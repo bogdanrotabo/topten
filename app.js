@@ -1449,6 +1449,7 @@
     const shareUrl = badgeUrl(slug, row.handle);
 
     view.innerHTML = `<div class="shell badgewrap">
+      <button class="badgeclose" id="badge-close" aria-label="Close">&times;</button>
       <div class="badgecard" id="badgecard">${svg}</div>
       <div class="share">
         ${shareButtons(shareText, shareUrl)}
@@ -1462,6 +1463,12 @@
       </p>
     </div>`;
 
+    /* Back to wherever this was opened from, which is normally the listing on
+       its board. A badge link shared to someone who has never been here has no
+       history to go back to, so that lands on the board instead. */
+    $('#badge-close').addEventListener('click', () => {
+      if (history.length > 1) history.back(); else navigate(`/${slug}`);
+    });
     $('#dl').addEventListener('click', () => downloadPng(svg, `topten-${slug}-${rank}.png`));
     $('#copy').addEventListener('click', async e => {
       try { await navigator.clipboard.writeText(location.href); e.target.textContent = 'Copied'; }
@@ -1512,6 +1519,10 @@
   }
 
   function navigate(href) {
+    /* A modal is a layer over the page, and the page is about to change under it.
+       Anything opened from inside one -- the badge above all -- would render
+       behind it and read as nothing having happened at all. */
+    if (!modal.hidden) closeModal();
     history.pushState({}, '', href);
     route();
     scrollTo({ top: 0, behavior: 'instant' });

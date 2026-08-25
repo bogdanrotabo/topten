@@ -1108,6 +1108,25 @@ img { max-width: 100%; }
 
 /* ----------------------------------------------------------------- badge */
 
+
+/* The badge is a page of its own now, reached from inside a window that has
+   just closed behind it. Without a way out it is a dead end. */
+.badgeclose {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  right: 12px;
+  z-index: 40;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--elev-2);
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.badgeclose:hover { color: var(--text); border-color: var(--accent); }
 .badgewrap { padding: 28px 0 60px; text-align: center; }
 .badgecard { max-width: 500px; margin: 0 auto; }
 .badgecard svg { width: 100%; height: auto; display: block; border-radius: var(--radius-lg); }
