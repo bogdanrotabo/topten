@@ -401,6 +401,45 @@
     </div>`;
   }
 
+
+  /* Everyone on every board, running across the top in each platform's own
+     colour. It sits above the name because the first thing worth knowing about
+     a leaderboard is that there are people standing on it. */
+  /* Everyone on every board, running across the top in each platform's own
+     colour. It sits above the name because the first thing worth knowing about
+     a leaderboard is that there are people standing on it.
+
+     The strip is always in the markup and fills itself from fillTicker(), so a
+     payment landing while someone is looking updates it in place instead of
+     leaving the top of the page contradicting the board under it. */
+  function renderTicker() {
+    return `<div class="ticker" id="ticker" hidden><div class="ticker__track"></div></div>`;
+  }
+
+  function fillTicker() {
+    const el = document.getElementById('ticker');
+    if (!el) return;
+
+    const items = PLATFORMS.flatMap(p =>
+      board(p.slug).slice(0, 10).map((row, i) => ({ p, row, rank: i + 1 })));
+    el.hidden = !items.length;
+    if (!items.length) return;
+
+    const cell = ({ p, row, rank }) => `
+      <span class="tick" style="--tick:${p.color}">
+        <span class="tick__i">${icon(p.slug, true)}</span>
+        <span class="tick__h">${esc(row.handle)}</span>
+        <span class="tick__r">#${rank}</span>
+        <span class="tick__a">${money(row.total_cents)}</span>
+      </span>`;
+
+    /* Printed twice, and the track slides exactly half its own width: when the
+       animation restarts, the second copy is sitting where the first was, so
+       the loop has no seam to see. */
+    const once = items.map(cell).join('');
+    el.querySelector('.ticker__track').innerHTML = once + once;
+  }
+
   function renderTabs() {
     // Always two rows, however many platforms there are: eight lands as 4+4,
     // ten lands as 5+5. Nothing scrolls out of sight either way.
@@ -591,6 +630,7 @@
 
   function renderHome(openSlug) {
     view.innerHTML = `
+      ${renderTicker()}
       <div class="shell">
         <section class="hero">
           <h1>TopTen<em>.one</em></h1>
@@ -601,6 +641,8 @@
       </div>
       ${renderTabs()}
       ${renderShareBar()}`;
+
+    fillTicker();
 
     /* A platform named in the address opens its board. The bare home page opens
        nothing, so the ten marks are the whole of the first screen. */
@@ -1607,7 +1649,7 @@
   });
   /* ------------------------------------------------------ live plumbing */
 
-  const refresh = debounce(async () => { await loadBoards(); if (!modal.hidden) return; refreshBoard(); }, 450);
+  const refresh = debounce(async () => { await loadBoards(); fillTicker(); if (!modal.hidden) return; refreshBoard(); }, 450);
 
   function subscribe() {
     if (!sb) return;

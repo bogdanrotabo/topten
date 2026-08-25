@@ -102,6 +102,57 @@ img { max-width: 100%; }
 .wordmark b { color: var(--accent); font-weight: 800; }
 .wordmark span { color: var(--dim); font-weight: 600; }
 
+
+/* ------------------------------------------------------------- ticker --- */
+
+/* A board with nobody on it is a claim; a name with money next to it is
+   evidence. This runs the evidence across the top of the page. */
+.ticker {
+  overflow: hidden;
+  padding: 7px 0;
+  background: var(--elev);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.ticker__track {
+  display: flex;
+  width: max-content;
+  animation: tick 45s linear infinite;
+}
+
+/* Half the track, because the track is the list twice over. */
+@keyframes tick { to { transform: translateX(-50%); } }
+
+.ticker:hover .ticker__track { animation-play-state: paused; }
+
+.tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 15px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.tick__i { line-height: 0; }
+.tick__i svg { width: 14px; height: 14px; display: block; color: var(--tick); }
+.tick__h { font-weight: 700; color: var(--text); }
+.tick__r { font-family: var(--num); font-weight: 800; color: var(--tick); }
+.tick__a { font-family: var(--num); font-weight: 800; color: var(--text); }
+
+@media (min-width: 560px) {
+  .ticker { padding: 9px 0; }
+  .tick { font-size: 13px; padding: 0 19px; }
+  .tick__i svg { width: 16px; height: 16px; }
+}
+
+/* Stopped, not hidden: the names and the money are the point, the motion is
+   only how they take turns. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track { animation: none; }
+}
+
 /* --------------------------------------------------------------------- hero */
 
 /* The masthead already carries the wordmark, so on a phone the hero gives up
