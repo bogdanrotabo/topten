@@ -739,10 +739,10 @@
       <button class="btn" data-add="${esc(row.id)}">Add money to ${esc(row.handle)}</button>
       ${keyFor(row.id) ? `<button class="btn btn--ghost" style="margin-top:8px" data-edit="${esc(row.id)}">Edit what this says</button>` : ''}
 
-      <ul class="finelist" style="display:flex;gap:14px;justify-content:center">
-        <li><a href="${badge}" data-link>Badge</a></li>
-        <li><a href="${esc(report)}">Report</a></li>
-      </ul>`);
+      <div class="detail__acts">
+        <a href="${badge}" data-link>Badge</a>
+        <a href="${esc(report)}">Report</a>
+      </div>`);
   }
 
   /**

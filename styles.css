@@ -792,6 +792,29 @@ img { max-width: 100%; }
 
 .detail__link:hover .detail__link-v { color: var(--accent); }
 
+/* These were 11px fine print under a 15px button — small enough that the two
+   things a visitor might actually want to do next read as a footnote. */
+.detail__acts {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.detail__acts a {
+  flex: 1;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--elev-2);
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.detail__acts a:hover { color: var(--text); border-color: var(--accent); }
+
 /* ------------------------------------------------------- amount picker */
 
 .amounts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
