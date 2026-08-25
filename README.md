@@ -56,6 +56,19 @@ GitHub Pages serves static files only, so every route needs a real file.
 `/thanks` and because link previews ignore 404 responses. `404.html` catches
 anything else so path-style badge links still render.
 
+
+Each platform also gets its own file: `x/index.html`, `tiktok/index.html` and
+so on, generated from `index.html` with a rewritten `<title>`, description,
+canonical and Open Graph block. They exist for one reason. The board is drawn
+by JavaScript after load, so `/?p=x` and `/?p=tiktok` and `/` were byte-
+identical documents — the sitemap advertised eleven URLs and a crawler found
+one page. Giving each board a head of its own is what makes them eleven
+documents rather than eleven addresses for the same one.
+
+`/?p=` still resolves to the same board, because links shared before the change
+must keep working. Badge URLs keep their own `?p=`: that one addresses a
+listing, not a board.
+
 **After editing `index.html`, `app.js`, `styles.css` or `config.js`, re-run:**
 
 ```bash
