@@ -965,6 +965,62 @@ img { max-width: 100%; }
   color: var(--dim);
 }
 
+/* ------------------------------------------------------------ share bar --- */
+
+/* The board is the product and the address is the pitch, so the address gets
+   to be readable and copyable rather than something to retype from memory. */
+.sharebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  max-width: 460px;
+  margin: 0 auto 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--elev);
+}
+
+.sharebar__k {
+  width: 100%;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--dim);
+}
+
+.sharebar__url {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.sharebar__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  width: 100%;
+}
+
+.sharebar__btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--elev-2);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.sharebar__btn:hover { color: var(--text); border-color: var(--accent); }
+
 /* ------------------------------------------------------------- sponsor --- */
 
 .sponsor {

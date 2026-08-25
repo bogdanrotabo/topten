@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://topten.one/og-image.png">
 <meta property="og:url" content="https://topten.one/privacy.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css?v=40988a9e06">
+<link rel="stylesheet" href="/styles.css?v=80a9928ad2">
 </head>
 <body>
 
@@ -84,6 +84,16 @@
 
 <footer class="foot">
   <div class="shell">
+    <div class="sharebar">
+      <span class="sharebar__k">Share</span>
+      <a class="sharebar__url" href="https://topten.one/">topten.one</a>
+      <span class="sharebar__acts">
+        <button class="sharebar__btn" data-share-copy>Copy link</button>
+        <a class="sharebar__btn" href="https://x.com/intent/post?text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform.%20No%20algorithm.&url=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Post on X</a>
+        <a class="sharebar__btn" href="https://wa.me/?text=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="sharebar__btn" href="https://t.me/share/url?url=https%3A%2F%2Ftopten.one%2F&text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform." target="_blank" rel="noopener">Telegram</a>
+      </span>
+    </div>
     <div class="sponsor">
       <span class="sponsor__k">Official sponsor</span>
       <img class="sponsor__logo" src="/icons/rotabo.png" width="26" height="26" alt="" loading="lazy"><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
@@ -98,6 +108,20 @@
     <p>🇨🇭 Made in Switzerland · Available worldwide</p>
   </div>
 </footer>
+
+<script>
+// These pages do not load app.js, so the share bar gets its own three lines.
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-share-copy]");
+  if (!b) return;
+  e.preventDefault();
+  try {
+    await navigator.clipboard.writeText("https://topten.one/");
+    b.textContent = "Copied";
+    setTimeout(() => { b.textContent = "Copy link"; }, 1800);
+  } catch { b.textContent = "Copy failed"; }
+});
+</script>
 
 </body>
 </html>

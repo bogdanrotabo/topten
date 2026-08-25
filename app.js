@@ -1083,15 +1083,15 @@
 
   function thanksSuccess(row) {
     const p = BY_SLUG[row.platform];
-    const badge = `/badge/?p=${row.platform}&h=${encodeURIComponent(row.handle)}`;
-    const shareText = `I'm #${row.rank} on ${p.name} at TopTen.one`;
+    const badge = `/badge/?p=${row.platform}&h=${encodeURIComponent(String(row.handle).replace(/^@/, ''))}`;
+    const shareText = `I'm #${row.rank} on ${p.name}`;
     view.innerHTML = `<div class="shell center-wrap">
       <span style="color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:12px">You are</span>
       <div class="bigrank">#${row.rank}</div>
       <p style="margin:0;font-size:19px;font-weight:700">${esc(row.handle)} on ${esc(p.name)}</p>
       <p style="color:var(--muted);margin:6px 0 0">${money(row.total_cents)} on the board</p>
       <div class="share">
-        <a href="https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent('https://topten.one' + badge)}" target="_blank" rel="noopener">Post on X</a>
+        <a href="${esc(postOnXUrl(shareText, badgeUrl(row.platform, row.handle)))}" target="_blank" rel="noopener">Post on X</a>
         <a href="${badge}" data-link>Get the badge</a>
         <a href="/?p=${row.platform}" data-link>Back to the board</a>
       </div>
@@ -1179,6 +1179,22 @@
     return { slug, handle: handle.startsWith('@') || !handle ? handle : '@' + handle };
   }
 
+  /* Always the live domain, never location.origin: a badge shared from
+     localhost or from plain http would post a link nobody else can open.
+     The @ comes off so the address reads as one clickable topten.one URL
+     rather than trailing a %40 that some clients cut the link at. */
+  const SITE = 'https://topten.one';
+
+  function badgeUrl(slug, handle) {
+    return `${SITE}/badge/?p=${encodeURIComponent(slug)}&h=${encodeURIComponent(String(handle).replace(/^@/, ''))}`;
+  }
+
+  /* X renamed the endpoint: /intent/tweet is legacy and can land on the app's
+     home instead of the composer. /intent/post is the current one. */
+  function postOnXUrl(text, url) {
+    return `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  }
+
   function badgeSvg(rank, handle, platformName, color, amount) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 315" width="600" height="315" role="img" aria-label="#${rank} on ${platformName}">
   <defs>
@@ -1223,16 +1239,21 @@
     }
 
     const svg = badgeSvg(rank, row.handle, p.name, p.color, money(row.total_cents));
-    const shareText = `${row.handle} is #${rank} on ${p.name} at TopTen.one`;
+    const shareText = `${row.handle} is #${rank} on ${p.name}`;
+    const shareUrl = badgeUrl(slug, row.handle);
 
     view.innerHTML = `<div class="shell badgewrap">
       <div class="badgecard" id="badgecard">${svg}</div>
       <div class="share">
+        <a href="${esc(postOnXUrl(shareText, shareUrl))}" target="_blank" rel="noopener">Post on X</a>
         <button id="dl">Download PNG</button>
-        <a href="https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(location.origin + '/badge/?p=' + slug + '&h=' + encodeURIComponent(row.handle))}" target="_blank" rel="noopener">Post on X</a>
         <button id="copy">Copy link</button>
         <a href="/?p=${slug}" data-link>See the board</a>
       </div>
+      <p class="finelist" style="max-width:40ch;margin:16px auto 0;text-align:center">
+        X shows the link, not the picture. Download the PNG and attach it to the
+        post if you want the badge itself in the timeline.
+      </p>
     </div>`;
 
     $('#dl').addEventListener('click', () => downloadPng(svg, `topten-${slug}-${rank}.png`));
@@ -1329,6 +1350,20 @@
   $('#foot-contact').addEventListener('click', e => {
     e.preventDefault();
     location.href = `mailto:${CFG.CONTACT_EMAIL || 'hello@topten.one'}`;
+  });
+
+  // The share bar is static markup on every page, so wire it from here.
+  document.addEventListener('click', async e => {
+    const copy = e.target.closest('[data-share-copy]');
+    if (!copy) return;
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(SITE + '/');
+      copy.textContent = 'Copied';
+      setTimeout(() => { copy.textContent = 'Copy link'; }, 1800);
+    } catch {
+      copy.textContent = 'Copy failed';
+    }
   });
 
   /* ------------------------------------------------------ live plumbing */
