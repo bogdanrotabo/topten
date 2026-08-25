@@ -1195,24 +1195,55 @@
     return `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
   }
 
-  function badgeSvg(rank, handle, platformName, color, amount) {
-    // The wordmark is the point of sharing this, so it is set at the size the
-    // home page sets it — white name, gold suffix — not a grey caption.
+  /**
+   * The badge is the site in one image: the wordmark, the promise, all ten
+   * boards, and where this listing stands. Someone seeing it in a timeline has
+   * to understand what the place is, not just that a stranger is number one.
+   *
+   * Everything is inlined, gradient included, because this same markup gets
+   * turned into a PNG with no page around it to resolve references against.
+   */
+  function badgeSvg(rank, handle, platformName, color, amount, activeSlug) {
+    const SANS = '-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif';
+    const MONO = 'ui-monospace,SFMono-Regular,Menlo,monospace';
+
+    const SIZE = 26, GAP = 28, START = 40, ROW_Y = 108;
+    const marks = PLATFORMS.map((p, i) => {
+      const x = START + i * (SIZE + GAP);
+      const on = p.slug === activeSlug;
+      const body = (ICONS_FULL[p.slug] || ICONS[p.slug] || '')
+        .replace(/currentColor/g, p.color);
+      return `<g transform="translate(${x} ${ROW_Y}) scale(${SIZE / 24})" opacity="${on ? 1 : 0.32}">${body}</g>` +
+        (on ? `<circle cx="${x + SIZE / 2}" cy="${ROW_Y + SIZE + 9}" r="2.5" fill="${color}"/>` : '');
+    }).join('');
+
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 315" width="600" height="315" role="img" aria-label="#${rank} on ${platformName} at TopTen.one">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#12141b"/><stop offset="1" stop-color="#07080b"/>
     </linearGradient>
+    <linearGradient id="tt-ig" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd521"/><stop offset=".26" stop-color="#f50000"/>
+      <stop offset=".62" stop-color="#b900b4"/><stop offset="1" stop-color="#4400c8"/>
+    </linearGradient>
   </defs>
+
   <rect width="600" height="315" fill="url(#bg)"/>
   <rect x="0" y="0" width="600" height="5" fill="${color}"/>
 
-  <text x="40" y="68" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="-1.6"><tspan fill="#f2f3f5">TopTen</tspan><tspan fill="#ffc233">.one</tspan></text>
+  <text x="40" y="56" font-family="${SANS}" font-size="38" font-weight="800" letter-spacing="-1.4"><tspan fill="#f2f3f5">TopTen</tspan><tspan fill="#ffc233">.one</tspan></text>
+  <text x="40" y="82" fill="#9aa0ad" font-family="${SANS}" font-size="15" font-weight="600">Pay to be seen. Top 10 per platform. No algorithm.</text>
 
-  <text x="40" y="190" fill="#ffc233" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="98" font-weight="800" letter-spacing="-5">#${rank}</text>
-  <text x="40" y="232" fill="#f2f3f5" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="26" font-weight="700">${esc(handle)}</text>
-  <text x="40" y="259" fill="${color}" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="600">on ${esc(platformName)}</text>
-  <text x="40" y="293" fill="#6b7280" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="15">${esc(amount)} · Be the one.</text>
+  ${marks}
+
+  <line x1="40" y1="162" x2="560" y2="162" stroke="#23262f" stroke-width="1"/>
+
+  <text x="40" y="244" fill="#ffc233" font-family="${MONO}" font-size="76" font-weight="800" letter-spacing="-4">#${rank}</text>
+  <text x="${rank > 9 ? 200 : 155}" y="222" fill="#f2f3f5" font-family="${SANS}" font-size="27" font-weight="700">${esc(handle)}</text>
+  <text x="${rank > 9 ? 200 : 155}" y="248" fill="${color}" font-family="${SANS}" font-size="17" font-weight="600">on ${esc(platformName)}</text>
+
+  <text x="40" y="290" fill="#6b7280" font-family="${MONO}" font-size="15">${esc(amount)} paid</text>
+  <text x="560" y="290" fill="#6b7280" font-family="${SANS}" font-size="15" font-weight="600" text-anchor="end">Be the one.</text>
 </svg>`;
   }
 
@@ -1242,7 +1273,7 @@
       return;
     }
 
-    const svg = badgeSvg(rank, row.handle, p.name, p.color, money(row.total_cents));
+    const svg = badgeSvg(rank, row.handle, p.name, p.color, money(row.total_cents), slug);
     const shareText = `${row.handle} is #${rank} on ${p.name}`;
     const shareUrl = badgeUrl(slug, row.handle);
 
