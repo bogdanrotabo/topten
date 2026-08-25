@@ -413,7 +413,7 @@
      payment landing while someone is looking updates it in place instead of
      leaving the top of the page contradicting the board under it. */
   function renderTicker() {
-    return `<div class="ticker" id="ticker" hidden><div class="ticker__track"></div></div>`;
+    return `<div class="ticker" id="ticker" hidden aria-hidden="true"><div class="ticker__track"></div></div>`;
   }
 
   function fillTicker() {
@@ -447,7 +447,7 @@
 
     const cell = p => {
       const n = board(p.slug).length;
-      return `<button class="tab" role="tab" aria-selected="false" data-tab="${p.slug}"
+      return `<button class="tab" aria-expanded="false" aria-controls="tp-${PLATFORMS.indexOf(p) < cols ? 0 : 1}" data-tab="${p.slug}"
                 style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug, true)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
     };
     const cells = PLATFORMS.map(cell);
@@ -455,10 +455,10 @@
     /* A panel after each row of tiles rather than one at the bottom: a board
        opened from the top row belongs under the top row, not below a second
        row of tiles it has nothing to do with. */
-    const panel = i => `<div class="tabpanel" data-panel="${i}" hidden></div>`;
+    const panel = i => `<div class="tabpanel" id="tp-${i}" data-panel="${i}" role="region" aria-label="The board that is open" hidden></div>`;
 
     return `
-    <div class="tabs"><div class="shell"><div class="tabs__grid" role="tablist" style="--tab-cols:${cols}">
+    <div class="tabs"><div class="shell"><div class="tabs__grid" style="--tab-cols:${cols}">
       ${cells.slice(0, cols).join('')}${panel(0)}${cells.slice(cols).join('')}${panel(1)}
     </div></div></div>`;
   }
@@ -579,12 +579,12 @@
     stampCascade();
 
     document.querySelectorAll('[data-tab]').forEach(t =>
-      t.setAttribute('aria-selected', String(t.dataset.tab === slug)));
+      t.setAttribute('aria-expanded', String(t.dataset.tab === slug)));
 
     sticky.hidden = false;
     $('#cta-claim').textContent = board(slug).length
       ? `Take #1 on ${BY_SLUG[slug].name} for ${money(clampMin(nextDollarAbove(topCents(slug))))}`
-      : 'Claim a spot';
+      : 'Claim your rank';
     document.title = `Top 10 on ${BY_SLUG[slug].name} — TopTen.one`;
     // Baseline for the outbid animation, once the rows exist to compare against.
     snapshotRanks();
@@ -596,8 +596,13 @@
       el.innerHTML = '';
       delete el.dataset.fresh;
     });
-    document.querySelectorAll('[data-tab]').forEach(t => t.setAttribute('aria-selected', 'false'));
-    sticky.hidden = true;
+    document.querySelectorAll('[data-tab]').forEach(t => t.setAttribute('aria-expanded', 'false'));
+
+    /* The button stays. The home page is where an advert lands, and a site whose
+       whole purpose is being paid should not make someone open a board first to
+       find out how. The form carries its own platform picker. */
+    sticky.hidden = false;
+    $('#cta-claim').textContent = 'Claim your rank';
     document.title = 'TopTen.one — Be the one.';
   }
 
@@ -692,7 +697,7 @@
     const cta = $('#cta-claim');
     if (cta) cta.textContent = board(state.platform).length
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
-      : 'Claim a spot';
+      : 'Claim your rank';
   }
 
   /** Remember where every listing sits, so the next refresh can animate movement. */
@@ -798,7 +803,7 @@
     openModal(`
       <div class="modal__head">
         <div>
-          <h2 id="modal-title">Claim a spot</h2>
+          <h2 id="modal-title">Claim your rank</h2>
           <p>Paste a profile, pick an amount. The money is the rank.</p>
         </div>
         <button class="modal__x" data-close aria-label="Close">&times;</button>
@@ -1586,7 +1591,7 @@
       const slug = tab.dataset.tab;
       /* Tapping the open one closes it, so the ten marks come back without
          anyone having to hunt for a way out of the board. */
-      if (tab.getAttribute('aria-selected') === 'true') {
+      if (tab.getAttribute('aria-expanded') === 'true') {
         closeBoard();
         history.replaceState({}, '', '/');
       } else {

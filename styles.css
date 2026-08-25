@@ -310,13 +310,13 @@ img { max-width: 100%; }
   white-space: nowrap;
 }
 
-.tab[aria-selected="true"] {
+.tab[aria-expanded="true"] {
   color: var(--text);
   border-color: var(--tab-brand, var(--accent));
   background: var(--elev-2);
 }
 
-.tab[aria-selected="true"] svg { opacity: 1; }
+.tab[aria-expanded="true"] svg { opacity: 1; }
 
 /* The listing count rides in the corner so it never widens the tab. */
 .tab__n {
@@ -328,7 +328,7 @@ img { max-width: 100%; }
   color: var(--dim);
 }
 
-.tab[aria-selected="true"] .tab__n { color: var(--accent); }
+.tab[aria-expanded="true"] .tab__n { color: var(--accent); }
 
 /* The board opens inside the grid, directly under the row of tiles it was
    tapped in, spanning the full width. Two panels rather than one so tapping a
