@@ -820,6 +820,10 @@
     const pos = board(row.platform).findIndex(r => r.id === row.id) + 1;
     const report = `mailto:${CFG.CONTACT_EMAIL || 'hello@topten.one'}?subject=${encodeURIComponent('Report listing ' + row.id)}&body=${encodeURIComponent('Listing: ' + row.id + '\nProfile: ' + row.url + '\n\nWhy this should be reviewed:\n')}`;
     const badge = `/badge/?p=${row.platform}&h=${encodeURIComponent(row.handle)}`;
+    /* Shared as the badge, not as this window: a link to a picture of the
+       place tells someone who has never seen the site what it is. */
+    const shareText = `${row.handle} is #${pos} on ${p.name}`;
+    const shareUrl = badgeUrl(row.platform, row.handle);
 
     openModal(`
       <div class="modal__head">
@@ -859,6 +863,11 @@
       <div class="detail__acts">
         <a href="${badge}" data-link>Badge</a>
         <a href="${esc(report)}">Report</a>
+      </div>
+
+      <div class="detail__share">
+        <span class="detail__share-k">Share this listing</span>
+        <span class="detail__share-acts">${shareButtons(shareText, shareUrl, 'sharebar__btn')}</span>
       </div>`);
     /* The listing is the thing people came to look at: a face, a tagline and
        two links deserve the page, not a card in the middle of it. */

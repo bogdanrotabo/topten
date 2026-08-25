@@ -753,6 +753,36 @@ img { max-width: 100%; }
   .modal__panel--full { width: 90vw; height: 90vh; }
 }
 
+/* The room left under a short listing had nothing in it. Sharing is what the
+   room is for: the person looking at a place is the one most likely to pass it
+   on, and the buttons sit at the bottom of whatever height is left over. */
+.modal__panel--full {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail__share {
+  margin-top: auto;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.detail__share-k {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--dim);
+}
+
+.detail__share-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 @media (min-width: 620px) {
   .modal { align-items: center; padding: 20px; }
   .modal__panel { border-bottom: 1px solid var(--line); border-radius: var(--radius-lg); }
