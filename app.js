@@ -1132,7 +1132,7 @@
       <p style="margin:0;font-size:19px;font-weight:700">${esc(row.handle)} on ${esc(p.name)}</p>
       <p style="color:var(--muted);margin:6px 0 0">${money(row.total_cents)} on the board</p>
       <div class="share">
-        <a href="${esc(postOnXUrl(shareText, badgeUrl(row.platform, row.handle)))}" target="_blank" rel="noopener">Post on X</a>
+        ${shareButtons(shareText, badgeUrl(row.platform, row.handle))}
         <a href="${badge}" data-link>Get the badge</a>
         <a href="/${row.platform}" data-link>Back to the board</a>
       </div>
@@ -1236,6 +1236,44 @@
     return `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
   }
 
+  /* Every place a link can actually be handed to from a web page.
+     Instagram, TikTok, YouTube, Twitch and Snapchat are missing on purpose:
+     none of them has a web address that opens a composer with a URL in it, so
+     a button for them could only ever look like it worked. They are reached
+     through the phone's own share sheet instead, added at the end of this row
+     when the browser has one. */
+  const SHARE_TARGETS = [
+    { name: 'X',        url: (t, u) => postOnXUrl(t, u) },
+    { name: 'WhatsApp', url: (t, u) => `https://wa.me/?text=${encodeURIComponent(t + ' ' + u)}` },
+    { name: 'Telegram', url: (t, u) => `https://t.me/share/url?url=${encodeURIComponent(u)}&text=${encodeURIComponent(t)}` },
+    { name: 'Facebook', url: (t, u) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}` },
+    { name: 'LinkedIn', url: (t, u) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(u)}` },
+    { name: 'Threads',  url: (t, u) => `https://www.threads.net/intent/post?text=${encodeURIComponent(t + ' ' + u)}` },
+    { name: 'Reddit',   url: (t, u) => `https://www.reddit.com/submit?url=${encodeURIComponent(u)}&title=${encodeURIComponent(t)}` },
+    { name: 'Email',    mail: true,
+      url: (t, u) => `mailto:?subject=${encodeURIComponent(t)}&body=${encodeURIComponent(t + '\n\n' + u)}` },
+  ];
+
+  /* What the site says about itself when the whole site is what is shared. */
+  const SITE_PITCH = 'Pay to be seen on our board. Ten places per board. No algorithm.';
+
+  function shareButtons(text, url, cls) {
+    const c = cls ? ` class="${cls}"` : '';
+    let html = SHARE_TARGETS.map(t => {
+      /* mailto in a new tab leaves an empty one behind once the mail client
+         takes over, so only the real web targets get target="_blank". */
+      const rest = t.mail ? '' : ' target="_blank" rel="noopener"';
+      return `<a${c} href="${esc(t.url(text, url))}"${rest}>${t.name}</a>`;
+    }).join('');
+
+    /* Only offered where it exists. A sheet button on a browser without one is
+       a button that does nothing, which is worse than not offering it. */
+    if (navigator.share) {
+      html += `<button${c} data-share-sheet data-text="${esc(text)}" data-url="${esc(url)}">More…</button>`;
+    }
+    return html;
+  }
+
   /**
    * The badge is the site in one image: the wordmark, the promise, all ten
    * boards, and where this listing stands. Someone seeing it in a timeline has
@@ -1321,7 +1359,7 @@
     view.innerHTML = `<div class="shell badgewrap">
       <div class="badgecard" id="badgecard">${svg}</div>
       <div class="share">
-        <a href="${esc(postOnXUrl(shareText, shareUrl))}" target="_blank" rel="noopener">Post on X</a>
+        ${shareButtons(shareText, shareUrl)}
         <button id="dl">Download PNG</button>
         <button id="copy">Copy link</button>
         <a href="/${slug}" data-link>See the board</a>
@@ -1434,8 +1472,27 @@
     location.href = `mailto:${CFG.CONTACT_EMAIL || 'hello@topten.one'}`;
   });
 
-  // The share bar is static markup on every page, so wire it from here.
+  /* The share bar is static markup so the footer is complete before this file
+     loads, but the list of places a link can go lives in one array above. Draw
+     the row from that array once the script is running, so the markup and the
+     list cannot drift apart. Without JavaScript the static three still work. */
+  const acts = document.querySelector('.sharebar__acts');
+  if (acts) {
+    acts.innerHTML = `<button class="sharebar__btn" data-share-copy>Copy link</button>`
+      + shareButtons(SITE_PITCH, SITE + '/', 'sharebar__btn');
+  }
+
   document.addEventListener('click', async e => {
+    const sheet = e.target.closest('[data-share-sheet]');
+    if (sheet) {
+      e.preventDefault();
+      /* The only route to Instagram, TikTok, Snapchat, YouTube and Twitch, none
+         of which can be linked into from a page. Cancelling the sheet rejects,
+         and a person changing their mind is not an error. */
+      try { await navigator.share({ text: sheet.dataset.text, url: sheet.dataset.url }); } catch {}
+      return;
+    }
+
     const copy = e.target.closest('[data-share-copy]');
     if (!copy) return;
     e.preventDefault();
