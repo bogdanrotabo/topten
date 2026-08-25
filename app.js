@@ -1196,19 +1196,23 @@
   }
 
   function badgeSvg(rank, handle, platformName, color, amount) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 315" width="600" height="315" role="img" aria-label="#${rank} on ${platformName}">
+    // The wordmark is the point of sharing this, so it is set at the size the
+    // home page sets it — white name, gold suffix — not a grey caption.
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 315" width="600" height="315" role="img" aria-label="#${rank} on ${platformName} at TopTen.one">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#12141b"/><stop offset="1" stop-color="#07080b"/>
     </linearGradient>
   </defs>
   <rect width="600" height="315" fill="url(#bg)"/>
-  <rect x="0" y="0" width="600" height="4" fill="${color}"/>
-  <text x="40" y="62" fill="#6b7280" font-family="system-ui,sans-serif" font-size="15" letter-spacing="3">TOPTEN.ONE</text>
-  <text x="40" y="176" fill="#ffc233" font-family="ui-monospace,monospace" font-size="112" font-weight="800" letter-spacing="-6">#${rank}</text>
-  <text x="40" y="222" fill="#f2f3f5" font-family="system-ui,sans-serif" font-size="27" font-weight="700">${esc(handle)}</text>
-  <text x="40" y="252" fill="${color}" font-family="system-ui,sans-serif" font-size="17" font-weight="600">on ${esc(platformName)}</text>
-  <text x="40" y="288" fill="#6b7280" font-family="ui-monospace,monospace" font-size="15">${esc(amount)} · Be the one.</text>
+  <rect x="0" y="0" width="600" height="5" fill="${color}"/>
+
+  <text x="40" y="68" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="-1.6"><tspan fill="#f2f3f5">TopTen</tspan><tspan fill="#ffc233">.one</tspan></text>
+
+  <text x="40" y="190" fill="#ffc233" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="98" font-weight="800" letter-spacing="-5">#${rank}</text>
+  <text x="40" y="232" fill="#f2f3f5" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="26" font-weight="700">${esc(handle)}</text>
+  <text x="40" y="259" fill="${color}" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="600">on ${esc(platformName)}</text>
+  <text x="40" y="293" fill="#6b7280" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="15">${esc(amount)} · Be the one.</text>
 </svg>`;
   }
 
