@@ -27,7 +27,7 @@
 <meta name="twitter:image" content="https://topten.one/og-image.png">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=e166d6eb1b">
+<link rel="stylesheet" href="/styles.css?v=40f7bec663">
 </head>
 <body>
 
@@ -68,6 +68,23 @@
       <img class="sponsor__logo" src="/icons/rotabo.png" width="26" height="26" alt="" loading="lazy"><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
       <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
     </div>
+    <!-- The ten boards as real links. The tiles above them are buttons, because
+         they open a board in place rather than navigate to it, and Googlebot does
+         not press buttons: Search Console reported every board as discovered from
+         the sitemap with "referring page: none". These give each board a way in
+         from every page the site serves, including the other nine boards. -->
+    <nav class="foot__boards" aria-label="All ten boards">
+      <a href="/x/" data-link>X</a>
+      <a href="/instagram/" data-link>Instagram</a>
+      <a href="/tiktok/" data-link>TikTok</a>
+      <a href="/youtube/" data-link>YouTube</a>
+      <a href="/facebook/" data-link>Facebook</a>
+      <a href="/telegram/" data-link>Telegram</a>
+      <a href="/snapchat/" data-link>Snapchat</a>
+      <a href="/twitch/" data-link>Twitch</a>
+      <a href="/linkedin/" data-link>LinkedIn</a>
+      <a href="/threads/" data-link>Threads</a>
+    </nav>
     <nav>
       <a href="/about.html">About</a>
       <a href="/terms.html">Terms</a>
@@ -95,8 +112,8 @@
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=e166d6eb1b"></script>
+<script src="/config.js?v=40f7bec663"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=e166d6eb1b"></script>
+<script defer src="/app.js?v=40f7bec663"></script>
 </body>
 </html>

@@ -1247,6 +1247,17 @@ img { max-width: 100%; }
 .sponsor__x svg { width: 11px; height: 11px; display: block; }
 .sponsor__x:hover { color: var(--text); }
 
+
+/* The ten boards, spelled out as addresses. Small and quiet, but real links:
+   the grid above is buttons, and a crawler cannot press one. */
+.foot__boards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  justify-content: center;
+  margin: 0 0 10px;
+  font-size: 12px;
+}
 .foot nav { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 .foot a { color: var(--muted); text-decoration: none; }
 .foot a:hover { color: var(--text); }
