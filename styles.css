@@ -761,9 +761,12 @@ img { max-width: 100%; }
   flex-direction: column;
 }
 
+/* Follows the content instead of being pinned to the floor. margin-top:auto
+   put it at the bottom of a 90vh panel, which on a desktop screen left it half
+   a page away from the listing it belongs to. */
 .detail__share {
-  margin-top: auto;
-  padding-top: 22px;
+  margin-top: 18px;
+  padding-top: 18px;
   border-top: 1px solid var(--line-soft);
 }
 
