@@ -56,11 +56,18 @@ GitHub Pages serves static files only, so every route needs a real file.
 `/thanks` and because link previews ignore 404 responses. `404.html` catches
 anything else so path-style badge links still render.
 
-**After editing `index.html`, re-run:**
+**After editing `index.html`, `app.js`, `styles.css` or `config.js`, re-run:**
 
 ```bash
 bash scripts/sync-routes.sh
 ```
+
+It hashes the three assets and stamps that hash onto their URLs
+(`/app.js?v=43920d8717`). GitHub Pages serves them with `max-age=600` and
+Cloudflare caches on top, so without this a visitor spends ten minutes running
+the old app against the new page — which is indistinguishable from the deploy
+not having happened. A changed file gets a changed URL and is fetched at once;
+an unchanged one still comes from cache. No purging, no waiting.
 
 ---
 
