@@ -367,17 +367,23 @@
     </div>`;
   }
 
-  /** An unclaimed place. Showing it beats hiding it — it names its own price. */
+  /**
+   * An unclaimed place. Showing it beats hiding it, but only one empty place
+   * can honestly carry a price: the first one after the last listing. Paying
+   * the minimum lands you exactly there. Any place below it is unreachable —
+   * whatever you pay, you land at the first gap — and any place above it costs
+   * whatever it takes to pass the listing sitting in it, which is a price the
+   * occupied tiles already show.
+   */
   function renderFreeSlot(rank, slug) {
-    const price = rank === 1
-      ? clampMin(nextDollarAbove(topCents(slug)))
-      : clampMin(nextDollarAbove(board(slug)[rank - 2]?.total_cents || 0));
+    const taken = board(slug).length;
+    const label = rank === taken + 1 ? money(MIN_CENTS) : 'Open';
     return `
     <div class="row row--free" title="Place ${rank} is open">
       <span class="row__rank">${rank}</span>
       <span class="row__brand" style="color:${BY_SLUG[slug]?.color || 'var(--dim)'}">${icon(slug, true)}</span>
       <span class="row__av"></span>
-      <span class="row__slot">${money(price)}</span>
+      <span class="row__slot">${esc(label)}</span>
       <button class="row__add" data-claim="1" aria-label="Claim place ${rank}">Claim</button>
     </div>`;
   }
