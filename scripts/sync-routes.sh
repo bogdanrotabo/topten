@@ -87,4 +87,22 @@ done
 echo '</urlset>' >> "$SITEMAP"
 echo "  $SITEMAP"
 
-echo "Routes synced from index.html"
+# Check our own work before saying it is done.
+#
+# This script died halfway once because it was run as `sync-routes.sh | head -3`:
+# under `set -o pipefail` the SIGPIPE from head killed it after the third line,
+# so index.html got the new stamp while 404.html and every board page kept the
+# old one and went on loading the previous app.js. The site looked deployed and
+# the fix was not live. A partial run must fail loudly instead.
+
+FOUND=$(grep -ohE 'app\.js\?v=[a-f0-9]+' \
+          index.html 404.html thanks/index.html badge/index.html \
+          about.html terms.html privacy.html ./*/index.html | sort -u)
+
+if [ "$(printf '%s\n' "$FOUND" | wc -l)" -ne 1 ] || [ "$FOUND" != "app.js?v=$STAMP" ]; then
+  echo "FAILED: pages disagree about which app.js to load" >&2
+  printf '%s\n' "$FOUND" >&2
+  exit 1
+fi
+
+echo "Routes synced from index.html — every page on $STAMP"
