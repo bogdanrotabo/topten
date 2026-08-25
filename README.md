@@ -170,6 +170,20 @@ minutes, sometimes hours.
 > (orange cloud) and set SSL/TLS → Overview → **Full**. Leaving it on *Flexible*
 > with the proxy on causes a redirect loop.
 
+**Step 4 — SSL/TLS → Edge Certificates → Always Use HTTPS: ON.** Without it
+Cloudflare happily serves `http://topten.one` as a plain 200 and never upgrades
+the scheme. Chrome's HTTPS-First mode then shows *"this site can't provide a
+secure connection"* on mobile, and `crypto.randomUUID()` is undefined because
+the page is not a secure context — which is what froze checkout on
+"Setting up...". A valid certificate is not enough; the redirect has to exist.
+Verify with:
+
+```bash
+curl -sSI http://topten.one/ | grep -i '^location'
+```
+
+It must print `Location: https://topten.one/`.
+
 Add `MX`/`TXT` records for `hello@topten.one` separately — email is not part
 of this setup.
 
