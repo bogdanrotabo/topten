@@ -12,6 +12,34 @@
   const ACTIVE_DAYS = 30;
   const LS_LAST = 'topten:last-listing';
   const LS_AMOUNT = 'topten:last-amount';
+  const LS_KEYS = 'topten:keys';
+
+  /* Without accounts there is no owner, so holding a secret is the only thing
+     that can stand in for one. The browser mints it when the listing is
+     submitted and keeps it here; the server never gives it back. Clearing site
+     data loses the ability to edit, which is why the thank-you page hands over
+     a link that carries it. */
+  function loadKeys() {
+    try { return JSON.parse(localStorage.getItem(LS_KEYS) || '{}'); } catch { return {}; }
+  }
+
+  function saveKey(id, token) {
+    try {
+      const keys = loadKeys();
+      keys[id] = token;
+      localStorage.setItem(LS_KEYS, JSON.stringify(keys));
+    } catch { /* private mode: editing simply will not be offered */ }
+  }
+
+  const keyFor = id => loadKeys()[id] || null;
+
+  /** #manage=<id>:<token> hands the key to another browser, then gets wiped. */
+  function absorbManageLink() {
+    const m = /^#manage=([0-9a-f-]{36}):([0-9a-f-]{36})$/i.exec(location.hash || '');
+    if (!m) return;
+    saveKey(m[1], m[2]);
+    history.replaceState({}, '', location.pathname + location.search);
+  }
 
   const PLATFORMS = [
     { slug: 'x',         name: 'X',         color: '#e7e9ea', hosts: ['x.com', 'twitter.com'] },
@@ -709,11 +737,82 @@
       </div>
 
       <button class="btn" data-add="${esc(row.id)}">Add money to ${esc(row.handle)}</button>
+      ${keyFor(row.id) ? `<button class="btn btn--ghost" style="margin-top:8px" data-edit="${esc(row.id)}">Edit what this says</button>` : ''}
 
       <ul class="finelist" style="display:flex;gap:14px;justify-content:center">
         <li><a href="${badge}" data-link>Badge</a></li>
         <li><a href="${esc(report)}">Report</a></li>
       </ul>`);
+  }
+
+  /**
+   * Only reachable by someone whose browser holds this listing's key, so the
+   * money, the rank and the moderation flag are not on the form at all — the
+   * two fields here are the only ones the server will let the key change.
+   */
+  function editModal(row) {
+    const token = keyFor(row.id);
+    if (!token) return;
+    openModal(`
+      <div class="modal__head">
+        <div>
+          <h2 id="modal-title">Edit ${esc(row.handle)}</h2>
+          <p>Change what your listing says. Rank and total stay exactly as they are.</p>
+        </div>
+        <button class="modal__x" data-close aria-label="Close">&times;</button>
+      </div>
+
+      <div class="field">
+        <label for="edit-tag">Tagline <span style="text-transform:none;letter-spacing:0">— 80 characters</span></label>
+        <input class="input" id="edit-tag" maxlength="80" value="${esc(row.tagline || '')}"
+               placeholder="One line about you">
+      </div>
+
+      <div class="field">
+        <label for="edit-link">Your link</label>
+        <input class="input" id="edit-link" type="url" inputmode="url" maxlength="200"
+               spellcheck="false" value="${esc(row.link || '')}"
+               placeholder="https://your-business.com">
+        <div class="hint" id="edit-hint">Leave either one empty to remove it.</div>
+      </div>
+
+      <button class="btn" id="edit-save">Save</button>`);
+
+    $('#edit-save').addEventListener('click', async () => {
+      const btn = $('#edit-save');
+      const hint = $('#edit-hint');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      try {
+        let link = $('#edit-link').value.trim();
+        if (link && !/^https?:\/\//i.test(link)) link = 'https://' + link;
+        const { data, error } = await sb.rpc('update_listing', {
+          p_id: row.id,
+          p_token: token,
+          p_tagline: $('#edit-tag').value.trim() || null,
+          p_link: link || null
+        });
+        if (error) throw error;
+        if (!data?.ok) {
+          hint.className = 'hint hint--bad';
+          hint.textContent = data?.reason === 'bad_link'
+            ? 'That link is not a web address.'
+            : 'This listing cannot be edited from this browser.';
+          btn.disabled = false;
+          btn.textContent = 'Save';
+          return;
+        }
+        await loadBoards();
+        refreshBoard();
+        closeModal();
+      } catch (err) {
+        console.error('edit failed', err);
+        hint.className = 'hint hint--bad';
+        hint.textContent = 'Could not save. Check your connection and try again.';
+        btn.disabled = false;
+        btn.textContent = 'Save';
+      }
+    });
   }
 
   /** example.com/shop rather than https://www.example.com/shop?utm=… */
@@ -898,13 +997,15 @@
     // "Setting up…" with no way forward. Never strand the buyer.
     try {
       const id = uuid();
+      const token = uuid();
 
       // Insert without asking for the row back: the RLS SELECT policy hides an
       // unpaid listing, so a returning insert would fail even on success.
       const { error } = await sb.from('listings').insert({
         id, platform: slug, url, handle,
         tagline: tagline || null,
-        link: link || null
+        link: link || null,
+        edit_token: token
       });
 
       if (error) {
@@ -922,6 +1023,9 @@
         return;
       }
 
+      // Keep the key before leaving for Stripe, or the listing is uneditable
+      // the moment the redirect happens.
+      saveKey(id, token);
       goToStripe(id);
     } catch (err) {
       console.error('could not start checkout', err);
@@ -991,7 +1095,22 @@
         <a href="${badge}" data-link>Get the badge</a>
         <a href="/?p=${row.platform}" data-link>Back to the board</a>
       </div>
+      ${keyFor(row.id) ? `
+      <p class="finelist" style="max-width:36ch;margin-top:22px">
+        This browser can edit your listing. To edit it from another device, keep
+        this link — anyone who has it can change your tagline and link.
+        <button id="copy-manage" style="display:block;margin:8px auto 0;padding:7px 13px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-weight:700">Copy my edit link</button>
+      </p>` : ''}
     </div>`;
+
+    const copyBtn = $('#copy-manage');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const manage = `${location.origin}/?p=${row.platform}#manage=${row.id}:${keyFor(row.id)}`;
+        try { await navigator.clipboard.writeText(manage); copyBtn.textContent = 'Copied'; }
+        catch { copyBtn.textContent = 'Copy failed'; }
+      });
+    }
     document.title = `#${row.rank} on ${p.name} — TopTen.one`;
     confetti();
   }
@@ -1182,6 +1301,13 @@
       return;
     }
 
+    const edit = e.target.closest('[data-edit]');
+    if (edit) {
+      const row = Object.values(state.boards).flat().find(r => r.id === edit.dataset.edit);
+      if (row) editModal(row);
+      return;
+    }
+
     const open = e.target.closest('[data-open]');
     if (open) {
       const row = Object.values(state.boards).flat().find(r => r.id === open.dataset.open);
@@ -1241,6 +1367,7 @@
   /* --------------------------------------------------------------- boot */
 
   (async function start() {
+    absorbManageLink();
     initSupabase();
     loadAnalytics();
     if (sb) await loadBoards();
