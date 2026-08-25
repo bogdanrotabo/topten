@@ -513,6 +513,25 @@
     return `<div class="shell board" style="--brand:${p.color}">${head}${body}${waiting}</div>`;
   }
 
+
+  /* One share row per view, and on the boards it belongs directly under the
+     platform strip: that is the moment someone has just understood what the
+     place is. At the bottom of the page it was past everything, including the
+     reason to pass it on. */
+  function renderShareBar() {
+    return `
+    <div class="shell">
+      <div class="sharebar">
+        <span class="sharebar__k">Share</span>
+        <a class="sharebar__url" href="https://topten.one/">topten.one</a>
+        <span class="sharebar__acts">
+          <button class="sharebar__btn" data-share-copy>Copy link</button>
+          ${shareButtons(SITE_PITCH, SITE + '/', 'sharebar__btn')}
+        </span>
+      </div>
+    </div>`;
+  }
+
   function renderHome() {
     view.innerHTML = `
       <div class="shell">
@@ -524,6 +543,7 @@
         ${renderStats()}
       </div>
       ${renderTabs()}
+      ${renderShareBar()}
       <div id="board-slot">${renderBoard()}</div>`;
     sticky.hidden = false;
     $('#cta-claim').textContent = board(state.platform).length
@@ -1465,22 +1485,11 @@
 
     if (e.target.closest('[data-claim]')) { submitModal(state.platform); return; }
   });
-
   $('#cta-claim').addEventListener('click', () => submitModal(state.platform));
   $('#foot-contact').addEventListener('click', e => {
     e.preventDefault();
     location.href = `mailto:${CFG.CONTACT_EMAIL || 'hello@topten.one'}`;
   });
-
-  /* The share bar is static markup so the footer is complete before this file
-     loads, but the list of places a link can go lives in one array above. Draw
-     the row from that array once the script is running, so the markup and the
-     list cannot drift apart. Without JavaScript the static three still work. */
-  const acts = document.querySelector('.sharebar__acts');
-  if (acts) {
-    acts.innerHTML = `<button class="sharebar__btn" data-share-copy>Copy link</button>`
-      + shareButtons(SITE_PITCH, SITE + '/', 'sharebar__btn');
-  }
 
   document.addEventListener('click', async e => {
     const sheet = e.target.closest('[data-share-sheet]');
@@ -1504,7 +1513,6 @@
       copy.textContent = 'Copy failed';
     }
   });
-
   /* ------------------------------------------------------ live plumbing */
 
   const refresh = debounce(async () => { await loadBoards(); if (!modal.hidden) return; refreshBoard(); }, 450);
