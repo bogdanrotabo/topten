@@ -18,10 +18,12 @@
     { slug: 'instagram', name: 'Instagram', color: '#e1306c', hosts: ['instagram.com'] },
     { slug: 'tiktok',    name: 'TikTok',    color: '#fe2c55', hosts: ['tiktok.com'] },
     { slug: 'youtube',   name: 'YouTube',   color: '#ff0000', hosts: ['youtube.com', 'youtu.be'] },
+    { slug: 'facebook',  name: 'Facebook',  color: '#1877f2', hosts: ['facebook.com', 'fb.com'] },
+    { slug: 'telegram',  name: 'Telegram',  color: '#26a5e4', hosts: ['t.me', 'telegram.me'] },
+    { slug: 'snapchat',  name: 'Snapchat',  color: '#fffc00', hosts: ['snapchat.com'] },
     { slug: 'twitch',    name: 'Twitch',    color: '#9146ff', hosts: ['twitch.tv'] },
     { slug: 'linkedin',  name: 'LinkedIn',  color: '#0a66c2', hosts: ['linkedin.com'] },
-    { slug: 'threads',   name: 'Threads',   color: '#c9c9c9', hosts: ['threads.net', 'threads.com'] },
-    { slug: 'facebook',  name: 'Facebook',  color: '#1877f2', hosts: ['facebook.com', 'fb.com'] }
+    { slug: 'threads',   name: 'Threads',   color: '#c9c9c9', hosts: ['threads.net', 'threads.com'] }
   ];
 
   const BY_SLUG = Object.fromEntries(PLATFORMS.map(p => [p.slug, p]));
@@ -36,7 +38,21 @@
     twitch: '<path fill="currentColor" d="M4.3 3 3 6.4v12.2h4.2V21h2.3l2.3-2.4h3.4L20 14.3V3zm14 10.5-2.6 2.6h-3.9l-2.3 2.3v-2.3H6.9V4.7h11.4zM15.4 7.6v4.7h-1.7V7.6zm-4.5 0v4.7H9.2V7.6z"/>',
     linkedin: '<path fill="currentColor" d="M20.4 3H3.6a.6.6 0 0 0-.6.6v16.8a.6.6 0 0 0 .6.6h16.8a.6.6 0 0 0 .6-.6V3.6a.6.6 0 0 0-.6-.6M8.3 18.3H5.5V9.7h2.8zM6.9 8.5a1.6 1.6 0 1 1 0-3.3 1.6 1.6 0 0 1 0 3.3m11.4 9.8h-2.8v-4.2c0-1 0-2.3-1.4-2.3s-1.6 1.1-1.6 2.2v4.3H9.7V9.7h2.7v1.2h.1a3 3 0 0 1 2.6-1.4c2.8 0 3.3 1.9 3.3 4.3z"/>',
     threads: '<path fill="currentColor" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>',
-    facebook: '<path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.3 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12"/>'
+    facebook: '<path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.3 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12"/>',
+    telegram: '<path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m4.6 6.8-1.5 7.3c-.1.5-.4.6-.8.4l-2.3-1.7-1.1 1.1c-.1.1-.2.2-.5.2l.2-2.5 4.4-4c.2-.2-.1-.3-.3-.1l-5.4 3.4-2.3-.7c-.5-.2-.5-.5.1-.8l9-3.4c.4-.2.8.1.5.8"/>',
+    snapchat: '<path fill="currentColor" d="M12 2.2c2.7 0 4.6 2 4.8 4.7v2c.3.1.7 0 1-.1.4-.2.9 0 1.1.4.2.4 0 .9-.4 1.1-.5.2-1 .4-1.5.5-.2.1-.3.3-.2.5.5 1.5 1.6 2.7 3 3.4.3.2.4.5.3.8-.3.8-1.4 1.1-2.2 1.2l-.2.9c-.1.2-.3.4-.5.4-.5 0-1-.1-1.5 0-.5.1-.9.4-1.3.7-.6.5-1.4.8-2.2.8s-1.6-.3-2.2-.8c-.4-.3-.8-.6-1.3-.7-.5-.1-1 0-1.5 0-.2 0-.4-.2-.5-.4l-.2-.9c-.8-.1-1.9-.4-2.2-1.2-.1-.3 0-.6.3-.8 1.4-.7 2.5-1.9 3-3.4.1-.2 0-.4-.2-.5-.5-.1-1-.3-1.5-.5-.4-.2-.6-.7-.4-1.1.2-.4.7-.6 1.1-.4.3.1.7.2 1 .1v-2c.2-2.7 2.1-4.7 4.8-4.7"/>'
+  };
+
+  /* The marks that are not one colour. Drawn full-size on the tiles and tabs
+     because "official logo" means the real thing, not a tinted silhouette.
+     TikTok is three offset copies of the note; Instagram is its gradient. */
+  const ICONS_FULL = {
+    tiktok:
+      '<path fill="#25f4ee" d="M15.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 13.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 18 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>' +
+      '<path fill="#fe2c55" d="M17.6 6.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 15.7 3h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6v-3.3a6 6 0 1 0 5.2 5.9V9.8A7.5 7.5 0 0 0 20 11.2V7.9a4.4 4.4 0 0 1-2.4-1.1"/>' +
+      '<path fill="#fff" d="M16.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 14.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 19 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>',
+    instagram:
+      '<path fill="url(#tt-ig)" d="M12 2c2.7 0 3 0 4.1.1 1 0 1.7.2 2.3.4.6.3 1.1.6 1.6 1.1s.8 1 1.1 1.6c.2.6.4 1.3.4 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c0 1-.2 1.7-.4 2.3-.3.6-.6 1.1-1.1 1.6s-1 .8-1.6 1.1c-.6.2-1.3.4-2.3.4-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1 0-1.7-.2-2.3-.4-.6-.3-1.1-.6-1.6-1.1s-.8-1-1.1-1.6c-.2-.6-.4-1.3-.4-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c0-1 .2-1.7.4-2.3.3-.6.6-1.1 1.1-1.6s1-.8 1.6-1.1c.6-.2 1.3-.4 2.3-.4C8.6 2 8.9 2 12 2m0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7s-.5.6-.7 1c-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.4.7.7 1s.6.5 1 .7c.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7s.5-.6.7-1c.1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7a2.8 2.8 0 0 0-1.7-1.7c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1m0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2m0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6m5.3-3.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4"/>'
   };
 
   const $ = sel => document.querySelector(sel);
@@ -50,7 +66,15 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  const icon = slug => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[slug] || ''}</svg>`;
+  /**
+   * `full` draws the platform's real colours — three-tone TikTok, the
+   * Instagram gradient — where there is room for them. Everywhere else the
+   * mark inherits currentColor so it can be tinted or dimmed.
+   */
+  const icon = (slug, full) => {
+    const body = (full && ICONS_FULL[slug]) || ICONS[slug] || '';
+    return `<svg viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
+  };
 
   function money(cents) {
     const n = Number(cents || 0) / 100;
@@ -109,7 +133,8 @@
   const PREFIXES = {
     youtube:  new Set(['c', 'user', 'channel']),
     linkedin: new Set(['in', 'company', 'school']),
-    facebook: new Set(['people', 'pg'])
+    facebook: new Set(['people', 'pg']),
+    snapchat: new Set(['add', 't'])
   };
 
   // A segment sitting after the handle that means "one piece of content".
@@ -299,7 +324,7 @@
         const on = p.slug === state.platform;
         const n = board(p.slug).length;
         return `<button class="tab" role="tab" aria-selected="${on}" data-tab="${p.slug}"
-                  style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
+                  style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug, true)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
       }).join('')}
     </div></div></div>`;
   }
@@ -310,7 +335,7 @@
     return `
     <div class="${cls}" data-row="${esc(row.id)}" title="${esc(row.handle)} — ${money(row.total_cents)}">
       <span class="row__rank">${rank}</span>
-      <span class="row__brand" style="color:${BY_SLUG[row.platform]?.color || 'var(--dim)'}">${icon(row.platform)}</span>
+      <span class="row__brand" style="color:${BY_SLUG[row.platform]?.color || 'var(--dim)'}">${icon(row.platform, true)}</span>
       <img class="row__av" loading="lazy" width="34" height="34" alt=""
            src="${esc(avatarUrl(row.platform, row.handle))}" onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
       <span class="row__handle"><a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a></span>
@@ -327,7 +352,7 @@
     return `
     <div class="row row--free" title="Place ${rank} is open">
       <span class="row__rank">${rank}</span>
-      <span class="row__brand" style="color:${BY_SLUG[slug]?.color || 'var(--dim)'}">${icon(slug)}</span>
+      <span class="row__brand" style="color:${BY_SLUG[slug]?.color || 'var(--dim)'}">${icon(slug, true)}</span>
       <span class="row__av"></span>
       <span class="row__slot">${money(price)}</span>
       <button class="row__add" data-claim="1" aria-label="Claim place ${rank}">Claim</button>
@@ -570,7 +595,7 @@
           ${PLATFORMS.map(p => `
             <button type="button" class="pick" data-pick="${p.slug}" aria-pressed="${p.slug === slug}"
                     style="--pick-brand:${p.color}" title="${esc(p.name)}"
-                    aria-label="${esc(p.name)}">${icon(p.slug)}</button>`).join('')}
+                    aria-label="${esc(p.name)}">${icon(p.slug, true)}</button>`).join('')}
         </div>
       </div>
 

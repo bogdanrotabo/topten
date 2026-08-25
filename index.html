@@ -31,6 +31,19 @@
 </head>
 <body>
 
+<!-- Instagram's mark is a gradient, not a flat colour. Defining it once here
+     keeps every inlined copy of the icon referencing one definition. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="tt-ig" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd521"/>
+      <stop offset=".26" stop-color="#f50000"/>
+      <stop offset=".62" stop-color="#b900b4"/>
+      <stop offset="1" stop-color="#4400c8"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <header class="masthead">
   <div class="shell masthead__row">
     <a class="wordmark" href="/" data-link>TopTen<b>.one</b></a>
