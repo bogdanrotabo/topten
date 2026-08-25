@@ -26,15 +26,17 @@
 
   const BY_SLUG = Object.fromEntries(PLATFORMS.map(p => [p.slug, p]));
 
+  // The platforms' own marks, used to say which board a listing sits on.
+  // Single-path where the brand allows it, so they scale down to 12px cleanly.
   const ICONS = {
-    x: '<path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/>',
-    instagram: '<rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.3" fill="currentColor"/>',
-    tiktok: '<path d="M9.2 17.4a3.4 3.4 0 1 0 3.4-3.4V3.6c1 2.7 2.9 4.1 5.6 4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    youtube: '<rect x="2.5" y="5" width="19" height="14" rx="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.4 9.1l5.2 2.9-5.2 2.9z" fill="currentColor"/>',
-    twitch: '<path d="M4 3h16v10.5L16 18h-3.2L9.6 21H8v-3H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M11.2 8v4M15.2 8v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    linkedin: '<rect x="3" y="3" width="18" height="18" rx="3.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7.6 10.6V17M11.6 17v-3.5a2.35 2.35 0 0 1 4.7 0V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="7.6" cy="7.4" r="1.15" fill="currentColor"/>',
-    threads: '<path d="M12.2 21a9 9 0 1 1 8.8-9v1.4a2.7 2.7 0 0 1-5.4 0V12a3.3 3.3 0 1 0-1.1 2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
-    facebook: '<path d="M14.4 21v-8h2.7l.5-3.2h-3.2V7.7c0-.9.3-1.5 1.7-1.5h1.7V3.3c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.2v2.4H8.4V13h2.7v8z" fill="currentColor"/>'
+    x: '<path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/>',
+    instagram: '<path fill="currentColor" d="M12 2c2.7 0 3 0 4.1.1 1 0 1.7.2 2.3.4.6.3 1.1.6 1.6 1.1s.8 1 1.1 1.6c.2.6.4 1.3.4 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c0 1-.2 1.7-.4 2.3-.3.6-.6 1.1-1.1 1.6s-1 .8-1.6 1.1c-.6.2-1.3.4-2.3.4-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1 0-1.7-.2-2.3-.4-.6-.3-1.1-.6-1.6-1.1s-.8-1-1.1-1.6c-.2-.6-.4-1.3-.4-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c0-1 .2-1.7.4-2.3.3-.6.6-1.1 1.1-1.6s1-.8 1.6-1.1c.6-.2 1.3-.4 2.3-.4C8.6 2 8.9 2 12 2m0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7s-.5.6-.7 1c-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.4.7.7 1s.6.5 1 .7c.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7s.5-.6.7-1c.1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7a2.8 2.8 0 0 0-1.7-1.7c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1m0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2m0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6m5.3-3.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4"/>',
+    tiktok: '<path fill="currentColor" d="M16.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 14.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 19 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>',
+    youtube: '<path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.3 5 12 5 12 5s-6.3 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8A26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.7 19 12 19 12 19s6.3 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8M10 15V9l5.2 3z"/>',
+    twitch: '<path fill="currentColor" d="M4.3 3 3 6.4v12.2h4.2V21h2.3l2.3-2.4h3.4L20 14.3V3zm14 10.5-2.6 2.6h-3.9l-2.3 2.3v-2.3H6.9V4.7h11.4zM15.4 7.6v4.7h-1.7V7.6zm-4.5 0v4.7H9.2V7.6z"/>',
+    linkedin: '<path fill="currentColor" d="M20.4 3H3.6a.6.6 0 0 0-.6.6v16.8a.6.6 0 0 0 .6.6h16.8a.6.6 0 0 0 .6-.6V3.6a.6.6 0 0 0-.6-.6M8.3 18.3H5.5V9.7h2.8zM6.9 8.5a1.6 1.6 0 1 1 0-3.3 1.6 1.6 0 0 1 0 3.3m11.4 9.8h-2.8v-4.2c0-1 0-2.3-1.4-2.3s-1.6 1.1-1.6 2.2v4.3H9.7V9.7h2.7v1.2h.1a3 3 0 0 1 2.6-1.4c2.8 0 3.3 1.9 3.3 4.3z"/>',
+    threads: '<path fill="currentColor" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>',
+    facebook: '<path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.3 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12"/>'
   };
 
   const $ = sel => document.querySelector(sel);
@@ -305,6 +307,7 @@
     return `
     <div class="${cls}" data-row="${esc(row.id)}" title="${esc(row.handle)} — ${money(row.total_cents)}">
       <span class="row__rank">${rank}</span>
+      <span class="row__brand" style="color:${BY_SLUG[row.platform]?.color || 'var(--dim)'}">${icon(row.platform)}</span>
       <img class="row__av" loading="lazy" width="34" height="34" alt=""
            src="${esc(avatarUrl(row.platform, row.handle))}" onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
       <span class="row__handle"><a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a></span>
@@ -321,6 +324,7 @@
     return `
     <div class="row row--free" title="Place ${rank} is open">
       <span class="row__rank">${rank}</span>
+      <span class="row__brand" style="color:${BY_SLUG[slug]?.color || 'var(--dim)'}">${icon(slug)}</span>
       <span class="row__av"></span>
       <span class="row__slot">${money(price)}</span>
       <button class="row__add" data-claim="1" aria-label="Claim place ${rank}">Claim</button>
