@@ -10,8 +10,10 @@ window.TOPTEN_CONFIG = {
   // Until this is set, the pay buttons say payments are not configured.
   STRIPE_PAYMENT_LINK: "https://buy.stripe.com/28EdR2eZoaV76yy2C00co0d",
 
-  // Google Analytics 4 measurement ID, e.g. G-XXXXXXXXXX. Empty disables analytics.
-  GA_MEASUREMENT_ID: "",
+  // Google Analytics 4, property "TopTen.one", stream 15497843288.
+  // Its own property, not a second stream on Rotabo's — mixing two sites into
+  // one property makes every report meaningless. Empty disables analytics.
+  GA_MEASUREMENT_ID: "G-NYF4ZEZPZ9",
 
   // Where reports and contact go.
   CONTACT_EMAIL: "hello@topten.one"
