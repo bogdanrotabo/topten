@@ -11,6 +11,7 @@
   const MAX_CENTS = 1000000;
   const ACTIVE_DAYS = 30;
   const LS_LAST = 'topten:last-listing';
+  const LS_AMOUNT = 'topten:last-amount';
 
   const PLATFORMS = [
     { slug: 'x',         name: 'X',         color: '#e7e9ea', hosts: ['x.com', 'twitter.com'] },
@@ -69,6 +70,29 @@
 
   const FALLBACK_AV = 'data:image/svg+xml;utf8,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#171a22"/><circle cx="22" cy="17" r="7" fill="#2b303b"/><path d="M8 42c2-8 7-12 14-12s12 4 14 12z" fill="#2b303b"/></svg>');
+
+  /**
+   * crypto.randomUUID() only exists in a secure context, and GitHub Pages
+   * answers on plain http until Enforce HTTPS is on. Anyone who reached the
+   * site over http used to get a TypeError here, which left the pay button
+   * frozen on "Setting up…". crypto.getRandomValues is not gated the same way,
+   * so build the v4 uuid by hand when the shortcut is missing.
+   */
+  function uuid() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    const b = new Uint8Array(16);
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      crypto.getRandomValues(b);
+    } else {
+      for (let i = 0; i < 16; i++) b[i] = (Math.random() * 256) | 0;
+    }
+    b[6] = (b[6] & 0x0f) | 0x40;   // version 4
+    b[8] = (b[8] & 0x3f) | 0x80;   // variant 10
+    const h = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+    return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  }
 
   function debounce(fn, ms) {
     let t;
@@ -499,7 +523,8 @@
                  placeholder="Any amount" aria-label="Custom amount in US dollars">
         </div>
       </div>
-      <div class="verdict" id="verdict"></div>`;
+      <div class="verdict" id="verdict"></div>
+      <p class="finelist" id="amount-echo" style="margin:-6px 0 10px;text-align:center"></p>`;
   }
 
   function submitModal(preslug) {
@@ -546,6 +571,7 @@
         <li>Payments are final. No refunds.</li>
         <li>A listing stays on the board for 30 days after its last payment.</li>
         <li>Anyone can add money to any listing, including yours.</li>
+        <li>Checkout is handled by Stripe, billed as Rotabo.</li>
       </ul>`);
 
     wireAmounts(slug, 0, null);
@@ -574,6 +600,7 @@
       <ul class="finelist">
         <li>Payments are final. No refunds.</li>
         <li>This resets the listing's 30-day clock.</li>
+        <li>Checkout is handled by Stripe, billed as Rotabo.</li>
       </ul>`);
 
     wireAmounts(row.platform, row.total_cents, row.id);
@@ -611,7 +638,15 @@
         ? `This puts you at <b>#${r}</b> on ${esc(BY_SLUG[slug].name)}`
         : `This puts you at <b>#${r}</b> — ${money(clampMin(nextDollarAbove(cutoffCents(slug)) - current))} reaches the Top 10`;
       const go = $('#go');
-      if (go) go.disabled = exceptId ? false : !state.draft.url;
+      if (go) {
+        go.disabled = exceptId ? false : !state.draft.url;
+        // Stripe cannot be handed the amount through a payment link, so the
+        // buyer types it there. Put the figure on the button and repeat it on
+        // the next screen rather than sending them to a form showing $0.00.
+        go.textContent = `Continue — pay ${money(cents)}`;
+      }
+      const echo = $('#amount-echo');
+      if (echo) echo.textContent = `Stripe will ask you to type the amount. Enter ${money(cents)}.`;
     };
 
     wrap.addEventListener('click', e => {
@@ -683,38 +718,48 @@
 
   async function createAndPay() {
     const go = $('#go');
+    const restore = () => { go.disabled = false; go.textContent = 'Continue to payment'; };
     go.disabled = true;
     go.textContent = 'Setting up…';
 
     const { slug, url, handle, tagline } = state.draft;
-    const id = crypto.randomUUID();
 
-    // Insert without .select(): the RLS SELECT policy hides an unpaid row, so
-    // asking for it back would fail even though the insert succeeded.
-    const { error } = await sb.from('listings').insert({
-      id, platform: slug, url, handle, tagline: tagline || null
-    }, { returning: 'minimal' });
+    // Anything unexpected in here used to leave the button stuck on
+    // "Setting up…" with no way forward. Never strand the buyer.
+    try {
+      const id = uuid();
 
-    if (error) {
-      const duplicate = error.code === '23505' || /duplicate key/i.test(error.message || '');
-      if (duplicate) {
+      // Insert without asking for the row back: the RLS SELECT policy hides an
+      // unpaid listing, so a returning insert would fail even on success.
+      const { error } = await sb.from('listings').insert({
+        id, platform: slug, url, handle, tagline: tagline || null
+      });
+
+      if (error) {
+        const duplicate = error.code === '23505' || /duplicate key/i.test(error.message || '');
+        if (!duplicate) throw error;
+
         const { data: existing } = await sb.rpc('lookup_listing', { p_platform: slug, p_url: url });
-        if (existing) {
-          const row = board(slug).find(r => r.id === existing);
-          if (row) { addMoneyModal(row); return; }
-          goToStripe(existing);           // listed but not on the board yet
+        if (!existing) {
+          go.textContent = 'That profile cannot be listed';
           return;
         }
-        go.textContent = 'That profile cannot be listed';
+        const row = board(slug).find(r => r.id === existing);
+        if (row) { addMoneyModal(row); return; }
+        goToStripe(existing);             // listed, but not on the board yet
         return;
       }
-      console.error('insert failed', error);
-      go.disabled = false;
-      go.textContent = 'Something went wrong — try again';
-      return;
-    }
 
-    goToStripe(id);
+      goToStripe(id);
+    } catch (err) {
+      console.error('could not start checkout', err);
+      restore();
+      const hint = $('#verdict');
+      if (hint) {
+        hint.className = 'verdict verdict--bad';
+        hint.textContent = 'Could not reach the payment page. Check your connection and try again.';
+      }
+    }
   }
 
   function goToStripe(listingId) {
@@ -722,6 +767,10 @@
     if (!link) { alert('Payments are not configured yet.'); return; }
     // The success URL cannot be trusted to carry the id back, so remember it.
     try { localStorage.setItem(LS_LAST, listingId); } catch { /* private mode */ }
+    // Stripe payment links cannot be pre-filled with a custom amount, so the
+    // buyer types it on Stripe's page. Carry it across so the amount they
+    // picked here is the amount they see there.
+    try { localStorage.setItem(LS_AMOUNT, String(state.draft?.cents || 0)); } catch { /* ignore */ }
     const sep = link.includes('?') ? '&' : '?';
     window.location.href = `${link}${sep}client_reference_id=${encodeURIComponent(listingId)}`;
   }
@@ -987,7 +1036,7 @@
       .on('postgres_changes', { event: '*', schema: 'public', table: 'listings' }, refresh)
       .subscribe();
 
-    const presence = sb.channel('who', { config: { presence: { key: crypto.randomUUID() } } });
+    const presence = sb.channel('who', { config: { presence: { key: uuid() } } });
     presence
       .on('presence', { event: 'sync' }, () => {
         state.online = Object.keys(presence.presenceState()).length || 1;
