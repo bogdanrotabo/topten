@@ -153,7 +153,7 @@ img { max-width: 100%; }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
-  margin: 20px 0 6px;
+  margin: 14px 0 4px;
   background: var(--line-soft);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
@@ -202,25 +202,6 @@ img { max-width: 100%; }
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: .35; transform: scale(.8); }
-}
-
-/* Shorter phones — an SE is 148px less tall than a Pro. Everything above the
-   board gives up a little so the tenth place still lands above the fold.
-   Keyed on height, not width: this is a vertical-space problem. */
-@media (max-height: 720px) {
-  .hero { padding: 10px 0 6px; }
-  .hero h1 { font-size: 26px; }
-  .hero__tag { font-size: 17px; margin-top: 6px; }
-  .hero__sub { display: none; }
-  .stats { margin: 12px 0 4px; }
-  .stat { padding: 7px 4px; }
-  .stat__v { font-size: 14px; }
-  .tabs__grid { padding: 5px 0; gap: 4px; }
-  .tab { padding: 5px 3px; }
-  .board { padding: 12px 0 100px; }
-  .tobeat { padding: 10px 12px; margin-bottom: 10px; }
-  .tobeat__v { font-size: 26px; }
-  .tobeat__cta { padding: 9px 13px; font-size: 13px; }
 }
 
 /* ------------------------------------------------------------------- tabs */
@@ -591,13 +572,19 @@ img { max-width: 100%; }
 
 /* ------------------------------------------------------------- sticky cta */
 
+/* Always on screen — it is the whole point of the page. The board above is
+   sized so its bottom row clears this rather than hiding behind it. */
 .sticky {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 45;
-  padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, transparent, rgba(8, 9, 12, .92) 32%);
+  padding: 7px var(--pad) calc(7px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, transparent, rgba(8, 9, 12, .94) 34%);
   pointer-events: none;
+}
+
+@media (min-width: 560px) {
+  .sticky { padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom)); }
 }
 
 .sticky__inner {
@@ -609,16 +596,20 @@ img { max-width: 100%; }
 .btn {
   display: block;
   width: 100%;
-  padding: 15px 18px;
+  padding: 13px 18px;
   border-radius: 999px;
   background: var(--accent);
   color: var(--accent-ink);
   font-weight: 800;
-  font-size: 16px;
+  font-size: 15.5px;
   letter-spacing: -.01em;
   text-align: center;
   text-decoration: none;
   box-shadow: 0 8px 30px -8px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+@media (min-width: 560px) {
+  .btn { padding: 15px 18px; font-size: 16px; }
 }
 
 .btn:disabled { opacity: .45; box-shadow: none; cursor: not-allowed; }
@@ -924,3 +915,36 @@ img { max-width: 100%; }
 }
 
 @keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+/* --------------------------------------------------------- short screens ---
+
+   An SE is 148px shorter than a Pro, and the tenth tile has to clear the
+   sticky button on both. Everything above the board gives up a few pixels;
+   the big wordmark goes entirely, since the masthead already carries it.
+
+   Keyed on height rather than width — this is a vertical-space problem — and
+   deliberately last in the file, so it outranks the base rules it trims. */
+
+@media (max-height: 760px) {
+  .hero { padding: 8px 0 4px; }
+  .hero h1 { display: none; }
+  .hero__tag { font-size: 18px; margin: 0; }
+  .hero__sub { display: none; }
+
+  .stats { margin: 10px 0 2px; }
+  .stat { padding: 6px 4px; }
+  .stat__v { font-size: 14px; }
+  .stat__k { font-size: 9px; }
+
+  .tabs__grid { padding: 5px 0; gap: 4px; }
+  .tab { padding: 5px 3px; }
+
+  .board { padding: 8px 0 92px; }
+  .rows { gap: 5px; }
+
+  .tobeat { padding: 7px 11px; margin-bottom: 8px; }
+  .tobeat__k { font-size: 10px; }
+  .tobeat__v { font-size: 21px; }
+  .tobeat__who { font-size: 11px; }
+  .tobeat__cta { padding: 8px 12px; font-size: 12.5px; }
+}

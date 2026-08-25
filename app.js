@@ -407,7 +407,7 @@
       </div>
       ${renderTabs()}
       <div id="board-slot">${renderBoard()}</div>`;
-    watchStickyCta();
+    sticky.hidden = false;
     $('#cta-claim').textContent = board(state.platform).length
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
       : 'Claim a spot';
@@ -456,27 +456,6 @@
     if (cta) cta.textContent = board(state.platform).length
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
       : 'Claim a spot';
-  }
-
-  /**
-   * The sticky bar sat over the bottom row of tiles, so the board never really
-   * showed all ten at once on a phone. The board header already carries a CTA
-   * with the exact price on it, so the bar only needs to exist once that header
-   * has scrolled away.
-   */
-  function watchStickyCta() {
-    const anchor = document.querySelector('.tobeat');
-    if (!anchor || typeof IntersectionObserver !== 'function') {
-      sticky.hidden = false;
-      return;
-    }
-    if (state.ctaWatcher) state.ctaWatcher.disconnect();
-    sticky.hidden = true;
-    state.ctaWatcher = new IntersectionObserver(
-      ([entry]) => { sticky.hidden = entry.isIntersecting; },
-      { threshold: 0 }
-    );
-    state.ctaWatcher.observe(anchor);
   }
 
   /** Remember where every listing sits, so the next refresh can animate movement. */
