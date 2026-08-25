@@ -912,12 +912,20 @@ img { max-width: 100%; }
   color: var(--dim);
 }
 
+.sponsor__logo {
+  width: 26px;
+  height: 26px;
+  display: block;
+  object-fit: contain;
+}
+
 .sponsor__brand {
   font-size: 17px;
   font-weight: 800;
   letter-spacing: -.02em;
   color: var(--text);
   text-decoration: none;
+  margin-right: 2px;
 }
 
 .sponsor__brand b { color: #9b3faf; }
@@ -938,19 +946,17 @@ img { max-width: 100%; }
 
 .sponsor__site:hover { color: var(--text); border-color: #9b3faf; }
 
+/* A link, not a button — the mark alone, small, so it sits beside the
+   wordmark instead of competing with it. */
 .sponsor__x {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 27px; height: 27px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--elev-2);
-  color: var(--muted);
+  line-height: 0;
+  color: var(--dim);
 }
 
-.sponsor__x svg { width: 12px; height: 12px; }
-.sponsor__x:hover { color: var(--text); border-color: var(--muted); }
+.sponsor__x svg { width: 13px; height: 13px; }
+.sponsor__x:hover { color: var(--text); }
 
 .foot nav { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 .foot a { color: var(--muted); text-decoration: none; }
