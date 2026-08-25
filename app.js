@@ -300,30 +300,30 @@
   }
 
   function renderRow(row, idx) {
-    const p = BY_SLUG[row.platform];
     const rank = idx + 1;
-    const cls = ['row', rank <= 10 ? 'row--top' : '', rank === 1 ? 'row--1' : ''].filter(Boolean).join(' ');
-    const report = `mailto:${CFG.CONTACT_EMAIL || 'hello@topten.one'}?subject=${encodeURIComponent('Report listing ' + row.id)}&body=${encodeURIComponent('Listing: ' + row.id + '\nProfile: ' + row.url + '\n\nWhy this should be reviewed:\n')}`;
+    const cls = ['row', 'row--top', rank === 1 ? 'row--1' : ''].filter(Boolean).join(' ');
     return `
-    <div class="${cls}" data-row="${esc(row.id)}">
-      <div class="row__rank">${rank}</div>
-      <img class="row__av" loading="lazy" width="44" height="44" alt=""
+    <div class="${cls}" data-row="${esc(row.id)}" title="${esc(row.handle)} — ${money(row.total_cents)}">
+      <span class="row__rank">${rank}</span>
+      <img class="row__av" loading="lazy" width="34" height="34" alt=""
            src="${esc(avatarUrl(row.platform, row.handle))}" onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
-      <div class="row__main">
-        <div class="row__handle">
-          <a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a>
-        </div>
-        ${row.tagline ? `<div class="row__tagline">${esc(row.tagline)}</div>` : ''}
-      </div>
-      <div class="row__right">
-        <div class="row__amt">${money(row.total_cents)}</div>
-        <button class="row__add" data-add="${esc(row.id)}">Add money</button>
-      </div>
-      <div class="row__meta">
-        <a href="/badge/?p=${esc(row.platform)}&amp;h=${encodeURIComponent(row.handle)}" data-link>Badge</a>
-        <a href="${esc(report)}">Report</a>
-        <span>${esc(p?.name || row.platform)}</span>
-      </div>
+      <span class="row__handle"><a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a></span>
+      <span class="row__amt">${money(row.total_cents)}</span>
+      <button class="row__add" data-add="${esc(row.id)}" aria-label="Add money to ${esc(row.handle)}">Add money</button>
+    </div>`;
+  }
+
+  /** An unclaimed place. Showing it beats hiding it — it names its own price. */
+  function renderFreeSlot(rank, slug) {
+    const price = rank === 1
+      ? clampMin(nextDollarAbove(topCents(slug)))
+      : clampMin(nextDollarAbove(board(slug)[rank - 2]?.total_cents || 0));
+    return `
+    <div class="row row--free" title="Place ${rank} is open">
+      <span class="row__rank">${rank}</span>
+      <span class="row__av"></span>
+      <span class="row__slot">${money(price)}</span>
+      <button class="row__add" data-claim="1" aria-label="Claim place ${rank}">Claim</button>
     </div>`;
   }
 
@@ -348,18 +348,25 @@
           <span class="tobeat__who">${esc(lead.handle)}</span>
         </div>
         <button class="tobeat__cta" data-claim="1">Beat it for ${money(clampMin(nextDollarAbove(lead.total_cents)))}</button>
-      </div>` : '';
+      </div>` : `
+      <div class="tobeat">
+        <div>
+          <span class="tobeat__k">Nobody on ${esc(p.name)} yet</span>
+          <span class="tobeat__v">${money(MIN_CENTS)}</span>
+          <span class="tobeat__who">takes #1 right now</span>
+        </div>
+        <button class="tobeat__cta" data-claim="1">Take #1</button>
+      </div>`;
 
-    const top10 = rows.slice(0, 10);
     const rest = rows.slice(10);
 
-    const body = top10.length
-      ? `<div class="rows">${top10.map(renderRow).join('')}</div>`
-      : `<div class="empty">
-           <h3>No one on ${esc(p.name)} yet</h3>
-           <p>The first listing takes #1 for ${money(MIN_CENTS)}.</p>
-           <button class="btn" data-claim="1">Take #1 for ${money(MIN_CENTS)}</button>
-         </div>`;
+    // Always ten tiles. A half-drawn board reads as broken; ten places with
+    // gaps reads as an invitation, and each gap prints its own price.
+    const tiles = [];
+    for (let i = 0; i < 10; i++) {
+      tiles.push(rows[i] ? renderRow(rows[i], i) : renderFreeSlot(i + 1, slug));
+    }
+    const body = `<div class="rows">${tiles.join('')}</div>`;
 
     const gap = rows.length >= 10 ? clampMin(nextDollarAbove(cutoffCents(slug))) : MIN_CENTS;
 

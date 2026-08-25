@@ -311,41 +311,53 @@ img { max-width: 100%; }
 
 /* ------------------------------------------------------------------ cards */
 
-.rows { display: flex; flex-direction: column; gap: 8px; }
+/* Ten places, two rows of five, no scrolling. A Top 10 you have to scroll is
+   not a Top 10 you can read at a glance, and the whole product is the glance. */
+.rows {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
 
 .row {
-  display: grid;
-  grid-template-columns: 38px 44px 1fr auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: 2px;
+  min-width: 0;
+  padding: 20px 3px 8px;
   border: 1px solid var(--line-soft);
-  border-radius: var(--radius);
+  border-radius: 12px;
   background: var(--elev);
-  transition: background .2s, border-color .2s, transform .2s;
+  text-align: center;
+  transition: border-color .2s, transform .2s, background .2s;
 }
 
 .row--top { border-color: var(--line); background: var(--elev-2); }
 
 .row--1 {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, var(--elev-2)), var(--elev));
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, var(--elev-2)), var(--elev));
 }
 
 .row__rank {
+  position: absolute;
+  top: 4px;
+  left: 0; right: 0;
   font-family: var(--num);
-  font-size: 20px;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: -.04em;
+  line-height: 1;
+  letter-spacing: -.03em;
   color: var(--dim);
-  text-align: right;
 }
 
-.row--top .row__rank { color: var(--text); }
-.row--1 .row__rank { color: var(--accent); font-size: 24px; }
+.row--top .row__rank { color: var(--muted); }
+.row--1 .row__rank { color: var(--accent); }
 
 .row__av {
-  width: 44px; height: 44px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   background: var(--elev-2);
   border: 1px solid var(--line);
@@ -353,69 +365,83 @@ img { max-width: 100%; }
   display: block;
 }
 
-.row__main { min-width: 0; }
+.row--1 .row__av { border-color: var(--accent); }
+
+.row__main { min-width: 0; width: 100%; }
 
 .row__handle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display: block;
+  width: 100%;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 10px;
   letter-spacing: -.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.row__handle a { text-decoration: none; }
-.row__handle a:hover { text-decoration: underline; }
+/* Sits above the full-tile button, so the handle opens the profile and
+   everywhere else on the tile means "add money". */
+.row__handle a { text-decoration: none; position: relative; z-index: 2; }
 
-.row__tagline {
-  margin-top: 1px;
-  font-size: 13px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.row__right { text-align: right; }
+/* No room for a tagline in a tile; it lives on the badge and the waiting list. */
+.row__tagline { display: none; }
 
 .row__amt {
   font-family: var(--num);
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 800;
   letter-spacing: -.02em;
   white-space: nowrap;
+  color: var(--muted);
 }
 
+.row--top .row__amt { color: var(--text); }
 .row--1 .row__amt { color: var(--accent); }
 
+/* The whole tile is the tap target on a phone; the explicit button is for pointers. */
 .row__add {
-  margin-top: 4px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--elev-2);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  white-space: nowrap;
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  border: 0;
+  background: none;
+  font-size: 0;
+  color: transparent;
 }
 
-.row__add:hover { color: var(--text); border-color: var(--brand); }
+.row__add:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); }
+.row__meta { display: none; }
 
-.row__meta {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 12px;
-  padding-left: 48px;
-  font-size: 11px;
+/* An unclaimed place is still a place. Showing it empty is the invitation. */
+.row--free {
+  border-style: dashed;
+  border-color: var(--line);
+  background: transparent;
+}
+
+.row--free .row__slot {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
   color: var(--dim);
 }
 
-.row__meta a { color: var(--dim); text-decoration: none; }
-.row__meta a:hover { color: var(--muted); text-decoration: underline; }
+.row--free .row__av {
+  border-style: dashed;
+  background: transparent;
+}
+
+@media (min-width: 560px) {
+  .rows { gap: 10px; }
+  .row { padding: 26px 6px 12px; gap: 4px; }
+  .row__rank { font-size: 15px; top: 7px; }
+  .row__av { width: 46px; height: 46px; }
+  .row__handle { font-size: 12px; }
+  .row__amt { font-size: 14px; }
+  .row--free .row__slot { font-size: 11px; }
+}
 
 /* an existing row that just lost or gained a position */
 .row--bumped { animation: bump .7s cubic-bezier(.2, .9, .25, 1); }
