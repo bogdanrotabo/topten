@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy — TopTen.one</title>
+<meta name="description" content="What TopTen.one stores, what it does not, and how to get a listing removed.">
+<link rel="canonical" href="https://topten.one/privacy.html">
+<meta name="theme-color" content="#08090c">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Privacy — TopTen.one">
+<meta property="og:description" content="No accounts, no logins. Here is exactly what is stored.">
+<meta property="og:image" content="https://topten.one/og-image.png">
+<meta property="og:url" content="https://topten.one/privacy.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="shell masthead__row">
+    <a class="wordmark" href="/">TopTen<b>.one</b></a>
+  </div>
+</header>
+
+<main class="shell prose">
+  <h1>Privacy</h1>
+  <p class="updated">Last updated 25 August 2026.</p>
+
+  <p>TopTen.one has no accounts and no logins. We collect as little as a public
+  leaderboard can work with.</p>
+
+  <h2>What we store</h2>
+  <p>For each listing: the <strong>profile link</strong> you submit, the handle derived
+  from it, an optional 80-character tagline, the running total paid towards it, and the
+  time of the last payment. All of this is public by design — it is the board.</p>
+  <p>For each payment: the Stripe session identifier, the amount and the currency, linked
+  to the listing it paid for. This is not shown publicly.</p>
+
+  <h2>What we do not store</h2>
+  <p>No card numbers, no billing addresses, no email addresses, no passwords, no accounts.
+  Payments are processed entirely by <a href="https://stripe.com/privacy" rel="noopener">Stripe</a>,
+  which acts as its own controller for the payment data you give it. We receive back only
+  the amount and a session identifier.</p>
+  <p>We do not ask who you are when you submit a listing, and we cannot tell you who paid
+  towards one.</p>
+
+  <h2>Analytics</h2>
+  <p>We use Google Analytics 4 to count page views and see which boards get traffic. It sets
+  its own cookies and processes an abbreviated IP address.
+  See <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a>.
+  Browser Do Not Track and content blockers are respected — the site works fine without it.</p>
+
+  <h2>Avatars</h2>
+  <p>Profile pictures on the boards are fetched by your browser from
+  <a href="https://unavatar.io" rel="noopener">unavatar.io</a> using the public handle.
+  That request comes from your browser, so unavatar.io sees your IP address. We do not
+  upload or host any images of people.</p>
+
+  <h2>Local storage</h2>
+  <p>We keep one value in your browser's local storage: the id of the listing you last paid
+  for, so the thank-you page can find it after you come back from Stripe. Clearing your
+  browser data removes it. It is never sent anywhere except to look up a public board row.</p>
+
+  <h2>Being listed by someone else</h2>
+  <p>Anyone can submit any public profile link, including yours. If you want a listing about
+  you removed, email <a href="mailto:hello@topten.one">hello@topten.one</a> with the link and
+  we will take it down. We do not require proof of identity for a removal request, and no
+  refund is owed to whoever paid for it.</p>
+
+  <h2>Retention and your rights</h2>
+  <p>Listings stop being displayed 30 days after their last payment. Listing and payment
+  records are kept for accounting purposes. Under Swiss data protection law and the GDPR you
+  may ask for access, correction or deletion of data concerning you — write to
+  <a href="mailto:hello@topten.one">hello@topten.one</a>.</p>
+
+  <h2>Where things run</h2>
+  <p>The site is served by GitHub Pages through Cloudflare. The database and the payment
+  webhook run on Supabase in the EU (Frankfurt). Payments run on Stripe. TopTen.one is
+  operated from Switzerland.</p>
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <nav>
+      <a href="/">Boards</a>
+      <a href="/about.html">About</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+    <p>🇨🇭 Made in Switzerland · Available worldwide</p>
+  </div>
+</footer>
+
+</body>
+</html>

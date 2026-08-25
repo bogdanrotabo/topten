@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TopTen.one — Be the one.</title>
+<meta name="description" content="Pay to be seen. Top 10 per platform. No algorithm. Submit any social profile, pay any amount, and the money decides the rank.">
+<link rel="canonical" href="https://topten.one/">
+
+<meta name="theme-color" content="#08090c">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TopTen.one">
+<meta property="og:title" content="TopTen.one — Be the one.">
+<meta property="og:description" content="Pay to be seen. Top 10 per platform. No algorithm.">
+<meta property="og:image" content="https://topten.one/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://topten.one/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TopTen.one — Be the one.">
+<meta name="twitter:description" content="Pay to be seen. Top 10 per platform. No algorithm.">
+<meta name="twitter:image" content="https://topten.one/og-image.png">
+
+<link rel="preconnect" href="https://unavatar.io" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="shell masthead__row">
+    <a class="wordmark" href="/" data-link>TopTen<b>.one</b></a>
+    <span class="stat--live" id="mast-live" hidden><span class="pulse"></span><span id="mast-live-n">0</span></span>
+  </div>
+</header>
+
+<main id="view" aria-live="polite">
+  <div class="shell board">
+    <div class="rows">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="#" id="foot-contact">Contact</a>
+    </nav>
+    <p>🇨🇭 Made in Switzerland · Available worldwide</p>
+    <p style="font-size:11px;max-width:56ch;margin:8px auto 0">
+      Not affiliated with X, Instagram, TikTok, YouTube, Twitch, LinkedIn, Threads or Facebook.
+      Rank is decided by money paid. All payments are final.
+    </p>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky" hidden>
+  <div class="sticky__inner">
+    <button class="btn" id="cta-claim">Claim a spot</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal__panel" id="modal-panel"></div>
+</div>
+
+<canvas id="confetti" hidden></canvas>
+
+<script src="/config.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script defer src="/app.js"></script>
+</body>
+</html>
