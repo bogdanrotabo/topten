@@ -933,31 +933,6 @@ img { max-width: 100%; }
 
 .sponsor__tag { font-size: 12px; color: var(--muted); }
 
-.sponsor__site {
-  padding: 5px 11px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--elev-2);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.sponsor__site:hover { color: var(--text); border-color: #9b3faf; }
-
-/* A link, not a button — the mark alone, small, so it sits beside the
-   wordmark instead of competing with it. */
-.sponsor__x {
-  display: inline-flex;
-  align-items: center;
-  line-height: 0;
-  color: var(--dim);
-}
-
-.sponsor__x svg { width: 13px; height: 13px; }
-.sponsor__x:hover { color: var(--text); }
-
 .foot nav { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 .foot a { color: var(--muted); text-decoration: none; }
 .foot a:hover { color: var(--text); }
