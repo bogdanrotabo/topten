@@ -370,6 +370,9 @@
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
       : 'Claim a spot';
     document.title = `Top 10 on ${BY_SLUG[state.platform].name} — TopTen.one`;
+    // Baseline for the outbid animation. Must happen after the platform is
+    // settled, or the first live change has nothing to compare against.
+    snapshotRanks();
   }
 
   /** Re-render only the board, animating rows whose position moved. */
@@ -400,6 +403,12 @@
     if (cta) cta.textContent = board(state.platform).length
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
       : 'Claim a spot';
+  }
+
+  /** Remember where every listing sits, so the next refresh can animate movement. */
+  function snapshotRanks() {
+    state.prevRanks = {};
+    board(state.platform).forEach((r, i) => { state.prevRanks[r.id] = i + 1; });
   }
 
   /* ------------------------------------------------------------- modals */
@@ -927,7 +936,6 @@
     const tab = e.target.closest('[data-tab]');
     if (tab) {
       state.platform = tab.dataset.tab;
-      state.prevRanks = {};
       history.replaceState({}, '', `/?p=${state.platform}`);
       renderHome();
       return;
@@ -988,7 +996,6 @@
     initSupabase();
     loadAnalytics();
     if (sb) await loadBoards();
-    board(state.platform).forEach((r, i) => { state.prevRanks[r.id] = i + 1; });
     route();
     subscribe();
     // Expired listings drop off silently, so re-read on a slow timer too.
