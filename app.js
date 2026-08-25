@@ -9,6 +9,9 @@
   // account asks support to raise it. Totals are cumulative, so this caps a
   // single payment, never how high a listing can climb.
   const MAX_CENTS = 1000000;
+  // Mirrors the CHECK constraint on listings.tagline. The database truncates
+  // silently past this, so the forms must never let anyone reach it unaware.
+  const TAG_MAX = 80;
   const ACTIVE_DAYS = 30;
   const LS_LAST = 'topten:last-listing';
   const LS_AMOUNT = 'topten:last-amount';
@@ -126,6 +129,26 @@
     const body = (full && ICONS_FULL[slug]) || ICONS[slug] || '';
     return `<svg viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
   };
+
+  /**
+   * `maxlength` stops the typing but says nothing about it, so a sentence that
+   * runs long is cut off and submitted without the writer ever noticing. The
+   * first listing somebody else made ended mid-word: "...naturală, ia". Count
+   * the remaining room out loud so the sentence gets finished instead.
+   * Returns the updater so callers that already listen for `input` can reuse it.
+   */
+  function countTagline(input, hint) {
+    const update = () => {
+      const left = TAG_MAX - input.value.length;
+      hint.textContent = left === 0
+        ? 'Full — anything more will not fit.'
+        : `${left} character${left === 1 ? '' : 's'} left`;
+      hint.classList.toggle('hint--bad', left === 0);
+    };
+    input.addEventListener('input', update);
+    update();
+    return update;
+  }
 
   function money(cents) {
     const n = Number(cents || 0) / 100;
@@ -664,8 +687,9 @@
       </div>
 
       <div class="field">
-        <label for="tag-input">Tagline <span style="text-transform:none;letter-spacing:0">— optional, 80 characters</span></label>
-        <input class="input" id="tag-input" maxlength="80" placeholder="One line about you">
+        <label for="tag-input">Tagline <span style="text-transform:none;letter-spacing:0">— optional</span></label>
+        <input class="input" id="tag-input" maxlength="${TAG_MAX}" placeholder="One line about you">
+        <div class="hint" id="tag-hint"></div>
       </div>
 
       <div class="field">
@@ -763,9 +787,10 @@
       </div>
 
       <div class="field">
-        <label for="edit-tag">Tagline <span style="text-transform:none;letter-spacing:0">— 80 characters</span></label>
-        <input class="input" id="edit-tag" maxlength="80" value="${esc(row.tagline || '')}"
+        <label for="edit-tag">Tagline</label>
+        <input class="input" id="edit-tag" maxlength="${TAG_MAX}" value="${esc(row.tagline || '')}"
                placeholder="One line about you">
+        <div class="hint" id="edit-tag-hint"></div>
       </div>
 
       <div class="field">
@@ -777,6 +802,8 @@
       </div>
 
       <button class="btn" id="edit-save">Save</button>`);
+
+    countTagline($('#edit-tag'), $('#edit-tag-hint'));
 
     $('#edit-save').addEventListener('click', async () => {
       const btn = $('#edit-save');
@@ -942,6 +969,7 @@
     };
 
     urlInput.addEventListener('input', validate);
+    countTagline(tag, $('#tag-hint'));
     tag.addEventListener('input', () => { state.draft.tagline = tag.value.trim(); });
 
     // The database refuses anything that is not an http(s) URL, so say so here
