@@ -40,4 +40,51 @@ for target in 404.html thanks/index.html badge/index.html; do
   echo "  $target"
 done
 
+# 3. Give every platform board a page of its own.
+#
+#    /?p=tiktok used to serve the same bytes as /?p=x and as the homepage, so a
+#    crawler saw eleven URLs and one document, and indexed one. The board is
+#    drawn by JavaScript after load, so the only thing that makes these separate
+#    documents is a head of their own: title, description and canonical. Those
+#    are rewritten here rather than kept in eleven hand-edited files.
+
+PLATFORMS="x|X instagram|Instagram tiktok|TikTok youtube|YouTube facebook|Facebook telegram|Telegram snapchat|Snapchat twitch|Twitch linkedin|LinkedIn threads|Threads"
+
+SITEMAP=sitemap.xml
+{
+  echo '<?xml version="1.0" encoding="UTF-8"?>'
+  echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+  echo "  <url><loc>https://topten.one/</loc><changefreq>hourly</changefreq><priority>1.0</priority></url>"
+} > "$SITEMAP"
+
+for entry in $PLATFORMS; do
+  slug="${entry%%|*}"
+  name="${entry##*|}"
+  title="Top 10 on $name — TopTen.one"
+  desc="The ten most-paid $name profiles right now. Rank is decided by money paid, not by an algorithm. Add yours from \$2."
+  # Trailing slash: GitHub Pages answers /x with a 301 to /x/, so declaring the
+  # bare form canonical would point every board at a redirect.
+  url="https://topten.one/$slug/"
+
+  mkdir -p "$slug"
+  sed -e "s|<title>.*</title>|<title>$title</title>|" \
+      -e "s|<meta name=\"description\" content=\"[^\"]*\">|<meta name=\"description\" content=\"$desc\">|" \
+      -e "s|<link rel=\"canonical\" href=\"[^\"]*\">|<link rel=\"canonical\" href=\"$url\">|" \
+      -e "s|<meta property=\"og:title\" content=\"[^\"]*\">|<meta property=\"og:title\" content=\"$title\">|" \
+      -e "s|<meta property=\"og:description\" content=\"[^\"]*\">|<meta property=\"og:description\" content=\"$desc\">|" \
+      -e "s|<meta property=\"og:url\" content=\"[^\"]*\">|<meta property=\"og:url\" content=\"$url\">|" \
+      -e "s|<meta name=\"twitter:title\" content=\"[^\"]*\">|<meta name=\"twitter:title\" content=\"$title\">|" \
+      -e "s|<meta name=\"twitter:description\" content=\"[^\"]*\">|<meta name=\"twitter:description\" content=\"$desc\">|" \
+      index.html > "$slug/index.html"
+
+  echo "  <url><loc>$url</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>" >> "$SITEMAP"
+  echo "  $slug/index.html"
+done
+
+for page in about terms privacy; do
+  echo "  <url><loc>https://topten.one/$page.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>" >> "$SITEMAP"
+done
+echo '</urlset>' >> "$SITEMAP"
+echo "  $SITEMAP"
+
 echo "Routes synced from index.html"

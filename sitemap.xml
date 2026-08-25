@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://topten.one/</loc><changefreq>hourly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://topten.one/?p=x</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=instagram</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=tiktok</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=youtube</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=twitch</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=linkedin</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=threads</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=facebook</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=telegram</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/?p=snapchat</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://topten.one/about.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://topten.one/x/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/instagram/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/tiktok/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/youtube/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/facebook/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/telegram/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/snapchat/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/twitch/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/linkedin/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/threads/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/about.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://topten.one/terms.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
   <url><loc>https://topten.one/privacy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>

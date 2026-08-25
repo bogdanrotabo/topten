@@ -1121,7 +1121,7 @@
       <div class="share">
         <a href="${esc(postOnXUrl(shareText, badgeUrl(row.platform, row.handle)))}" target="_blank" rel="noopener">Post on X</a>
         <a href="${badge}" data-link>Get the badge</a>
-        <a href="/?p=${row.platform}" data-link>Back to the board</a>
+        <a href="/${row.platform}" data-link>Back to the board</a>
       </div>
       ${keyFor(row.id) ? `
       <p class="finelist" style="max-width:36ch;margin-top:22px">
@@ -1134,7 +1134,7 @@
     const copyBtn = $('#copy-manage');
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
-        const manage = `${location.origin}/?p=${row.platform}#manage=${row.id}:${keyFor(row.id)}`;
+        const manage = `${location.origin}/${row.platform}#manage=${row.id}:${keyFor(row.id)}`;
         try { await navigator.clipboard.writeText(manage); copyBtn.textContent = 'Copied'; }
         catch { copyBtn.textContent = 'Copy failed'; }
       });
@@ -1297,7 +1297,7 @@
     if (!row) {
       view.innerHTML = `<div class="shell center-wrap"><h2>${esc(handle)} is not on the ${esc(p.name)} board</h2>
         <p style="color:var(--muted)">It may have expired, or it was never paid for.</p>
-        <div class="share"><a href="/?p=${slug}" data-link>See the board</a></div></div>`;
+        <div class="share"><a href="/${slug}" data-link>See the board</a></div></div>`;
       return;
     }
 
@@ -1311,7 +1311,7 @@
         <a href="${esc(postOnXUrl(shareText, shareUrl))}" target="_blank" rel="noopener">Post on X</a>
         <button id="dl">Download PNG</button>
         <button id="copy">Copy link</button>
-        <a href="/?p=${slug}" data-link>See the board</a>
+        <a href="/${slug}" data-link>See the board</a>
       </div>
       <p class="finelist" style="max-width:40ch;margin:16px auto 0;text-align:center">
         X shows the link, not the picture. Download the PNG and attach it to the
@@ -1355,7 +1355,13 @@
     if (path === '/thanks') return renderThanks();
     if (path === '/badge' || path.startsWith('/badge/')) return renderBadge();
 
-    const p = new URLSearchParams(location.search).get('p');
+    // /tiktok and /?p=tiktok reach the same board. The path form is what the
+    // tabs write, what the sitemap lists and what each generated page declares
+    // canonical, because a query string served byte-identical HTML for all ten
+    // platforms and Google folded them into a single indexed page. The query
+    // form still works: links shared before this change must not break.
+    const fromPath = path.slice(1);
+    const p = BY_SLUG[fromPath] ? fromPath : new URLSearchParams(location.search).get('p');
     if (p && BY_SLUG[p]) state.platform = p;
     renderHome();
   }
@@ -1380,7 +1386,7 @@
     const tab = e.target.closest('[data-tab]');
     if (tab) {
       state.platform = tab.dataset.tab;
-      history.replaceState({}, '', `/?p=${state.platform}`);
+      history.replaceState({}, '', `/${state.platform}`);
       renderHome();
       return;
     }
