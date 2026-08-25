@@ -740,6 +740,19 @@ img { max-width: 100%; }
 
 @keyframes rise { from { transform: translateY(26px); opacity: 0; } }
 
+/* The listing window takes the page. A form is as tall as its fields, but a
+   listing is what someone opened the site to look at, and 520px of it in the
+   middle of a dimmed page reads as a preview of something else. */
+.modal__panel--full {
+  max-width: none;
+  height: 90vh;
+  max-height: 90vh;
+}
+
+@media (min-width: 620px) {
+  .modal__panel--full { width: 90vw; height: 90vh; }
+}
+
 @media (min-width: 620px) {
   .modal { align-items: center; padding: 20px; }
   .modal__panel { border-bottom: 1px solid var(--line); border-radius: var(--radius-lg); }

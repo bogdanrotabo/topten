@@ -663,6 +663,9 @@
 
   function openModal(html) {
     panel.innerHTML = html;
+    /* Every modal starts at its content size. Only the listing asks to be
+       bigger, and it asks for itself, below. */
+    panel.classList.remove("modal__panel--full");
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
     const first = panel.querySelector('input, button');
@@ -857,6 +860,9 @@
         <a href="${badge}" data-link>Badge</a>
         <a href="${esc(report)}">Report</a>
       </div>`);
+    /* The listing is the thing people came to look at: a face, a tagline and
+       two links deserve the page, not a card in the middle of it. */
+    panel.classList.add("modal__panel--full");
   }
 
   /**
