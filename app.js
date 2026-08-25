@@ -403,16 +403,24 @@
 
   function renderTabs() {
     // Always two rows, however many platforms there are: eight lands as 4+4,
-    // ten would land as 5+5. Nothing scrolls out of sight either way.
+    // ten lands as 5+5. Nothing scrolls out of sight either way.
     const cols = Math.ceil(PLATFORMS.length / 2);
+
+    const cell = p => {
+      const n = board(p.slug).length;
+      return `<button class="tab" role="tab" aria-selected="false" data-tab="${p.slug}"
+                style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug, true)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
+    };
+    const cells = PLATFORMS.map(cell);
+
+    /* A panel after each row of tiles rather than one at the bottom: a board
+       opened from the top row belongs under the top row, not below a second
+       row of tiles it has nothing to do with. */
+    const panel = i => `<div class="tabpanel" data-panel="${i}" hidden></div>`;
+
     return `
     <div class="tabs"><div class="shell"><div class="tabs__grid" role="tablist" style="--tab-cols:${cols}">
-      ${PLATFORMS.map(p => {
-        const on = p.slug === state.platform;
-        const n = board(p.slug).length;
-        return `<button class="tab" role="tab" aria-selected="${on}" data-tab="${p.slug}"
-                  style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug, true)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
-      }).join('')}
+      ${cells.slice(0, cols).join('')}${panel(0)}${cells.slice(cols).join('')}${panel(1)}
     </div></div></div>`;
   }
 
@@ -513,6 +521,55 @@
     return `<div class="shell board" style="--brand:${p.color}">${head}${body}${waiting}</div>`;
   }
 
+  /* The board lives inside the tile grid now: opening one fills the panel that
+     sits under that tile's row, and the other panel closes, so there is only
+     ever one board on screen. Tapping the open tile again closes it. */
+  function openBoard(slug) {
+    state.platform = slug;
+    const cols = Math.ceil(PLATFORMS.length / 2);
+    const which = PLATFORMS.findIndex(p => p.slug === slug) < cols ? 0 : 1;
+
+    document.querySelectorAll('.tabpanel').forEach(el => {
+      const mine = Number(el.dataset.panel) === which;
+      el.hidden = !mine;
+      el.innerHTML = mine ? renderBoard() : '';
+      /* data-fresh is what the cascade keys off. Set only here, so a live
+         update repaints the board without dealing it out again. */
+      if (mine) el.dataset.fresh = ''; else delete el.dataset.fresh;
+    });
+    stampCascade();
+
+    document.querySelectorAll('[data-tab]').forEach(t =>
+      t.setAttribute('aria-selected', String(t.dataset.tab === slug)));
+
+    sticky.hidden = false;
+    $('#cta-claim').textContent = board(slug).length
+      ? `Take #1 on ${BY_SLUG[slug].name} for ${money(clampMin(nextDollarAbove(topCents(slug))))}`
+      : 'Claim a spot';
+    document.title = `Top 10 on ${BY_SLUG[slug].name} — TopTen.one`;
+    // Baseline for the outbid animation, once the rows exist to compare against.
+    snapshotRanks();
+  }
+
+  function closeBoard() {
+    document.querySelectorAll('.tabpanel').forEach(el => {
+      el.hidden = true;
+      el.innerHTML = '';
+      delete el.dataset.fresh;
+    });
+    document.querySelectorAll('[data-tab]').forEach(t => t.setAttribute('aria-selected', 'false'));
+    sticky.hidden = true;
+    document.title = 'TopTen.one — Be the one.';
+  }
+
+  /* One delay step per place. Set from here rather than written into the
+     markup, so renderRow and renderFreeSlot stay unaware of how they arrive. */
+  function stampCascade() {
+    const open = document.querySelector('.tabpanel:not([hidden])');
+    if (!open) return;
+    open.querySelectorAll('.rows > *').forEach((el, i) => el.style.setProperty('--i', i + 1));
+  }
+
 
   /* One share row per view, and on the boards it belongs directly under the
      platform strip: that is the moment someone has just understood what the
@@ -532,7 +589,7 @@
     </div>`;
   }
 
-  function renderHome() {
+  function renderHome(openSlug) {
     view.innerHTML = `
       <div class="shell">
         <section class="hero">
@@ -543,22 +600,22 @@
         ${renderStats()}
       </div>
       ${renderTabs()}
-      ${renderShareBar()}
-      <div id="board-slot">${renderBoard()}</div>`;
-    sticky.hidden = false;
-    $('#cta-claim').textContent = board(state.platform).length
-      ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
-      : 'Claim a spot';
-    document.title = `Top 10 on ${BY_SLUG[state.platform].name} — TopTen.one`;
-    // Baseline for the outbid animation. Must happen after the platform is
-    // settled, or the first live change has nothing to compare against.
-    snapshotRanks();
+      ${renderShareBar()}`;
+
+    /* A platform named in the address opens its board. The bare home page opens
+       nothing, so the ten marks are the whole of the first screen. */
+    if (openSlug) openBoard(openSlug); else closeBoard();
   }
 
-  /** Re-render only the board, animating rows whose position moved. */
+  /** Re-render only the open board, animating rows whose position moved. */
   function refreshBoard() {
-    const slot = $('#board-slot');
+    /* Nothing open means nothing to refresh: on the bare home page the boards
+       are closed, and a live change has no panel to land in. */
+    const slot = document.querySelector(".tabpanel:not([hidden])");
     if (!slot) return;
+    /* The cascade is for opening. A row that moved gets bump or sink below;
+       re-dealing all ten on every live change would drown that out. */
+    delete slot.dataset.fresh;
     const before = state.prevRanks;
     slot.innerHTML = renderBoard();
 
@@ -1433,8 +1490,10 @@
     // form still works: links shared before this change must not break.
     const fromPath = path.slice(1);
     const p = BY_SLUG[fromPath] ? fromPath : new URLSearchParams(location.search).get('p');
-    if (p && BY_SLUG[p]) state.platform = p;
-    renderHome();
+    /* The address decides what is open: /tiktok opens TikTok, / opens nothing. */
+    const open = p && BY_SLUG[p] ? p : null;
+    if (open) state.platform = open;
+    renderHome(open);
   }
 
   function navigate(href) {
@@ -1456,9 +1515,16 @@
 
     const tab = e.target.closest('[data-tab]');
     if (tab) {
-      state.platform = tab.dataset.tab;
-      history.replaceState({}, '', `/${state.platform}`);
-      renderHome();
+      const slug = tab.dataset.tab;
+      /* Tapping the open one closes it, so the ten marks come back without
+         anyone having to hunt for a way out of the board. */
+      if (tab.getAttribute('aria-selected') === 'true') {
+        closeBoard();
+        history.replaceState({}, '', '/');
+      } else {
+        openBoard(slug);
+        history.replaceState({}, '', `/${slug}`);
+      }
       return;
     }
 

@@ -207,8 +207,9 @@ img { max-width: 100%; }
 /* ------------------------------------------------------------------- tabs */
 
 .tabs {
-  position: sticky;
-  top: 56px;
+  /* Not sticky any more: the board opens inside this container now, and a
+     sticky bar wrapping an accordion pins the whole board to the top. */
+  position: relative;
   z-index: 30;
   margin: 14px 0 0;
   background: rgba(8, 9, 12, .9);
@@ -231,14 +232,14 @@ img { max-width: 100%; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 6px;
   min-width: 0;
-  padding: 6px 2px;
-  border-radius: 10px;
+  padding: 18px 4px 12px;
+  border-radius: 12px;
   border: 1px solid var(--line);
   background: var(--elev);
   color: var(--muted);
-  font-size: 8.5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: -.02em;
   white-space: nowrap;
@@ -248,7 +249,7 @@ img { max-width: 100%; }
   transition: color .15s, border-color .15s, background .15s;
 }
 
-.tab svg { width: 16px; height: 16px; flex: 0 0 auto; color: var(--tab-brand); opacity: .8; }
+.tab svg { width: 34px; height: 34px; flex: 0 0 auto; color: var(--tab-brand); opacity: .8; }
 
 .tab__name {
   display: block;
@@ -278,10 +279,103 @@ img { max-width: 100%; }
 
 .tab[aria-selected="true"] .tab__n { color: var(--accent); }
 
+/* The board opens inside the grid, directly under the row of tiles it was
+   tapped in, spanning the full width. Two panels rather than one so tapping a
+   tile in the top row does not push the bottom row away before opening. */
+.tabpanel {
+  grid-column: 1 / -1;
+}
+
+.tabpanel[hidden] { display: none; }
+
+/* The board carried 120px of bottom padding to clear the sticky claim button
+   when it was the last thing on the page. Inside the accordion it is not: the
+   second row of tiles follows it, and that padding reads as a hole. */
+.tabpanel .board { padding: 14px 0 16px; }
+
+/* Inside the panel the ten places are a list, one under the other, not the
+   five-across grid the page used to end with. A leaderboard reads down: rank,
+   face, name, money, in that order on one line. The grid was there to fit ten
+   places on a phone without scrolling; that constraint belongs to a board that
+   is always on screen, and this one is opened deliberately. */
+.tabpanel .rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tabpanel .row {
+  display: grid;
+  grid-template-columns: 28px 20px 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  text-align: left;
+}
+
+.tabpanel .row__rank {
+  position: static;
+  font-size: 20px;
+  text-align: right;
+}
+
+.tabpanel .row__brand {
+  position: static;
+  top: auto; right: auto;
+}
+
+.tabpanel .row__brand svg { width: 16px; height: 16px; }
+
+.tabpanel .row__av { width: 38px; height: 38px; }
+
+.tabpanel .row__handle {
+  width: auto;
+  font-size: 14px;
+}
+
+.tabpanel .row__amt { font-size: 15px; }
+
+/* An empty place has no amount, so its label takes the room the name and the
+   money would have used together. */
+.tabpanel .row__slot {
+  grid-column: 4 / -1;
+  font-family: var(--num);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--dim);
+}
+
+@media (min-width: 560px) {
+  .tabpanel .row { grid-template-columns: 34px 24px 44px minmax(0, 1fr) auto; padding: 12px 16px; }
+  .tabpanel .row__rank { font-size: 24px; }
+  .tabpanel .row__av { width: 44px; height: 44px; }
+  .tabpanel .row__handle { font-size: 15px; }
+  .tabpanel .row__amt { font-size: 17px; }
+}
+
+/* Places arrive one after another rather than all at once: ten tiles landing
+   together read as a page that reloaded, while a cascade reads as a board
+   being dealt. --i is set per place when the panel opens. */
+.tabpanel[data-fresh] .tobeat,
+.tabpanel[data-fresh] .rows > * {
+  animation: cascade .34s cubic-bezier(.2, .9, .25, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+@keyframes cascade {
+  from { opacity: 0; transform: translateY(14px) scale(.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabpanel[data-fresh] .tobeat,
+  .tabpanel[data-fresh] .rows > * { animation: none; }
+}
+
 @media (min-width: 560px) {
   .tabs__grid { gap: 8px; padding: 10px 0; }
-  .tab { padding: 10px 6px; font-size: 12px; border-radius: 13px; gap: 4px; }
-  .tab svg { width: 22px; height: 22px; }
+  .tab { padding: 24px 6px 16px; font-size: 13px; border-radius: 14px; gap: 8px; }
+  .tab svg { width: 44px; height: 44px; }
   .tab__n { font-size: 11px; }
 }
 
@@ -1153,7 +1247,8 @@ img { max-width: 100%; }
   .stat__k { font-size: 9px; }
 
   .tabs__grid { padding: 5px 0; gap: 4px; }
-  .tab { padding: 5px 3px; }
+  .tab { padding: 14px 3px 10px; }
+  .tab svg { width: 28px; height: 28px; }
 
   .board { padding: 8px 0 92px; }
   .rows { gap: 5px; }
