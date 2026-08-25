@@ -57,7 +57,20 @@
     { slug: 'threads',   name: 'Threads',   color: '#c9c9c9', hosts: ['threads.net', 'threads.com'] }
   ];
 
-  const BY_SLUG = Object.fromEntries(PLATFORMS.map(p => [p.slug, p]));
+  /**
+   * A map that can only answer for keys we put in it.
+   *
+   * These are looked up with strings taken straight off the URL, and
+   * `Object.fromEntries` hands back an object with `Object.prototype` behind
+   * it. So `BY_SLUG['constructor']` was truthy, `/constructor` set the platform
+   * to "constructor", `state.boards['constructor']` returned the `Object`
+   * function instead of falling back to `[]`, and `rows.slice(10)` threw. The
+   * whole board vanished for anyone who opened that address — no tabs, no rows,
+   * no stats. A null prototype has nothing to inherit and nothing to leak.
+   */
+  const slugMap = pairs => Object.assign(Object.create(null), Object.fromEntries(pairs));
+
+  const BY_SLUG = slugMap(PLATFORMS.map(p => [p.slug, p]));
 
   // The platforms' own marks, used to say which board a listing sits on.
   // Single-path where the brand allows it, so they scale down to 12px cleanly.
@@ -317,7 +330,7 @@
   /* -------------------------------------------------------------- state */
 
   const state = {
-    boards: Object.fromEntries(PLATFORMS.map(p => [p.slug, []])),
+    boards: slugMap(PLATFORMS.map(p => [p.slug, []])),
     platform: 'x',
     online: 1,
     loaded: false,
@@ -335,7 +348,7 @@
 
     if (error) { console.error('board load failed', error); connectionError = 'query'; return; }
 
-    const next = Object.fromEntries(PLATFORMS.map(p => [p.slug, []]));
+    const next = slugMap(PLATFORMS.map(p => [p.slug, []]));
     for (const row of data || []) {
       if (next[row.platform]) next[row.platform].push(row);
     }
