@@ -34,13 +34,18 @@ function toHex(buf: ArrayBuffer): string {
  * Verify a `Stripe-Signature` header the same way stripe.constructEvent does:
  * HMAC-SHA256 over `${timestamp}.${rawBody}`, compared against every v1
  * signature present, with a replay window.
+ *
+ * The returned reason is for our logs only. Callers get a flat "invalid
+ * signature" — telling an unauthenticated stranger the secret's length, or a
+ * fingerprint of it, hands them a way to confirm guesses.
  */
 async function verifyStripeSignature(
   rawBody: string,
   header: string | null,
   secret: string,
-): Promise<boolean> {
-  if (!header || !secret) return false;
+): Promise<{ ok: boolean; reason: string }> {
+  if (!secret) return { ok: false, reason: "STRIPE_WEBHOOK_SECRET is not set" };
+  if (!header) return { ok: false, reason: "no stripe-signature header" };
 
   let timestamp = "";
   const signatures: string[] = [];
@@ -52,10 +57,14 @@ async function verifyStripeSignature(
     if (key === "t") timestamp = value;
     else if (key === "v1") signatures.push(value);
   }
-  if (!timestamp || signatures.length === 0) return false;
+  if (!timestamp || signatures.length === 0) {
+    return { ok: false, reason: "malformed signature header" };
+  }
 
   const age = Math.floor(Date.now() / 1000) - Number(timestamp);
-  if (!Number.isFinite(age) || Math.abs(age) > TOLERANCE_SECONDS) return false;
+  if (!Number.isFinite(age) || Math.abs(age) > TOLERANCE_SECONDS) {
+    return { ok: false, reason: `timestamp ${age}s outside the ${TOLERANCE_SECONDS}s window` };
+  }
 
   const key = await crypto.subtle.importKey(
     "raw",
@@ -71,7 +80,9 @@ async function verifyStripeSignature(
   );
   const expected = toHex(mac);
 
-  return signatures.some((sig) => safeEqual(sig, expected));
+  return signatures.some((sig) => safeEqual(sig, expected))
+    ? { ok: true, reason: "ok" }
+    : { ok: false, reason: "signature does not match the configured secret" };
 }
 
 Deno.serve(async (req: Request): Promise<Response> => {
@@ -80,14 +91,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   const rawBody = await req.text();
-  const ok = await verifyStripeSignature(
+  const verdict = await verifyStripeSignature(
     rawBody,
     req.headers.get("stripe-signature"),
     STRIPE_WEBHOOK_SECRET,
   );
 
-  if (!ok) {
-    console.error("signature rejected");
+  if (!verdict.ok) {
+    // The detail goes to the function logs, never to the caller.
+    console.error(`signature rejected: ${verdict.reason}`);
     return new Response("invalid signature", { status: 400 });
   }
 
