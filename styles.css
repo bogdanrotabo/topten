@@ -933,6 +933,19 @@ img { max-width: 100%; }
 
 .sponsor__tag { font-size: 12px; color: var(--muted); }
 
+/* Sits with the small line, at the size of the small line. Not a button, not
+   a badge — just the mark, the same weight as the words beside it. */
+.sponsor__x {
+  display: inline-flex;
+  align-items: center;
+  margin-left: -4px;
+  line-height: 0;
+  color: var(--dim);
+}
+
+.sponsor__x svg { width: 11px; height: 11px; display: block; }
+.sponsor__x:hover { color: var(--text); }
+
 .foot nav { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 .foot a { color: var(--muted); text-decoration: none; }
 .foot a:hover { color: var(--text); }
