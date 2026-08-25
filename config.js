@@ -8,7 +8,7 @@ window.TOPTEN_CONFIG = {
 
   // Printed by scripts/stripe-setup.sh once you drop a restricted key into .env.
   // Until this is set, the pay buttons say payments are not configured.
-  STRIPE_PAYMENT_LINK: "",
+  STRIPE_PAYMENT_LINK: "https://buy.stripe.com/28EdR2eZoaV76yy2C00co0d",
 
   // Google Analytics 4 measurement ID, e.g. G-XXXXXXXXXX. Empty disables analytics.
   GA_MEASUREMENT_ID: "",

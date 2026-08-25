@@ -5,6 +5,10 @@
 
   const CFG = window.TOPTEN_CONFIG || {};
   const MIN_CENTS = 200;                 // Stripe fee floor: $2
+  // Stripe refuses a custom_unit_amount above $10,000 per payment unless the
+  // account asks support to raise it. Totals are cumulative, so this caps a
+  // single payment, never how high a listing can climb.
+  const MAX_CENTS = 1000000;
   const ACTIVE_DAYS = 30;
   const LS_LAST = 'topten:last-listing';
 
@@ -436,8 +440,15 @@
     const rows = board(slug).filter(r => r.id !== exceptId);
     const opts = [];
     const push = (label, note, targetTotal) => {
-      const delta = clampMin(targetTotal - current);
-      opts.push({ label, note, delta });
+      const wanted = clampMin(targetTotal - current);
+      const delta = Math.min(wanted, MAX_CENTS);
+      // A position can cost more than Stripe allows in one go. Say so rather
+      // than offering a button that dies at checkout.
+      opts.push({
+        label,
+        note: delta < wanted ? `${note} — more than one payment` : note,
+        delta
+      });
     };
 
     if (rows[0] && rows[0].total_cents >= current) {
@@ -484,6 +495,7 @@
         <div class="free" id="free" aria-pressed="false">
           <span class="free__cur">$</span>
           <input id="free-input" type="number" inputmode="decimal" min="2" step="1"
+                 max="${MAX_CENTS / 100}"
                  placeholder="Any amount" aria-label="Custom amount in US dollars">
         </div>
       </div>
@@ -579,9 +591,17 @@
       if (!cents || cents < MIN_CENTS) {
         verdict.className = 'verdict verdict--bad';
         verdict.textContent = `Minimum ${money(MIN_CENTS)}.`;
+        // Below the floor is never payable, whichever modal is open.
         const go = $('#go');
-        if (go && !exceptId) go.disabled = !state.draft.url;
-        else if (go) go.disabled = true;
+        if (go) go.disabled = true;
+        return;
+      }
+      if (cents > MAX_CENTS) {
+        verdict.className = 'verdict verdict--bad';
+        verdict.textContent =
+          `Stripe caps one payment at ${money(MAX_CENTS)}. Pay again after this one — totals add up.`;
+        const go = $('#go');
+        if (go) go.disabled = true;
         return;
       }
       const total = current + cents;

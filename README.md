@@ -99,6 +99,30 @@ stores `STRIPE_WEBHOOK_SECRET` in Supabase Secrets, then prints everything.
 
 `.env` is git-ignored. Never commit it.
 
+**What already exists on the live account:**
+
+| | |
+|---|---|
+| Product | `prod_V8W8qy1wEaSS1r` |
+| Price | `price_1U8F7b2eIfG2oegbO92AoF9x` |
+| Payment link | `plink_1U8F7c2eIfG2oegb4npVFInN` |
+| Webhook | `we_1U8F7d2eIfG2oegbq6i4BACB` |
+| Success URL | `https://topten.one/thanks?listing={CHECKOUT_SESSION_CLIENT_REFERENCE_ID}` |
+
+Two things the Stripe API taught us the hard way, both now handled in the script:
+
+- **A tax code is mandatory.** Managed Payments is enabled by default on new
+  accounts and refuses to build a payment link for a product without one. The
+  product carries `txcd_10000000` (General – Electronically Supplied Services).
+- **A single payment is capped at $10,000.** `custom_unit_amount.maximum` will
+  not accept anything higher without asking
+  [Stripe support](https://support.stripe.com/contact/) to lift it. `MAX_CENTS`
+  in `app.js` mirrors that limit, so the amount picker refuses larger figures
+  instead of letting someone hit the wall at checkout. It caps one payment, not
+  a listing: totals are cumulative, so paying repeatedly climbs as high as you
+  like. If support ever raises the ceiling, bump `MAX_CENTS` — the setup script
+  already probes for a higher one on each run.
+
 ### 3. Google Analytics
 
 Put the GA4 measurement ID into `GA_MEASUREMENT_ID` in `config.js`. Leaving it

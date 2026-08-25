@@ -15,10 +15,17 @@ const API = "https://api.stripe.com/v1";
 const SUCCESS_TEMPLATE = "https://topten.one/thanks?listing={CHECKOUT_SESSION_CLIENT_REFERENCE_ID}";
 const SUCCESS_FALLBACK = "https://topten.one/thanks?session={CHECKOUT_SESSION_ID}";
 
-// Stripe does not document the per-currency ceiling for custom_unit_amount,
-// so try the largest plausible value and walk down until one is accepted.
-const MAX_CANDIDATES = [99_999_999, 9_999_999, 999_999];
+// Stripe caps custom_unit_amount.maximum at $10,000.00 per payment by default
+// and only raises it on request to support. The larger values stay in this
+// ladder on purpose: if the cap is ever lifted for the account, the script
+// picks the higher ceiling up on its own.
+const MAX_CANDIDATES = [99_999_999, 9_999_999, 1_000_000, 999_999];
 const MIN_CENTS = 200;
+
+// Managed Payments is on by default for new accounts and refuses to build a
+// payment link for a product with no tax code. This one is
+// "General - Electronically Supplied Services".
+const TAX_CODE = "txcd_10000000";
 
 type Json = Record<string, any>;
 
@@ -70,6 +77,7 @@ async function main() {
   const product = await stripe(key, "products", {
     name: "TopTen.one rank",
     description: "A position on a TopTen.one leaderboard. Rank is the total paid.",
+    tax_code: TAX_CODE,
   });
   if (product.error) throw new Error(`product: ${product.error.message}`);
   console.log(`     ${product.id}`);
