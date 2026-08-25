@@ -743,14 +743,18 @@ img { max-width: 100%; }
 /* The listing window takes the page. A form is as tall as its fields, but a
    listing is what someone opened the site to look at, and 520px of it in the
    middle of a dimmed page reads as a preview of something else. */
+/* 70% is the size a listing gets, not a lid on it. A short listing fills the
+   70% and stops; a long one grows to fit rather than hiding its own share row
+   below the fold, and 90% is where growing stops. */
 .modal__panel--full {
   max-width: none;
-  height: 90vh;
+  height: auto;
+  min-height: 70vh;
   max-height: 90vh;
 }
 
 @media (min-width: 620px) {
-  .modal__panel--full { width: 90vw; height: 90vh; }
+  .modal__panel--full { width: 70vw; }
 }
 
 /* The room left under a short listing had nothing in it. Sharing is what the
@@ -1281,11 +1285,15 @@ img { max-width: 100%; }
    Keyed on height rather than width — this is a vertical-space problem — and
    deliberately last in the file, so it outranks the base rules it trims. */
 
+/* The wordmark used to be given up on a short screen so the board's bottom row
+   would clear the fold. There is no bottom row any more -- the boards open on
+   demand -- so the name of the place stays on every screen, and only the
+   spacing tightens. */
 @media (max-height: 760px) {
   .hero { padding: 8px 0 4px; }
-  .hero h1 { display: none; }
-  .hero__tag { font-size: 18px; margin: 0; }
-  .hero__sub { display: none; }
+  .hero h1 { font-size: clamp(26px, 7vw, 40px); }
+  .hero__tag { font-size: 18px; margin: 2px 0 0; }
+  .hero__sub { font-size: 13px; margin-top: 4px; }
 
   .stats { margin: 10px 0 2px; }
   .stat { padding: 6px 4px; }
