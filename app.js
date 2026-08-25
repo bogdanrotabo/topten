@@ -290,13 +290,16 @@
   }
 
   function renderTabs() {
+    // Always two rows, however many platforms there are: eight lands as 4+4,
+    // ten would land as 5+5. Nothing scrolls out of sight either way.
+    const cols = Math.ceil(PLATFORMS.length / 2);
     return `
-    <div class="tabs"><div class="shell"><div class="tabs__scroll" role="tablist">
+    <div class="tabs"><div class="shell"><div class="tabs__grid" role="tablist" style="--tab-cols:${cols}">
       ${PLATFORMS.map(p => {
         const on = p.slug === state.platform;
         const n = board(p.slug).length;
         return `<button class="tab" role="tab" aria-selected="${on}" data-tab="${p.slug}"
-                  style="--tab-brand:${p.color}">${icon(p.slug)}${esc(p.name)}${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
+                  style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
       }).join('')}
     </div></div></div>`;
   }
@@ -404,7 +407,7 @@
       </div>
       ${renderTabs()}
       <div id="board-slot">${renderBoard()}</div>`;
-    sticky.hidden = false;
+    watchStickyCta();
     $('#cta-claim').textContent = board(state.platform).length
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
       : 'Claim a spot';
@@ -434,14 +437,46 @@
     const statsEl = document.querySelector('.stats');
     if (statsEl) statsEl.outerHTML = renderStats();
     PLATFORMS.forEach(p => {
-      const tab = document.querySelector(`[data-tab="${p.slug}"] .tab__n`);
+      const tab = document.querySelector(`[data-tab="${p.slug}"]`);
+      if (!tab) return;
       const n = board(p.slug).length;
-      if (tab) tab.textContent = String(n);
+      let badge = tab.querySelector('.tab__n');
+      // A board that just got its first listing has no badge to update yet.
+      if (n && !badge) {
+        badge = document.createElement('span');
+        badge.className = 'tab__n';
+        tab.appendChild(badge);
+      }
+      if (badge) {
+        if (n) badge.textContent = String(n);
+        else badge.remove();
+      }
     });
     const cta = $('#cta-claim');
     if (cta) cta.textContent = board(state.platform).length
       ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
       : 'Claim a spot';
+  }
+
+  /**
+   * The sticky bar sat over the bottom row of tiles, so the board never really
+   * showed all ten at once on a phone. The board header already carries a CTA
+   * with the exact price on it, so the bar only needs to exist once that header
+   * has scrolled away.
+   */
+  function watchStickyCta() {
+    const anchor = document.querySelector('.tobeat');
+    if (!anchor || typeof IntersectionObserver !== 'function') {
+      sticky.hidden = false;
+      return;
+    }
+    if (state.ctaWatcher) state.ctaWatcher.disconnect();
+    sticky.hidden = true;
+    state.ctaWatcher = new IntersectionObserver(
+      ([entry]) => { sticky.hidden = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    state.ctaWatcher.observe(anchor);
   }
 
   /** Remember where every listing sits, so the next refresh can animate movement. */

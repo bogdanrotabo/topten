@@ -104,17 +104,23 @@ img { max-width: 100%; }
 
 /* --------------------------------------------------------------------- hero */
 
+/* The masthead already carries the wordmark, so on a phone the hero gives up
+   height rather than pushing the board's bottom row under the fold. */
 .hero {
-  padding: 34px 0 20px;
+  padding: 16px 0 12px;
   text-align: center;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(38px, 12vw, 60px);
+  font-size: clamp(30px, 9vw, 60px);
   line-height: .98;
   letter-spacing: -.035em;
   font-weight: 800;
+}
+
+@media (min-width: 560px) {
+  .hero { padding: 34px 0 20px; }
 }
 
 .hero h1 em {
@@ -131,10 +137,14 @@ img { max-width: 100%; }
 }
 
 .hero__sub {
-  margin: 8px auto 0;
-  max-width: 32ch;
+  margin: 6px auto 0;
+  max-width: 34ch;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 13.5px;
+}
+
+@media (min-width: 560px) {
+  .hero__sub { margin-top: 8px; font-size: 15px; }
 }
 
 /* --------------------------------------------------------------- stats bar */
@@ -194,6 +204,25 @@ img { max-width: 100%; }
   50% { opacity: .35; transform: scale(.8); }
 }
 
+/* Shorter phones — an SE is 148px less tall than a Pro. Everything above the
+   board gives up a little so the tenth place still lands above the fold.
+   Keyed on height, not width: this is a vertical-space problem. */
+@media (max-height: 720px) {
+  .hero { padding: 10px 0 6px; }
+  .hero h1 { font-size: 26px; }
+  .hero__tag { font-size: 17px; margin-top: 6px; }
+  .hero__sub { display: none; }
+  .stats { margin: 12px 0 4px; }
+  .stat { padding: 7px 4px; }
+  .stat__v { font-size: 14px; }
+  .tabs__grid { padding: 5px 0; gap: 4px; }
+  .tab { padding: 5px 3px; }
+  .board { padding: 12px 0 100px; }
+  .tobeat { padding: 10px 12px; margin-bottom: 10px; }
+  .tobeat__v { font-size: 26px; }
+  .tobeat__cta { padding: 9px 13px; font-size: 13px; }
+}
+
 /* ------------------------------------------------------------------- tabs */
 
 .tabs {
@@ -206,35 +235,47 @@ img { max-width: 100%; }
   border-bottom: 1px solid var(--line-soft);
 }
 
-.tabs__scroll {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: 8px 0;
-  scroll-snap-type: x proximity;
+/* Every platform on screen at once, in two rows. A board you cannot see is a
+   board nobody visits, and the old horizontal scroll hid the last two. */
+.tabs__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--tab-cols, 4), minmax(0, 1fr));
+  gap: 5px;
+  padding: 7px 0;
 }
 
-.tabs__scroll::-webkit-scrollbar { display: none; }
-
 .tab {
-  flex: 0 0 auto;
-  display: inline-flex;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 7px;
-  padding: 8px 13px;
-  border-radius: 999px;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  padding: 7px 3px;
+  border-radius: 11px;
   border: 1px solid var(--line);
   background: var(--elev);
   color: var(--muted);
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 600;
+  letter-spacing: -.01em;
   white-space: nowrap;
-  scroll-snap-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
   transition: color .15s, border-color .15s, background .15s;
 }
 
-.tab svg { width: 16px; height: 16px; flex: 0 0 auto; }
+.tab svg { width: 15px; height: 15px; flex: 0 0 auto; color: var(--tab-brand); opacity: .7; }
+
+.tab__name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .tab[aria-selected="true"] {
   color: var(--text);
@@ -242,12 +283,25 @@ img { max-width: 100%; }
   background: var(--elev-2);
 }
 
-.tab[aria-selected="true"] svg { color: var(--tab-brand, var(--accent)); }
+.tab[aria-selected="true"] svg { opacity: 1; }
 
+/* The listing count rides in the corner so it never widens the tab. */
 .tab__n {
+  position: absolute;
+  top: 3px; right: 5px;
   font-family: var(--num);
-  font-size: 11px;
+  font-size: 9px;
+  font-weight: 700;
   color: var(--dim);
+}
+
+.tab[aria-selected="true"] .tab__n { color: var(--accent); }
+
+@media (min-width: 560px) {
+  .tabs__grid { gap: 8px; padding: 10px 0; }
+  .tab { padding: 10px 6px; font-size: 12px; border-radius: 13px; }
+  .tab svg { width: 19px; height: 19px; }
+  .tab__n { font-size: 11px; }
 }
 
 /* ------------------------------------------------------------- board head */
