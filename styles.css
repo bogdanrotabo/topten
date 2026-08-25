@@ -728,8 +728,11 @@ img { max-width: 100%; }
   pointer-events: none;
 }
 
+/* Flush against the bottom edge is right on a phone, where the thumb lives
+   there. On anything wider there is room, and sitting in the last few pixels
+   of the window reads as cramped, so the button gets lifted off the floor. */
 @media (min-width: 560px) {
-  .sticky { padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom)); }
+  .sticky { padding: 14px var(--pad) calc(48px + env(safe-area-inset-bottom)); }
 }
 
 .sticky__inner {
