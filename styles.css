@@ -714,6 +714,84 @@ img { max-width: 100%; }
 
 /* Ten platforms, five over five — the same shape as the boards themselves. */
 
+/* ------------------------------------------------------ listing detail --- */
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  margin-bottom: 10px;
+}
+
+.detail__av {
+  width: 64px; height: 64px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  object-fit: cover;
+}
+
+.detail__body { min-width: 0; }
+
+/* The thing they paid to say. It gets to be the biggest text in the panel. */
+.detail__tagline {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.detail__tagline--none { color: var(--dim); font-size: 14px; font-style: italic; }
+
+.detail__brand { display: inline-block; vertical-align: -2px; line-height: 0; }
+.detail__brand svg { width: 13px; height: 13px; }
+
+.detail__links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.detail__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--elev-2);
+  text-decoration: none;
+}
+
+.detail__link:hover { border-color: var(--accent); }
+
+.detail__link-k {
+  flex: 0 0 auto;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--dim);
+}
+
+.detail__link-v {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail__link:hover .detail__link-v { color: var(--accent); }
+
 /* ------------------------------------------------------- amount picker */
 
 .amounts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }

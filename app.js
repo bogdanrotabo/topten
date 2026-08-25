@@ -277,7 +277,7 @@
     if (!sb) return;
     const { data, error } = await sb
       .from('board')
-      .select('id,platform,handle,url,tagline,total_cents,last_paid_at,rank')
+      .select('id,platform,handle,url,tagline,link,total_cents,last_paid_at,rank')
       .order('platform', { ascending: true })
       .order('rank', { ascending: true })
       .limit(2000);
@@ -363,7 +363,7 @@
            src="${esc(avatarUrl(row.platform, row.handle))}" onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
       <span class="row__handle"><a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a></span>
       <span class="row__amt">${money(row.total_cents)}</span>
-      <button class="row__add" data-add="${esc(row.id)}" aria-label="Add money to ${esc(row.handle)}">Add money</button>
+      <button class="row__add" data-open="${esc(row.id)}" aria-label="See ${esc(row.handle)}">Details</button>
     </div>`;
   }
 
@@ -641,6 +641,13 @@
       </div>
 
       <div class="field">
+        <label for="link-input">Your link <span style="text-transform:none;letter-spacing:0">— optional</span></label>
+        <input class="input" id="link-input" type="url" inputmode="url" maxlength="200"
+               spellcheck="false" placeholder="https://your-business.com">
+        <div class="hint" id="link-hint">Your site, shop or business. Shown on your listing.</div>
+      </div>
+
+      <div class="field">
         <label>Amount</label>
         ${amountBlock(slug, 0, null)}
       </div>
@@ -655,6 +662,67 @@
 
     wireAmounts(slug, 0, null);
     wireSubmit();
+  }
+
+  /**
+   * Tapping a tile opens this. The tile is 70px wide and can only carry a
+   * rank, a face and a number; everything the listing is actually paying to
+   * say — the tagline they wrote, the profile they bought the place for, the
+   * site they want you to go to next — lives here.
+   */
+  function listingModal(row) {
+    const p = BY_SLUG[row.platform];
+    const pos = board(row.platform).findIndex(r => r.id === row.id) + 1;
+    const report = `mailto:${CFG.CONTACT_EMAIL || 'hello@topten.one'}?subject=${encodeURIComponent('Report listing ' + row.id)}&body=${encodeURIComponent('Listing: ' + row.id + '\nProfile: ' + row.url + '\n\nWhy this should be reviewed:\n')}`;
+    const badge = `/badge/?p=${row.platform}&h=${encodeURIComponent(row.handle)}`;
+
+    openModal(`
+      <div class="modal__head">
+        <div>
+          <h2 id="modal-title">${esc(row.handle)}</h2>
+          <p><span class="detail__brand" style="color:${p.color}">${icon(row.platform, true)}</span> ${esc(p.name)} · #${pos} with ${money(row.total_cents)}</p>
+        </div>
+        <button class="modal__x" data-close aria-label="Close">&times;</button>
+      </div>
+
+      <div class="detail">
+        <img class="detail__av" width="64" height="64" alt=""
+             src="${esc(avatarUrl(row.platform, row.handle))}"
+             onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
+        <div class="detail__body">
+          ${row.tagline
+            ? `<p class="detail__tagline">${esc(row.tagline)}</p>`
+            : `<p class="detail__tagline detail__tagline--none">No tagline on this listing.</p>`}
+        </div>
+      </div>
+
+      <div class="detail__links">
+        <a class="detail__link" href="${esc(row.url)}" target="_blank" rel="nofollow noopener">
+          <span class="detail__link-k">${esc(p.name)} profile</span>
+          <span class="detail__link-v">${esc(row.handle)}</span>
+        </a>
+        ${row.link ? `
+        <a class="detail__link" href="${esc(row.link)}" target="_blank" rel="nofollow noopener">
+          <span class="detail__link-k">Their link</span>
+          <span class="detail__link-v">${esc(prettyLink(row.link))}</span>
+        </a>` : ''}
+      </div>
+
+      <button class="btn" data-add="${esc(row.id)}">Add money to ${esc(row.handle)}</button>
+
+      <ul class="finelist" style="display:flex;gap:14px;justify-content:center">
+        <li><a href="${badge}" data-link>Badge</a></li>
+        <li><a href="${esc(report)}">Report</a></li>
+      </ul>`);
+  }
+
+  /** example.com/shop rather than https://www.example.com/shop?utm=… */
+  function prettyLink(u) {
+    try {
+      const url = new URL(u);
+      const path = url.pathname.replace(/\/$/, '');
+      return (url.hostname.replace(/^www\./, '') + path).slice(0, 42);
+    } catch { return u.slice(0, 42); }
   }
 
   function addMoneyModal(row) {
@@ -777,6 +845,29 @@
     urlInput.addEventListener('input', validate);
     tag.addEventListener('input', () => { state.draft.tagline = tag.value.trim(); });
 
+    // The database refuses anything that is not an http(s) URL, so say so here
+    // rather than letting the insert fail after they have committed to paying.
+    const linkInput = $('#link-input');
+    const linkHint = $('#link-hint');
+    linkInput.addEventListener('input', () => {
+      let v = linkInput.value.trim();
+      if (!v) {
+        state.draft.link = '';
+        linkInput.removeAttribute('aria-invalid');
+        linkHint.className = 'hint';
+        linkHint.textContent = 'Your site, shop or business. Shown on your listing.';
+      } else {
+        if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+        let ok = false;
+        try { ok = /^[a-z0-9][a-z0-9._-]*\.[a-z]{2,}$/i.test(new URL(v).hostname); } catch { ok = false; }
+        state.draft.link = ok ? v : '';
+        linkInput.toggleAttribute('aria-invalid', !ok);
+        linkHint.className = ok ? 'hint hint--good' : 'hint hint--bad';
+        linkHint.textContent = ok ? v : 'That is not a web address.';
+      }
+      validate();
+    });
+
     $('#picker').addEventListener('click', e => {
       const b = e.target.closest('[data-pick]');
       if (!b) return;
@@ -801,7 +892,7 @@
     go.disabled = true;
     go.textContent = 'Setting up…';
 
-    const { slug, url, handle, tagline } = state.draft;
+    const { slug, url, handle, tagline, link } = state.draft;
 
     // Anything unexpected in here used to leave the button stuck on
     // "Setting up…" with no way forward. Never strand the buyer.
@@ -811,7 +902,9 @@
       // Insert without asking for the row back: the RLS SELECT policy hides an
       // unpaid listing, so a returning insert would fail even on success.
       const { error } = await sb.from('listings').insert({
-        id, platform: slug, url, handle, tagline: tagline || null
+        id, platform: slug, url, handle,
+        tagline: tagline || null,
+        link: link || null
       });
 
       if (error) {
@@ -1086,6 +1179,13 @@
       state.platform = tab.dataset.tab;
       history.replaceState({}, '', `/?p=${state.platform}`);
       renderHome();
+      return;
+    }
+
+    const open = e.target.closest('[data-open]');
+    if (open) {
+      const row = Object.values(state.boards).flat().find(r => r.id === open.dataset.open);
+      if (row) listingModal(row);
       return;
     }
 
