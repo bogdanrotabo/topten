@@ -27,22 +27,15 @@
 <meta name="twitter:image" content="https://topten.one/og-image.png">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=02a62e3927">
+<link rel="stylesheet" href="/styles.css?v=4b3519eaed">
 </head>
 <body>
 
-<!-- Instagram's mark is a gradient, not a flat colour. Defining it once here
-     keeps every inlined copy of the icon referencing one definition. -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <linearGradient id="tt-ig" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#ffd521"/>
-      <stop offset=".26" stop-color="#f50000"/>
-      <stop offset=".62" stop-color="#b900b4"/>
-      <stop offset="1" stop-color="#4400c8"/>
-    </linearGradient>
-  </defs>
-</svg>
+<!-- The Instagram gradient used to be defined once here and pointed at from
+     every copy of the icon. One definition is tidy right up until the pointer
+     stops resolving, and then Instagram is the only mark on the site that
+     vanishes while its own name still sits under the empty space. Each icon
+     carries its own gradient now, so there is nothing left to point at. -->
 
 <header class="masthead">
   <div class="shell masthead__row">
@@ -112,8 +105,8 @@
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=02a62e3927"></script>
+<script src="/config.js?v=4b3519eaed"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=02a62e3927"></script>
+<script defer src="/app.js?v=4b3519eaed"></script>
 </body>
 </html>

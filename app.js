@@ -133,14 +133,35 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  /* Instagram is the only mark that needs a paint server instead of a flat
+     colour, and it used to point at one gradient defined once at the top of the
+     page. That made it the only mark that can fail to draw while its own name
+     still shows underneath -- which is exactly how it failed. Every icon now
+     carries its gradient inside itself, under an id of its own, so several can
+     stand on the same page and none depends on anything outside its own svg. */
+  let igSeq = 0;
+  const IG_STOPS =
+    '<stop offset="0" stop-color="#ffd521"/>' +
+    '<stop offset=".26" stop-color="#f50000"/>' +
+    '<stop offset=".62" stop-color="#b900b4"/>' +
+    '<stop offset="1" stop-color="#4400c8"/>';
+
   /**
    * `full` draws the platform's real colours — three-tone TikTok, the
    * Instagram gradient — where there is room for them. Everywhere else the
    * mark inherits currentColor so it can be tinted or dimmed.
    */
   const icon = (slug, full) => {
-    const body = (full && ICONS_FULL[slug]) || ICONS[slug] || '';
-    return `<svg viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
+    let body = (full && ICONS_FULL[slug]) || ICONS[slug] || '';
+    let defs = '';
+
+    if (body.includes('url(#tt-ig)')) {
+      const gid = `ig${++igSeq}`;
+      defs = `<defs><linearGradient id="${gid}" x1="0" y1="1" x2="1" y2="0">${IG_STOPS}</linearGradient></defs>`;
+      body = body.replace('url(#tt-ig)', `url(#${gid})`);
+    }
+
+    return `<svg viewBox="0 0 24 24" aria-hidden="true">${defs}${body}</svg>`;
   };
 
   /**
@@ -435,9 +456,13 @@
 
     /* Printed twice, and the track slides exactly half its own width: when the
        animation restarts, the second copy is sitting where the first was, so
-       the loop has no seam to see. */
-    const once = items.map(cell).join('');
-    el.querySelector('.ticker__track').innerHTML = once + once;
+       the loop has no seam to see.
+
+       Drawn twice rather than one string used twice, because each Instagram
+       mark mints a gradient id as it is built. Reusing the string would put the
+       first copy's ids in the second one's markup. */
+    el.querySelector('.ticker__track').innerHTML =
+      items.map(cell).join('') + items.map(cell).join('');
   }
 
   function renderTabs() {
@@ -1429,24 +1454,29 @@
     const marks = PLATFORMS.map((p, i) => {
       const x = START + i * (SIZE + GAP);
       const on = p.slug === activeSlug;
+      /* The raw mark, not icon(): this is one flat svg rather than ten nested
+         ones. Instagram's gradient therefore has to be pointed at the badge's
+         own definition below, or it arrives here as a reference to nothing. */
       const body = (ICONS_FULL[p.slug] || ICONS[p.slug] || '')
-        .replace(/currentColor/g, p.color);
+        .replace(/currentColor/g, p.color)
+        .replace('url(#tt-ig)', 'url(#ttbadgeig)');
       return `<g transform="translate(${x} ${ROW_Y}) scale(${SIZE / 24})" opacity="${on ? 1 : 0.32}">${body}</g>` +
         (on ? `<circle cx="${x + SIZE / 2}" cy="${ROW_Y + SIZE + 9}" r="2.5" fill="${color}"/>` : '');
     }).join('');
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 315" width="600" height="315" role="img" aria-label="#${rank} on ${platformName} at TopTen.one">
+  <!-- Scoped ids. This markup gets dropped into a live page as well as turned
+       into a PNG on its own, and "bg" in a document that has anything else in
+       it is a collision waiting to happen. The Instagram gradient is gone from
+       here: every icon now brings its own. -->
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="ttbadgebg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#12141b"/><stop offset="1" stop-color="#07080b"/>
     </linearGradient>
-    <linearGradient id="tt-ig" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#ffd521"/><stop offset=".26" stop-color="#f50000"/>
-      <stop offset=".62" stop-color="#b900b4"/><stop offset="1" stop-color="#4400c8"/>
-    </linearGradient>
+    <linearGradient id="ttbadgeig" x1="0" y1="1" x2="1" y2="0">${IG_STOPS}</linearGradient>
   </defs>
 
-  <rect width="600" height="315" fill="url(#bg)"/>
+  <rect width="600" height="315" fill="url(#ttbadgebg)"/>
   <rect x="0" y="0" width="600" height="5" fill="${color}"/>
 
   <text x="40" y="56" font-family="${SANS}" font-size="38" font-weight="800" letter-spacing="-1.4"><tspan fill="#f2f3f5">TopTen</tspan><tspan fill="#ffc233">.one</tspan></text>
