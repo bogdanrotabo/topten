@@ -255,19 +255,19 @@
         re:    NAME_RE,
         profile: null
       } },
-    { slug: 'nba-players', name: 'NBA Players', color: '#1d428a', fan: true, tag: {
+    { slug: 'nba-players', name: 'NBA Players', color: '#5b8ae6', fan: true, tag: {
         label: 'Player name',
         hint:  'LeBron James',
         re:    NAME_RE,
         profile: null
       } },
-    { slug: 'nhl-teams', name: 'NHL Teams', color: '#111111', fan: true, tag: {
+    { slug: 'nhl-teams', name: 'NHL Teams', color: '#d9dde2', fan: true, tag: {
         label: 'Team name',
         hint:  'Toronto Maple Leafs',
         re:    NAME_RE,
         profile: null
       } },
-    { slug: 'nhl-players', name: 'NHL Players', color: '#0033a0', fan: true, tag: {
+    { slug: 'nhl-players', name: 'NHL Players', color: '#4a7fe0', fan: true, tag: {
         label: 'Player name',
         hint:  'Connor McDavid',
         re:    NAME_RE,
