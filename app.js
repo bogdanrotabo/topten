@@ -64,7 +64,7 @@
 
        `profile` is what the board links the name to. Null means there is
        nowhere to link, and the name renders as plain text instead. */
-    { slug: 'playstation', name: 'PlayStation', color: '#0070d1', tag: {
+    { slug: 'playstation', name: 'PlayStation', color: '#0070d1', fan: true, tag: {
         label: 'PSN Online ID',
         hint:  '3 to 16 characters: letters, digits, hyphen and underscore',
         re:    /^[A-Za-z0-9][A-Za-z0-9_-]{2,15}$/,
@@ -72,13 +72,13 @@
         // to something a stranger can open.
         profile: id => `https://psnprofiles.com/${encodeURIComponent(id)}`
       } },
-    { slug: 'xbox', name: 'Xbox', color: '#107c10', tag: {
+    { slug: 'xbox', name: 'Xbox', color: '#107c10', fan: true, tag: {
         label: 'Gamertag',
         hint:  '3 to 15 characters: letters, digits and single spaces',
         re:    /^[A-Za-z0-9][A-Za-z0-9 ]{1,13}[A-Za-z0-9]$|^[A-Za-z0-9]{3}$/,
         profile: t => `https://account.xbox.com/en-us/profile?gamertag=${encodeURIComponent(t)}`
       } },
-    { slug: 'nintendo', name: 'Nintendo', color: '#e60012', tag: {
+    { slug: 'nintendo', name: 'Nintendo', color: '#e60012', fan: true, tag: {
         label: 'Friend Code',
         hint:  'SW-1234-5678-9012',
         re:    /^SW-\d{4}-\d{4}-\d{4}$/i,
@@ -556,6 +556,26 @@
   const PANEL_OF = new Map();
   TAB_ROWS.forEach((r, i) => r.items.forEach(p => PANEL_OF.set(p.slug, i)));
 
+  /* Two models, two sentences. On a social board you list yourself and the
+     money buys your own place. On a player board the person ranked is not
+     the person paying: fans bid to push someone up, which is a thing people
+     already do and a much easier thing to ask for than self-promotion.
+
+     The flag sits on the platform rather than the group because the boards
+     coming next -- basketball, hockey, golf, actors -- work the same way
+     without having a gamertag to give them away. */
+  const isFan = slug => !!(BY_SLUG[slug] && BY_SLUG[slug].fan);
+
+  const ctaFor = slug => {
+    if (!slug) return 'Claim your rank';
+    const n = board(slug).length;
+    const top = money(clampMin(nextDollarAbove(topCents(slug))));
+    if (isFan(slug)) {
+      return n ? `Put your player at #1 for ${top}` : 'Bid for your favourite player';
+    }
+    return n ? `Take #1 on ${BY_SLUG[slug].name} for ${top}` : 'Claim your rank';
+  };
+
   function renderTabs() {
     const cell = (p, panelId) => {
       const n = board(p.slug).length;
@@ -705,9 +725,7 @@
       t.setAttribute('aria-expanded', String(t.dataset.tab === slug)));
 
     sticky.hidden = false;
-    $('#cta-claim').textContent = board(slug).length
-      ? `Take #1 on ${BY_SLUG[slug].name} for ${money(clampMin(nextDollarAbove(topCents(slug))))}`
-      : 'Claim your rank';
+    $('#cta-claim').textContent = ctaFor(slug);
     document.title = `Top 10 on ${BY_SLUG[slug].name} — TopTen.one`;
     // Baseline for the outbid animation, once the rows exist to compare against.
     snapshotRanks();
@@ -818,9 +836,7 @@
       }
     });
     const cta = $('#cta-claim');
-    if (cta) cta.textContent = board(state.platform).length
-      ? `Take #1 on ${BY_SLUG[state.platform].name} for ${money(clampMin(nextDollarAbove(topCents(state.platform))))}`
-      : 'Claim your rank';
+    if (cta) cta.textContent = ctaFor(state.platform);
   }
 
   /** Remember where every listing sits, so the next refresh can animate movement. */
@@ -927,7 +943,7 @@
       <div class="modal__head">
         <div>
           <h2 id="modal-title">Claim your rank</h2>
-          <p>Paste a profile, pick an amount. The money is the rank.</p>
+          <p id="modal-sub">Paste a profile, pick an amount. The money is the rank.</p>
         </div>
         <button class="modal__x" data-close aria-label="Close">&times;</button>
       </div>
@@ -1281,6 +1297,20 @@
          give them. */
       const picked = BY_SLUG[state.draft.slug];
       const urlLabel = $('#url-label');
+
+      /* The form is asking two different things depending on the board, so it
+         says two different things. A fan filling this in for someone else is
+         not claiming a rank, and telling them they are only confuses what
+         they came to do. */
+      const mTitle = $('#modal-title');
+      const mSub = $('#modal-sub');
+      if (picked.fan) {
+        if (mTitle) mTitle.textContent = 'Bid for your favourite player';
+        if (mSub) mSub.textContent = 'Add their tag, pick an amount. The money is the rank.';
+      } else {
+        if (mTitle) mTitle.textContent = 'Claim your rank';
+        if (mSub) mSub.textContent = 'Paste a profile, pick an amount. The money is the rank.';
+      }
       if (picked.tag) {
         if (urlLabel) urlLabel.textContent = picked.tag.label;
         urlInput.placeholder = picked.tag.hint;
