@@ -54,7 +54,36 @@
     { slug: 'snapchat',  name: 'Snapchat',  color: '#fffc00', hosts: ['snapchat.com'] },
     { slug: 'twitch',    name: 'Twitch',    color: '#9146ff', hosts: ['twitch.tv'] },
     { slug: 'linkedin',  name: 'LinkedIn',  color: '#0a66c2', hosts: ['linkedin.com'] },
-    { slug: 'threads',   name: 'Threads',   color: '#c9c9c9', hosts: ['threads.net', 'threads.com'] }
+    { slug: 'threads',   name: 'Threads',   color: '#c9c9c9', hosts: ['threads.net', 'threads.com'] },
+
+    /* The gaming boards. These do not take a profile URL, because two of the
+       three have no public profile page a player could paste: Xbox hides
+       profiles behind a sign-in and Nintendo has nothing but a friend code.
+       The identity on a console is the tag itself, so that is what the form
+       asks for -- see parseProfile, which branches on this `tag` block.
+
+       `profile` is what the board links the name to. Null means there is
+       nowhere to link, and the name renders as plain text instead. */
+    { slug: 'playstation', name: 'PlayStation', color: '#0070d1', tag: {
+        label: 'PSN Online ID',
+        hint:  '3 to 16 characters: letters, digits, hyphen and underscore',
+        re:    /^[A-Za-z0-9][A-Za-z0-9_-]{2,15}$/,
+        // psnprofiles is not Sony, but it is where a PSN ID actually resolves
+        // to something a stranger can open.
+        profile: id => `https://psnprofiles.com/${encodeURIComponent(id)}`
+      } },
+    { slug: 'xbox', name: 'Xbox', color: '#107c10', tag: {
+        label: 'Gamertag',
+        hint:  '3 to 15 characters: letters, digits and single spaces',
+        re:    /^[A-Za-z0-9][A-Za-z0-9 ]{1,13}[A-Za-z0-9]$|^[A-Za-z0-9]{3}$/,
+        profile: t => `https://account.xbox.com/en-us/profile?gamertag=${encodeURIComponent(t)}`
+      } },
+    { slug: 'nintendo', name: 'Nintendo', color: '#e60012', tag: {
+        label: 'Friend Code',
+        hint:  'SW-1234-5678-9012',
+        re:    /^SW-\d{4}-\d{4}-\d{4}$/i,
+        profile: null
+      } }
   ];
 
   /**
@@ -84,7 +113,10 @@
     threads: '<path fill="currentColor" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>',
     facebook: '<path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.3 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12"/>',
     telegram: '<path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m4.6 6.8-1.5 7.3c-.1.5-.4.6-.8.4l-2.3-1.7-1.1 1.1c-.1.1-.2.2-.5.2l.2-2.5 4.4-4c.2-.2-.1-.3-.3-.1l-5.4 3.4-2.3-.7c-.5-.2-.5-.5.1-.8l9-3.4c.4-.2.8.1.5.8"/>',
-    snapchat: '<path fill="currentColor" d="M12 2.2c2.7 0 4.6 2 4.8 4.7v2c.3.1.7 0 1-.1.4-.2.9 0 1.1.4.2.4 0 .9-.4 1.1-.5.2-1 .4-1.5.5-.2.1-.3.3-.2.5.5 1.5 1.6 2.7 3 3.4.3.2.4.5.3.8-.3.8-1.4 1.1-2.2 1.2l-.2.9c-.1.2-.3.4-.5.4-.5 0-1-.1-1.5 0-.5.1-.9.4-1.3.7-.6.5-1.4.8-2.2.8s-1.6-.3-2.2-.8c-.4-.3-.8-.6-1.3-.7-.5-.1-1 0-1.5 0-.2 0-.4-.2-.5-.4l-.2-.9c-.8-.1-1.9-.4-2.2-1.2-.1-.3 0-.6.3-.8 1.4-.7 2.5-1.9 3-3.4.1-.2 0-.4-.2-.5-.5-.1-1-.3-1.5-.5-.4-.2-.6-.7-.4-1.1.2-.4.7-.6 1.1-.4.3.1.7.2 1 .1v-2c.2-2.7 2.1-4.7 4.8-4.7"/>'
+    snapchat: '<path fill="currentColor" d="M12 2.2c2.7 0 4.6 2 4.8 4.7v2c.3.1.7 0 1-.1.4-.2.9 0 1.1.4.2.4 0 .9-.4 1.1-.5.2-1 .4-1.5.5-.2.1-.3.3-.2.5.5 1.5 1.6 2.7 3 3.4.3.2.4.5.3.8-.3.8-1.4 1.1-2.2 1.2l-.2.9c-.1.2-.3.4-.5.4-.5 0-1-.1-1.5 0-.5.1-.9.4-1.3.7-.6.5-1.4.8-2.2.8s-1.6-.3-2.2-.8c-.4-.3-.8-.6-1.3-.7-.5-.1-1 0-1.5 0-.2 0-.4-.2-.5-.4l-.2-.9c-.8-.1-1.9-.4-2.2-1.2-.1-.3 0-.6.3-.8 1.4-.7 2.5-1.9 3-3.4.1-.2 0-.4-.2-.5-.5-.1-1-.3-1.5-.5-.4-.2-.6-.7-.4-1.1.2-.4.7-.6 1.1-.4.3.1.7.2 1 .1v-2c.2-2.7 2.1-4.7 4.8-4.7"/>',
+    playstation: '<path fill="currentColor" d="M9.5 3.4v15.9l3.6 1.1V7.6c0-.6.3-1 .8-.8.6.2.7.7.7 1.3v4.7c2.2 1.1 4 0 4-2.9 0-3-1-4.3-4-5.3-1.2-.4-3.4-1-5.1-1.2m4.8 14.4 5.8-2.1c.7-.2.8-.6.2-.8s-1.6-.2-2.3 0l-3.7 1.3v-2.1l.2-.1s.7-.2 1.6-.3c1-.1 2.1 0 3 .1 1 .1 1.4.3 1.9.5.4.2.5.6-.1 1-.6.4-6.6 2.6-6.6 2.6zM4.3 17.6c-1-.3-1.2-.9-.7-1.3.4-.3 1.1-.5 1.1-.5l4.4-1.6v1.8l-3.2 1.1c-.6.2-.7.5-.2.7.5.1 1.3.1 1.9-.1l1.5-.5v1.6c-1.6.3-3.3.2-4.8-.2z"/>',
+    xbox: '<path fill="currentColor" d="M6.3 3.7a10 10 0 0 1 11.4 0c.4.3.2.5-.1.4-1.6-.6-4.1.6-5.6 1.8-1.5-1.2-4-2.4-5.6-1.8-.3.1-.5-.1-.1-.4M12 8.6c2.7 2.6 6.6 7.3 6 9.7A10 10 0 0 1 12 22a10 10 0 0 1-6-3.7c-.6-2.4 3.3-7.1 6-9.7M4.4 5.6c.5-.1 2 .5 4 2.7C5.8 11 3 15 3.4 17A10 10 0 0 1 4.4 5.6m15.2 0A10 10 0 0 1 20.6 17c.4-2-2.4-6-5-8.7 2-2.2 3.5-2.8 4-2.7"/>',
+    nintendo: '<path fill="currentColor" d="M4.5 2h4.3v20H4.5A2.5 2.5 0 0 1 2 19.5v-15A2.5 2.5 0 0 1 4.5 2m2.1 3.3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2M15.2 2h4.3A2.5 2.5 0 0 1 22 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-4.3zm2.2 12.1a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4"/>'
   };
 
   /* The marks that are not one colour. Drawn full-size on the tiles and tabs
@@ -255,12 +287,35 @@
    * Normalize a pasted profile URL and pull the handle out of it.
    * Returns { ok, url, handle } or { ok:false, error }.
    */
+  /* A friend code is an identity, not an address. Anything that is not an
+     http(s) URL is rendered as text, never as a dead link. */
+  const linkable = u => /^https?:\/\//i.test(String(u || ''));
+
   function parseProfile(raw, slug) {
     const p = BY_SLUG[slug];
     if (!p) return { ok: false, error: 'Pick a platform first.' };
 
     let input = String(raw || '').trim();
     if (!input) return { ok: false, error: '' };
+
+    /* Consoles identify a player by tag, not by link. The tag is validated
+       against the platform's own rule and then carried in `url`, because the
+       unique key is (platform, url) and its job is one listing per identity
+       -- a gamertag serves that exactly as well as an address does.
+
+       Where the platform has a public profile the identity IS that URL, so
+       the board can link it. Nintendo has none, so the identity is stored as
+       sw:CODE, which is not a link and is never rendered as one. */
+    if (p.tag) {
+      const tag = input.replace(/\s+/g, ' ').trim();
+      if (!p.tag.re.test(tag)) {
+        // No article in front of the platform name: the template has to serve
+        // "a PlayStation" and "an Xbox" from one string, and this dodges both.
+        return { ok: false, error: `${p.name} ${p.tag.label} does not look right. ${p.tag.hint}.` };
+      }
+      const url = p.tag.profile ? p.tag.profile(tag) : 'sw:' + tag.toUpperCase();
+      return { ok: true, url, handle: tag };
+    }
     if (!/^https?:\/\//i.test(input)) input = 'https://' + input.replace(/^\/+/, '');
 
     let u;
@@ -497,7 +552,9 @@
       <span class="row__brand" style="color:${BY_SLUG[row.platform]?.color || 'var(--dim)'}">${icon(row.platform, true)}</span>
       <img class="row__av" loading="lazy" width="34" height="34" alt=""
            src="${esc(avatarUrl(row.platform, row.handle))}" onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
-      <span class="row__handle"><a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a></span>
+      <span class="row__handle">${linkable(row.url)
+        ? `<a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a>`
+        : esc(row.handle)}</span>
       <span class="row__amt">${money(row.total_cents)}</span>
       <button class="row__add" data-open="${esc(row.id)}" aria-label="See ${esc(row.handle)}">Details</button>
     </div>`;
@@ -845,8 +902,8 @@
       </div>
 
       <div class="field">
-        <label for="url-input">Profile link</label>
-        <input class="input" id="url-input" type="url" inputmode="url" autocomplete="off"
+        <label for="url-input" id="url-label">Profile link</label>
+        <input class="input" id="url-input" type="text" inputmode="url" autocomplete="off"
                spellcheck="false" placeholder="https://x.com/yourname">
         <div class="hint" id="url-hint"></div>
       </div>
@@ -918,8 +975,8 @@
       </div>
 
       <div class="detail__links">
-        <a class="detail__link" href="${esc(row.url)}" target="_blank" rel="nofollow noopener">
-          <span class="detail__link-k">${esc(p.name)} profile</span>
+        <a class="detail__link" href="${linkable(row.url) ? esc(row.url) : '#'}"${linkable(row.url) ? ' target="_blank" rel="nofollow noopener"' : ' aria-disabled="true"'}>
+          <span class="detail__link-k">${esc(p.name)} ${p.tag ? esc(p.tag.label) : 'profile'}</span>
           <span class="detail__link-v">${esc(row.handle)}</span>
         </a>
         ${row.link ? `
@@ -1177,7 +1234,19 @@
       if (!b) return;
       state.draft.slug = b.dataset.pick;
       $('#picker').querySelectorAll('[data-pick]').forEach(x => x.setAttribute('aria-pressed', x === b));
-      urlInput.placeholder = `https://${BY_SLUG[state.draft.slug].hosts[0]}/yourname`;
+      /* A console asks for a tag and a network asks for a link, so the
+         label and the example change with the platform. Asking a PlayStation
+         player for a "profile link" is asking for something Sony does not
+         give them. */
+      const picked = BY_SLUG[state.draft.slug];
+      const urlLabel = $('#url-label');
+      if (picked.tag) {
+        if (urlLabel) urlLabel.textContent = picked.tag.label;
+        urlInput.placeholder = picked.tag.hint;
+      } else {
+        if (urlLabel) urlLabel.textContent = 'Profile link';
+        urlInput.placeholder = `https://${picked.hosts[0]}/yourname`;
+      }
       // The ladder is per platform, so rebuild it when the platform changes.
       const field = $('#amounts').parentElement;
       field.innerHTML = `<label>Amount</label>${amountBlock(state.draft.slug, 0, null)}`;

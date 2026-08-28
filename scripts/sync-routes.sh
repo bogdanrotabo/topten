@@ -48,7 +48,7 @@ done
 #    documents is a head of their own: title, description and canonical. Those
 #    are rewritten here rather than kept in eleven hand-edited files.
 
-PLATFORMS="x|X instagram|Instagram tiktok|TikTok youtube|YouTube facebook|Facebook telegram|Telegram snapchat|Snapchat twitch|Twitch linkedin|LinkedIn threads|Threads"
+PLATFORMS="x|X instagram|Instagram tiktok|TikTok youtube|YouTube facebook|Facebook telegram|Telegram snapchat|Snapchat twitch|Twitch linkedin|LinkedIn threads|Threads playstation|PlayStation xbox|Xbox nintendo|Nintendo"
 
 SITEMAP=sitemap.xml
 {
