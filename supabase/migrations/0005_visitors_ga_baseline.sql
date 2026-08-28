@@ -1,6 +1,5 @@
--- RULEAZA MANUAL in Supabase (proiectul "topten", iezclmijwrtjibgflfqj),
--- SQL Editor. Blocat de clasificatorul din modul automat, deci nu a fost
--- aplicat de mine.
+-- Applied 28 August 2026 at the owner's explicit instruction, after the
+-- auto-mode classifier had blocked the first attempt.
 --
 -- The site went live on 25 August 2026 and this table only came into being
 -- on the 28th, so counting from here alone would tell a visitor that the
