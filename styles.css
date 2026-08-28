@@ -238,22 +238,9 @@ img { max-width: 100%; }
   color: var(--dim);
 }
 
-.stat--live .stat__v { color: var(--ok); }
-
-.pulse {
-  display: inline-block;
-  width: 7px; height: 7px;
-  margin-right: 5px;
-  border-radius: 50%;
-  background: var(--ok);
-  vertical-align: middle;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .35; transform: scale(.8); }
-}
+/* The one stat that is not about money: distinct browsers that have been
+   here, counted once each however often they come back. */
+.stat--count .stat__v { color: var(--ok); }
 
 /* ------------------------------------------------------------------- tabs */
 

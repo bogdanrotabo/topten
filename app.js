@@ -353,7 +353,7 @@
   const state = {
     boards: slugMap(PLATFORMS.map(p => [p.slug, []])),
     platform: 'x',
-    online: 1,
+    visitors: null,
     loaded: false,
     prevRanks: {}
   };
@@ -418,7 +418,7 @@
       <div class="stat"><span class="stat__v">${s.count}</span><span class="stat__k">Listings</span></div>
       <div class="stat"><span class="stat__v">${money(s.total)}</span><span class="stat__k">On the boards</span></div>
       <div class="stat"><span class="stat__v">${money(s.top)}</span><span class="stat__k">Highest</span></div>
-      <div class="stat stat--live"><span class="stat__v"><span class="pulse"></span>${state.online}</span><span class="stat__k">Online</span></div>
+      <div class="stat stat--count"><span class="stat__v">${state.visitors === null ? '—' : state.visitors.toLocaleString()}</span><span class="stat__k">Visitors</span></div>
     </div>`;
   }
 
@@ -1682,6 +1682,59 @@
       copy.textContent = 'Copy failed';
     }
   });
+  /* ----------------------------------------------------------- visitors */
+
+  /* The masthead used to show who was connected this second. On a board that
+     is still filling up that is one person, and it reads as an empty room --
+     a true number arguing against the site it sits on. This counts distinct
+     browsers instead: a row per visit, one visitor per browser however often
+     they come back.
+
+     anon may write to site_visits and may never read it. site_visitors() is
+     the only way a number comes back out, and it is only ever a count. */
+
+  function visitorId() {
+    let id = null;
+    try { id = localStorage.getItem('topten_sid'); } catch (e) {}
+    if (!id) {
+      id = uuid();
+      try { localStorage.setItem('topten_sid', id); } catch (e) {}
+    }
+    return id;
+  }
+
+  /* Path only. A board link carries the platform and nothing private, but a
+     manage link carries its edit token in the query string, and analytics is
+     not a place to write down credentials. */
+  function visitPath() {
+    try { return new URL(location.href).pathname || '/'; } catch (e) { return '/'; }
+  }
+
+  async function recordVisit() {
+    if (!sb) return;
+    try {
+      await sb.from('site_visits').insert({
+        path: visitPath(),
+        referrer: document.referrer || null,
+        language: navigator.language || null,
+        session_id: visitorId()
+      });
+    } catch (e) { /* a visit that will not write is not worth a broken page */ }
+  }
+
+  async function loadVisitors() {
+    if (!sb) return;
+    try {
+      const { data, error } = await sb.rpc('site_visitors');
+      if (error || typeof data !== 'number') return;
+      state.visitors = data;
+      // Patch the rendered stat in place rather than redrawing the board:
+      // the count lands after the first paint and nothing else has changed.
+      const el = document.querySelector('.stat--count .stat__v');
+      if (el) el.textContent = state.visitors.toLocaleString();
+    } catch (e) {}
+  }
+
   /* ------------------------------------------------------ live plumbing */
 
   const refresh = debounce(async () => { await loadBoards(); fillTicker(); if (!modal.hidden) return; refreshBoard(); }, 450);
@@ -1691,15 +1744,6 @@
     sb.channel('listings-live')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'listings' }, refresh)
       .subscribe();
-
-    const presence = sb.channel('who', { config: { presence: { key: uuid() } } });
-    presence
-      .on('presence', { event: 'sync' }, () => {
-        state.online = Object.keys(presence.presenceState()).length || 1;
-        const el = document.querySelector('.stat--live .stat__v');
-        if (el) el.innerHTML = `<span class="pulse"></span>${state.online}`;
-      })
-      .subscribe(status => { if (status === 'SUBSCRIBED') presence.track({ at: Date.now() }); });
   }
 
   function loadAnalytics() {
@@ -1724,6 +1768,9 @@
     if (sb) await loadBoards();
     route();
     subscribe();
+    // Written first, read second, so a visitor is counted in the number they
+    // are shown rather than seeing the figure from just before they arrived.
+    recordVisit().then(loadVisitors);
     // Expired listings drop off silently, so re-read on a slow timer too.
     setInterval(() => { if (modal.hidden && document.visibilityState === 'visible') refresh(); }, 60000);
   })();
