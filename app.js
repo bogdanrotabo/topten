@@ -50,6 +50,157 @@
      with a number in it is a handle, and this is not a handle board. */
   const NAME_RE = /^(?=.{2,40}$)[\p{L}][\p{L}.'’-]*(?: [\p{L}.'’-]+){0,5}$/u;
 
+  /* One name, one row. Lower case, accents off, punctuation out, spaces
+     collapsed -- so "LeBron James", "lebron  james" and "Montreal" against
+     "Montreal" all agree, and the fans bidding for one man are never split
+     across three rows. Only the key underneath is folded; what everybody
+     reads on the board is a proper spelling. */
+  const fold = s => String(s).toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[.'’-]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  /* Every club in both leagues: name, the abbreviation the sport itself uses,
+     and the two colours the club plays in.
+
+     Not the crests. A club crest is registered artwork and this site takes
+     money, which is the one combination the leagues actually send letters
+     about. Colours are not ownable and the abbreviations are how the sport
+     writes itself down -- put together they read at a glance across a list of
+     thirty-two, which is the whole job of a mark this size.
+
+     They are not listings either. The board shows what has been paid for and
+     nothing else, so thirty-two unpaid rows would be invisible -- the view
+     filters on last_paid_at. What the list solves is spelling: a fan should
+     not have to know how to write "Vegas Golden Knights", and thirty people
+     typing one club three ways is how a team's fans end up split across
+     three rows. Picked from the list, they agree by default. */
+  const ROSTERS = {
+    'nba-teams': [
+      ['Atlanta Hawks',          'ATL', '#e03a3e', '#c1d32f'],
+      ['Boston Celtics',         'BOS', '#007a33', '#ba9653'],
+      ['Brooklyn Nets',          'BKN', '#000000', '#ffffff'],
+      ['Charlotte Hornets',      'CHA', '#1d1160', '#00788c'],
+      ['Chicago Bulls',          'CHI', '#ce1141', '#000000'],
+      ['Cleveland Cavaliers',    'CLE', '#860038', '#fdbb30'],
+      ['Dallas Mavericks',       'DAL', '#00538c', '#b8c4ca'],
+      ['Denver Nuggets',         'DEN', '#0e2240', '#fec524'],
+      ['Detroit Pistons',        'DET', '#c8102e', '#1d42ba'],
+      ['Golden State Warriors',  'GSW', '#1d428a', '#ffc72c'],
+      ['Houston Rockets',        'HOU', '#ce1141', '#000000'],
+      ['Indiana Pacers',         'IND', '#002d62', '#fdbb30'],
+      ['LA Clippers',            'LAC', '#c8102e', '#1d428a'],
+      ['Los Angeles Lakers',     'LAL', '#552583', '#fdb927'],
+      ['Memphis Grizzlies',      'MEM', '#5d76a9', '#12173f'],
+      ['Miami Heat',             'MIA', '#98002e', '#f9a01b'],
+      ['Milwaukee Bucks',        'MIL', '#00471b', '#eee1c6'],
+      ['Minnesota Timberwolves', 'MIN', '#0c2340', '#78be20'],
+      ['New Orleans Pelicans',   'NOP', '#0c2340', '#c8102e'],
+      ['New York Knicks',        'NYK', '#006bb6', '#f58426'],
+      ['Oklahoma City Thunder',  'OKC', '#007ac1', '#ef3b24'],
+      ['Orlando Magic',          'ORL', '#0077c0', '#c4ced4'],
+      ['Philadelphia 76ers',     'PHI', '#006bb6', '#ed174c'],
+      ['Phoenix Suns',           'PHX', '#1d1160', '#e56020'],
+      ['Portland Trail Blazers', 'POR', '#e03a3e', '#000000'],
+      ['Sacramento Kings',       'SAC', '#5a2d81', '#c4ced4'],
+      ['San Antonio Spurs',      'SAS', '#c4ced4', '#000000'],
+      ['Toronto Raptors',        'TOR', '#ce1141', '#000000'],
+      ['Utah Jazz',              'UTA', '#002b5c', '#f9a01b'],
+      ['Washington Wizards',     'WAS', '#002b5c', '#e31837']
+    ],
+    'nhl-teams': [
+      ['Anaheim Ducks',          'ANA', '#f47a38', '#b9975b'],
+      ['Boston Bruins',          'BOS', '#000000', '#ffb81c'],
+      ['Buffalo Sabres',         'BUF', '#002654', '#fcb514'],
+      ['Calgary Flames',         'CGY', '#c8102e', '#f1be48'],
+      ['Carolina Hurricanes',    'CAR', '#cc0000', '#000000'],
+      ['Chicago Blackhawks',     'CHI', '#cf0a2c', '#ff671f'],
+      ['Colorado Avalanche',     'COL', '#6f263d', '#236192'],
+      ['Columbus Blue Jackets',  'CBJ', '#002654', '#ce1126'],
+      ['Dallas Stars',           'DAL', '#006847', '#8f8f8c'],
+      ['Detroit Red Wings',      'DET', '#ce1126', '#ffffff'],
+      ['Edmonton Oilers',        'EDM', '#041e42', '#ff4c00'],
+      ['Florida Panthers',       'FLA', '#041e42', '#c8102e'],
+      ['Los Angeles Kings',      'LAK', '#111111', '#a2aaad'],
+      ['Minnesota Wild',         'MIN', '#154734', '#a6192e'],
+      ['Montreal Canadiens',     'MTL', '#af1e2d', '#192168'],
+      ['Nashville Predators',    'NSH', '#041e42', '#ffb81c'],
+      ['New Jersey Devils',      'NJD', '#ce1126', '#000000'],
+      ['New York Islanders',     'NYI', '#00539b', '#f47d30'],
+      ['New York Rangers',       'NYR', '#0038a8', '#ce1126'],
+      ['Ottawa Senators',        'OTT', '#c52032', '#c2912c'],
+      ['Philadelphia Flyers',    'PHI', '#f74902', '#000000'],
+      ['Pittsburgh Penguins',    'PIT', '#000000', '#fcb514'],
+      ['San Jose Sharks',        'SJS', '#006d75', '#ea7200'],
+      ['Seattle Kraken',         'SEA', '#001628', '#99d9d9'],
+      ['St. Louis Blues',        'STL', '#002f87', '#fcb514'],
+      ['Tampa Bay Lightning',    'TBL', '#002868', '#ffffff'],
+      ['Toronto Maple Leafs',    'TOR', '#00205b', '#ffffff'],
+      ['Utah Mammoth',           'UTA', '#71afe5', '#010101'],
+      ['Vancouver Canucks',      'VAN', '#00205b', '#00843d'],
+      ['Vegas Golden Knights',   'VGK', '#333f42', '#b4975a'],
+      ['Washington Capitals',    'WSH', '#041e42', '#c8102e'],
+      ['Winnipeg Jets',          'WPG', '#041e42', '#55b5e5']
+    ],
+    /* Ten names to start each player board: the shirt number, the colours of
+       the club, and the club itself beside the name.
+
+       Not a photograph. A player's face is licensed by the league and by the
+       agencies that shoot it, and putting a real athlete's likeness on a site
+       that takes money is the textbook right-of-publicity claim -- the one
+       thing here that could cost real money. A number on a coloured disc says
+       "McDavid, Edmonton, 97" to anyone who follows the sport, and belongs to
+       nobody. If the faces are ever wanted for real, the way in is a licence,
+       or a photo the fan uploads and warrants they may use.
+
+       Unlike the clubs, this list is not the whole of anything. A league has
+       exactly thirty-two teams and never a thirty-third; it has seven hundred
+       players and "the best ten" is an argument, not a fact. So these are
+       offered and nothing more -- type any name and it is taken. What settles
+       the board is the money, the same as everywhere else on this site. */
+    'nba-players': [
+      ['Nikola Jokic',            'DEN', '#0e2240', '#fec524', 'Denver Nuggets',         '15'],
+      ['Shai Gilgeous-Alexander', 'OKC', '#007ac1', '#ef3b24', 'Oklahoma City Thunder',   '2'],
+      ['Giannis Antetokounmpo',   'MIL', '#00471b', '#eee1c6', 'Milwaukee Bucks',        '34'],
+      ['Luka Doncic',             'LAL', '#552583', '#fdb927', 'Los Angeles Lakers',     '77'],
+      ['Victor Wembanyama',       'SAS', '#c4ced4', '#000000', 'San Antonio Spurs',       '1'],
+      ['Jayson Tatum',            'BOS', '#007a33', '#ba9653', 'Boston Celtics',          '0'],
+      ['Anthony Edwards',         'MIN', '#0c2340', '#78be20', 'Minnesota Timberwolves',  '5'],
+      ['Stephen Curry',           'GSW', '#1d428a', '#ffc72c', 'Golden State Warriors',  '30'],
+      ['LeBron James',            'LAL', '#552583', '#fdb927', 'Los Angeles Lakers',     '23'],
+      ['Donovan Mitchell',        'CLE', '#860038', '#fdbb30', 'Cleveland Cavaliers',    '45']
+    ],
+    'nhl-players': [
+      ['Connor McDavid',          'EDM', '#041e42', '#ff4c00', 'Edmonton Oilers',        '97'],
+      ['Nathan MacKinnon',        'COL', '#6f263d', '#236192', 'Colorado Avalanche',     '29'],
+      ['Auston Matthews',         'TOR', '#00205b', '#ffffff', 'Toronto Maple Leafs',    '34'],
+      ['Leon Draisaitl',          'EDM', '#041e42', '#ff4c00', 'Edmonton Oilers',        '29'],
+      ['Cale Makar',              'COL', '#6f263d', '#236192', 'Colorado Avalanche',      '8'],
+      ['Nikita Kucherov',         'TBL', '#002868', '#ffffff', 'Tampa Bay Lightning',    '86'],
+      ['David Pastrnak',          'BOS', '#000000', '#ffb81c', 'Boston Bruins',          '88'],
+      ['Kirill Kaprizov',         'MIN', '#154734', '#a6192e', 'Minnesota Wild',         '97'],
+      ['Quinn Hughes',            'VAN', '#00205b', '#00843d', 'Vancouver Canucks',      '43'],
+      ['Connor Hellebuyck',       'WPG', '#041e42', '#55b5e5', 'Winnipeg Jets',          '37']
+    ]
+  };
+
+  /* Four accessors rather than four index numbers scattered about: the shape
+     of a roster row is stated once here and nowhere else. */
+  const teamName = t => t[0];
+  const teamMark = t => t[1];
+  const teamInk  = t => t[2];
+  const teamTrim = t => t[3];
+  const teamClub = t => t[4] || '';
+  const teamNo   = t => t[5] || '';
+
+  /* Only the two club boards are closed sets. A league has thirty-two teams
+     and never a thirty-third, so anything else typed there is a mistake worth
+     refusing. The player boards are open: their ten are a starting point, and
+     a fan who wants somebody outside it must be able to say so. */
+  const CLOSED_LIST = new Set(['nba-teams', 'nhl-teams']);
+
+
   const PLATFORMS = [
     { slug: 'x',         name: 'X',         color: '#e7e9ea', hosts: ['x.com', 'twitter.com'] },
     { slug: 'instagram', name: 'Instagram', color: '#e1306c', hosts: ['instagram.com'] },
@@ -155,7 +306,16 @@
     snapchat: '<path fill="currentColor" d="M12 2.2c2.7 0 4.6 2 4.8 4.7v2c.3.1.7 0 1-.1.4-.2.9 0 1.1.4.2.4 0 .9-.4 1.1-.5.2-1 .4-1.5.5-.2.1-.3.3-.2.5.5 1.5 1.6 2.7 3 3.4.3.2.4.5.3.8-.3.8-1.4 1.1-2.2 1.2l-.2.9c-.1.2-.3.4-.5.4-.5 0-1-.1-1.5 0-.5.1-.9.4-1.3.7-.6.5-1.4.8-2.2.8s-1.6-.3-2.2-.8c-.4-.3-.8-.6-1.3-.7-.5-.1-1 0-1.5 0-.2 0-.4-.2-.5-.4l-.2-.9c-.8-.1-1.9-.4-2.2-1.2-.1-.3 0-.6.3-.8 1.4-.7 2.5-1.9 3-3.4.1-.2 0-.4-.2-.5-.5-.1-1-.3-1.5-.5-.4-.2-.6-.7-.4-1.1.2-.4.7-.6 1.1-.4.3.1.7.2 1 .1v-2c.2-2.7 2.1-4.7 4.8-4.7"/>',
     playstation: '<path fill="currentColor" d="M9.5 3.4v15.9l3.6 1.1V7.6c0-.6.3-1 .8-.8.6.2.7.7.7 1.3v4.7c2.2 1.1 4 0 4-2.9 0-3-1-4.3-4-5.3-1.2-.4-3.4-1-5.1-1.2m4.8 14.4 5.8-2.1c.7-.2.8-.6.2-.8s-1.6-.2-2.3 0l-3.7 1.3v-2.1l.2-.1s.7-.2 1.6-.3c1-.1 2.1 0 3 .1 1 .1 1.4.3 1.9.5.4.2.5.6-.1 1-.6.4-6.6 2.6-6.6 2.6zM4.3 17.6c-1-.3-1.2-.9-.7-1.3.4-.3 1.1-.5 1.1-.5l4.4-1.6v1.8l-3.2 1.1c-.6.2-.7.5-.2.7.5.1 1.3.1 1.9-.1l1.5-.5v1.6c-1.6.3-3.3.2-4.8-.2z"/>',
     xbox: '<path fill="currentColor" d="M6.3 3.7a10 10 0 0 1 11.4 0c.4.3.2.5-.1.4-1.6-.6-4.1.6-5.6 1.8-1.5-1.2-4-2.4-5.6-1.8-.3.1-.5-.1-.1-.4M12 8.6c2.7 2.6 6.6 7.3 6 9.7A10 10 0 0 1 12 22a10 10 0 0 1-6-3.7c-.6-2.4 3.3-7.1 6-9.7M4.4 5.6c.5-.1 2 .5 4 2.7C5.8 11 3 15 3.4 17A10 10 0 0 1 4.4 5.6m15.2 0A10 10 0 0 1 20.6 17c.4-2-2.4-6-5-8.7 2-2.2 3.5-2.8 4-2.7"/>',
-    nintendo: '<path fill="currentColor" d="M4.5 2h4.3v20H4.5A2.5 2.5 0 0 1 2 19.5v-15A2.5 2.5 0 0 1 4.5 2m2.1 3.3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2M15.2 2h4.3A2.5 2.5 0 0 1 22 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-4.3zm2.2 12.1a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4"/>'
+    nintendo: '<path fill="currentColor" d="M4.5 2h4.3v20H4.5A2.5 2.5 0 0 1 2 19.5v-15A2.5 2.5 0 0 1 4.5 2m2.1 3.3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2M15.2 2h4.3A2.5 2.5 0 0 1 22 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-4.3zm2.2 12.1a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4"/>',
+    /* The two sports, drawn rather than borrowed. A league crest is
+       registered artwork and this site takes money for rank -- the ball and
+       the sticks say basketball and hockey just as fast, and belong to
+       nobody. Both boards of a sport share its mark; what tells teams from
+       players is the label under it. */
+    'nba-teams': '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 2.8v18.4M2.8 12h18.4M5.5 5.5c2.3 2 3.7 4.4 3.7 6.5s-1.4 4.5-3.7 6.5M18.5 5.5c-2.3 2-3.7 4.4-3.7 6.5s1.4 4.5 3.7 6.5"/>',
+    'nba-players': '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 2.8v18.4M2.8 12h18.4M5.5 5.5c2.3 2 3.7 4.4 3.7 6.5s-1.4 4.5-3.7 6.5M18.5 5.5c-2.3 2-3.7 4.4-3.7 6.5s1.4 4.5 3.7 6.5"/>',
+    'nhl-teams': '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 3.4 14.4 13H19M19 3.4 9.6 13H5"/><ellipse cx="12" cy="18.6" rx="5" ry="2.1" fill="currentColor"/>',
+    'nhl-players': '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 3.4 14.4 13H19M19 3.4 9.6 13H5"/><ellipse cx="12" cy="18.6" rx="5" ry="2.1" fill="currentColor"/>'
   };
 
   /* The marks that are not one colour. Drawn full-size on the tiles and tabs
@@ -347,6 +507,22 @@
        slug:key, which is not a link and is never rendered as one. */
     if (p.tag) {
       const tag = input.replace(/\s+/g, ' ').trim();
+      /* A league is a closed set. Thirty clubs, thirty-two clubs, and no
+         thirty-first. Checked against the roster rather than against the
+         name rule, which would throw out the Philadelphia 76ers over the
+         digits and let "Lakers4Life" through -- exactly backwards.
+
+         Stored in the roster's spelling, whatever was typed, so one club is
+         one row on the board no matter who bids first. */
+      const squad = CLOSED_LIST.has(slug) ? ROSTERS[slug] : null;
+      if (squad) {
+        const hit = squad.find(t => fold(teamName(t)) === fold(tag));
+        if (!hit) {
+          return { ok: false, error: `${p.name} takes the ${squad.length} clubs in the league. Start typing and pick one from the list.` };
+        }
+        return { ok: true, url: `${slug}:${fold(teamName(hit))}`, handle: teamName(hit) };
+      }
+
       if (!p.tag.re.test(tag)) {
         // No article in front of the platform name: the template has to serve
         // "a PlayStation" and "an Xbox" from one string, and this dodges both.
@@ -360,11 +536,7 @@
 
          The spelling the first person typed is what everybody sees; only the
          key underneath is folded. */
-      const key = tag.toLowerCase()
-        .normalize('NFD').replace(/[̀-ͯ]/g, '')
-        .replace(/[.'’-]/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
+      const key = fold(tag);
       const url = p.tag.profile ? p.tag.profile(tag) : `${slug}:${key}`;
       return { ok: true, url, handle: tag };
 
@@ -622,12 +794,17 @@
      without having a gamertag to give them away. */
   const isFan = slug => !!(BY_SLUG[slug] && BY_SLUG[slug].fan);
 
+  /* A board of clubs is not a board of players, and asking somebody to bid
+     for their favourite player on the NHL Teams board reads as a mistake --
+     because it is one. */
+  const fanNoun = slug => (CLOSED_LIST.has(slug) ? 'club' : 'player');
+
   const ctaFor = slug => {
     if (!slug) return 'Claim your rank';
     const n = board(slug).length;
     const top = money(clampMin(nextDollarAbove(topCents(slug))));
     if (isFan(slug)) {
-      return n ? `Put your player at #1 for ${top}` : 'Bid for your favourite player';
+      return n ? `Put your ${fanNoun(slug)} at #1 for ${top}` : `Bid for your favourite ${fanNoun(slug)}`;
     }
     return n ? `Take #1 on ${BY_SLUG[slug].name} for ${top}` : 'Claim your rank';
   };
@@ -992,6 +1169,158 @@
       <p class="finelist" id="amount-echo" style="margin:-6px 0 10px;text-align:center"></p>`;
   }
 
+  let cascadeList = null;
+  let cascadeDocBound = false;
+
+  /* The clubs and the players, dropped in a list rather than tucked inside a
+     datalist. A datalist is a suggestion the browser may or may not honour --
+     several will not open it until enough letters are typed, which is no use
+     to somebody who wants to SEE the thirty-two and choose one.
+
+     So: an arrow that opens the lot, typing that narrows by word start the
+     way the country list does, arrows and Enter for the keyboard, Escape and
+     a click outside to close. Absent entirely on the boards that have no
+     list, where the field is a profile link and a dropdown would be noise. */
+  function setupCascade(slug, input) {
+    const wrap = $('#roster-wrap');
+    const list = $('#roster-list');
+    const toggle = $('#roster-toggle');
+    if (!wrap || !list || !toggle) return;
+
+    cascadeList = ROSTERS[slug] || null;
+
+    /* One listener for the whole page, not one per modal: the nodes are
+       looked up when the click happens, so it keeps working across every
+       later opening instead of holding on to the first modal's dead ones. */
+    if (!cascadeDocBound) {
+      cascadeDocBound = true;
+      document.addEventListener('click', e => {
+        const w = document.getElementById('roster-wrap');
+        const l = document.getElementById('roster-list');
+        if (!w || !l || l.hidden) return;
+        if (!w.contains(e.target)) {
+          l.hidden = true;
+          const t = document.getElementById('roster-toggle');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    if (!cascadeList) {
+      wrap.classList.remove('cascade--on');
+      toggle.hidden = true;
+      list.hidden = true;
+      list.innerHTML = '';
+      return;
+    }
+
+    wrap.classList.add('cascade--on');
+    toggle.hidden = false;
+    list.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+
+    /* The modal is rebuilt from scratch every time it opens, so this flag is
+       fresh each time -- but picking a second platform without closing it
+       runs this function again on the same nodes, and listeners would stack.
+       Bound once; what changes between platforms is cascadeList, which the
+       handlers read rather than close over. */
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = '1';
+
+    let active = -1;
+    let taking = false;
+
+    const draw = q => {
+      const words = fold(q).split(' ').filter(Boolean);
+      const shown = (cascadeList || []).filter(t => {
+        if (!words.length) return true;
+        const hay = fold(teamName(t)).split(' ')
+          .concat(fold(teamClub(t)).split(' '))
+          .concat([fold(teamMark(t))])
+          .filter(Boolean);
+        return words.every(w => hay.some(h => h && h.indexOf(w) === 0));
+      });
+
+      active = -1;
+      list.innerHTML = shown.length
+        ? shown.map(t => `
+            <button type="button" class="cascade__opt" role="option" aria-selected="false"
+                    data-club="${esc(teamName(t))}">
+              <span class="chip" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}</span>
+              <span class="cascade__who">
+                <span class="cascade__name">${esc(teamName(t))}</span>
+                ${teamClub(t) ? `<span class="cascade__club">${esc(teamClub(t))}${teamNo(t) ? ` &middot; #${esc(teamNo(t))}` : ''}</span>` : ''}
+              </span>
+            </button>`).join('')
+        : `<p class="cascade__none">Nothing by that name in the list. Type it out in full and it will be taken as it is.</p>`;
+    };
+
+    const open = all => {
+      draw(all ? '' : input.value);
+      list.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+    };
+
+    const close = () => {
+      list.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      active = -1;
+    };
+
+    const opts = () => Array.prototype.slice.call(list.querySelectorAll('.cascade__opt'));
+
+    const move = d => {
+      if (list.hidden) { open(true); }
+      const o = opts();
+      if (!o.length) return;
+      active = (active + d + o.length) % o.length;
+      o.forEach((b, i) => {
+        b.classList.toggle('is-active', i === active);
+        b.setAttribute('aria-selected', i === active ? 'true' : 'false');
+      });
+      o[active].scrollIntoView({ block: 'nearest' });
+    };
+
+    const take = name => {
+      /* The form's own validation listens for `input`, and it has to run for
+         a name that was clicked exactly as for one that was typed. But so
+         does the handler that opens this list -- which would drop it straight
+         back over the field the moment a choice was made. The latch lets the
+         validation through and keeps the list shut. */
+      taking = true;
+      input.value = name;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      taking = false;
+      close();
+      input.focus();
+    };
+
+    toggle.addEventListener('click', () => { list.hidden ? open(true) : close(); });
+
+    input.addEventListener('input', () => { if (cascadeList && !taking) open(false); });
+    input.addEventListener('focus', () => { if (cascadeList && !input.value) open(true); });
+
+    input.addEventListener('keydown', e => {
+      if (!cascadeList) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+      else if (e.key === 'Escape' && !list.hidden) { e.preventDefault(); close(); }
+      else if (e.key === 'Enter' && !list.hidden && active >= 0) {
+        e.preventDefault();
+        take(opts()[active].dataset.club);
+      }
+    });
+
+    list.addEventListener('mousedown', e => {
+      // mousedown, not click: the input's blur would close the list out from
+      // under the pointer before the click ever landed.
+      const opt = e.target.closest('.cascade__opt');
+      if (!opt) return;
+      e.preventDefault();
+      take(opt.dataset.club);
+    });
+  }
+
   function submitModal(preslug) {
     state.draft = { slug: preslug || state.platform, url: '', handle: '', tagline: '', cents: 0 };
     const slug = state.draft.slug;
@@ -1016,8 +1345,15 @@
 
       <div class="field">
         <label for="url-input" id="url-label">Profile link</label>
-        <input class="input" id="url-input" type="text" inputmode="url" autocomplete="off"
-               spellcheck="false" placeholder="https://x.com/yourname">
+        <div class="cascade" id="roster-wrap">
+          <input class="input" id="url-input" type="text" inputmode="url" autocomplete="off"
+                 spellcheck="false" placeholder="https://x.com/yourname">
+          <button class="cascade__toggle" id="roster-toggle" type="button" hidden
+                  aria-expanded="false" aria-controls="roster-list" aria-label="Show the whole list">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m6 9 6 6 6-6z"/></svg>
+          </button>
+          <div class="cascade__list" id="roster-list" role="listbox" aria-label="Clubs and players" hidden></div>
+        </div>
         <div class="hint" id="url-hint"></div>
       </div>
 
@@ -1342,11 +1678,17 @@
       validate();
     });
 
-    $('#picker').addEventListener('click', e => {
-      const b = e.target.closest('[data-pick]');
-      if (!b) return;
-      state.draft.slug = b.dataset.pick;
-      $('#picker').querySelectorAll('[data-pick]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    /* Everything the platform decides -- the label, the example, the two
+       sentences at the top, the list of clubs, the ladder of amounts -- used
+       to live inside the click handler, which meant it only ever ran when
+       somebody clicked. Open the form from a board and the platform is
+       already chosen: no click, so a PlayStation player was asked for a
+       "profile link" and a hockey fan got no list at all. Named, so it can
+       be run once on the way in as well. */
+    function applyPlatform(slug) {
+      state.draft.slug = slug;
+      $('#picker').querySelectorAll('[data-pick]')
+        .forEach(x => x.setAttribute('aria-pressed', x.dataset.pick === slug));
       /* A console asks for a tag and a network asks for a link, so the
          label and the example change with the platform. Asking a PlayStation
          player for a "profile link" is asking for something Sony does not
@@ -1360,9 +1702,23 @@
          they came to do. */
       const mTitle = $('#modal-title');
       const mSub = $('#modal-sub');
+      /* The clubs, offered rather than spelled from memory. A datalist is a
+         suggestion and not a menu -- the browser decides when to drop it --
+         which is right here: the fan knows the name and wants the spelling
+         agreed, not a list to browse. Detached when the board has no roster,
+         so a PSN tag is never autocompleted with the Boston Bruins. */
+      setupCascade(state.draft.slug, urlInput);
+
       if (picked.fan) {
-        if (mTitle) mTitle.textContent = 'Bid for your favourite player';
-        if (mSub) mSub.textContent = 'Add their tag, pick an amount. The money is the rank.';
+        if (mTitle) mTitle.textContent = `Bid for your favourite ${fanNoun(slug)}`;
+        // Three things are being asked for here and only one of them is a
+        // tag: a club is picked, a player is named, a console player has a
+        // gamertag. Saying "tag" to somebody typing Connor McDavid is wrong.
+        if (mSub) mSub.textContent = CLOSED_LIST.has(slug)
+          ? 'Pick the club, pick an amount. The money is the rank.'
+          : ROSTERS[slug]
+            ? 'Add their name, pick an amount. The money is the rank.'
+            : 'Add their tag, pick an amount. The money is the rank.';
       } else {
         if (mTitle) mTitle.textContent = 'Claim your rank';
         if (mSub) mSub.textContent = 'Paste a profile, pick an amount. The money is the rank.';
@@ -1379,7 +1735,15 @@
       field.innerHTML = `<label>Amount</label>${amountBlock(state.draft.slug, 0, null)}`;
       wireAmounts(state.draft.slug, 0, null);
       validate();
+    }
+
+    $('#picker').addEventListener('click', e => {
+      const b = e.target.closest('[data-pick]');
+      if (b) applyPlatform(b.dataset.pick);
     });
+
+    // Opened from a board, the platform came with it.
+    if (state.draft.slug) applyPlatform(state.draft.slug);
 
     $('#go').addEventListener('click', createAndPay);
   }
