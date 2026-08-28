@@ -48,7 +48,7 @@ done
 #    documents is a head of their own: title, description and canonical. Those
 #    are rewritten here rather than kept in eleven hand-edited files.
 
-PLATFORMS="x|X instagram|Instagram tiktok|TikTok youtube|YouTube facebook|Facebook telegram|Telegram snapchat|Snapchat twitch|Twitch linkedin|LinkedIn threads|Threads playstation|PlayStation xbox|Xbox nintendo|Nintendo"
+PLATFORMS="x|X instagram|Instagram tiktok|TikTok youtube|YouTube facebook|Facebook telegram|Telegram snapchat|Snapchat twitch|Twitch linkedin|LinkedIn threads|Threads playstation|PlayStation xbox|Xbox nintendo|Nintendo nba-teams|NBA-Teams nba-players|NBA-Players nhl-teams|NHL-Teams nhl-players|NHL-Players"
 
 SITEMAP=sitemap.xml
 {
@@ -60,6 +60,9 @@ SITEMAP=sitemap.xml
 for entry in $PLATFORMS; do
   slug="${entry%%|*}"
   name="${entry##*|}"
+  # The list is space separated, so a two-word board name is written with a
+  # hyphen and put back here. "Top 10 on NBA-Teams" is not a title.
+  name="${name//-/ }"
   title="Top 10 on $name — TopTen.one"
   desc="The ten most-paid $name profiles right now. Rank is decided by money paid, not by an algorithm. Add yours from \$2."
   # Trailing slash: GitHub Pages answers /x with a 301 to /x/, so declaring the

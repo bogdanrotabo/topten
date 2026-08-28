@@ -44,6 +44,12 @@
     history.replaceState({}, '', location.pathname + location.search);
   }
 
+  /* Two to forty characters of a person's or a team's name: letters from any
+     alphabet, spaces, and the punctuation names actually carry -- Shaquille
+     O'Neal, Karl-Anthony Towns, Nikola Jokic. Digits are out, because a name
+     with a number in it is a handle, and this is not a handle board. */
+  const NAME_RE = /^(?=.{2,40}$)[\p{L}][\p{L}.'’-]*(?: [\p{L}.'’-]+){0,5}$/u;
+
   const PLATFORMS = [
     { slug: 'x',         name: 'X',         color: '#e7e9ea', hosts: ['x.com', 'twitter.com'] },
     { slug: 'instagram', name: 'Instagram', color: '#e1306c', hosts: ['instagram.com'] },
@@ -83,8 +89,41 @@
         hint:  'SW-1234-5678-9012',
         re:    /^SW-\d{4}-\d{4}-\d{4}$/i,
         profile: null
+      } },
+
+    /* The leagues. A team and a player are both just names -- there is no
+       account to link and nothing the person listed controls, which is the
+       whole point: fans bid, the player never touches it.
+
+       Teams and players are separate boards rather than one per league,
+       because a top ten holding both the Lakers and LeBron is not a ranking
+       of anything. */
+    { slug: 'nba-teams', name: 'NBA Teams', color: '#c8102e', fan: true, tag: {
+        label: 'Team name',
+        hint:  'Los Angeles Lakers',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'nba-players', name: 'NBA Players', color: '#1d428a', fan: true, tag: {
+        label: 'Player name',
+        hint:  'LeBron James',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'nhl-teams', name: 'NHL Teams', color: '#111111', fan: true, tag: {
+        label: 'Team name',
+        hint:  'Toronto Maple Leafs',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'nhl-players', name: 'NHL Players', color: '#0033a0', fan: true, tag: {
+        label: 'Player name',
+        hint:  'Connor McDavid',
+        re:    NAME_RE,
+        profile: null
       } }
   ];
+
 
   /**
    * A map that can only answer for keys we put in it.
@@ -305,7 +344,7 @@
 
        Where the platform has a public profile the identity IS that URL, so
        the board can link it. Nintendo has none, so the identity is stored as
-       sw:CODE, which is not a link and is never rendered as one. */
+       slug:key, which is not a link and is never rendered as one. */
     if (p.tag) {
       const tag = input.replace(/\s+/g, ' ').trim();
       if (!p.tag.re.test(tag)) {
@@ -313,8 +352,22 @@
         // "a PlayStation" and "an Xbox" from one string, and this dodges both.
         return { ok: false, error: `${p.name} ${p.tag.label} does not look right. ${p.tag.hint}.` };
       }
-      const url = p.tag.profile ? p.tag.profile(tag) : 'sw:' + tag.toUpperCase();
+      /* The identity is the name folded down: lower case, accents off,
+         punctuation out, spaces collapsed. Without that, "LeBron James",
+         "lebron  james" and "LeBron  James" are three listings and the fans
+         bidding for one man are split across three rows -- which is the one
+         thing a top ten of real people must not do.
+
+         The spelling the first person typed is what everybody sees; only the
+         key underneath is folded. */
+      const key = tag.toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[.'’-]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const url = p.tag.profile ? p.tag.profile(tag) : `${slug}:${key}`;
       return { ok: true, url, handle: tag };
+
     }
     if (!/^https?:\/\//i.test(input)) input = 'https://' + input.replace(/^\/+/, '');
 
@@ -528,9 +581,12 @@
      Membership is derived, not declared. A platform that asks for a tag is a
      console -- that is already true in PLATFORMS and cannot fall out of step
      with a second list saying the same thing. */
+  const LEAGUES = new Set(['nba-teams', 'nba-players', 'nhl-teams', 'nhl-players']);
+
   const GROUPS = [
     { label: 'Social networks', rows: 2, has: p => !p.tag },
-    { label: 'Gaming',          rows: 1, has: p => !!p.tag }
+    { label: 'Gaming',          rows: 1, has: p => p.tag && !LEAGUES.has(p.slug) },
+    { label: 'Sport',           rows: 1, has: p => LEAGUES.has(p.slug) }
   ];
 
   /* The strip's layout, worked out once: which platforms sit in which group,

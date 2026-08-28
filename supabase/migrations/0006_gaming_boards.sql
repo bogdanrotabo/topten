@@ -7,8 +7,9 @@
 -- unique key enforces, and a gamertag is an identity. Where the console has
 -- a public profile the identity is that URL and the board links it:
 -- psnprofiles.com for PSN, account.xbox.com for a gamertag. Nintendo has no
--- public profile at all, so a friend code is stored as sw:SW-1234-5678-9012
--- and the board renders it as text rather than as a link that goes nowhere.
+-- public profile at all, so a friend code is stored as slug:key -- the same
+-- folded form the league boards use -- and rendered as text rather than as a
+-- link that goes nowhere.
 
 alter table public.listings drop constraint if exists listings_platform_check;
 
