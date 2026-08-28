@@ -520,27 +520,67 @@
       items.map(cell).join('') + items.map(cell).join('');
   }
 
-  function renderTabs() {
-    // Always two rows, however many platforms there are: eight lands as 4+4,
-    // ten lands as 5+5. Nothing scrolls out of sight either way.
-    const cols = Math.ceil(PLATFORMS.length / 2);
+  /* Two kinds of board, said out loud. Ten social networks and three consoles
+     in one undivided strip read as thirteen of the same thing, and the split
+     is the point: a gamer looking for the Xbox board should not have to scan
+     past Telegram to find it.
 
-    const cell = p => {
+     Membership is derived, not declared. A platform that asks for a tag is a
+     console -- that is already true in PLATFORMS and cannot fall out of step
+     with a second list saying the same thing. */
+  const GROUPS = [
+    { label: 'Social networks', rows: 2, has: p => !p.tag },
+    { label: 'Gaming',          rows: 1, has: p => !!p.tag }
+  ];
+
+  /* The strip's layout, worked out once: which platforms sit in which group,
+     how each group splits into rows, and which panel each row owns.
+
+     openBoard has to reach the same answer renderTabs used. It used to
+     recompute it from PLATFORMS.length, which was correct for exactly as long
+     as there was one group -- adding the consoles would have opened the wrong
+     panel with nothing to show for it. */
+  const TAB_ROWS = (() => {
+    const rows = [];
+    GROUPS.forEach(g => {
+      const list = PLATFORMS.filter(g.has);
+      if (!list.length) return;
+      const cols = Math.ceil(list.length / g.rows);
+      for (let i = 0; i < list.length; i += cols) {
+        rows.push({ group: g.label, cols, items: list.slice(i, i + cols) });
+      }
+    });
+    return rows;
+  })();
+
+  const PANEL_OF = new Map();
+  TAB_ROWS.forEach((r, i) => r.items.forEach(p => PANEL_OF.set(p.slug, i)));
+
+  function renderTabs() {
+    const cell = (p, panelId) => {
       const n = board(p.slug).length;
-      return `<button class="tab" aria-expanded="false" aria-controls="tp-${PLATFORMS.indexOf(p) < cols ? 0 : 1}" data-tab="${p.slug}"
+      return `<button class="tab" aria-expanded="false" aria-controls="tp-${panelId}" data-tab="${esc(p.slug)}"
                 style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug, true)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
     };
-    const cells = PLATFORMS.map(cell);
 
     /* A panel after each row of tiles rather than one at the bottom: a board
-       opened from the top row belongs under the top row, not below a second
-       row of tiles it has nothing to do with. */
+       opened from a row belongs under that row, not below tiles it has
+       nothing to do with. */
     const panel = i => `<div class="tabpanel" id="tp-${i}" data-panel="${i}" role="region" aria-label="The board that is open" hidden></div>`;
 
-    return `
-    <div class="tabs"><div class="shell"><div class="tabs__grid" style="--tab-cols:${cols}">
-      ${cells.slice(0, cols).join('')}${panel(0)}${cells.slice(cols).join('')}${panel(1)}
-    </div></div></div>`;
+    let html = '';
+    let openGroup = null;
+    TAB_ROWS.forEach((r, i) => {
+      if (r.group !== openGroup) {
+        if (openGroup !== null) html += '</div>';
+        html += `<div class="tabs__group"><p class="tabs__label">${esc(r.group)}</p>`;
+        openGroup = r.group;
+      }
+      html += `<div class="tabs__grid" style="--tab-cols:${r.cols}">${r.items.map(p => cell(p, i)).join('')}${panel(i)}</div>`;
+    });
+    if (openGroup !== null) html += '</div>';
+
+    return `<div class="tabs"><div class="shell">${html}</div></div>`;
   }
 
   function renderRow(row, idx) {
@@ -647,8 +687,9 @@
      ever one board on screen. Tapping the open tile again closes it. */
   function openBoard(slug) {
     state.platform = slug;
-    const cols = Math.ceil(PLATFORMS.length / 2);
-    const which = PLATFORMS.findIndex(p => p.slug === slug) < cols ? 0 : 1;
+    // The layout worked this out once; recomputing it here is how the two
+    // answers drift the next time a board is added.
+    const which = PANEL_OF.get(slug);
 
     document.querySelectorAll('.tabpanel').forEach(el => {
       const mine = Number(el.dataset.panel) === which;
