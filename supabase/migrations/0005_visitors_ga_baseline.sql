@@ -3,20 +3,23 @@
 -- aplicat de mine.
 --
 -- The site went live on 25 August 2026 and this table only came into being
--- on the 28th, so counting from here alone would tell a visitor that three
--- days of real traffic never happened.
+-- on the 28th, so counting from here alone would tell a visitor that the
+-- first three days of real traffic never happened.
 --
--- Google Analytics measured it: 143 active users on property 551474282
--- between launch and the moment this table started counting, of which 143
--- were new -- so 143 is everyone who had been here at all. That figure is
--- carried in as a baseline rather than written into the table as invented
--- rows, so the number stays a real measurement and the code says where it
--- came from and as of when.
+-- Google Analytics measured them, on property 551474282: its seven-day card
+-- read 143 active users, all of them new, for 21-27 August -- a window that
+-- ends the day before this was written and so leaves out the 28th. Counting
+-- that day in brings it to 147. Every one of them is a real person Google
+-- saw arrive.
 --
--- One known imprecision, stated rather than hidden: somebody who visited
--- before the cutover and comes back afterwards is counted once by Google
--- and once here. Over three days and 143 people the overlap is small, and
--- it errs by at most a few.
+-- The figure is carried in as a baseline rather than written into the table
+-- as invented rows, so what the site shows stays a real measurement and the
+-- code says where it came from and as of when.
+--
+-- One known imprecision, stated rather than hidden: this table started
+-- counting at about 09:25 UTC on 28 August, so anyone who arrives after
+-- that and was also seen by Google today is counted twice. It is a handful
+-- of people, and it errs high by that handful.
 
 create or replace function public.site_visitors()
 returns bigint
@@ -25,7 +28,7 @@ security definer
 set search_path = public
 stable
 as $$
-  select 143 + count(distinct session_id) from public.site_visits;
+  select 147 + count(distinct session_id) from public.site_visits;
 $$;
 
 revoke all on function public.site_visitors() from public;
