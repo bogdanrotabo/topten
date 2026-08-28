@@ -136,7 +136,7 @@ img { max-width: 100%; }
 }
 
 .tick__i { line-height: 0; }
-.tick__i svg { width: 14px; height: 14px; display: block; color: var(--tick); }
+.tick__i svg { width: 42px; height: 42px; display: block; color: var(--tick); }
 .tick__h { font-weight: 700; color: var(--text); }
 .tick__r { font-family: var(--num); font-weight: 800; color: var(--tick); }
 .tick__a { font-family: var(--num); font-weight: 800; color: var(--text); }
@@ -144,7 +144,7 @@ img { max-width: 100%; }
 @media (min-width: 560px) {
   .ticker { padding: 9px 0; }
   .tick { font-size: 13px; padding: 0 19px; }
-  .tick__i svg { width: 16px; height: 16px; }
+  .tick__i svg { width: 48px; height: 48px; }
 }
 
 /* Stopped, not hidden: the names and the money are the point, the motion is
@@ -287,7 +287,14 @@ img { max-width: 100%; }
   transition: color .15s, border-color .15s, background .15s;
 }
 
-.tab svg { width: 34px; height: 34px; flex: 0 0 auto; color: var(--tab-brand); opacity: .8; }
+.tab svg {
+  width: min(102px, 82%);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  color: var(--tab-brand);
+  opacity: 1;
+}
 
 .tab__name {
   display: block;
@@ -363,7 +370,7 @@ img { max-width: 100%; }
   top: auto; right: auto;
 }
 
-.tabpanel .row__brand svg { width: 16px; height: 16px; }
+.tabpanel .row__brand svg { width: 28px; height: 28px; }
 
 .tabpanel .row__av { width: 38px; height: 38px; }
 
@@ -413,7 +420,7 @@ img { max-width: 100%; }
 @media (min-width: 560px) {
   .tabs__grid { gap: 8px; padding: 10px 0; }
   .tab { padding: 24px 6px 16px; font-size: 13px; border-radius: 14px; gap: 8px; }
-  .tab svg { width: 44px; height: 44px; }
+  .tab svg { width: min(132px, 82%); }
   .tab__n { font-size: 11px; }
 }
 
@@ -529,16 +536,16 @@ img { max-width: 100%; }
   position: absolute;
   top: 4px; right: 4px;
   line-height: 0;
-  opacity: .75;
+  opacity: 1;
 }
 
-.row__brand svg { width: 11px; height: 11px; display: block; }
-.row--free .row__brand { opacity: .3; }
+.row__brand svg { width: 22px; height: 22px; display: block; }
+.row--free .row__brand { opacity: .55; }
 .row--1 .row__brand { opacity: 1; }
 
 @media (min-width: 560px) {
   .row__brand { top: 7px; right: 8px; }
-  .row__brand svg { width: 14px; height: 14px; }
+  .row__brand svg { width: 26px; height: 26px; }
 }
 
 .row__av {
@@ -894,7 +901,7 @@ img { max-width: 100%; }
   color: var(--muted);
 }
 
-.pick svg { width: 19px; height: 19px; }
+.pick svg { width: min(57px, 74%); height: auto; aspect-ratio: 1 / 1; }
 .pick[aria-pressed="true"] { border-color: var(--pick-brand); color: var(--pick-brand); background: var(--elev-2); }
 
 /* Ten platforms, five over five — the same shape as the boards themselves. */
@@ -934,7 +941,7 @@ img { max-width: 100%; }
 .detail__tagline--none { color: var(--dim); font-size: 14px; font-style: italic; }
 
 .detail__brand { display: inline-block; vertical-align: -2px; line-height: 0; }
-.detail__brand svg { width: 13px; height: 13px; }
+.detail__brand svg { width: 39px; height: 39px; }
 
 .detail__links {
   display: flex;
@@ -1304,7 +1311,7 @@ img { max-width: 100%; }
   color: var(--dim);
 }
 
-.sponsor__x svg { width: 11px; height: 11px; display: block; }
+.sponsor__x svg { width: 33px; height: 33px; display: block; }
 .sponsor__x:hover { color: var(--text); }
 
 
@@ -1373,7 +1380,7 @@ img { max-width: 100%; }
 
   .tabs__grid { padding: 5px 0; gap: 4px; }
   .tab { padding: 14px 3px 10px; }
-  .tab svg { width: 28px; height: 28px; }
+  .tab svg { width: min(84px, 82%); }
 
   .board { padding: 8px 0 92px; }
   .rows { gap: 5px; }
