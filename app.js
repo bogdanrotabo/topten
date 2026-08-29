@@ -12,7 +12,11 @@
   // Mirrors the CHECK constraint on listings.tagline. The database truncates
   // silently past this, so the forms must never let anyone reach it unaware.
   const TAG_MAX = 80;
-  const ACTIVE_DAYS = 30;
+  // The thirty days a listing stays on a board are enforced by the `board`
+  // view (last_paid_at > now() - '30 days'), not here. A constant sitting in
+  // this file looks like the place to change that number and is not: editing
+  // it would move nothing, and the board would go on expiring at thirty while
+  // whoever changed it believed otherwise.
   const LS_LAST = 'topten:last-listing';
   const LS_AMOUNT = 'topten:last-amount';
   const LS_KEYS = 'topten:keys';
@@ -1428,7 +1432,7 @@
           <span class="detail__link-k">${esc(p.name)} ${p.tag ? esc(p.tag.label) : 'profile'}</span>
           <span class="detail__link-v">${esc(row.handle)}</span>
         </a>
-        ${row.link ? `
+        ${linkable(row.link) ? `
         <a class="detail__link" href="${esc(row.link)}" target="_blank" rel="nofollow noopener">
           <span class="detail__link-k">Their link</span>
           <span class="detail__link-v">${esc(prettyLink(row.link))}</span>
