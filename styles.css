@@ -1287,6 +1287,11 @@ img { max-width: 100%; }
   object-fit: contain;
 }
 
+/* The rotabo.app mark is two diamonds side by side, so it is wider than
+   it is tall: the square box every other sponsor logo gets would squash it. */
+.sponsor__logo--rotabo { width: 43px; }
+
+
 .sponsor__brand {
   font-size: 17px;
   font-weight: 800;
