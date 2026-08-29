@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin — TopTen.one</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#08090c">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="/styles.css?v=a02dc79406">
+<style>
+  /* The dashboard is wider than the site: the site is a board read on a phone,
+     this is a table read on a desk. Everything else -- colours, type, the
+     masthead -- comes from styles.css, so the two never drift apart. */
+  .admin-shell{max-width:1200px;margin:0 auto;padding:32px var(--pad) 80px;}
+
+  .login-card{
+    max-width:360px;margin:64px auto;background:var(--elev);
+    border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px;text-align:center;
+  }
+  .login-card h1{margin:0 0 6px;font-size:1.3rem;}
+  .login-card p{color:var(--muted);font-size:.9rem;margin:0 0 22px;}
+  .login-card button{
+    width:100%;padding:13px 20px;border-radius:var(--radius);
+    background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:1rem;
+  }
+  .login-card button:disabled{opacity:.5;cursor:default;}
+  .login-error{color:var(--danger);font-size:.88rem;margin:14px 0 0;display:none;}
+  .login-error.show{display:block;}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:26px;}
+  .tab-btn{
+    padding:9px 15px;border-radius:999px;border:1px solid var(--line);
+    background:var(--elev);color:var(--muted);font-weight:700;font-size:.9rem;
+  }
+  .tab-btn.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .tabs-actions{margin-left:auto;display:flex;gap:8px;}
+  .ghost-btn{
+    padding:9px 15px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;color:var(--muted);font-size:.9rem;
+  }
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  h1{font-size:1.5rem;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:.94rem;margin:0 0 26px;}
+
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+  .tile{
+    background:var(--elev);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 18px;min-width:130px;flex:1 1 130px;
+  }
+  .tile__k{color:var(--dim);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;}
+  .tile__v{font-family:var(--num);font-size:1.5rem;font-weight:700;margin-top:4px;}
+  /* The board and the till should hold the same number. When they do not, the
+     tile says so instead of showing two figures and leaving the reader to
+     notice. */
+  .tile--off{border-color:var(--danger);}
+  .tile--off .tile__v{color:var(--danger);}
+
+  .filter-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+  .filter-row .input{flex:1 1 240px;}
+  select.input{appearance:none;}
+
+  .table-wrap{
+    background:var(--elev);border:1px solid var(--line);border-radius:var(--radius);
+    overflow-x:auto;
+  }
+  table{width:100%;border-collapse:collapse;font-size:.88rem;}
+  th,td{padding:11px 14px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line-soft);}
+  th{
+    color:var(--dim);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+    position:sticky;top:0;background:var(--elev-2);
+  }
+  tr:last-child td{border-bottom:0;}
+  td.num{font-family:var(--num);text-align:right;}
+  td.wrap{white-space:normal;max-width:280px;}
+  .muted{color:var(--dim);}
+
+  .pill{
+    display:inline-block;padding:2px 9px;border-radius:999px;
+    font-size:.7rem;font-weight:700;letter-spacing:.03em;
+  }
+  .pill--live{background:rgba(61,220,132,.12);color:var(--ok);}
+  .pill--gone{background:rgba(154,160,173,.12);color:var(--muted);}
+  .pill--hidden{background:rgba(255,107,107,.13);color:var(--danger);}
+
+  .row-btn{
+    padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;color:var(--muted);font-size:.78rem;font-weight:700;
+  }
+  .row-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .row-btn:disabled{opacity:.45;cursor:default;}
+
+  .note{color:var(--muted);font-size:.9rem;padding:16px 0;display:none;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="shell masthead__row">
+    <a class="wordmark" href="/">TopTen<b>.one</b></a>
+  </div>
+</header>
+
+<div class="admin-shell">
+
+  <div id="loginView" class="login-card">
+    <h1>Admin</h1>
+    <!-- One way in, and it cannot be typed.
+
+         No email box, no password box, no shared word in a config file. A
+         password can be guessed, reused from a site that leaked it, filled in
+         by a browser that saved it once and never forgot, or read over a
+         shoulder -- and every one of those is somebody else holding it. Google
+         is asked instead, and the function checks that the session really came
+         from Google before it answers with anything at all.
+
+         There is therefore no field on this card for a wrong answer to be
+         typed into, which is also why the password manager has nothing to
+         hunt for here. -->
+    <p>This page opens for one Google account.</p>
+    <button type="button" id="googleBtn">Continue with Google</button>
+    <p class="login-error" id="loginError"></p>
+  </div>
+
+  <div id="dashboardView" style="display:none;">
+    <div class="tabs">
+      <button type="button" class="tab-btn active" id="tabBtnListings">Boards</button>
+      <button type="button" class="tab-btn" id="tabBtnPayments">Payments</button>
+      <button type="button" class="tab-btn" id="tabBtnVisits">Visits</button>
+      <div class="tabs-actions">
+        <button type="button" class="ghost-btn" id="refreshBtn">Refresh</button>
+        <button type="button" class="ghost-btn" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+
+    <div class="tab-panel active" id="panelListings">
+      <h1>Boards</h1>
+      <p class="sub">Every listing ever paid for, in the order the money puts them.</p>
+      <div class="stats" id="listingStats"></div>
+      <div class="filter-row">
+        <input type="text" class="input" id="listingSearch" placeholder="Search handle, platform, tagline…" autocomplete="off" spellcheck="false">
+      </div>
+      <p class="note" id="listingNote"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Platform</th><th>Handle</th><th>Tagline</th>
+            <th>Total</th><th>Last paid</th><th>State</th><th></th>
+          </tr></thead>
+          <tbody id="listingBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panelPayments">
+      <h1>Payments</h1>
+      <p class="sub">One row per completed checkout, newest first.</p>
+      <div class="stats" id="paymentStats"></div>
+      <div class="filter-row">
+        <input type="text" class="input" id="paymentSearch" placeholder="Search handle, platform, session…" autocomplete="off" spellcheck="false">
+      </div>
+      <p class="note" id="paymentNote"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>When</th><th>Amount</th><th>Platform</th><th>Handle</th>
+            <th>Listing total</th><th>Stripe session</th>
+          </tr></thead>
+          <tbody id="paymentBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panelVisits">
+      <h1>Visits</h1>
+      <p class="sub">The last thousand pageviews. The counters above them are counted over all of them.</p>
+      <div class="stats" id="visitStats"></div>
+      <div class="filter-row">
+        <input type="text" class="input" id="visitSearch" placeholder="Search path, country, referrer…" autocomplete="off" spellcheck="false">
+        <select class="input" id="visitSegment" style="flex:0 0 auto;">
+          <option value="all">All traffic</option>
+          <option value="paid">Paid (ads)</option>
+          <option value="organic">Organic</option>
+        </select>
+      </div>
+      <p class="note" id="visitNote"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>When</th><th>Path</th><th>Country</th><th>Referrer</th><th>Language</th><th>Visitor</th>
+          </tr></thead>
+          <tbody id="visitBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/config.js?v=a02dc79406"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var CFG = window.TOPTEN_CONFIG || {};
+  var sb = window.supabase
+    ? window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY)
+    : null;
+  var FUNCTION_URL = CFG.SUPABASE_URL + "/functions/v1/admin-listings";
+
+  /* "Log out" exists because this page lists what every visitor read and what
+     everyone paid, and there had to be a way to put that away. On its own it
+     would be half a gesture: the Supabase session lives in localStorage and
+     survives, so F5 would walk straight back in. This flag is what the check
+     at the bottom of this file reads. It is session-scoped, so closing the tab
+     forgets it, and it does not sign the person out of Google site-wide. */
+  var LOGGED_OUT_KEY = "topten_admin_logged_out";
+  function markLoggedOut(){ try { sessionStorage.setItem(LOGGED_OUT_KEY, "1"); } catch (e) {} }
+  function isLoggedOut(){
+    try { return sessionStorage.getItem(LOGGED_OUT_KEY) === "1"; } catch (e) { return false; }
+  }
+  function clearLoggedOut(){ try { sessionStorage.removeItem(LOGGED_OUT_KEY); } catch (e) {} }
+
+  var loginView = document.getElementById("loginView");
+  var dashboardView = document.getElementById("dashboardView");
+  var loginError = document.getElementById("loginError");
+
+  var TABS = [
+    { key: "listings", btn: "tabBtnListings", panel: "panelListings", note: "listingNote", loaded: false, loading: false },
+    { key: "payments", btn: "tabBtnPayments", panel: "panelPayments", note: "paymentNote", loaded: false, loading: false },
+    { key: "visits",   btn: "tabBtnVisits",   panel: "panelVisits",   note: "visitNote",   loaded: false, loading: false }
+  ];
+  var activeTab = TABS[0];
+
+  var rows = { listings: [], payments: [], visits: [] };
+  var stats = { listings: null, payments: null, visits: null };
+  var visitSegment = "all";
+
+  // ---- plumbing ------------------------------------------------------------
+
+  function getSession(){
+    if (!sb) return Promise.resolve(null);
+    return sb.auth.getSession().then(function(r){
+      return (r && r.data && r.data.session) || null;
+    }).catch(function(){ return null; });
+  }
+
+  // Always a fresh token from the client, which refreshes the ~1h JWT on its
+  // own. Holding the one from page load meant the first click an hour later
+  // silently 401'd into a blank tab.
+  function credential(){
+    return getSession().then(function(s){ return (s && s.access_token) || null; });
+  }
+
+  function apiGet(resource, token){
+    var qs = "";
+    if (resource === "visits") {
+      qs = "?resource=visits&tz=" + encodeURIComponent(browserTz())
+         + "&segment=" + encodeURIComponent(visitSegment);
+    } else if (resource === "payments") {
+      qs = "?resource=payments";
+    }
+    return fetch(FUNCTION_URL + qs, {
+      headers: { "Authorization": "Bearer " + token },
+      cache: "no-store"
+    }).then(function(res){
+      if (!res.ok) return { ok: false, status: res.status };
+      return res.json().then(function(json){
+        return { ok: true, data: json.data || [], stats: json.stats || null };
+      });
+    });
+  }
+
+  function apiPost(body, token){
+    return fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + token, "content-type": "application/json" },
+      body: JSON.stringify(body)
+    }).then(function(res){ return { ok: res.ok, status: res.status }; });
+  }
+
+  function browserTz(){
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
+    catch (e) { return "UTC"; }
+  }
+
+  var ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  function esc(s){
+    if (s == null) return "";
+    return String(s).replace(/[&<>"']/g, function(c){ return ESCAPES[c]; });
+  }
+
+  // Cents, because the database stores cents and floating point is not a thing
+  // to do to money.
+  function money(cents, currency){
+    var n = Number(cents || 0) / 100;
+    var cur = (currency || "usd").toUpperCase();
+    return cur + " " + n.toFixed(2);
+  }
+
+  function when(iso){
+    if (!iso) return "—";
+    var d = new Date(iso);
+    if (isNaN(d)) return "—";
+    return d.toLocaleString(undefined, {
+      year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit"
+    });
+  }
+
+  // A listing drops off the board thirty days after its last payment.
+  var THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  function isLive(row){
+    return !!row.last_paid_at && (Date.now() - new Date(row.last_paid_at).getTime()) < THIRTY_DAYS;
+  }
+
+  function tile(k, v, off){
+    return '<div class="tile' + (off ? ' tile--off' : '') + '">'
+         + '<div class="tile__k">' + esc(k) + '</div>'
+         + '<div class="tile__v">' + esc(v) + '</div></div>';
+  }
+
+  // Referrers are whole URLs; the host is what names the source and the path
+  // after it rarely earns the width it takes.
+  function shortRef(v){
+    if (!v) return "—";
+    var s = v;
+    try {
+      var u = new URL(v);
+      s = u.hostname.replace(/^www\./, "") + (u.pathname !== "/" ? u.pathname : "");
+    } catch (e) { /* not a URL: show it as stored */ }
+    return s.length > 40 ? s.slice(0, 39) + "…" : s;
+  }
+
+  function debounce(fn){
+    var timer = null;
+    return function(){
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function(){ timer = null; fn(); }, 150);
+    };
+  }
+
+  // ---- rendering -----------------------------------------------------------
+
+  function matches(haystack, needle){
+    if (!needle) return true;
+    return haystack.toLowerCase().indexOf(needle) !== -1;
+  }
+
+  function renderListings(){
+    var q = document.getElementById("listingSearch").value.trim().toLowerCase();
+    var s = stats.listings;
+    var el = document.getElementById("listingStats");
+    if (s) {
+      // cents_on_board is what the listings say they were paid; cents_taken is
+      // what the payments table actually recorded. Two columns on two tables,
+      // kept in step by the Stripe webhook. Equal is the only healthy answer.
+      var off = s.cents_on_board !== s.cents_taken;
+      el.innerHTML =
+          tile("Listings", s.total)
+        + tile("Live", s.live)
+        + tile("Hidden", s.hidden)
+        + tile("On the board", money(s.cents_on_board, "usd"))
+        + tile(off ? "Taken — mismatch" : "Taken", money(s.cents_taken, "usd"), off);
+    }
+
+    var list = rows.listings.filter(function(r){
+      return matches([r.platform, r.handle, r.tagline, r.url, r.link].join(" "), q);
+    });
+
+    document.getElementById("listingBody").innerHTML = list.map(function(r, i){
+      var state = r.hidden
+        ? '<span class="pill pill--hidden">hidden</span>'
+        : (isLive(r) ? '<span class="pill pill--live">live</span>'
+                     : '<span class="pill pill--gone">expired</span>');
+      return "<tr>"
+        + '<td class="num muted">' + (i + 1) + "</td>"
+        + "<td>" + esc(r.platform) + "</td>"
+        + '<td><a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.handle) + "</a></td>"
+        + '<td class="wrap muted">' + esc(r.tagline || "—") + "</td>"
+        + '<td class="num">' + esc(money(r.total_cents, "usd")) + "</td>"
+        + '<td class="muted">' + esc(when(r.last_paid_at)) + "</td>"
+        + "<td>" + state + "</td>"
+        + '<td><button type="button" class="row-btn" data-id="' + esc(r.id) + '" data-act="'
+        + (r.hidden ? "unhide" : "hide") + '">' + (r.hidden ? "Unhide" : "Hide") + "</button></td>"
+        + "</tr>";
+    }).join("");
+
+    note("listingNote", list.length ? "" : (rows.listings.length ? "Nothing matches that." : "No listings yet."));
+  }
+
+  function renderPayments(){
+    var q = document.getElementById("paymentSearch").value.trim().toLowerCase();
+    var s = stats.payments;
+    if (s) {
+      var perCurrency = Object.keys(s.by_currency || {}).map(function(cur){
+        return tile("Taken (" + cur.toUpperCase() + ")", money(s.by_currency[cur], cur));
+      }).join("");
+      document.getElementById("paymentStats").innerHTML =
+        tile("Payments", s.total) + tile("Listings paid", s.listings_paid) + perCurrency;
+    }
+
+    var list = rows.payments.filter(function(r){
+      var l = r.listings || {};
+      return matches([l.platform, l.handle, r.stripe_session_id, r.currency].join(" "), q);
+    });
+
+    document.getElementById("paymentBody").innerHTML = list.map(function(r){
+      var l = r.listings || {};
+      return "<tr>"
+        + '<td class="muted">' + esc(when(r.created_at)) + "</td>"
+        + '<td class="num">' + esc(money(r.amount_cents, r.currency)) + "</td>"
+        + "<td>" + esc(l.platform || "—") + "</td>"
+        + "<td>" + esc(l.handle || "—") + "</td>"
+        + '<td class="num muted">' + esc(l.total_cents != null ? money(l.total_cents, "usd") : "—") + "</td>"
+        + '<td class="muted">' + esc(r.stripe_session_id || "—") + "</td>"
+        + "</tr>";
+    }).join("");
+
+    note("paymentNote", list.length ? "" : (rows.payments.length ? "Nothing matches that." : "No payments yet."));
+  }
+
+  function renderVisits(){
+    var q = document.getElementById("visitSearch").value.trim().toLowerCase();
+    var s = stats.visits;
+    if (s) {
+      var k = visitSegment === "paid" ? "paid_" : visitSegment === "organic" ? "organic_" : "";
+      document.getElementById("visitStats").innerHTML =
+          tile("Pageviews", k ? s[k + "total"] : s.total)
+        + tile("Visitors", k ? s[k + "unique"] : s.unique_visitors)
+        + tile("Today", k ? s[k + "today"] : s.today)
+        + tile("Paid", s.paid_total)
+        + tile("Organic", s.organic_total);
+    }
+
+    var list = rows.visits.filter(function(r){
+      return matches([r.path, r.country, r.referrer, r.language].join(" "), q);
+    });
+
+    document.getElementById("visitBody").innerHTML = list.map(function(r){
+      return "<tr>"
+        + '<td class="muted">' + esc(when(r.created_at)) + "</td>"
+        + '<td class="wrap" title="' + esc(r.path) + '">' + esc(r.path) + "</td>"
+        + "<td>" + esc(r.country || "—") + "</td>"
+        + '<td class="muted" title="' + esc(r.referrer || "") + '">' + esc(shortRef(r.referrer)) + "</td>"
+        + '<td class="muted">' + esc(r.language || "—") + "</td>"
+        + '<td class="muted">' + esc((r.session_id || "—").slice(0, 12)) + "</td>"
+        + "</tr>";
+    }).join("");
+
+    note("visitNote", list.length ? "" : (rows.visits.length ? "Nothing matches that." : "No visits recorded yet."));
+  }
+
+  function note(id, text){
+    var el = document.getElementById(id);
+    el.textContent = text;
+    el.style.display = text ? "block" : "none";
+  }
+
+  function render(){
+    if (activeTab.key === "listings") renderListings();
+    else if (activeTab.key === "payments") renderPayments();
+    else renderVisits();
+  }
+
+  // ---- loading -------------------------------------------------------------
+
+  function loadTab(tab){
+    if (tab.loaded || tab.loading) { render(); return; }
+    tab.loading = true;
+    note(tab.note, "Loading…");
+    credential().then(function(token){
+      if (!token) { tab.loading = false; signedOut(); return; }
+      return apiGet(tab.key, token).then(function(res){
+        tab.loading = false;
+        if (!res.ok) {
+          note(tab.note, res.status === 401
+            ? "This session cannot open the dashboard any more. Log out and continue with Google."
+            : "Could not load. Try Refresh.");
+          return;
+        }
+        rows[tab.key] = res.data;
+        stats[tab.key] = res.stats;
+        tab.loaded = true;
+        render();
+      });
+    }).catch(function(){
+      tab.loading = false;
+      note(tab.note, "Could not reach the server. Check the connection and try Refresh.");
+    });
+  }
+
+  function selectTab(tab){
+    activeTab = tab;
+    TABS.forEach(function(t){
+      document.getElementById(t.btn).classList.toggle("active", t === tab);
+      document.getElementById(t.panel).classList.toggle("active", t === tab);
+    });
+    loadTab(tab);
+  }
+
+  function enter(listingRows, listingStats){
+    rows.listings = listingRows;
+    stats.listings = listingStats;
+    TABS[0].loaded = true;
+    loginView.style.display = "none";
+    dashboardView.style.display = "block";
+    selectTab(TABS[0]);
+  }
+
+  function signedOut(){
+    dashboardView.style.display = "none";
+    loginView.style.display = "block";
+  }
+
+  // ---- the way in ----------------------------------------------------------
+
+  function loginFailed(message){
+    loginError.textContent = message;
+    loginError.classList.add("show");
+  }
+
+  /* signInWithOAuth navigates the whole browser away and comes back to a URL
+     Supabase has to have been told about in advance. This page is that URL --
+     there is no account page on this site to land on -- so it returns here and
+     the check at the bottom finds the session waiting.
+
+     Pressing this is a deliberate login, so it clears the logged-out flag.
+     Without that, "Log out" followed by "Continue with Google" would come back
+     to a page that refused to open, with a perfectly good session and nothing
+     on screen saying why. */
+  document.getElementById("googleBtn").addEventListener("click", function(){
+    var gb = this;
+    if (!sb) {
+      loginFailed("Sign-in needs the Supabase library, which did not load. Check the connection and reload.");
+      return;
+    }
+    clearLoggedOut();
+    gb.disabled = true;
+    loginError.classList.remove("show");
+    sb.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin + "/admin.html" }
+    }).then(function(r){
+      if (r && r.error) { gb.disabled = false; loginFailed("Google sign-in did not start. Try again."); }
+    }).catch(function(){
+      gb.disabled = false;
+      loginFailed("Google sign-in did not start. Try again.");
+    });
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", function(){
+    markLoggedOut();
+    rows = { listings: [], payments: [], visits: [] };
+    stats = { listings: null, payments: null, visits: null };
+    visitSegment = "all";
+    document.getElementById("visitSegment").value = "all";
+    TABS.forEach(function(t){
+      t.loaded = false; t.loading = false;
+      note(t.note, "");
+    });
+    ["listingBody", "paymentBody", "visitBody"].forEach(function(id){
+      document.getElementById(id).innerHTML = "";
+    });
+    ["listingSearch", "paymentSearch", "visitSearch"].forEach(function(id){
+      document.getElementById(id).value = "";
+    });
+    ["listingStats", "paymentStats", "visitStats"].forEach(function(id){
+      document.getElementById(id).innerHTML = "";
+    });
+    selectTab(TABS[0]);
+    signedOut();
+    loginError.classList.remove("show");
+  });
+
+  // ---- wiring --------------------------------------------------------------
+
+  TABS.forEach(function(t){
+    document.getElementById(t.btn).addEventListener("click", function(){ selectTab(t); });
+  });
+
+  document.getElementById("refreshBtn").addEventListener("click", function(){
+    activeTab.loaded = false;
+    loadTab(activeTab);
+  });
+
+  ["listingSearch", "paymentSearch", "visitSearch"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", debounce(render));
+  });
+
+  // The segment is a server-side filter, not a search box over rows already in
+  // hand: the slice is capped at a thousand rows, so a day of heavy ad traffic
+  // would fill every one of them and leave the organic segment looking empty.
+  document.getElementById("visitSegment").addEventListener("change", function(){
+    visitSegment = this.value;
+    TABS[2].loaded = false;
+    loadTab(TABS[2]);
+  });
+
+  // Hiding is the only thing this page writes, and it writes it one row at a
+  // time. The row is re-read from the server afterwards rather than flipped
+  // locally: if the write did not land, the button should not claim it did.
+  document.getElementById("listingBody").addEventListener("click", function(e){
+    var btn = e.target.closest ? e.target.closest(".row-btn") : null;
+    if (!btn) return;
+    var id = btn.getAttribute("data-id");
+    var act = btn.getAttribute("data-act");
+    btn.disabled = true;
+    btn.textContent = "…";
+    credential().then(function(token){
+      if (!token) { signedOut(); return; }
+      return apiPost({ id: id, action: act }, token).then(function(res){
+        if (!res.ok) {
+          btn.disabled = false;
+          btn.textContent = act === "hide" ? "Hide" : "Unhide";
+          note("listingNote", "That did not save. Try again.");
+          return;
+        }
+        TABS[0].loaded = false;
+        loadTab(TABS[0]);
+      });
+    }).catch(function(){
+      btn.disabled = false;
+      btn.textContent = act === "hide" ? "Hide" : "Unhide";
+      note("listingNote", "That did not save. Try again.");
+    });
+  });
+
+  /* The session already in this browser is the credential, so the normal way
+     in asks for nothing: coming back from Google lands here, and this finds
+     the session and enters. The button is for the browser that has none. */
+  getSession().then(function(session){
+    if (isLoggedOut()) return;
+    if (!session || !session.access_token) return;
+    return apiGet("listings", session.access_token).then(function(res){
+      if (res.ok) { enter(res.data, res.stats); return; }
+      // Signed in, but not as the admin: somebody else's Google account, or a
+      // session made some other way. The function will not say which, and
+      // neither does this -- but the button is the answer either way.
+      if (res.status === 401) {
+        loginFailed("This browser is signed in, but not as the admin.");
+      }
+    });
+  }).catch(function(){
+    loginFailed("Couldn't reach the server. Check your connection and reload.");
+  });
+})();
+</script>
+
+</body>
+</html>
