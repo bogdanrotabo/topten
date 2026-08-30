@@ -638,6 +638,7 @@
     boards: slugMap(PLATFORMS.map(p => [p.slug, []])),
     platform: 'x',
     visitors: null,
+    online: null,
     loaded: false,
     prevRanks: {}
   };
@@ -703,6 +704,7 @@
       <div class="stat"><span class="stat__v">${money(s.total)}</span><span class="stat__k">On the boards</span></div>
       <div class="stat"><span class="stat__v">${money(s.top)}</span><span class="stat__k">Highest</span></div>
       <div class="stat stat--count"><span class="stat__v">${state.visitors === null ? '—' : state.visitors.toLocaleString()}</span><span class="stat__k">Visitors</span></div>
+      <div class="stat stat--online"><span class="stat__v">${state.online === null ? '—' : state.online.toLocaleString()}</span><span class="stat__k">Online now</span></div>
     </div>`;
   }
 
@@ -2352,6 +2354,22 @@
     } catch (e) {}
   }
 
+  /* Who is here this minute, back beside the visitor total. site_pulse()
+     writes the heartbeat and returns the count in one call, so a browser that
+     asks is also counted. It stays quiet while the tab is hidden: forty
+     background tabs are not forty people, and the number has to mean what it
+     says. Same id as the visit row, so one browser is one of each. */
+  async function pulse() {
+    if (!sb || document.hidden) return;
+    try {
+      const { data, error } = await sb.rpc('site_pulse', { p_session: visitorId() });
+      if (error || typeof data !== 'number') return;
+      state.online = data;
+      const el = document.querySelector('.stat--online .stat__v');
+      if (el) el.textContent = state.online.toLocaleString();
+    } catch (e) {}
+  }
+
   /* ------------------------------------------------------ live plumbing */
 
   const refresh = debounce(async () => { await loadBoards(); fillTicker(); if (!modal.hidden) return; refreshBoard(); }, 450);
@@ -2388,6 +2406,12 @@
     // Written first, read second, so a visitor is counted in the number they
     // are shown rather than seeing the figure from just before they arrived.
     recordVisit().then(loadVisitors);
+    // A heartbeat expires after 90s, so beat well inside that. A tab brought
+    // back to the front should not wait 45s to be counted again -- by then its
+    // own beat has already lapsed.
+    pulse();
+    setInterval(pulse, 45000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) pulse(); });
     // Expired listings drop off silently, so re-read on a slow timer too.
     setInterval(() => { if (modal.hidden && document.visibilityState === 'visible') refresh(); }, 60000);
   })();
