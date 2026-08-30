@@ -130,6 +130,7 @@
       <button type="button" class="tab-btn active" id="tabBtnListings">Boards</button>
       <button type="button" class="tab-btn" id="tabBtnPayments">Payments</button>
       <button type="button" class="tab-btn" id="tabBtnVisits">Visits</button>
+        <button type="button" class="tab-btn" id="tabBtnAds">Ads</button>
       <div class="tabs-actions">
         <button type="button" class="ghost-btn" id="refreshBtn">Refresh</button>
         <button type="button" class="ghost-btn" id="logoutBtn">Log out</button>
@@ -195,6 +196,25 @@
           <tbody id="visitBody"></tbody>
         </table>
       </div>
+
+    <div class="tab-panel" id="panelAds">
+      <h1>Ads</h1>
+      <p class="sub">What the paid clicks delivered, read from the addresses they landed on &mdash; not from what Google reports having billed for.</p>
+      <div class="stats" id="adsStats"></div>
+      <div class="filter-row">
+        <input type="text" class="input" id="adsSearch" placeholder="Search campaign or country…" autocomplete="off" spellcheck="false">
+      </div>
+      <p class="note" id="adsNote"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Campaign</th><th>Country</th><th>Clicks</th><th>Visitors</th>
+            <th>Left after one page</th><th>First</th><th>Last</th>
+          </tr></thead>
+          <tbody id="adsBody"></tbody>
+        </table>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -232,12 +252,13 @@
   var TABS = [
     { key: "listings", btn: "tabBtnListings", panel: "panelListings", note: "listingNote", loaded: false, loading: false },
     { key: "payments", btn: "tabBtnPayments", panel: "panelPayments", note: "paymentNote", loaded: false, loading: false },
-    { key: "visits",   btn: "tabBtnVisits",   panel: "panelVisits",   note: "visitNote",   loaded: false, loading: false }
+    { key: "visits",   btn: "tabBtnVisits",   panel: "panelVisits",   note: "visitNote",   loaded: false, loading: false },
+    { key: "ads",      btn: "tabBtnAds",      panel: "panelAds",      note: "adsNote",     loaded: false, loading: false }
   ];
   var activeTab = TABS[0];
 
-  var rows = { listings: [], payments: [], visits: [] };
-  var stats = { listings: null, payments: null, visits: null };
+  var rows = { listings: [], payments: [], visits: [], ads: [] };
+  var stats = { listings: null, payments: null, visits: null, ads: null };
   var visitSegment = "all";
 
   // ---- plumbing ------------------------------------------------------------
@@ -263,6 +284,8 @@
          + "&segment=" + encodeURIComponent(visitSegment);
     } else if (resource === "payments") {
       qs = "?resource=payments";
+    } else if (resource === "ads") {
+      qs = "?resource=ads&days=30";
     }
     return fetch(FUNCTION_URL + qs, {
       headers: { "Authorization": "Bearer " + token },
@@ -460,9 +483,55 @@
     el.style.display = text ? "block" : "none";
   }
 
+  /* One row per campaign per country, worst first.
+
+     "Left after one page" is the column that decides whether a click was
+     worth what it cost: somebody who saw the board and nothing else did not
+     fail at the form, they failed before reaching it. Next to the country it
+     came from, it says whether the ads are being shown to people this site
+     can serve -- which Google Ads cannot answer, because it reports what it
+     billed for, not who arrived. */
+  function renderAds(){
+    var q = document.getElementById("adsSearch").value.trim().toLowerCase();
+    var s = stats.ads;
+    if (s) {
+      var away = s.visitors ? Math.round(100 * s.bounced / s.visitors) : 0;
+      document.getElementById("adsStats").innerHTML =
+          tile("Paid clicks", s.clicks)
+        + tile("Visitors", s.visitors)
+        + tile("Left after one page", away + "%")
+        + tile("Campaigns", s.campaigns)
+        + tile("Countries", s.countries);
+    }
+
+    var list = rows.ads.filter(function(r){
+      return matches((r.campaign || "") + " " + (r.country || ""), q);
+    });
+
+    document.getElementById("adsBody").innerHTML = list.map(function(r){
+      var visitors = Number(r.visitors || 0), bounced = Number(r.bounced || 0);
+      var pct = visitors ? Math.round(100 * bounced / visitors) : 0;
+      // Two thirds walking straight back out is where a country stops being
+      // an audience and starts being a bill.
+      var cls = pct >= 66 ? ' class="pill pill--hidden"' : ' class="muted"';
+      return "<tr>"
+        + "<td>" + esc(r.campaign) + "</td>"
+        + "<td>" + esc(r.country) + "</td>"
+        + '<td class="num">' + esc(String(r.clicks)) + "</td>"
+        + '<td class="num">' + esc(String(visitors)) + "</td>"
+        + "<td><span" + cls + ">" + pct + "%</span></td>"
+        + '<td class="muted">' + esc(when(r.first_seen)) + "</td>"
+        + '<td class="muted">' + esc(when(r.last_seen)) + "</td>"
+        + "</tr>";
+    }).join("");
+
+    note("adsNote", list.length ? "" : (rows.ads.length ? "Nothing matches that." : "No paid clicks recorded in the last 30 days."));
+  }
+
   function render(){
     if (activeTab.key === "listings") renderListings();
     else if (activeTab.key === "payments") renderPayments();
+    else if (activeTab.key === "ads") renderAds();
     else renderVisits();
   }
 
@@ -562,13 +631,13 @@
       t.loaded = false; t.loading = false;
       note(t.note, "");
     });
-    ["listingBody", "paymentBody", "visitBody"].forEach(function(id){
+    ["listingBody", "paymentBody", "visitBody", "adsBody"].forEach(function(id){
       document.getElementById(id).innerHTML = "";
     });
-    ["listingSearch", "paymentSearch", "visitSearch"].forEach(function(id){
+    ["listingSearch", "paymentSearch", "visitSearch", "adsSearch"].forEach(function(id){
       document.getElementById(id).value = "";
     });
-    ["listingStats", "paymentStats", "visitStats"].forEach(function(id){
+    ["listingStats", "paymentStats", "visitStats", "adsStats"].forEach(function(id){
       document.getElementById(id).innerHTML = "";
     });
     selectTab(TABS[0]);
@@ -587,7 +656,7 @@
     loadTab(activeTab);
   });
 
-  ["listingSearch", "paymentSearch", "visitSearch"].forEach(function(id){
+  ["listingSearch", "paymentSearch", "visitSearch", "adsSearch"].forEach(function(id){
     document.getElementById(id).addEventListener("input", debounce(render));
   });
 

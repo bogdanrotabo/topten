@@ -209,6 +209,35 @@ Deno.serve(async (req: Request) => {
     return ok({ data: rowsRes.data, stats, segment });
   }
 
+  /* What the ads delivered, read from the addresses they landed on.
+
+     Google Ads reports what it billed for; this reports who actually arrived,
+     from where, and whether they stayed past the first page. Until the visit
+     tracking was fixed this table could not answer either question -- the
+     query string was dropped before the row was written and the country was
+     never filled -- so two campaigns spent for days with nothing on this side
+     able to say which of them, or which country, any visitor came from. */
+  if (resource === "ads") {
+    const daysParam = Number(url.searchParams.get("days") || "30");
+    const days = Number.isFinite(daysParam) ? Math.min(Math.max(daysParam, 1), 365) : 30;
+
+    const { data, error } = await supabase.rpc("ad_traffic_stats", { p_days: days });
+    if (error) return fail(error.message);
+
+    const rows = (data ?? []) as any[];
+    return ok({
+      data: rows,
+      stats: {
+        clicks: rows.reduce((n, r) => n + Number(r.clicks || 0), 0),
+        visitors: rows.reduce((n, r) => n + Number(r.visitors || 0), 0),
+        bounced: rows.reduce((n, r) => n + Number(r.bounced || 0), 0),
+        campaigns: new Set(rows.map((r) => r.campaign)).size,
+        countries: new Set(rows.map((r) => r.country)).size,
+        days,
+      },
+    });
+  }
+
   if (resource === "payments") {
     // One row per completed checkout, with the listing it moved. The listing
     // is joined rather than looked up afterwards because a payment identified
