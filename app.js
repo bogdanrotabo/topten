@@ -2270,17 +2270,70 @@
   /* Path only. A board link carries the platform and nothing private, but a
      manage link carries its edit token in the query string, and analytics is
      not a place to write down credentials. */
+  /* The address as it arrived, query string and all.
+     
+     This used to return pathname alone, which threw away everything after the
+     "?" -- including gclid and gad_campaignid, the two markers that say a
+     visit was bought. Every ad click was therefore filed as an ordinary visit
+     to "/", and the money spent on Google Ads left no trace on this side at
+     all: campaigns could run for weeks with nothing here able to say which of
+     them, or which country, any visitor came from.
+
+     Sensitive names are dropped rather than the whole query, so a token that
+     ever does travel in a URL is not written into a table that keeps rows
+     forever. The edit token arrives in the hash today, which never reaches
+     the server and is not in location.search -- this is the guard for the day
+     that stops being true. */
+  const STRIPPED_PARAMS = [
+    'token', 'edit_token', 'code', 'access_token', 'refresh_token',
+    'secret', 'password', 'otp', 'token_hash'
+  ];
   function visitPath() {
-    try { return new URL(location.href).pathname || '/'; } catch (e) { return '/'; }
+    try {
+      const u = new URL(location.href);
+      STRIPPED_PARAMS.forEach(k => u.searchParams.delete(k));
+      return (u.pathname || '/') + (u.search || '');
+    } catch (e) { return '/'; }
+  }
+
+  /* The country, from Cloudflare's own endpoint on this origin.
+
+     No third-party geolocation service: the site already sits behind
+     Cloudflare, /cdn-cgi/trace answers with the country of this very request,
+     and nothing about the visitor is sent to anybody else. Cached for the tab.
+
+     The column has existed since site_visits was created and nothing has ever
+     written it, so every row reads NULL -- which is why "where is the traffic
+     coming from" had no answer here. */
+  let geoCache = null;
+  async function detectCountry() {
+    if (geoCache !== null) return geoCache;
+    try {
+      const stored = sessionStorage.getItem('topten:cc');
+      if (stored) { geoCache = stored; return stored; }
+    } catch (e) { /* storage denied */ }
+    try {
+      const res = await fetch('/cdn-cgi/trace', { cache: 'no-store' });
+      const text = res.ok ? await res.text() : '';
+      const m = /(?:^|\n)loc=([A-Z]{2})/.exec(text);
+      geoCache = m ? m[1] : '';
+      try { if (geoCache) sessionStorage.setItem('topten:cc', geoCache); } catch (e) {}
+    } catch (e) { geoCache = ''; }
+    return geoCache;
   }
 
   async function recordVisit() {
     if (!sb) return;
     try {
+      // The country is looked up first but never allowed to hold the visit
+      // up: detectCountry() resolves to '' rather than throwing, so a blocked
+      // /cdn-cgi/trace costs the country and nothing else.
+      const country = await detectCountry();
       await sb.from('site_visits').insert({
         path: visitPath(),
         referrer: document.referrer || null,
         language: navigator.language || null,
+        country: country || null,
         session_id: visitorId()
       });
     } catch (e) { /* a visit that will not write is not worth a broken page */ }
