@@ -32,7 +32,7 @@
   --line-soft: #e6d5ee;
   --text: #17121c;
   --muted: #5b4a66;
-  --dim: #8a7994;
+  --dim: #776980;
   --accent: #8a1fb2;
   --accent-ink: #ffffff;
   --accent-soft: #f2e2f8;
@@ -1092,6 +1092,12 @@ img { max-width: 100%; }
 .sponsor__brand b { color: #9b3faf; }
 .sponsor__brand:hover { color: #9b3faf; }
 
+/* The rotabo violet reads at 3.1:1 against the dark panel, and 4.5 is what
+   somebody with low vision needs to read it at all. Same hue, lifted until it
+   clears; the mark still reads as rotabo. */
+:root[data-theme="dark"] .sponsor__brand b,
+:root[data-theme="dark"] .sponsor__brand:hover { color: #c471db; }
+
 .sponsor__tag { font-size: 12px; color: var(--muted); }
 
 /* Sits with the small line, at the size of the small line. Not a button, not
@@ -1121,6 +1127,13 @@ img { max-width: 100%; }
 .foot nav { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 .foot a { color: var(--muted); text-decoration: none; }
 .foot a:hover { color: var(--text); }
+
+/* A link sitting inside a sentence cannot be told from the sentence by colour
+   alone -- somebody who does not see the difference between #5b4a66 and
+   #776980 has no way of knowing CoinGecko is a link. The ones in the nav are
+   on their own line and read as links already; these are the ones in running
+   text, and they get the underline. */
+.foot p a { text-decoration: underline; text-underline-offset: 2px; }
 
 /* --------------------------------------------------------------- a11y/motion */
 
@@ -1379,10 +1392,15 @@ img { max-width: 100%; }
    -- and .chips + .hero has to be named again because a compound selector
    outranks a bare one whatever the media query. */
 @media (max-width: 559px) {
-  .hero { padding: 20px 0 10px; }
+  .hero { padding: 40px 0 10px; }
 }
 
-@media (max-height: 760px) {
+/* A short screen that is not a phone is a laptop, and there the head has to
+   give up its air or the first row of the board goes under the bottom of the
+   window. A phone is short too, but it scrolls the way a phone scrolls and the
+   head is the first thing seen, so it keeps its space -- which is why this one
+   asks for the width as well. */
+@media (max-height: 760px) and (min-width: 560px) {
   .hero,
   .chips + .hero { padding: 10px 0 6px; }
 }
