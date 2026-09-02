@@ -1360,7 +1360,11 @@ img { max-width: 100%; }
 
 /* ------------------------------------------------------------- the head */
 
-.hero { padding: 20px 0 12px; text-align: left; }
+/* Centred, and with air under the headline. The rule and the invitation are
+   two short lines meant to be read as a statement, not as body copy hanging
+   off a left margin — and the blank line after the title is what separates
+   the name of the thing from what it does. */
+.hero { padding: 22px 0 14px; text-align: center; }
 
 /* On a board the headline comes after the chips and sits on its own ten, so
    it needs the space above it that the chips took, and less below. */
@@ -1403,8 +1407,11 @@ img { max-width: 100%; }
 
 :root[data-theme="dark"] .hero__mark svg { color: var(--chip-d, var(--chip)); }
 
+/* The blank line after the title. There are two .hero__sub rules in this
+   file and this is the one that wins — the earlier one is older and fully
+   overridden, which is why editing it changed nothing on screen. */
 .hero__sub {
-  margin: 8px 0 0;
+  margin: 22px auto 0;
   max-width: 68ch;
   color: var(--muted);
   font-size: 15px;
@@ -1417,7 +1424,7 @@ img { max-width: 100%; }
    size as the rule above it, its own line, and the price in the accent so
    the eye lands on the number. */
 .hero__ask {
-  margin: 6px 0 0;
+  margin: 6px auto 0;
   max-width: 68ch;
   font-size: 15px;
   line-height: 1.55;
