@@ -52,7 +52,7 @@ done
 # word: a board name written with hyphens is put back with spaces below, and
 # the noun is what that board actually lists. "The ten most-paid Crypto
 # profiles" describes nothing -- coins do not have profiles.
-PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins gifts|Gifts-and-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
+PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins gifts|Gifts-+-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
 
 SITEMAP=sitemap.xml
 {
@@ -70,21 +70,38 @@ for entry in $PLATFORMS; do
   # hyphen and put back here. "Top 10 on NBA-Teams" is not a title.
   name="${name//-/ }"
   noun="${noun//-/ }"
+  # A board whose name carries an ampersand writes it "+" in the list above,
+  # because the list is space separated and & has a second meaning further
+  # down: inside a sed replacement a bare & is "the whole match", which would
+  # paste the entire <title> tag into itself. So the & is restored here in
+  # plain bash, written as the HTML entity it has to be in an attribute, and
+  # the sed-safe copy is what the substitutions below actually use.
+  #
+  # & is special twice over, which is why this is three lines and not none.
+  # Bash 5.2 reads a bare & in ${var//pat/repl} as the matched text -- and it
+  # does so after expanding the replacement, so routing it through a variable
+  # does not help either. sed reads a bare & in its own replacement the same
+  # way, which would paste the whole matched <title> tag into itself. So the
+  # entity is restored with sed (where \& is a literal &) and a sed-safe copy
+  # is made with sed (where \\& is a backslash followed by the match).
+  name=$(printf '%s' "$name" | sed 's/+/\&amp;/g')
   title="Top 10 on $name — TopTen.one"
   desc="The ten most-paid $name $noun right now. Rank is decided by money paid, not by an algorithm. Add yours from \$2."
+  title_sed=$(printf '%s' "$title" | sed 's/&/\\&/g')
+  desc_sed=$(printf '%s' "$desc" | sed 's/&/\\&/g')
   # Trailing slash: GitHub Pages answers /x with a 301 to /x/, so declaring the
   # bare form canonical would point every board at a redirect.
   url="https://topten.one/$slug/"
 
   mkdir -p "$slug"
-  sed -e "s|<title>.*</title>|<title>$title</title>|" \
-      -e "s|<meta name=\"description\" content=\"[^\"]*\">|<meta name=\"description\" content=\"$desc\">|" \
+  sed -e "s|<title>.*</title>|<title>$title_sed</title>|" \
+      -e "s|<meta name=\"description\" content=\"[^\"]*\">|<meta name=\"description\" content=\"$desc_sed\">|" \
       -e "s|<link rel=\"canonical\" href=\"[^\"]*\">|<link rel=\"canonical\" href=\"$url\">|" \
-      -e "s|<meta property=\"og:title\" content=\"[^\"]*\">|<meta property=\"og:title\" content=\"$title\">|" \
-      -e "s|<meta property=\"og:description\" content=\"[^\"]*\">|<meta property=\"og:description\" content=\"$desc\">|" \
+      -e "s|<meta property=\"og:title\" content=\"[^\"]*\">|<meta property=\"og:title\" content=\"$title_sed\">|" \
+      -e "s|<meta property=\"og:description\" content=\"[^\"]*\">|<meta property=\"og:description\" content=\"$desc_sed\">|" \
       -e "s|<meta property=\"og:url\" content=\"[^\"]*\">|<meta property=\"og:url\" content=\"$url\">|" \
-      -e "s|<meta name=\"twitter:title\" content=\"[^\"]*\">|<meta name=\"twitter:title\" content=\"$title\">|" \
-      -e "s|<meta name=\"twitter:description\" content=\"[^\"]*\">|<meta name=\"twitter:description\" content=\"$desc\">|" \
+      -e "s|<meta name=\"twitter:title\" content=\"[^\"]*\">|<meta name=\"twitter:title\" content=\"$title_sed\">|" \
+      -e "s|<meta name=\"twitter:description\" content=\"[^\"]*\">|<meta name=\"twitter:description\" content=\"$desc_sed\">|" \
       index.html > "$slug/index.html"
 
   echo "  <url><loc>$url</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>" >> "$SITEMAP"
