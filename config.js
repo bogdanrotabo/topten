@@ -16,5 +16,21 @@ window.TOPTEN_CONFIG = {
   GA_MEASUREMENT_ID: "G-NYF4ZEZPZ9",
 
   // Where reports and contact go.
-  CONTACT_EMAIL: "hello@topten.one"
+  CONTACT_EMAIL: "hello@topten.one",
+
+  /* unavatar, which fetches the profile picture for every social listing.
+     It answers free for some handles and 403 "requires a pro plan" for
+     others, per handle rather than per network — so half the faces on the
+     boards are currently missing and the drawn badge stands in for them.
+
+     Paste the key from unavatar's dashboard here and they come back. The
+     parameter name is what their dashboard calls it: it is apiKey on the
+     plans documented today, and the second value exists so a rename on
+     their side is one word here rather than a code change.
+
+     Public by design, like everything else in this file — the key travels
+     in the image URL, which is visible to anyone who opens the page. Do not
+     put a key here that can do anything but fetch avatars. */
+  UNAVATAR_KEY: "",
+  UNAVATAR_KEY_PARAM: "apiKey"
 };

@@ -815,9 +815,19 @@
      those faces on the page at all, and a key that moves every Monday is a
      promise to throw them away. So the address is stable again. Put the key
      back the day the avatars are paid for. */
+  /* The key, when there is one. Empty is the normal state and costs nothing:
+     the free tier still answers for a good number of handles, and the badge
+     stands in for the rest. */
+  const unavatarAuth = () => {
+    const k = CFG.UNAVATAR_KEY;
+    if (!k) return '';
+    return `&${encodeURIComponent(CFG.UNAVATAR_KEY_PARAM || 'apiKey')}=${encodeURIComponent(k)}`;
+  };
+
   function avatarUrl(platform, handle) {
     const h = String(handle || '').replace(/^@/, '');
-    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}?fallback=false`;
+    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}`
+      + `?fallback=false${unavatarAuth()}`;
   }
 
   const FALLBACK_AV = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -1657,7 +1667,9 @@
     if (!linkable(link)) return null;
     try {
       const host = new URL(link).hostname.replace(/^www\./, '');
-      return host ? `https://unavatar.io/${encodeURIComponent(host)}?fallback=false` : null;
+      return host
+        ? `https://unavatar.io/${encodeURIComponent(host)}?fallback=false${unavatarAuth()}`
+        : null;
     } catch (e) { return null; }
   }
 
