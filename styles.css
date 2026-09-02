@@ -1421,6 +1421,18 @@ img { max-width: 100%; }
 
 .hero__sub b { color: var(--text); font-weight: 700; }
 
+/* The line under the rule: the question and what answering it costs. Same
+   size as the rule above it, its own line, and the price in the accent so
+   the eye lands on the number. */
+.hero__ask {
+  margin: 6px 0 0;
+  max-width: 68ch;
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 600;
+  color: var(--text);
+}
+
 /* --------------------------------------------------------- board filter */
 
 /* Not .chip: that name was already taken by the round club badge in the

@@ -2034,9 +2034,13 @@
      more than a promise you cannot. */
   function heroHome() {
     const c = cheapestTop();
+    /* Two lines, not one sentence. The first states the rule; the second is
+       the invitation and the price. Run together, the question read as a
+       clause of the explanation instead of the thing being asked. */
     return `<h1>Rankings decided by <em>money</em></h1>
       <p class="hero__sub"><b>Pay more than the person above you. That's the
-      whole algorithm.</b> Who should be #1? Take a place — ${money(c.cost)}.</p>`;
+      whole algorithm.</b></p>
+      <p class="hero__ask">Who should be #1? Take a place — ${money(c.cost)}.</p>`;
   }
 
   function heroBoard(slug) {
