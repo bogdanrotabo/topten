@@ -66,6 +66,23 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
    a 429 that never happens from a laptop. So: back off and try again, and
    believe their Retry-After when they send one. Five attempts spanning about
    two and a half minutes; past that it really is not going to work now. */
+/* The exchanges CoinGecko ranks, with their own marks. Kept in a namespace of
+   their own rather than poured into the coin map: "Gate" and "Bitget" are
+   exchange names a coin could also carry, and a listing on the exchange board
+   must never end up wearing a token's logo because the two folded together.
+   Two maps, and no collision to arbitrate. */
+async function fetchExchanges(attempt = 1) {
+  const r = await fetch('https://api.coingecko.com/api/v3/exchanges?per_page=30&page=1',
+    { headers: { accept: 'application/json' } });
+  if ((r.status === 429 || r.status >= 500) && attempt <= 5) {
+    const told = Number(r.headers.get('retry-after'));
+    await sleep(Number.isFinite(told) && told > 0 ? told * 1000 : 6000 * 2 ** (attempt - 1));
+    return fetchExchanges(attempt + 1);
+  }
+  if (!r.ok) throw new Error(`CoinGecko exchanges: HTTP ${r.status}`);
+  return r.json();
+}
+
 async function fetchPage(page, category, attempt = 1) {
   const u = 'https://api.coingecko.com/api/v3/coins/markets'
     + `?vs_currency=usd&order=market_cap_desc&per_page=${PER}&page=${page}`
@@ -170,19 +187,39 @@ async function build() {
     console.error(`build-coin-logos: only ${coins} coins came back, expected ~${PAGES * PER}.`);
     process.exit(2);
   }
+  /* Their images live under /markets/ rather than /coins/, so they carry the
+     whole address instead of the two-part shorthand the coins use. Thirty of
+     them is not worth a second encoding. */
+  await sleep(GAP);
+  const exchanges = {};
+  const exchangeNames = [];
+  try {
+    for (const e of await fetchExchanges()) {
+      const nume = String(e.name || '').trim();
+      const img = String(e.image || '').split('?')[0];
+      if (!nume || !img) continue;
+      exchangeNames.push([nume, nume.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase()]);
+      const k = fold(nume);
+      if (k && !(k in exchanges)) exchanges[k] = img;
+    }
+  } catch (err) {
+    console.warn(`  exchanges: ${err.message} — keeping whatever was built last`);
+  }
+
   const map = resolve(byName, bySym);
   const toate = new Set(byName.map(x => x[0]).concat(bySym.map(x => x[0])));
   toate.delete('');
   const pierdute = toate.size - Object.keys(map).length;
   if (pierdute) console.log(`  ${pierdute} names two projects could both mean — dropped rather than guessed`);
-  return { base: BASE, size: 'small', coins, logos: map, names, meme };
+  return { base: BASE, size: 'small', coins, logos: map, names, meme, exchanges, exchangeNames };
 }
 
 function split(data) {
   const builtAt = new Date().toISOString();
   return [
-    { builtAt, base: data.base, size: data.size, coins: data.coins, logos: data.logos },
-    { builtAt, names: data.names, meme: data.meme }
+    { builtAt, base: data.base, size: data.size, coins: data.coins,
+      logos: data.logos, exchanges: data.exchanges },
+    { builtAt, names: data.names, meme: data.meme, exchanges: data.exchangeNames }
   ];
 }
 
@@ -235,4 +272,4 @@ writeFileSync(OUT, json);
 writeFileSync(OUT_LIST, jsonList);
 console.log(`build-coin-logos: ${data.coins} coins`);
 console.log(`  coin-logos.json  ${Object.keys(data.logos).length} keys, ${(json.length / 1024).toFixed(0)} KB`);
-console.log(`  coin-list.json   ${data.names.length} coins + ${data.meme.length} memecoins, ${(jsonList.length / 1024).toFixed(0)} KB`);
+console.log(`  coin-list.json   ${data.names.length} coins + ${data.meme.length} memecoins + ${data.exchangeNames.length} exchanges, ${(jsonList.length / 1024).toFixed(0)} KB`);

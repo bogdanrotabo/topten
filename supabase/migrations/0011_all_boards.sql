@@ -7,7 +7,8 @@
 -- boards; app.js only draws it, and scripts/check-boards.mjs fails the build
 -- when the two disagree.
 --
--- Applied to production on 2026-09-02 as `0004_platform_check_all_boards`.
+-- Applied to production on 2026-09-02 as `0004_platform_check_all_boards`,
+-- then extended with 'exchanges' as `0005_exchanges_board`.
 alter table public.listings drop constraint if exists listings_platform_check;
 
 alter table public.listings add constraint listings_platform_check check (
@@ -25,7 +26,7 @@ alter table public.listings add constraint listings_platform_check check (
     'nba-teams', 'nba-players', 'nhl-teams', 'nhl-players',
     'football-clubs', 'football-players', 'f1-drivers',
     -- crypto
-    'crypto', 'memecoins', 'gifts',
+    'crypto', 'memecoins', 'exchanges', 'gifts',
     -- culture, business, life
     'artists', 'podcasts', 'startups', 'restaurants', 'cities', 'pets'
   ]::text[])

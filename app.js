@@ -338,6 +338,17 @@
         re:    COIN_RE,
         profile: null
       } },
+    /* The places the coins are actually traded. A fourth crypto board rather
+       than rows on the first one: an exchange is a company with a desk, a
+       licence and a support queue, and putting Binance in the same ranking as
+       a dog coin ranks neither. */
+    { slug: 'exchanges', name: 'Exchanges', color: '#2775ca', fan: true,
+      noun: 'exchange', tag: {
+        label: 'Exchange',
+        hint:  'Binance',
+        re:    COIN_RE,
+        profile: null
+      } },
     /* The only board where the listing is an offer rather than a name: the
        project says what it is giving, and the link is where to claim it.
        Not a fan board -- nobody bids for somebody else's airdrop. */
@@ -510,6 +521,9 @@
        belongs to nobody. */
     crypto: '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M12 6.4v11.2M9.6 9.2h4.2a1.9 1.9 0 0 1 0 3.8H9.6h4.5a1.9 1.9 0 0 1 0 3.8H9.6"/>',
     memecoins: '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="10" r="1.2" fill="currentColor"/><circle cx="15" cy="10" r="1.2" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M8 14.2a4.6 4.6 0 0 0 8 0"/>',
+    /* Two arrows crossing: the thing an exchange does, and the one drawing
+       that is nobody's registered mark. */
+    exchanges: '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8.4h13.2l-3.4-3.4M20 15.6H6.8l3.4 3.4"/>',
     gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
     /* The ten newest boards. Same rule as the leagues and the coins: a crest,
        a team badge, a record label's mark and a city's coat of arms are all
@@ -1052,7 +1066,7 @@
 
   /* Same job as LEAGUES: keep the crypto boards out of Gaming, which would
      otherwise take them for being tag boards that are not a league. */
-  const CRYPTO_LIST = ['crypto', 'memecoins', 'gifts'];
+  const CRYPTO_LIST = ['crypto', 'memecoins', 'gifts', 'exchanges'];
   const CRYPTO = new Set(CRYPTO_LIST);
 
   /* The rest of the groups, in the same shape and for the same reason: a
@@ -1209,6 +1223,12 @@
     return hit ? COIN_LOGOS.base + hit.replace('/', `/${COIN_LOGOS.size}/`) : null;
   }
 
+  /* Looked up separately and never mixed with the coins, because the names
+     overlap: an exchange called Gate and a token called Gate are two things,
+     and the board being looked at is what says which one is meant. */
+  const exchangeLogo = handle =>
+    (COIN_LOGOS && COIN_LOGOS.exchanges && COIN_LOGOS.exchanges[fold(handle)]) || null;
+
   /* The publisher's own cover art for a game, from Steam's store search,
      built into a file the same way the coin logos are. Not every game is on
      Steam — Minecraft, Fortnite and Roblox sell elsewhere — so those keep
@@ -1338,7 +1358,7 @@
      different rates of change: a thousand coins that move weekly, and three
      hundred names that barely move at all. */
   const LISTED_LATER = new Set([
-    'crypto', 'memecoins',
+    'crypto', 'memecoins', 'exchanges',
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts',
     'x-influencers', 'tiktok-influencers', 'youtube-influencers', 'facebook-influencers'
@@ -1367,9 +1387,11 @@
          cascade that already exists needs nothing new to draw it. */
       const asRoster = rows => rows.map(([name, sym]) =>
         [name, sym, '#f7931a', '#ffffff']);
-      COIN_LIST = { crypto: asRoster(d.names), memecoins: asRoster(d.meme) };
+      COIN_LIST = { crypto: asRoster(d.names), memecoins: asRoster(d.meme),
+                    exchanges: (d.exchanges || []).map(([n, m]) => [n, m, '#2775ca', '#ffffff']) };
       ROSTERS.crypto = COIN_LIST.crypto;
       ROSTERS.memecoins = COIN_LIST.memecoins;
+      ROSTERS.exchanges = COIN_LIST.exchanges;
       await logos;   // the list is nothing to look at without them
     } catch (e) {
       console.warn('coin list unavailable', e);
@@ -1427,7 +1449,8 @@
        a logo where a profile picture belonged. The site icon is what a board
        with no profile to look up falls back on -- a startup, a restaurant, a
        podcast, a project giving something away. */
-    const src = (CRYPTO.has(slug) && coinLogo(handle))
+    const src = (slug === 'exchanges' && exchangeLogo(handle))
+      || (slug !== 'exchanges' && CRYPTO.has(slug) && coinLogo(handle))
       || (slug === 'games' && gameArt(handle))
       || (on ? avatarUrl(on, handle) : null)
       || siteLogo(row && row.link);
@@ -2041,7 +2064,9 @@
                    keep their abbreviation; a crest is not ours to fetch. */
                 (n => n ? `<img alt="" src="${esc(n)}"
                      onload="this.parentNode.classList.add('token--on')"
-                     onerror="this.remove()">` : '')(coinLogo(teamName(t)) || gameArt(teamName(t)))
+                     onerror="this.remove()">` : '')(
+                       slug === 'exchanges' ? exchangeLogo(teamName(t))
+                                            : (coinLogo(teamName(t)) || gameArt(teamName(t))))
               }</span>
               <span class="cascade__who">
                 <span class="cascade__name">${esc(teamName(t))}</span>
