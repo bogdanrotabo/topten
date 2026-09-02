@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <rect width="64" height="64" rx="14" fill="#f6ecf9"/>
-  <path fill="#7c2596" d="M28.6 14.6h7.6v28.2h-7.6z"/><path fill="#7c2596" d="M28.6 14.6v9.9l-9.4-2.4z"/><rect x="20.4" y="43.4" width="23.2" height="6.1" rx="1.6" fill="#7c2596"/>
+  <text x="31" y="45" text-anchor="middle"
+        font-family="ui-monospace, SF Mono, Cascadia Mono, Roboto Mono, Menlo, monospace"
+        font-size="25" font-weight="800" letter-spacing="-1.8" fill="#7c2596">#1</text>
 </svg>
