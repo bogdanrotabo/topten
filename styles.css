@@ -1364,7 +1364,7 @@ img { max-width: 100%; }
    two short lines meant to be read as a statement, not as body copy hanging
    off a left margin — and the blank line after the title is what separates
    the name of the thing from what it does. */
-.hero { padding: 22px 0 14px; text-align: center; }
+.hero { padding: 44px 0 14px; text-align: center; }
 
 /* On a board the headline comes after the chips and sits on its own ten, so
    it needs the space above it that the chips took, and less below. */
