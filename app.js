@@ -1197,17 +1197,17 @@
 
   const ctaFor = slug => {
     /* The button that follows you down the page says the price, because
-       "Claim your rank" asks somebody to imagine a number and "Be #1
+       "Claim my rank" asks somebody to imagine a number and "Be #1
        somewhere for $2" hands them one they can check on the row above. */
     if (!slug || !BY_SLUG[slug]) {
-      return state.loaded ? `Be #1 somewhere for ${money(cheapestTop().cost)}` : 'Claim your rank';
+      return state.loaded ? `Be #1 somewhere for ${money(cheapestTop().cost)}` : 'Claim my rank';
     }
     const n = board(slug).length;
     const top = money(clampMin(nextDollarAbove(topCents(slug))));
     if (isFan(slug)) {
       return n ? `Put your ${fanNoun(slug)} at #1 for ${top}` : `Bid for your favourite ${fanNoun(slug)}`;
     }
-    return n ? `Take #1 on ${BY_SLUG[slug].name} for ${top}` : 'Claim your rank';
+    return n ? `Take #1 on ${BY_SLUG[slug].name} for ${top}` : 'Claim my rank';
   };
 
   /* ------------------------------------------------------- the market */
@@ -2249,7 +2249,7 @@
     openModal(`
       <div class="modal__head">
         <div>
-          <h2 id="modal-title">Claim your rank</h2>
+          <h2 id="modal-title">Claim my rank</h2>
           <p id="modal-sub">Pick a board, pick an amount. Pay more than the listing above you and you are above it — the moment the payment clears.</p>
         </div>
         <button class="modal__x" data-close aria-label="Close">&times;</button>
@@ -2647,7 +2647,7 @@
         if (mSub) mSub.textContent =
           `${cum}, pick an amount. Pay more than the listing above them and they are above it — the moment the payment clears.`;
       } else {
-        if (mTitle) mTitle.textContent = 'Claim your rank';
+        if (mTitle) mTitle.textContent = 'Claim my rank';
         if (mSub) mSub.textContent = 'Pick a board, pick an amount. Pay more than the listing above you and you are above it — the moment the payment clears.';
       }
       if (picked.tag) {
