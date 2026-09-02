@@ -1304,6 +1304,13 @@
   let COIN_LIST = null;
   async function loadCoinList() {
     if (COIN_LIST) return COIN_LIST;
+    /* Both files, not just this one. The picker draws a logo beside every
+       coin in it, and that logo comes out of the other file — which until now
+       was fetched only when a crypto listing was already on a board. Open the
+       form on an empty crypto board and every row in the list of a thousand
+       coins fell back to its ticker badge, which is precisely where somebody
+       is trying to recognise a coin by its logo. */
+    const logos = loadCoinLogos();
     try {
       const r = await fetch('/coin-list.json', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -1315,6 +1322,7 @@
       COIN_LIST = { crypto: asRoster(d.names), memecoins: asRoster(d.meme) };
       ROSTERS.crypto = COIN_LIST.crypto;
       ROSTERS.memecoins = COIN_LIST.memecoins;
+      await logos;   // the list is nothing to look at without them
     } catch (e) {
       console.warn('coin list unavailable', e);
       COIN_LIST = { crypto: null, memecoins: null };
