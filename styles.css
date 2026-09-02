@@ -1382,7 +1382,31 @@ img { max-width: 100%; }
   line-height: 1.1;
 }
 
+/* The accent belongs to the mark beside it, not to the word. "Top 10 on
+   [X logo] X" with the X in violet was the same thing said twice, in two
+   colours — the board's own mark carries the colour and the name carries the
+   name. The front page's own headline keeps the accent: there is no mark
+   beside it to hand the colour to. */
 .hero h1 em { font-style: normal; color: var(--accent); }
+.hero__mark + em { color: inherit; }
+
+/* The board's mark, set on the headline's own baseline rather than floated
+   beside it, so it reads as part of the sentence and not as decoration. */
+.hero__mark {
+  display: inline-block;
+  vertical-align: -0.12em;
+  margin-right: .3em;
+  line-height: 0;
+}
+
+.hero__mark svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+  color: var(--chip, currentColor);
+}
+
+:root[data-theme="dark"] .hero__mark svg { color: var(--chip-d, var(--chip)); }
 
 .hero__sub {
   margin: 8px 0 0;

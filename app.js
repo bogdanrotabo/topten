@@ -2014,7 +2014,12 @@
     const b = held ? toBeat(held) : { need: MIN_CENTS, oneGo: true };
     const cost = b.need;
     const n = board(slug).length;
-    return `<h1>Top 10 on <em>${esc(p.name)}</em></h1>
+    /* The board's own mark beside its name. "Top 10 on X" set in the accent
+       violet said nothing about which X — the platform has a mark and this is
+       the one line on the page big enough to carry it properly. Its own
+       colour, through chipVars, so a pale one still shows on white. */
+    return `<h1>Top 10 on <span class="hero__mark" style="${chipVars(p.color)}"
+        aria-hidden="true">${icon(slug, true)}</span><em>${esc(p.name)}</em></h1>
       <p class="hero__sub">${n
         ? `${n} ${n === 1 ? 'listing is' : 'listings are'} on this board.
            <b>First place costs ${money(cost)}</b> — one dollar more than the
@@ -3006,7 +3011,9 @@
     c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px';
     ctx.scale(dpr, dpr);
 
-    const colors = ['#ffc233', '#ffffff', '#fe2c55', '#9146ff', '#3ddc84'];
+    /* The brand's own, and no white: this fires over whichever theme the page
+       is in, and white confetti on a light page is confetti nobody sees. */
+    const colors = ['#fdd321', '#8a1fb2', '#cd6ff0', '#06945a', '#fe2c55'];
     const bits = Array.from({ length: 110 }, () => ({
       x: Math.random() * innerWidth,
       y: -20 - Math.random() * innerHeight * 0.4,
