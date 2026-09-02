@@ -1388,7 +1388,10 @@ img { max-width: 100%; }
    name. The front page's own headline keeps the accent: there is no mark
    beside it to hand the colour to. */
 .hero h1 em { font-style: normal; color: var(--accent); }
-.hero__mark + em { color: inherit; }
+/* Written with the h1 in front of it because .hero h1 em is two elements and
+   one class, and .hero__mark + em is one of each — the shorter selector lost
+   silently and the X stayed violet. */
+.hero h1 .hero__mark + em { color: inherit; }
 
 /* The board's mark, set on the headline's own baseline rather than floated
    beside it, so it reads as part of the sentence and not as decoration. */
