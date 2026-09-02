@@ -146,6 +146,10 @@ node "$(dirname "$0")/build-coin-logos.mjs" --check
 #    it, which is a mistake and not a schedule.
 node "$(dirname "$0")/rosters.mjs" --check
 
+#    And the game art, which only warns: Steam is not in this site's critical
+#    path and a month-old capsule is not a reason to block a CSS fix.
+node "$(dirname "$0")/build-game-art.mjs" --check
+
 # 5. And check that the boards actually agree, everywhere they are written
 #    down. A board drawn in app.js that the database rejects takes somebody's
 #    money for a listing that cannot be inserted; this is where that gets

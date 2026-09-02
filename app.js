@@ -536,7 +536,7 @@
     tiktok:
       '<path fill="#25f4ee" d="M15.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 13.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 18 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>' +
       '<path fill="#fe2c55" d="M17.6 6.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 15.7 3h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6v-3.3a6 6 0 1 0 5.2 5.9V9.8A7.5 7.5 0 0 0 20 11.2V7.9a4.4 4.4 0 0 1-2.4-1.1"/>' +
-      '<path fill="#fff" d="M16.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 14.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 19 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>',
+      '<path fill="var(--mark-ink,#fff)" d="M16.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 14.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 19 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>',
     instagram:
       '<path fill="url(#tt-ig)" d="M12 2c2.7 0 3 0 4.1.1 1 0 1.7.2 2.3.4.6.3 1.1.6 1.6 1.1s.8 1 1.1 1.6c.2.6.4 1.3.4 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c0 1-.2 1.7-.4 2.3-.3.6-.6 1.1-1.1 1.6s-1 .8-1.6 1.1c-.6.2-1.3.4-2.3.4-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1 0-1.7-.2-2.3-.4-.6-.3-1.1-.6-1.6-1.1s-.8-1-1.1-1.6c-.2-.6-.4-1.3-.4-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c0-1 .2-1.7.4-2.3.3-.6.6-1.1 1.1-1.6s1-.8 1.6-1.1c.6-.2 1.3-.4 2.3-.4C8.6 2 8.9 2 12 2m0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7s-.5.6-.7 1c-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.4.7.7 1s.6.5 1 .7c.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7s.5-.6.7-1c.1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7a2.8 2.8 0 0 0-1.7-1.7c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1m0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2m0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6m5.3-3.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4"/>',
 
@@ -563,7 +563,7 @@
        Hard-coded #fff was correct while the site only had a dark theme and
        invisible the moment it got a light one. */
     x:
-      '<path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/>',
+      '<path fill="var(--mark-ink,#fff)" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/>',
     /* The three consoles in their own colours. The shapes were already the
        real marks — what they were missing is the colour, which is half of
        what makes a mark recognisable at 26px in a grid of thirty-four. */
@@ -574,7 +574,7 @@
     nintendo:
       '<path fill="#e60012" d="M4.5 2h4.3v20H4.5A2.5 2.5 0 0 1 2 19.5v-15A2.5 2.5 0 0 1 4.5 2m2.1 3.3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2M15.2 2h4.3A2.5 2.5 0 0 1 22 4.5v15a2.5 2.5 0 0 1-2.5 2.5h-4.3zm2.2 12.1a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4"/>',
     threads:
-      '<path fill="currentColor" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>'
+      '<path fill="var(--mark-ink,#fff)" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>'
   };
 
   /* And the same four in the full-colour set, so an influencer chip carries
@@ -916,6 +916,7 @@
        arriving later would mean every coin drawn once as a badge and again as
        a logo. Only fetched when there is a coin to draw. */
     if (CRYPTO_LIST.some(slug => next[slug] && next[slug].length)) await loadCoinLogos();
+    if (next.games && next.games.length) await loadGameArt();
   }
 
   const board = slug => state.boards[slug] || [];
@@ -1195,6 +1196,28 @@
     return hit ? COIN_LOGOS.base + hit.replace('/', `/${COIN_LOGOS.size}/`) : null;
   }
 
+  /* The publisher's own cover art for a game, from Steam's store search,
+     built into a file the same way the coin logos are. Not every game is on
+     Steam — Minecraft, Fortnite and Roblox sell elsewhere — so those keep
+     their drawn badge, which is the honest outcome rather than a gap to fill
+     with something close. */
+  let GAME_ART = null;
+  async function loadGameArt() {
+    if (GAME_ART) return GAME_ART;
+    try {
+      const r = await fetch('/game-art.json', { cache: 'force-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      GAME_ART = await r.json();
+    } catch (e) {
+      console.warn('game art unavailable', e);
+      GAME_ART = { art: {} };
+    }
+    return GAME_ART;
+  }
+
+  const gameArt = handle =>
+    (GAME_ART && GAME_ART.art && GAME_ART.art[fold(handle)]) || null;
+
   /* The map holds the top thousand. Somebody will list the one that is not in
      it — a coin that launched this week, or one at rank 4000 that its holders
      care about anyway — and that listing deserves its logo as much as
@@ -1255,6 +1278,7 @@
       const img = document.createElement('img');
       img.loading = 'lazy'; img.width = 32; img.height = 32; img.alt = '';
       img.onerror = () => img.remove();
+      img.onload = () => cell.classList.add('token--on');
       img.src = url;
       cell.appendChild(img);
     }
@@ -1308,7 +1332,9 @@
   ]);
 
   const fetchRoster = slug =>
-    CRYPTO.has(slug) ? loadCoinList() : loadRosterFile();
+    CRYPTO.has(slug) ? loadCoinList()
+    : slug === 'games' ? Promise.all([loadRosterFile(), loadGameArt()])
+    : loadRosterFile();
 
   let COIN_LIST = null;
   async function loadCoinList() {
@@ -1369,7 +1395,14 @@
      The badge is not a fallback that gets swapped in on failure. It is the
      floor: always drawn, the picture layered over it, and a picture that 404s
      removes itself and reveals what was already there. No broken-image glyph,
-     no flash of the wrong thing, no second request. */
+     no flash of the wrong thing, no second request.
+
+     But a floor has to be covered once the picture is actually down. Most
+     coin logos are transparent PNGs, so the initials underneath showed
+     through them — two marks in one circle. onload is the only moment the
+     page knows an image has real pixels in it, so that is where the letters
+     are told to stand down. A picture that never loads never fires it, and
+     the badge stays exactly as it was. */
   function facePic(slug, handle, cls, row) {
     const colour = (BY_SLUG[slug] && BY_SLUG[slug].color) || '#8c98a4';
     const initials = String(handle || '?')
@@ -1382,12 +1415,15 @@
        with no profile to look up falls back on -- a startup, a restaurant, a
        podcast, a project giving something away. */
     const src = (CRYPTO.has(slug) && coinLogo(handle))
+      || (slug === 'games' && gameArt(handle))
       || (on ? avatarUrl(on, handle) : null)
       || siteLogo(row && row.link);
 
     return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
                   aria-hidden="true">${esc(initials)}${src
-      ? `<img loading="lazy" width="32" height="32" alt="" src="${esc(src)}" onerror="this.remove()">`
+      ? `<img loading="lazy" width="32" height="32" alt="" src="${esc(src)}"
+              onload="this.parentNode.classList.add('token--on')"
+              onerror="this.remove()">`
       : ''}</span>`;
   }
 
@@ -1979,7 +2015,9 @@
                    the ticker is drawn first and the picture sits on top of
                    it, so one that fails to load simply is not there. Clubs
                    keep their abbreviation; a crest is not ours to fetch. */
-                (n => n ? `<img loading="lazy" alt="" src="${esc(n)}" onerror="this.remove()">` : '')(coinLogo(teamName(t)))
+                (n => n ? `<img loading="lazy" alt="" src="${esc(n)}"
+                     onload="this.parentNode.classList.add('token--on')"
+                     onerror="this.remove()">` : '')(coinLogo(teamName(t)) || gameArt(teamName(t)))
               }</span>
               <span class="cascade__who">
                 <span class="cascade__name">${esc(teamName(t))}</span>

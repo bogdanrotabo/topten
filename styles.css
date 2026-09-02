@@ -60,6 +60,14 @@
      one, so it is the one that should carry the most colour; the strips below
      it step back toward the page rather than away from it. Still light enough
      to hold dark text — this is a tint, not a dark header. */
+  /* The ink layer of a two-tone mark: TikTok's note, X's glyph, the Threads
+     loop. Those marks are drawn in the page's own colour — black on light,
+     white on dark — which is why they were hard-coded #fff and vanished the
+     day the site got a light theme. Not currentColor: inside a chip that
+     resolves to the board's brand colour, and a red note on a red fringe is
+     not the TikTok logo either. */
+  --mark-ink: #17121c;
+
   --band-0: #dcc4e9;
   --band-1: #f0e2f7;
   --band-2: #e7d4f0;
@@ -96,6 +104,8 @@
   --danger: #ff6b76;
   --ok: #2ad796;
   --gold: #fdd321;
+
+  --mark-ink: #fbf6fd;
 
   --band-0: #2b1f39;
   --band-1: #1e1628;
@@ -1376,10 +1386,13 @@ img { max-width: 100%; }
   align-items: center;
   gap: 6px;
   padding: 9px 0;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
+  letter-spacing: .01em;
+  /* Not uppercased. text-transform only paints capitals — the text underneath
+     stays as written, so the line read "MEMECOINS — ALL 34 BOARDS" and pasted
+     as "Memecoins — all 34 boards". It also contains a proper noun, which is
+     the one kind of word that should keep the case it was given. */
   color: var(--muted);
   cursor: pointer;
   list-style: none;
@@ -1561,6 +1574,13 @@ img { max-width: 100%; }
   background: var(--token);
   color: var(--token-ink, #fff);
 }
+
+/* Set the moment an image reports real pixels. Nearly every coin logo is a
+   transparent PNG, so without this the initials underneath read straight
+   through it and one circle carried two marks. It has to come after .token,
+   not before: both are one class deep, so source order is the whole of the
+   argument between them. */
+.token--on { color: transparent; }
 
 .mname__pic--empty { border: 1px dashed var(--line); background: none; }
 
