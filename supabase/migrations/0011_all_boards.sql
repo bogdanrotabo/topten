@@ -10,7 +10,8 @@
 -- Applied to production on 2026-09-02 as `0004_platform_check_all_boards`,
 -- then extended with 'exchanges' as `0005_exchanges_board`, and with actors,
 -- movies, cars, boats and golf as `0006_actors_movies_cars_boats_golf`, and
--- with Instagram creators as `0007_instagram_influencers`.
+-- with Instagram creators as `0007_instagram_influencers`, and with the two
+-- political boards as `0008_political_boards`.
 alter table public.listings drop constraint if exists listings_platform_check;
 
 alter table public.listings add constraint listings_platform_check check (
@@ -33,6 +34,8 @@ alter table public.listings add constraint listings_platform_check check (
     'artists', 'podcasts', 'actors', 'movies',
     -- machines
     'cars', 'boats',
+    -- politics
+    'us-parties', 'us-politicians',
     -- business and life
     'startups', 'restaurants', 'cities', 'pets'
   ]::text[])

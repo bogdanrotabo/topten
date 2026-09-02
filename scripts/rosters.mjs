@@ -163,6 +163,43 @@ const R = {
     ['Ludvig Aberg','LA'], ['Tommy Fleetwood','TF'], ['Shane Lowry','SL'],
     ['Annika Sorenstam','AS'], ['Nelly Korda','NK'], ['Lydia Ko','LK'],
   ],
+  /* The parties on the ballot, not a shortlist somebody drew up. These are
+     the national committees and the parties with recognised ballot access in
+     multiple states — a matter of public record rather than an opinion about
+     who counts. Anyone can type a party that is not here. */
+  'us-parties': [
+    ['Republican Party','GOP'], ['Democratic Party','DEM'],
+    ['Libertarian Party','LP'], ['Green Party','GRN'],
+    ['Constitution Party','CP'], ['Forward Party','FWD'],
+    ['Working Families Party','WFP'], ['Independent','IND'],
+    ['Peace and Freedom Party','PFP'], ['Party for Socialism and Liberation','PSL'],
+    ['Alliance Party','ALP'], ['American Solidarity Party','ASP'],
+    ['Legal Marijuana Now Party','LMN'], ['Natural Law Party','NLP'],
+    ['Reform Party','REF'], ['Socialist Party USA','SPU'],
+    ['Prohibition Party','PRO'], ['Unity Party','UP'],
+    ['United Utah Party','UUP'], ['Mountain Party','MTN'],
+    ['Vermont Progressive Party','VPP'], ['Independence Party of Minnesota','IPM'],
+    ['Moderate Party','MOD'], ['SAM Party','SAM'],
+    ['Common Sense Party','CSP'], ['No Labels','NL'],
+    ['Conservative Party of New York','CNY'], ['Liberal Party','LIB'],
+    ['Justice for All Party','JFA'], ['Approval Voting Party','AVP'],
+  ],
+  /* Presidents and vice presidents. A closed, historical, entirely factual
+     set — so the list is spelling help rather than a nomination, which is
+     what a hand-picked roster of sitting politicians would be. Anyone can
+     type any name; the board takes whoever is paid for. */
+  'us-politicians': [
+    ['George Washington','GW'], ['Thomas Jefferson','TJ'], ['Abraham Lincoln','AL'],
+    ['Theodore Roosevelt','TR'], ['Franklin D. Roosevelt','FDR'], ['Harry S. Truman','HT'],
+    ['Dwight D. Eisenhower','DE'], ['John F. Kennedy','JFK'], ['Lyndon B. Johnson','LBJ'],
+    ['Richard Nixon','RN'], ['Gerald Ford','GF'], ['Jimmy Carter','JC'],
+    ['Ronald Reagan','RR'], ['George H. W. Bush','GHB'], ['Bill Clinton','BC'],
+    ['George W. Bush','GWB'], ['Barack Obama','BO'], ['Donald Trump','DT'],
+    ['Joe Biden','JB'], ['Kamala Harris','KH'], ['Mike Pence','MP'],
+    ['Al Gore','AG'], ['Dick Cheney','DC'], ['Joe Lieberman','JL'],
+    ['Hillary Clinton','HC'], ['John McCain','JM'], ['Mitt Romney','MR'],
+    ['Bernie Sanders','BS'], ['Nancy Pelosi','NP'], ['John Adams','JA'],
+  ],
   podcasts: [
     ['The Joe Rogan Experience','JRE'], ['The Daily','TD'], ['Huberman Lab','HL'],
     ['Lex Fridman Podcast','LF'], ['SmartLess','SL'], ['Call Her Daddy','CHD'],

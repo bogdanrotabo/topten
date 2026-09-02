@@ -1406,6 +1406,22 @@ img { max-width: 100%; }
 
 /* Wrapped, not scrolled: all thirty-four boards on screen at once, under the
    eight headings they are grouped by. */
+/* The political boards carry this and no other board does. Loud enough to be
+   read before the money moves, quiet enough not to be a warning label on a
+   product — it is a statement of what is being bought, which on those two
+   boards is the one thing somebody could reasonably get wrong. */
+.notice {
+  margin: 10px 0 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--elev-2);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .chips { padding-bottom: 8px; }
 
 .chips__sum {

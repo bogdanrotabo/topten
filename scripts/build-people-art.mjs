@@ -36,10 +36,17 @@ const fold = s => String(s).toLowerCase()
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-function wanted() {
+/* Every board whose subject is a person or an organisation with a page. Kept
+   in one file but keyed by board, because a name can mean two different
+   things on two different boards and each should get its own picture. */
+const BOARDS = ['actors', 'us-politicians', 'us-parties', 'football-players',
+                'f1-drivers', 'golf-players', 'artists'];
+
+function wanted(board) {
   const src = readFileSync(join(root, 'scripts/rosters.mjs'), 'utf8');
-  const m = /actors: \[([\s\S]*?)\n  \],/.exec(src);
-  if (!m) { console.error('build-people-art: no actors list in scripts/rosters.mjs'); process.exit(2); }
+  const re = new RegExp(`'?${board}'?: \\[([\\s\\S]*?)\\n  \\],`);
+  const m = re.exec(src);
+  if (!m) { console.error(`build-people-art: no ${board} list in scripts/rosters.mjs`); process.exit(2); }
   return [...m[1].matchAll(/\['([^']+)'/g)].map(x => x[1]);
 }
 
@@ -98,17 +105,25 @@ if (process.argv.includes('--check')) {
 
 const art = {};
 let gasit = 0, refuzat = 0;
-for (const n of wanted()) {
-  try {
-    const hit = await look(n);
-    if (hit) { art[fold(n)] = hit; gasit++; }
-    else refuzat++;
-  } catch (e) {
-    console.warn(`  ${n}: ${e.message}`);
+
+for (const board of BOARDS) {
+  art[board] = {};
+  let g = 0, r = 0;
+  for (const n of wanted(board)) {
+    try {
+      const hit = await look(n);
+      if (hit) { art[board][fold(n)] = hit; g++; }
+      else r++;
+    } catch (e) {
+      console.warn(`  ${board}/${n}: ${e.message}`);
+    }
+    await sleep(GAP);
   }
-  await sleep(GAP);
+  gasit += g; refuzat += r;
+  console.log(`  ${board.padEnd(18)} ${String(g).padStart(2)} from Commons`
+    + (r ? `, ${r} not free to use` : ''));
 }
 
 writeFileSync(OUT, JSON.stringify({ builtAt: new Date().toISOString(), art }));
-console.log(`build-people-art: ${gasit} photographs from Commons`
+console.log(`build-people-art: ${gasit} pictures across ${BOARDS.length} boards`
   + (refuzat ? `, ${refuzat} skipped — not on Commons, so not ours to use` : ''));

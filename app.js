@@ -467,6 +467,32 @@
         re:    NAME_RE,
         profile: null
       } },
+    /* Politics, in two boards rather than one, and never as a poll.
+    
+       "Republicans vs Democrats" as a single board is two rows and nothing to
+       rank. Parties and people are separate questions with separate answers,
+       and both are lists that argue with themselves for free — which is the
+       only test a board has to pass.
+    
+       What these two carry that no other board needs is a notice: money paid
+       here is not a donation, a contribution or a vote. It buys a position in
+       a private ranking on this website and nothing else. That is stated on
+       the board itself rather than in the small print, because the small
+       print is not where somebody about to pay is looking. */
+    { slug: 'us-parties', name: 'U.S. Political Parties', color: '#7f1d1d',
+      fan: true, noun: 'party', notice: true, tag: {
+        label: 'Party',
+        hint:  'Libertarian Party',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'us-politicians', name: 'U.S. Political Figures', color: '#1e3a8a',
+      fan: true, noun: 'name', notice: true, tag: {
+        label: 'Name',
+        hint:  'Abraham Lincoln',
+        re:    NAME_RE,
+        profile: null
+      } },
     { slug: 'podcasts', name: 'Podcasts', color: '#0d9488', tag: {
         label: 'Podcast',
         hint:  'The Weekly Show',
@@ -575,6 +601,11 @@
     movies: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 4.4h17.2v15.2H3.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7.4 4.4v15.2M16.6 4.4v15.2M3.4 12h17.2"/><path fill="currentColor" d="M4.6 6h1.6v1.6H4.6zM4.6 9h1.6v1.6H4.6zM4.6 13.4h1.6V15H4.6zM4.6 16.4h1.6V18H4.6zM17.8 6h1.6v1.6h-1.6zM17.8 9h1.6v1.6h-1.6zM17.8 13.4h1.6V15h-1.6zM17.8 16.4h1.6V18h-1.6z"/>',
     cars: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 15.4v-2.2l1.8-4A2.4 2.4 0 0 1 7 7.6h10a2.4 2.4 0 0 1 2.2 1.6l1.8 4v2.2a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 15.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M4.8 13.2h14.4"/><circle cx="7.2" cy="16.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16.8" cy="16.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.6"/>',
     boats: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 16.4h18l-2.4 4H5.4zM12 3.2v10.6M12 13.8H5.6L12 3.2M12.8 13.8h5.6l-5.6-7.4z"/>',
+    /* A ballot box and a lectern. Party emblems are registered marks of the
+       committees that own them, and this site takes money — the same line the
+       club crests are on. */
+    'us-parties': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.6 9.4h16.8v11H3.6zM7.4 9.4l1.6-6h6l1.6 6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M9.4 13.4h5.2"/>',
+    'us-politicians': '<circle cx="12" cy="5.4" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M8.2 20.6v-6.4a3.8 3.8 0 0 1 7.6 0v6.4M6 20.6h12M9.4 11.2 12 9.2l2.6 2"/>',
     'golf-players': '<circle cx="17.4" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M6.2 3.4v14.4M6.2 3.4l7.4 2.4-7.4 2.6"/><ellipse cx="10" cy="19.4" rx="6.4" ry="1.9" fill="none" stroke="currentColor" stroke-width="1.5"/>',
     exchanges: '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8.4h13.2l-3.4-3.4M20 15.6H6.8l3.4 3.4"/>',
     gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
@@ -1000,7 +1031,8 @@
        a logo. Only fetched when there is a coin to draw. */
     if (CRYPTO_LIST.some(slug => next[slug] && next[slug].length)) await loadCoinLogos();
     if (next.games && next.games.length) await loadGameArt();
-    if (next.actors && next.actors.length) await loadPeopleArt();
+    if (PEOPLE_BOARDS.some(b => next[b] && next[b].length)) await loadPeopleArt();
+    if (next['us-politicians'] && next['us-politicians'].length) await loadCongress();
   }
 
   const board = slug => state.boards[slug] || [];
@@ -1132,13 +1164,14 @@
   const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players',
                          'f1-drivers', 'golf-players']);
   const CULTURE = new Set(['artists', 'podcasts', 'actors', 'movies']);
+  const POLITICS = new Set(['us-parties', 'us-politicians']);
   const MACHINES = new Set(['cars', 'boats']);
   const TRADE = new Set(['startups', 'restaurants']);
   const LIFE = new Set(['cities', 'pets']);
   const STARS = new Set(['x-influencers', 'instagram-influencers', 'tiktok-influencers',
                          'youtube-influencers', 'facebook-influencers']);
   const NOT_GAMING = new Set([...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE,
-                              ...STARS, ...MACHINES]);
+                              ...STARS, ...MACHINES, ...POLITICS]);
   // 'games' is culture by any reading, but it sits where people look for it.
 
   const GROUPS = [
@@ -1150,6 +1183,7 @@
     { label: 'Culture',         rows: 1, has: p => CULTURE.has(p.slug) },
     { label: 'Business',        rows: 1, has: p => TRADE.has(p.slug) },
     { label: 'Machines',        rows: 1, has: p => MACHINES.has(p.slug) },
+    { label: 'Politics',        rows: 1, has: p => POLITICS.has(p.slug) },
     { label: 'Life',            rows: 1, has: p => LIFE.has(p.slug) }
   ];
 
@@ -1308,6 +1342,46 @@
      The credit travels with the file because the licences ask for it. A
      CC-BY photograph shown without its author is not a free photograph, it
      is somebody's work taken. */
+  /* The boards that have pictures on Commons. Same list the build script
+     walks; kept here so a board without a section in the file never triggers
+     a fetch for one. */
+  const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties',
+                         'football-players', 'f1-drivers', 'golf-players', 'artists'];
+
+  /* Every sitting member of Congress, kept current by the public-domain
+     dataset the civic-tech world maintains rather than by a list I typed once
+     — 537 names hand-written would be wrong the week after an election, and
+     wrong quietly. Their official portraits are works of the United States
+     government, so this board carries real faces where the party board mostly
+     cannot: a party emblem belongs to its committee, a senator's official
+     photograph belongs to everyone. */
+  let CONGRESS = null;
+  async function loadCongress() {
+    if (CONGRESS) return CONGRESS;
+    try {
+      const r = await fetch('/congress.json', { cache: 'force-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const d = await r.json();
+      /* Role, state and party on one line. The sixth field is a jersey number
+         on the boards it was written for, and rendered "· #Democrat" here. */
+      const rand = ([nume, id, rol, partid]) =>
+        [nume, nume.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+         '#1e3a8a', '#ffffff', partid ? `${rol} · ${partid}` : rol, ''];
+      CONGRESS = { photos: d.photos, byName: {}, list: (d.members || []).map(rand) };
+      for (const [nume, id] of d.members || []) CONGRESS.byName[fold(nume)] = id;
+    } catch (e) {
+      console.warn('congress unavailable', e);
+      CONGRESS = { photos: '', byName: {}, list: [] };
+    }
+    return CONGRESS;
+  }
+
+  const congressPhoto = handle => {
+    if (!CONGRESS || !CONGRESS.photos) return null;
+    const id = CONGRESS.byName[fold(handle)];
+    return id ? CONGRESS.photos + id + '.jpg' : null;
+  };
+
   let PEOPLE_ART = null;
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
@@ -1322,8 +1396,14 @@
     return PEOPLE_ART;
   }
 
-  const personArt = handle =>
-    (PEOPLE_ART && PEOPLE_ART.art && PEOPLE_ART.art[fold(handle)]) || null;
+  /* Keyed by board as well as by name: "Gary Player" the golfer and a party
+     called anything are different pictures, and one flat map would have to
+     pick. */
+  const personArt = (slug, handle) =>
+    (PEOPLE_ART && PEOPLE_ART.art && PEOPLE_ART.art[slug]
+      && PEOPLE_ART.art[slug][fold(handle)]) || null;
+
+  const hasPersonArt = slug => !!(PEOPLE_ART && PEOPLE_ART.art && PEOPLE_ART.art[slug]);
 
   /* The publisher's own cover art for a game, from Steam's store search,
      built into a file the same way the coin logos are. Not every game is on
@@ -1457,6 +1537,7 @@
     'crypto', 'memecoins', 'exchanges',
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
+    'us-parties', 'us-politicians',
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'youtube-influencers', 'facebook-influencers'
   ]);
@@ -1464,7 +1545,17 @@
   const fetchRoster = slug =>
     CRYPTO.has(slug) ? loadCoinList()
     : slug === 'games'  ? Promise.all([loadRosterFile(), loadGameArt()])
-    : slug === 'actors' ? Promise.all([loadRosterFile(), loadPeopleArt()])
+    : slug === 'us-politicians'
+        ? Promise.all([loadRosterFile(), loadPeopleArt(), loadCongress()]).then(() => {
+            /* The presidents and vice presidents the file carries, then every
+               sitting member — the historical names first because they are
+               the ones somebody types from memory. */
+            const baza = (ROSTER_FILE && ROSTER_FILE['us-politicians']) || [];
+            const vazut = new Set(baza.map(t => fold(t[0])));
+            ROSTERS['us-politicians'] = baza.concat(
+              (CONGRESS.list || []).filter(t => !vazut.has(fold(t[0]))));
+          })
+    : PEOPLE_BOARDS.includes(slug) ? Promise.all([loadRosterFile(), loadPeopleArt()])
     : loadRosterFile();
 
   let COIN_LIST = null;
@@ -1550,7 +1641,8 @@
     const src = (slug === 'exchanges' && exchangeLogo(handle))
       || (slug !== 'exchanges' && CRYPTO.has(slug) && coinLogo(handle))
       || (slug === 'games' && gameArt(handle))
-      || (slug === 'actors' && (personArt(handle) || {}).img)
+      || (personArt(slug, handle) || {}).img
+      || (slug === 'us-politicians' && congressPhoto(handle))
       || (on ? avatarUrl(on, handle) : null)
       || siteLogo(row && row.link);
 
@@ -1773,6 +1865,22 @@
     </div>`;
   }
 
+  /* Said on the board, in the form, and on the thank-you page — everywhere
+     somebody is about to pay or has just paid. Not buried in the terms: the
+     terms are not where a person about to click a button is looking, and the
+     whole point of this notice is that it is read before the money moves. */
+  const NOTICE = 'This is a TopTen.one ranking, not a poll, an election, or a '
+    + 'political donation. Money paid here buys a position in a private '
+    + 'ranking on this website. It does not reach any party, campaign or '
+    + 'candidate, it is not a contribution of any kind, and it counts as no '
+    + "vote anywhere. Nothing here is an endorsement by TopTen.one of anyone "
+    + 'listed on it.';
+
+  const needsNotice = slug => !!(BY_SLUG[slug] && BY_SLUG[slug].notice);
+
+  const noticeBlock = slug => needsNotice(slug)
+    ? `<p class="notice">${esc(NOTICE)}</p>` : '';
+
   /** The line above a single board: what #1 costs to take off whoever holds it. */
   function renderLead(slug) {
     const p = BY_SLUG[slug];
@@ -1889,7 +1997,7 @@
       ${renderStats()}
       ${renderTicker()}
       <div class="shell">
-        ${p ? renderChips(openSlug) + cap + renderLead(openSlug)
+        ${p ? renderChips(openSlug) + cap + noticeBlock(openSlug) + renderLead(openSlug)
             : cap + renderChips(null)}
         ${renderMarket(openSlug)}
         ${openSlug ? renderWaiting(openSlug) : ''}
@@ -2172,7 +2280,9 @@
                      onload="this.parentNode.classList.add('token--on')"
                      onerror="this.remove()">` : '')(
                        slug === 'exchanges' ? exchangeLogo(teamName(t))
-                     : slug === 'actors'    ? (personArt(teamName(t)) || {}).img
+                     : slug === 'us-politicians' ? ((personArt(slug, teamName(t)) || {}).img
+                                                    || congressPhoto(teamName(t)))
+                     : PEOPLE_BOARDS.includes(slug) ? (personArt(slug, teamName(t)) || {}).img
                                             : (coinLogo(teamName(t)) || gameArt(teamName(t))))
               }</span>
               <span class="cascade__who">
@@ -2306,6 +2416,8 @@
         <div class="hint" id="link-hint">Your site, shop or business. Shown on your listing.</div>
       </div>
 
+      ${noticeBlock(slug)}
+
       <div class="field">
         <label>Amount</label>
         ${amountBlock(slug, 0, null)}
@@ -2356,7 +2468,7 @@
             : `<p class="detail__tagline detail__tagline--none">No tagline on this listing.</p>`}
           ${(a => a ? `<p class="detail__credit">Photo: <a href="${esc(a.pagina)}"
                target="_blank" rel="noopener">${esc(a.autor)}</a>, ${esc(a.licenta)},
-               via Wikimedia Commons</p>` : '')(row.platform === 'actors' ? personArt(row.handle) : null)}
+               via Wikimedia Commons</p>` : '')(personArt(row.platform, row.handle))}
         </div>
       </div>
 
