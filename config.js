@@ -18,24 +18,20 @@ window.TOPTEN_CONFIG = {
   // Where reports and contact go.
   CONTACT_EMAIL: "hello@topten.one",
 
-  /* unavatar fetches the profile picture for every social listing, and its
-     paid tier cannot be used from this file.
+  /* unavatar, which fetches the profile picture for every social listing.
 
-     Their documentation is explicit: the key travels as an "x-api-key"
-     request header, and a browser cannot put a header on an <img>. An
-     earlier version of this config hung the key on the URL as a query
-     parameter, which unavatar ignores — it would have looked configured and
-     changed nothing.
+     A publishable token, and it belongs in the URL: that is what unavatar's
+     own onboarding shows and what the pk_ prefix means. Anonymous requests
+     are 25 a day per visitor IP with cache hits free, which is why some
+     handles resolved and others answered 403 EPRO before this existed.
 
-     The key also arrives only after payment; there is no free API key, and
-     anonymous traffic is 25 requests a day per visitor IP with cache hits
-     free. That is why some handles resolve and others answer 403.
+     Public, like everything else in this file — anyone who opens the page can
+     read it and spend against the same quota. That is the trade a publishable
+     key is for. If it is ever abused, roll it in unavatar's dashboard and
+     paste the new one here.
 
-     So the paid tier needs a proxy: something server-side that holds the key,
-     sets the header, and hands back the image, with the page asking it for
-     /avatar/<network>/<handle> instead of unavatar directly. Set the base URL
-     of that proxy here once it exists and every avatar goes through it. Empty
-     means the page asks unavatar directly, anonymously, which is what it does
-     today. */
-  UNAVATAR_PROXY: ""
+     An earlier version of this comment said the key had to be an x-api-key
+     header and therefore needed a server-side proxy. The header works, but so
+     does the token in the query, and the second needs nothing built. */
+  UNAVATAR_TOKEN: "pk_z1Zqr3XZBaxMvWoHH8SnCG"
 };
