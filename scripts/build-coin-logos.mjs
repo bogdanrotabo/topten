@@ -12,8 +12,16 @@
  * calls per page view against a rate-limited free endpoint, and the answer
  * changes about as often as a coin is renamed.
  *
- *   node scripts/build-coin-logos.mjs          # rebuild coin-logos.json
- *   node scripts/build-coin-logos.mjs --check  # exit 1 if it is missing/stale
+ *   node scripts/build-coin-logos.mjs          # rebuild both files
+ *   node scripts/build-coin-logos.mjs --check  # used by sync-routes.sh
+ *
+ * --check is deliberately hard to fail on. A missing file is a hard error,
+ * because the site fetches it and would 404. Data younger than MAX_AGE_DAYS
+ * passes without touching the network at all, so most deploys never call
+ * CoinGecko. Older than that, it asks — and if the answer does not arrive it
+ * says so and lets the deploy through: their outage is not a reason this site
+ * cannot ship a CSS fix. The only thing that fails a deploy on live data is
+ * having none.
  *
  * Attribution: CoinGecko's free API requires it, and index.html carries it.
  */
@@ -28,6 +36,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
    would put 56 KB of names on every visit that never asks for them. */
 const OUT = join(root, 'coin-logos.json');
 const OUT_LIST = join(root, 'coin-list.json');
+const MAX_AGE_DAYS = 10;
 const PAGES = 4;            // 4 x 250 = the top 1000 by market cap
 const PER = 250;
 const BASE = 'https://coin-images.coingecko.com/coins/images/';
@@ -108,26 +117,58 @@ async function build() {
   return { base: BASE, size: 'small', coins, logos: map, names, meme };
 }
 
-const data = await build();
-const logos = { base: data.base, size: data.size, coins: data.coins, logos: data.logos };
-const lists = { names: data.names, meme: data.meme };
-const json = JSON.stringify(logos);
-const jsonList = JSON.stringify(lists);
+function split(data) {
+  const builtAt = new Date().toISOString();
+  return [
+    { builtAt, base: data.base, size: data.size, coins: data.coins, logos: data.logos },
+    { builtAt, names: data.names, meme: data.meme }
+  ];
+}
+
+const ageDays = f => {
+  try {
+    const t = Date.parse(JSON.parse(readFileSync(f, 'utf8')).builtAt);
+    return Number.isFinite(t) ? (Date.now() - t) / 86400000 : Infinity;
+  } catch (e) { return Infinity; }
+};
 
 if (process.argv.includes('--check')) {
   if (!existsSync(OUT) || !existsSync(OUT_LIST)) {
-    console.error('build-coin-logos: coin-logos.json is missing. Run scripts/build-coin-logos.mjs');
+    console.error('build-coin-logos: coin-logos.json or coin-list.json is missing —');
+    console.error('  the site fetches both. Run: node scripts/build-coin-logos.mjs');
     process.exit(1);
+  }
+
+  const age = Math.max(ageDays(OUT), ageDays(OUT_LIST));
+  if (age <= MAX_AGE_DAYS) {
+    console.log(`build-coin-logos: ${age.toFixed(1)} days old, fresh enough (no API call).`);
+    process.exit(0);
+  }
+
+  /* Old enough to ask. Not old enough to stop a deploy over. */
+  let live;
+  try {
+    live = await build();
+  } catch (e) {
+    console.warn(`build-coin-logos: ${age.toFixed(0)} days old and CoinGecko did not answer (${e.message}).`);
+    console.warn('  Shipping the data we have. Rerun the script when they are back.');
+    process.exit(0);
   }
   const have = JSON.parse(readFileSync(OUT, 'utf8'));
-  const missing = Object.keys(logos.logos).filter(k => !(k in have.logos));
-  if (missing.length > 50) {
-    console.error(`build-coin-logos: ${missing.length} coins are not in coin-logos.json. Rebuild it.`);
+  const noi = Object.keys(live.logos).filter(k => !(k in have.logos));
+  if (noi.length > 50) {
+    console.error(`build-coin-logos: ${age.toFixed(0)} days old and ${noi.length} coins are missing.`);
+    console.error('  Run: node scripts/build-coin-logos.mjs');
     process.exit(1);
   }
-  console.log(`build-coin-logos: ${Object.keys(have.logos).length} keys, current enough (${missing.length} new).`);
+  console.log(`build-coin-logos: ${age.toFixed(0)} days old, only ${noi.length} new coins. Fine.`);
   process.exit(0);
 }
+
+const data = await build();
+const [logos, lists] = split(data);
+const json = JSON.stringify(logos);
+const jsonList = JSON.stringify(lists);
 
 writeFileSync(OUT, json);
 writeFileSync(OUT_LIST, jsonList);

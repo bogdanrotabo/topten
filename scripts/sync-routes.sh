@@ -132,7 +132,15 @@ if [ "$(printf '%s\n' "$FOUND" | wc -l)" -ne 1 ] || [ "$FOUND" != "app.js?v=$STA
   exit 1
 fi
 
-# 4. And check that the boards actually agree, everywhere they are written
+# 4. Check the coin data is present and not stale.
+#
+#    The crypto boards fetch coin-logos.json and coin-list.json, so a deploy
+#    without them ships two 404s. Fresh data passes without calling anybody;
+#    old data asks CoinGecko and, if they do not answer, says so and lets the
+#    deploy through — their outage is not a reason a CSS fix cannot ship.
+node "$(dirname "$0")/build-coin-logos.mjs" --check
+
+# 5. And check that the boards actually agree, everywhere they are written
 #    down. A board drawn in app.js that the database rejects takes somebody's
 #    money for a listing that cannot be inserted; this is where that gets
 #    caught, not in production.

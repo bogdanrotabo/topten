@@ -1,0 +1,64 @@
+# Keep the coin data current without anybody remembering to.
+#
+# New coins list every day, and the logo map and the picker list freeze at
+# whatever day the script last ran. This runs it weekly and commits only when
+# the bytes actually changed, so the history stays readable — a commit here
+# means new coins, not "the timestamp moved".
+#
+# It touches two data files and nothing else. It cannot change app.js, the
+# styles or any page, so the worst a bad run can do is ship a coin list that
+# is a week old, which is what would happen anyway if it did not run.
+#
+# To stop it: disable the workflow in the Actions tab, or delete this file.
+# The site keeps working on whatever data was committed last.
+
+name: Coin data
+
+on:
+  schedule:
+    # 04:12 UTC on Mondays. Not on the hour: everybody schedules on the hour,
+    # and GitHub runs a busy cron late.
+    - cron: '12 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: coin-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rebuild the coin logo map and the picker list
+        run: node scripts/build-coin-logos.mjs
+
+      - name: Check the boards still agree
+        run: node scripts/check-boards.mjs
+
+      - name: Commit only if the data actually changed
+        run: |
+          set -euo pipefail
+          # Nothing but the two data files, so a mistake anywhere else in the
+          # tree cannot ride along on this commit.
+          git add coin-logos.json coin-list.json
+          if git diff --cached --quiet; then
+            echo "No change in the coin data. Nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          coins=$(node -e "console.log(Object.keys(require('./coin-logos.json').logos).length)")
+          git commit -m "Coin data refreshed — $coins keys
+
+          Rebuilt from CoinGecko by .github/workflows/coin-data.yml.
+          Only coin-logos.json and coin-list.json change here."
+          git push
