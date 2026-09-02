@@ -20,14 +20,16 @@
   --bg: #ffffff;
   --elev: #ffffff;
   --elev-2: #f7eefa;
-  /* Two weights, because a control's edge and a row separator want opposite
-     things. #ecdff1 was one value doing both jobs: right for the hairline
-     between table rows and, on a white page, all but invisible around the
-     thirty-four tiles of the board picker — which is a control somebody has
-     to see before they can use it. */
-  --line: #d9c6e4;
-  --hairline: #efe4f3;
-  --line-soft: #f4e8f7;
+  /* Two weights, both drawn to be seen. A control's edge and a row separator
+     want different strengths, not different visibilities: the separator is
+     the lighter of the two, but it is still a line somebody can find on a
+     white page rather than a suggestion of one. The first version of this
+     palette used #ecdff1 for both, which read as nothing at all around the
+     thirty-four tiles of the board picker — a control has to be visible
+     before it can be used. */
+  --line: #cdb4dc;
+  --hairline: #e0cdea;
+  --line-soft: #e6d5ee;
   --text: #1e1923;
   --muted: #6b5c74;
   --dim: #9d8ea6;
@@ -68,9 +70,9 @@
   --bg: #16101b;
   --elev: #1e1726;
   --elev-2: #291f33;
-  --line: #3d3050;
-  --hairline: #2a2136;
-  --line-soft: #241c2e;
+  --line: #4c3c63;
+  --hairline: #372c47;
+  --line-soft: #33283f;
   --text: #f7f0fa;
   --muted: #b3a4bd;
   --dim: #8b7c95;
