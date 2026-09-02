@@ -25,6 +25,10 @@ as it does today.
 
 ## Deploying it
 
+Three ways, and the third needs no terminal at all.
+
+**From a terminal:**
+
 ```sh
 cd worker
 npx wrangler deploy
@@ -33,6 +37,18 @@ npx wrangler deploy
 The first run opens a browser to log in. Nothing needs filling in: the routes
 are in `wrangler.toml`, and the Supabase key it reads with is the same public
 anon key `config.js` already hands to every browser.
+
+**From a push.** `.github/workflows/deploy-worker.yml` deploys this on every
+push that touches `worker/`. It needs one repository secret,
+`CLOUDFLARE_API_TOKEN`; the comment at the top of that file says where to make
+the token and where to paste it, and both are web pages. After that, changing
+the Worker is changing this directory.
+
+**By hand, in the dashboard.** `npx wrangler deploy --dry-run --outdir dist`
+writes one self-contained file, 2.7 KB gzipped. Cloudflare -> Workers ->
+Create -> paste it -> Deploy, then add four routes on the Settings tab:
+`topten.one/badge`, `topten.one/badge/*`, and the same two on
+`www.topten.one`.
 
 To take it off again:
 

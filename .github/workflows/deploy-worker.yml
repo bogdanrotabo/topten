@@ -1,0 +1,74 @@
+# Deploy the badge-preview Worker when it changes.
+#
+# The Worker lives in worker/ and runs on Cloudflare in front of GitHub Pages,
+# on /badge only. Without this, deploying it means a terminal and a browser
+# login; with it, a push that touches worker/ is the deploy.
+#
+# It needs one secret, CLOUDFLARE_API_TOKEN, and will not run without one --
+# the job checks first and stops with an explanation rather than failing in
+# wrangler's own words. To create it:
+#
+#   1. https://dash.cloudflare.com/profile/api-tokens -> Create Token
+#   2. Use the "Edit Cloudflare Workers" template
+#   3. Account Resources: the account topten.one is on
+#      Zone Resources: Include -> Specific zone -> topten.one
+#   4. Copy the token once -- it is shown one time
+#   5. https://github.com/bogdanrotabo/topten/settings/secrets/actions
+#      -> New repository secret -> name CLOUDFLARE_API_TOKEN, paste, save
+#
+# That token can edit Workers on this account and nothing else. To take it
+# away, delete it on the same page it was made on; the Worker already deployed
+# keeps running.
+#
+# To stop deploying: disable this workflow in the Actions tab, or delete this
+# file. To take the Worker off the site entirely:
+#   npx wrangler delete --name topten-badge
+# and the site goes back to serving GitHub Pages directly on /badge.
+
+name: Deploy badge Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/**'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Said plainly, before wrangler says it obscurely. A missing secret is
+      # the normal state of this workflow until somebody sets one up, and it
+      # should read as "not configured yet", not as a broken build.
+      - name: Check the token is there
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "No CLOUDFLARE_API_TOKEN secret on this repository."
+            echo "The Worker was not deployed. The site is unaffected: /badge"
+            echo "keeps being served by GitHub Pages as it is today."
+            echo "See the comment at the top of this file for how to add one."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Deploy
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --yes wrangler@4 deploy
