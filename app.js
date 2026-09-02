@@ -2042,21 +2042,19 @@
     </div>`;
   }
 
-  /* The headline's job is to answer, in one line, the question somebody
-     arrives with: what would it cost me to be first. So it says the number.
-     It is a live number -- the cheapest unheld #1 on the site right now, or a
-     dollar more than whoever is holding the one you are looking at -- and it
-     is never rounded, dressed up or invented. A price you can check is worth
-     more than a promise you cannot. */
+  /* The headline asks; it no longer answers. The price it used to quote was
+     live -- the cheapest unheld #1 on the site at that moment -- and it still
+     is, in the strip of figures below and on the button, where it is never
+     rounded, dressed up or invented. A price you can check is worth more than
+     a promise you cannot, but it does not have to be the first thing said. */
   function heroHome() {
-    const c = cheapestTop();
-    /* Two lines, not one sentence. The first states the rule; the second is
-       the invitation and the price. Run together, the question read as a
-       clause of the explanation instead of the thing being asked. */
+    /* Two lines and nothing else. The name of the thing, then the question it
+       exists to ask. The rule and the price used to stand here too; they are
+       both still on the page -- the price is a live figure in the strip below
+       and on the button -- and the head reads as a question now rather than
+       as an explanation somebody has to get through first. */
     return `<h1>Rankings decided by <em>money</em></h1>
-      <p class="hero__sub"><b>Pay more than the person above you. That's the
-      whole algorithm.</b></p>
-      <p class="hero__ask">Who should be #1? Take a place — ${money(c.cost)}.</p>`;
+      <p class="hero__ask">Who should be #1?</p>`;
   }
 
   function heroBoard(slug) {

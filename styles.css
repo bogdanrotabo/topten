@@ -1370,6 +1370,23 @@ img { max-width: 100%; }
    it needs the space above it that the chips took, and less below. */
 .chips + .hero { padding: 16px 0 10px; }
 
+/* These two put back what this rule broke. There is an older hero block near
+   the top of the file whose media queries gave a phone and a short screen a
+   shallower head; the rule above is later in the document and the same weight,
+   so it won every one of them and every screen got the desktop 58px. On a
+   675px-tall laptop that is the first row of the table pushed off the bottom.
+   They are repeated here, after the rule, which is the only place they can win
+   -- and .chips + .hero has to be named again because a compound selector
+   outranks a bare one whatever the media query. */
+@media (max-width: 559px) {
+  .hero { padding: 20px 0 10px; }
+}
+
+@media (max-height: 760px) {
+  .hero,
+  .chips + .hero { padding: 10px 0 6px; }
+}
+
 .hero h1 {
   margin: 0;
   font-size: clamp(26px, 5vw, 36px);
