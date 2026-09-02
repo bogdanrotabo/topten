@@ -3090,7 +3090,11 @@
   ];
 
   /* What the site says about itself when the whole site is what is shared. */
-  const SITE_PITCH = 'Thirty-four boards, ten places each, ranked by what people paid. #1 from $2. No algorithm.';
+  /* Counted, not written. It said thirty-four while the site had forty-three,
+     because a number typed into a sentence is a number nobody updates — and
+     this one goes out on every share. */
+  const SITE_PITCH = `${PLATFORMS.length} boards, ten places each. Pay more than `
+    + 'the person above you. That is the whole algorithm.';
 
   function shareButtons(text, url, cls) {
     const c = cls ? ` class="${cls}"` : '';
