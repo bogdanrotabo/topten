@@ -30,16 +30,16 @@
   --line: #cdb4dc;
   --hairline: #e0cdea;
   --line-soft: #e6d5ee;
-  --text: #1e1923;
-  --muted: #6b5c74;
-  --dim: #9d8ea6;
-  --accent: #9632ba;
+  --text: #17121c;
+  --muted: #5b4a66;
+  --dim: #8a7994;
+  --accent: #8a1fb2;
   --accent-ink: #ffffff;
-  --accent-soft: #f4e8f7;
-  --danger: #d23b48;
-  --ok: #0f9d63;
-  --gold: #e9b800;
-  --brand: #9632ba;
+  --accent-soft: #f2e2f8;
+  --danger: #cf2f3e;
+  --ok: #06945a;
+  --gold: #dfae00;
+  --brand: #8a1fb2;
 
   /* The four surfaces that sit over something: masthead, sticky bar, modal
      scrim, tile veil. Held as variables so the dark theme can invert them
@@ -49,6 +49,15 @@
   --veil-soft: rgba(250, 245, 251, .9);
   --scrim: rgba(30, 25, 35, .46);
   --shadow: 0 1px 2px rgba(124, 52, 154, .09), 0 4px 14px rgba(124, 52, 154, .07);
+
+  /* The two bands across the top are one height, held in one place, so they
+     cannot drift apart again the next time either of them is touched — and
+     two tones, each a step down from the page, so the eye reads three
+     surfaces stacked rather than one that keeps changing its mind. The
+     ticker is the deeper of the two: it is the one that moves. */
+  --band: 38px;
+  --band-1: #f3e8f8;
+  --band-2: #e9d8f1;
 
   --radius: 8px;
   --radius-lg: 12px;
@@ -73,15 +82,18 @@
   --line: #4c3c63;
   --hairline: #372c47;
   --line-soft: #33283f;
-  --text: #f7f0fa;
-  --muted: #b3a4bd;
-  --dim: #8b7c95;
-  --accent: #c161df;
-  --accent-ink: #1a1020;
-  --accent-soft: #2c1c38;
-  --danger: #ef5a66;
-  --ok: #21c98a;
+  --text: #fbf6fd;
+  --muted: #c3b5cd;
+  --dim: #9a8ba5;
+  --accent: #cd6ff0;
+  --accent-ink: #17091f;
+  --accent-soft: #342043;
+  --danger: #ff6b76;
+  --ok: #2ad796;
   --gold: #fdd321;
+
+  --band-1: #1e1628;
+  --band-2: #271c34;
 
   --veil: rgba(22, 16, 27, .92);
   --veil-strong: rgba(22, 16, 27, .96);
@@ -193,15 +205,24 @@ img { max-width: 100%; }
 
 /* A board with nobody on it is a claim; a name with money next to it is
    evidence. This runs the evidence across the top of the page. */
+/* Same height as the figures strip above it, and centred in it. Two bands of
+   different heights stacked at the top of a page read as one band and a
+   mistake — and the icon was 48px inside a 67px strip, which is a logo parade
+   rather than a ticker. Both are now a fixed --band tall with their contents
+   centred, rather than a height that falls out of whatever padding and line
+   height happen to add up to. */
 .ticker {
   overflow: hidden;
-  padding: 7px 0;
-  background: var(--elev);
-  border-bottom: 1px solid var(--line-soft);
+  height: var(--band);
+  display: flex;
+  align-items: center;
+  background: var(--band-2);
+  border-bottom: 1px solid var(--line);
 }
 
 .ticker__track {
   display: flex;
+  align-items: center;
   width: max-content;
   animation: tick 45s linear infinite;
 }
@@ -219,18 +240,19 @@ img { max-width: 100%; }
   font-size: 12px;
   white-space: nowrap;
   color: var(--muted);
+  font-weight: 600;
 }
 
 .tick__i { line-height: 0; }
-.tick__i svg { width: 26px; height: 26px; display: block; color: var(--tick); }
+.tick__i svg { width: 22px; height: 22px; display: block; color: var(--tick); }
 .tick__h { font-weight: 700; color: var(--text); }
 .tick__r { font-family: var(--num); font-weight: 800; color: var(--tick); }
 .tick__a { font-family: var(--num); font-weight: 800; color: var(--text); }
 
 @media (min-width: 560px) {
   .ticker { padding: 9px 0; }
-  .tick { font-size: 13px; padding: 0 19px; }
-  .tick__i svg { width: 48px; height: 48px; }
+  .tick { font-size: 12.5px; padding: 0 17px; }
+  .tick__i svg { width: 22px; height: 22px; }
 }
 
 /* Stopped, not hidden: the names and the money are the point, the motion is
@@ -1263,16 +1285,20 @@ img { max-width: 100%; }
 
 .stats {
   border-bottom: 1px solid var(--line);
-  background: var(--bg);
+  background: var(--band-1);
   font-size: 12px;
 }
 
 .stats__row {
   display: flex;
+  align-items: center;
+  /* Minus the border. box-sizing:border-box puts the ticker's rule inside its
+     --band, and this row's rule sits on the strip around it, so without the
+     subtraction the two bands land a pixel apart — which is exactly the kind
+     of difference that is invisible in a screenshot and obvious on a screen. */
+  height: calc(var(--band) - 1px);
   gap: 20px;
   overflow-x: auto;
-  padding-top: 9px;
-  padding-bottom: 9px;
   scrollbar-width: none;
 }
 
