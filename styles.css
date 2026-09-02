@@ -1258,6 +1258,17 @@ img { max-width: 100%; }
   color: var(--dim);
 }
 
+/* Said only when the list was cut short. The number is the point: "1,000
+   more" tells you to type, where a silent truncation just looks like the
+   coin you wanted is missing. */
+.cascade__more {
+  margin: 0;
+  padding: 9px 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
 /* Not a crest -- the club's two colours with its abbreviation, or a player's
    shirt number. Reads across a list of thirty-two at a glance and is nobody's
    property. The ring is the second colour, which is what makes Boston's black
@@ -1588,6 +1599,15 @@ img { max-width: 100%; }
    through it and one circle carried two marks. It has to come after .token,
    not before: both are one class deep, so source order is the whole of the
    argument between them. */
+/* The plate clears the moment a picture is on its way, not when it finishes
+   arriving. onload is the reliable signal that an image has pixels, but on a
+   slow connection it can be a second away, and for that second the badge
+   showed a coloured disc with a ticker on it — which is indistinguishable
+   from the bug this is here to fix. :has() reads the img element itself, and
+   an image that 404s removes itself, so the disc comes back for a coin that
+   genuinely has no logo and only for that one. */
+.token:has(img), .chip:has(img) { background: none; color: transparent; }
+
 .token--on {
   color: transparent;
   /* And the disc goes with the letters. --token paints the board's colour

@@ -2005,8 +2005,19 @@
       });
 
       active = -1;
+      /* A thousand rows in a dropdown is not a list, it is a scroll, and it
+         was drawing a thousand <img> tags to go with it. Lazy loading then
+         did what it is for: fetched the handful on screen and left every
+         other coin sitting on a coloured disc with its ticker on it, which
+         is what "the logos are not showing, they are on a yellow circle"
+         was. Sixty is more than anyone reads before typing, and sixty
+         pictures load at once without being asked twice. */
+      const CAP = 60;
+      const prea = Math.max(0, shown.length - CAP);
+      const lista = shown.slice(0, CAP);
+
       list.innerHTML = shown.length
-        ? shown.map(t => `
+        ? lista.map(t => `
             <button type="button" class="cascade__opt" role="option" aria-selected="false"
                     data-club="${esc(teamName(t))}">
               <span class="chip" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}${
@@ -2015,7 +2026,7 @@
                    the ticker is drawn first and the picture sits on top of
                    it, so one that fails to load simply is not there. Clubs
                    keep their abbreviation; a crest is not ours to fetch. */
-                (n => n ? `<img loading="lazy" alt="" src="${esc(n)}"
+                (n => n ? `<img alt="" src="${esc(n)}"
                      onload="this.parentNode.classList.add('token--on')"
                      onerror="this.remove()">` : '')(coinLogo(teamName(t)) || gameArt(teamName(t)))
               }</span>
@@ -2024,6 +2035,7 @@
                 ${teamClub(t) ? `<span class="cascade__club">${esc(teamClub(t))}${teamNo(t) ? ` &middot; #${esc(teamNo(t))}` : ''}</span>` : ''}
               </span>
             </button>`).join('')
+          + (prea ? `<p class="cascade__more">${prea.toLocaleString()} more — keep typing to narrow it, or type any name in full and it will be taken as it is.</p>` : '')
         : `<p class="cascade__none">Nothing by that name in the list. Type it out in full and it will be taken as it is.</p>`;
     };
 
