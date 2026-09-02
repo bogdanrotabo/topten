@@ -20,7 +20,13 @@
   --bg: #ffffff;
   --elev: #ffffff;
   --elev-2: #f7eefa;
-  --line: #ecdff1;
+  /* Two weights, because a control's edge and a row separator want opposite
+     things. #ecdff1 was one value doing both jobs: right for the hairline
+     between table rows and, on a white page, all but invisible around the
+     thirty-four tiles of the board picker — which is a control somebody has
+     to see before they can use it. */
+  --line: #d9c6e4;
+  --hairline: #efe4f3;
   --line-soft: #f4e8f7;
   --text: #1e1923;
   --muted: #6b5c74;
@@ -62,7 +68,8 @@
   --bg: #16101b;
   --elev: #1e1726;
   --elev-2: #291f33;
-  --line: #352943;
+  --line: #3d3050;
+  --hairline: #2a2136;
   --line-soft: #241c2e;
   --text: #f7f0fa;
   --muted: #b3a4bd;
@@ -1149,6 +1156,12 @@ img { max-width: 100%; }
   color: var(--dim);
   cursor: pointer;
 }
+/* display:grid on a class beats the browser's own [hidden] rule, so setting
+   the attribute left the arrow drawn on every board that has no list —
+   a control that opens nothing, sitting in the field somebody is typing a
+   profile link into. */
+.cascade__toggle[hidden] { display: none; }
+
 .cascade__toggle svg { width: 20px; height: 20px; transition: transform .15s ease; }
 .cascade__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 .cascade__toggle:hover { color: var(--text); }
@@ -1455,7 +1468,9 @@ img { max-width: 100%; }
 
 .market td {
   padding: 11px 8px;
-  border-bottom: 1px solid var(--line);
+  /* The hairline, not the control weight: a hundred row separators at the
+     strength a button's edge needs turns a table into a grid. */
+  border-bottom: 1px solid var(--hairline);
   text-align: right;
   vertical-align: middle;
 }
