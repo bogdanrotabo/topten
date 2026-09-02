@@ -56,8 +56,13 @@
      surfaces stacked rather than one that keeps changing its mind. The
      ticker is the deeper of the two: it is the one that moves. */
   --band: 38px;
-  --band-1: #f3e8f8;
-  --band-2: #e9d8f1;
+  /* Top band darkest, then the two under it. The wordmark sits on the first
+     one, so it is the one that should carry the most colour; the strips below
+     it step back toward the page rather than away from it. Still light enough
+     to hold dark text — this is a tint, not a dark header. */
+  --band-0: #dcc4e9;
+  --band-1: #f0e2f7;
+  --band-2: #e7d4f0;
 
   --radius: 8px;
   --radius-lg: 12px;
@@ -92,6 +97,7 @@
   --ok: #2ad796;
   --gold: #fdd321;
 
+  --band-0: #2b1f39;
   --band-1: #1e1628;
   --band-2: #271c34;
 
@@ -154,9 +160,9 @@ img { max-width: 100%; }
   position: sticky;
   top: 0;
   z-index: 40;
-  background: var(--veil-soft);
+  background: var(--band-0);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line);
 }
 
 .masthead__row {
@@ -1133,23 +1139,18 @@ img { max-width: 100%; }
    would clear the fold. There is no bottom row any more -- the boards open on
    demand -- so the name of the place stays on every screen, and only the
    spacing tightens. */
+/* What is left of the short-screen block after the tile grid it was written
+   for went away. Its .stats rule put a 10px margin above the figures strip
+   and 2px below it — two stripes of bare page between three bands that are
+   supposed to sit against each other, which is what "band 2 is not coloured
+   down to band 1's bottom border" was. The .stat sizing went with it: the
+   band has a fixed height now, and a rule that shrinks its contents on a
+   short screen only moves them off centre. */
 @media (max-height: 760px) {
   .hero { padding: 8px 0 4px; }
   .hero h1 { font-size: clamp(26px, 7vw, 40px); }
   .hero__tag { font-size: 18px; margin: 2px 0 0; }
   .hero__sub { font-size: 13px; margin-top: 4px; }
-
-  .stats { margin: 10px 0 2px; }
-  .stat { padding: 6px 4px; }
-  .stat__v { font-size: 14px; }
-  .stat__k { font-size: 9px; }
-
-  .tabs__grid { padding: 5px 0; gap: 4px; }
-  .tab { padding: 14px 3px 10px; }
-  .tab svg { width: min(84px, 82%); }
-
-  .board { padding: 8px 0 92px; }
-  .rows { gap: 5px; }
 
   .tobeat { padding: 7px 11px; margin-bottom: 8px; }
   .tobeat__k { font-size: 10px; }
