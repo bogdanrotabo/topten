@@ -1533,7 +1533,9 @@ img { max-width: 100%; }
   vertical-align: middle;
 }
 
-.mrow { transition: background .1s; }
+.mrow { transition: background .1s; cursor: pointer; }
+.mrow:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.mrow--free { cursor: default; }
 .mrow:hover { background: var(--elev-2); }
 
 .c-n {

@@ -43,10 +43,23 @@
   /** #manage=<id>:<token> hands the key to another browser, then gets wiped. */
   function absorbManageLink() {
     const m = /^#manage=([0-9a-f-]{36}):([0-9a-f-]{36})$/i.exec(location.hash || '');
-    if (!m) return;
+    if (!m) return false;
     saveKey(m[1], m[2]);
     history.replaceState({}, '', location.pathname + location.search);
+    return true;
   }
+
+  /* Called at boot, and again whenever only the hash changes. Boot alone was
+     not enough: opening a manage link while already on the site is a
+     same-document navigation — nothing reloads, so nothing ran, and the link
+     did nothing at all without saying so. That is the one case where somebody
+     is most likely to try it, because the thank-you page hands them the link
+     on the site itself.
+
+     Re-rendering after absorbing is what puts the Edit button on their
+     listing; without it the key is saved and the page still shows no way in
+     until the next reload. */
+  addEventListener('hashchange', () => { if (absorbManageLink()) route(); });
 
   /* Two to forty characters of a person's or a team's name: letters from any
      alphabet, spaces, and the punctuation names actually carry -- Shaquille
@@ -1515,7 +1528,7 @@
       : `<span class="mname__h">${esc(row.handle)}</span>`;
 
     return `
-    <tr class="mrow${n === 1 ? ' mrow--1' : ''}" data-row="${esc(row.id)}">
+    <tr class="mrow${n === 1 ? ' mrow--1' : ''}" data-row="${esc(row.id)}" data-open="${esc(row.id)}" tabindex="0">
       <td class="c-n">${n}</td>
       <td class="c-name">
         <span class="mname">
@@ -1536,7 +1549,7 @@
       </td>`}
       <td class="c-spark">${sparkline(row.spark)}</td>
       <td class="c-act">
-        <button class="mbtn" data-open="${esc(row.id)}">Details</button>
+        <button class="mbtn" data-open="${esc(row.id)}" tabindex="-1">Details</button>
         <button class="mbtn mbtn--go" data-add="${esc(row.id)}">Add</button>
       </td>
     </tr>`;
@@ -2996,6 +3009,20 @@
     try { localStorage.setItem('topten_theme', now); } catch (e) { /* private mode */ }
   }
 
+  /* The row is the target now, so it answers the keyboard like one. Hiding
+     the Details button below 1200px to buy the table some width had quietly
+     taken away the only way into a listing on a laptop, a tablet or a phone —
+     the tagline, the link, the share, the badge and the edit button, all
+     unreachable, on most of the screens the site is read on. */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const row = e.target instanceof Element && e.target.closest('tr[data-open]');
+    if (!row || e.target.closest('a, button')) return;
+    e.preventDefault();
+    const r = Object.values(state.boards).flat().find(x => x.id === row.dataset.open);
+    if (r) listingModal(r);
+  });
+
   addEventListener('popstate', route);
 
   document.addEventListener('click', e => {
@@ -3015,7 +3042,14 @@
       return;
     }
 
-    const open = e.target.closest('[data-open]');
+    /* The whole row opens the listing, so anything inside it that has its own
+       job has to say so first. Add is the one that matters: it is on top of a
+       row that also carries data-open, and without this guard tapping it
+       opened the listing card instead of taking the payment — the click that
+       exists to take money, answered with a page about the money. */
+    const open = e.target.closest('a, [data-add], [data-claim], [data-edit], [data-share-copy], [data-close]')
+      ? null
+      : e.target.closest('[data-open]');
     if (open) {
       const row = Object.values(state.boards).flat().find(r => r.id === open.dataset.open);
       if (row) listingModal(row);
