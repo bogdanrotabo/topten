@@ -48,7 +48,11 @@ done
 #    documents is a head of their own: title, description and canonical. Those
 #    are rewritten here rather than kept in eleven hand-edited files.
 
-PLATFORMS="x|X instagram|Instagram tiktok|TikTok youtube|YouTube facebook|Facebook telegram|Telegram snapchat|Snapchat twitch|Twitch linkedin|LinkedIn threads|Threads playstation|PlayStation xbox|Xbox nintendo|Nintendo nba-teams|NBA-Teams nba-players|NBA-Players nhl-teams|NHL-Teams nhl-players|NHL-Players"
+# slug|Board-Name|noun. Three fields, space separated, so every field is one
+# word: a board name written with hyphens is put back with spaces below, and
+# the noun is what that board actually lists. "The ten most-paid Crypto
+# profiles" describes nothing -- coins do not have profiles.
+PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins gifts|Gifts-and-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
 
 SITEMAP=sitemap.xml
 {
@@ -59,12 +63,15 @@ SITEMAP=sitemap.xml
 
 for entry in $PLATFORMS; do
   slug="${entry%%|*}"
-  name="${entry##*|}"
+  rest="${entry#*|}"
+  name="${rest%%|*}"
+  noun="${rest##*|}"
   # The list is space separated, so a two-word board name is written with a
   # hyphen and put back here. "Top 10 on NBA-Teams" is not a title.
   name="${name//-/ }"
+  noun="${noun//-/ }"
   title="Top 10 on $name — TopTen.one"
-  desc="The ten most-paid $name profiles right now. Rank is decided by money paid, not by an algorithm. Add yours from \$2."
+  desc="The ten most-paid $name $noun right now. Rank is decided by money paid, not by an algorithm. Add yours from \$2."
   # Trailing slash: GitHub Pages answers /x with a 301 to /x/, so declaring the
   # bare form canonical would point every board at a redirect.
   url="https://topten.one/$slug/"
@@ -107,5 +114,11 @@ if [ "$(printf '%s\n' "$FOUND" | wc -l)" -ne 1 ] || [ "$FOUND" != "app.js?v=$STA
   printf '%s\n' "$FOUND" >&2
   exit 1
 fi
+
+# 4. And check that the boards actually agree, everywhere they are written
+#    down. A board drawn in app.js that the database rejects takes somebody's
+#    money for a listing that cannot be inserted; this is where that gets
+#    caught, not in production.
+node "$(dirname "$0")/check-boards.mjs"
 
 echo "Routes synced from index.html — every page on $STAMP"

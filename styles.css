@@ -1,27 +1,73 @@
-/* TopTen.one — dark, one accent, big numerals. Mobile first. */
+/* TopTen.one — a market table. Light by default, dark on request. Mobile first.
+
+   The palette is CoinMarketCap's, because that is the room this site is
+   asking to be read in: white page, one blue for anything you can act on,
+   #16C784 for money that moved and #EA3943 for money that went the other
+   way, and a grey scale that stays legible at 12px across a dense table.
+   Those are colours, not marks -- the wordmark, the coin badges and the
+   board icons on this site are its own, and none of them are borrowed. */
 
 :root {
-  --bg: #08090c;
-  --elev: #101218;
-  --elev-2: #171a22;
-  --line: #23262f;
-  --line-soft: #1a1d25;
-  --text: #f2f3f5;
-  --muted: #9aa0ad;
-  --dim: #6b7280;
-  --accent: #ffc233;
-  --accent-ink: #1a1200;
-  --danger: #ff6b6b;
-  --ok: #3ddc84;
-  --brand: #ffc233;
+  color-scheme: light;
 
-  --radius: 14px;
-  --radius-lg: 20px;
-  --shell: 720px;
+  --bg: #ffffff;
+  --elev: #ffffff;
+  --elev-2: #f8fafd;
+  --line: #eff2f5;
+  --line-soft: #f4f6f9;
+  --text: #0d1421;
+  --muted: #616e85;
+  --dim: #8c98a4;
+  --accent: #3861fb;
+  --accent-ink: #ffffff;
+  --accent-soft: #eef2ff;
+  --danger: #ea3943;
+  --ok: #16c784;
+  --gold: #f0b90b;
+  --brand: #3861fb;
+
+  /* The four surfaces that sit over something: masthead, sticky bar, modal
+     scrim, tile veil. Held as variables so the dark theme can invert them
+     without a second copy of the rule. */
+  --veil: rgba(255, 255, 255, .92);
+  --veil-strong: rgba(255, 255, 255, .96);
+  --veil-soft: rgba(248, 250, 253, .88);
+  --scrim: rgba(13, 20, 33, .45);
+  --shadow: 0 1px 2px rgba(88, 102, 126, .08), 0 4px 12px rgba(88, 102, 126, .06);
+
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shell: 1240px;
   --pad: 16px;
 
   --num: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Dark is the same table with the greys turned over: CoinMarketCap's own
+   night values, the two money colours unchanged because they have to mean
+   the same thing in both. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0d1421;
+  --elev: #171924;
+  --elev-2: #1f2230;
+  --line: #232a3b;
+  --line-soft: #1b2130;
+  --text: #ffffff;
+  --muted: #a1a7bb;
+  --dim: #808a9d;
+  --accent: #3861fb;
+  --accent-ink: #ffffff;
+  --accent-soft: #1c2540;
+  --gold: #f0b90b;
+
+  --veil: rgba(13, 20, 33, .92);
+  --veil-strong: rgba(13, 20, 33, .96);
+  --veil-soft: rgba(23, 25, 36, .88);
+  --scrim: rgba(4, 7, 13, .68);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 12px rgba(0, 0, 0, .24);
 }
 
 * { box-sizing: border-box; }
@@ -76,7 +122,7 @@ img { max-width: 100%; }
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(8, 9, 12, .82);
+  background: var(--veil-soft);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line-soft);
 }
@@ -100,6 +146,26 @@ img { max-width: 100%; }
 }
 
 .wordmark b { color: var(--accent); font-weight: 800; }
+
+/* One button, two marks, only ever one of them drawn: the sun when the page
+   is dark and pressing it would bring the light back, the moon when it is
+   light. Showing the state you are in rather than the state you would get
+   reads as a status light nobody can act on. */
+.themer {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  color: var(--muted);
+  flex: none;
+}
+
+.themer:hover { background: var(--elev-2); color: var(--text); }
+.themer svg { width: 18px; height: 18px; display: block; }
+.themer__sun { display: none; }
+:root[data-theme="dark"] .themer__sun { display: block; }
+:root[data-theme="dark"] .themer__moon { display: none; }
 .wordmark span { color: var(--dim); font-weight: 600; }
 
 
@@ -136,7 +202,7 @@ img { max-width: 100%; }
 }
 
 .tick__i { line-height: 0; }
-.tick__i svg { width: 42px; height: 42px; display: block; color: var(--tick); }
+.tick__i svg { width: 26px; height: 26px; display: block; color: var(--tick); }
 .tick__h { font-weight: 700; color: var(--text); }
 .tick__r { font-family: var(--num); font-weight: 800; color: var(--tick); }
 .tick__a { font-family: var(--num); font-weight: 800; color: var(--text); }
@@ -200,235 +266,7 @@ img { max-width: 100%; }
 
 /* --------------------------------------------------------------- stats bar */
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  margin: 14px 0 4px;
-  background: var(--line-soft);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.stat {
-  background: var(--elev);
-  padding: 11px 6px;
-  text-align: center;
-  min-width: 0;
-}
-
-.stat__v {
-  font-family: var(--num);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -.02em;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.stat__k {
-  display: block;
-  margin-top: 2px;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: .09em;
-  color: var(--dim);
-}
-
-/* The one stat that is not about money: distinct browsers that have been
-   here, counted once each however often they come back. */
-.stat--count .stat__v { color: var(--ok); }
-
-/* ------------------------------------------------------------------- tabs */
-
-.tabs {
-  /* Not sticky any more: the board opens inside this container now, and a
-     sticky bar wrapping an accordion pins the whole board to the top. */
-  position: relative;
-  z-index: 30;
-  margin: 14px 0 0;
-  background: rgba(8, 9, 12, .9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line-soft);
-}
-
-/* Every platform on screen at once, in two rows. A board you cannot see is a
-   board nobody visits, and the old horizontal scroll hid the last two. */
-.tabs__grid {
-  display: grid;
-  grid-template-columns: repeat(var(--tab-cols, 4), minmax(0, 1fr));
-  gap: 5px;
-  padding: 7px 0;
-}
-
-.tab {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-width: 0;
-  padding: 18px 4px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--elev);
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: -.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  transition: color .15s, border-color .15s, background .15s;
-}
-
-.tab svg {
-  width: min(102px, 82%);
-  height: auto;
-  aspect-ratio: 1 / 1;
-  flex: 0 0 auto;
-  color: var(--tab-brand);
-  opacity: 1;
-}
-
-.tab__name {
-  display: block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tab[aria-expanded="true"] {
-  color: var(--text);
-  border-color: var(--tab-brand, var(--accent));
-  background: var(--elev-2);
-}
-
-.tab[aria-expanded="true"] svg { opacity: 1; }
-
-/* The listing count rides in the corner so it never widens the tab. */
-.tab__n {
-  position: absolute;
-  top: 3px; right: 5px;
-  font-family: var(--num);
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--dim);
-}
-
-.tab[aria-expanded="true"] .tab__n { color: var(--accent); }
-
-/* The board opens inside the grid, directly under the row of tiles it was
-   tapped in, spanning the full width. Two panels rather than one so tapping a
-   tile in the top row does not push the bottom row away before opening. */
-.tabpanel {
-  grid-column: 1 / -1;
-}
-
-.tabpanel[hidden] { display: none; }
-
-/* The board carried 120px of bottom padding to clear the sticky claim button
-   when it was the last thing on the page. Inside the accordion it is not: the
-   second row of tiles follows it, and that padding reads as a hole. */
-.tabpanel .board { padding: 14px 0 16px; }
-
-/* Inside the panel the ten places are a list, one under the other, not the
-   five-across grid the page used to end with. A leaderboard reads down: rank,
-   face, name, money, in that order on one line. The grid was there to fit ten
-   places on a phone without scrolling; that constraint belongs to a board that
-   is always on screen, and this one is opened deliberately. */
-.tabpanel .rows {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.tabpanel .row {
-  display: grid;
-  grid-template-columns: 28px 20px 38px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--radius);
-  text-align: left;
-}
-
-.tabpanel .row__rank {
-  position: static;
-  font-size: 20px;
-  text-align: right;
-}
-
-.tabpanel .row__brand {
-  position: static;
-  top: auto; right: auto;
-}
-
-.tabpanel .row__brand svg { width: 28px; height: 28px; }
-
-.tabpanel .row__av { width: 38px; height: 38px; }
-
-.tabpanel .row__handle {
-  width: auto;
-  font-size: 14px;
-}
-
-.tabpanel .row__amt { font-size: 15px; }
-
-/* An empty place has no amount, so its label takes the room the name and the
-   money would have used together. */
-.tabpanel .row__slot {
-  grid-column: 4 / -1;
-  font-family: var(--num);
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--dim);
-}
-
-@media (min-width: 560px) {
-  .tabpanel .row { grid-template-columns: 34px 24px 44px minmax(0, 1fr) auto; padding: 12px 16px; }
-  .tabpanel .row__rank { font-size: 24px; }
-  .tabpanel .row__av { width: 44px; height: 44px; }
-  .tabpanel .row__handle { font-size: 15px; }
-  .tabpanel .row__amt { font-size: 17px; }
-}
-
-/* Places arrive one after another rather than all at once: ten tiles landing
-   together read as a page that reloaded, while a cascade reads as a board
-   being dealt. --i is set per place when the panel opens. */
-.tabpanel[data-fresh] .tobeat,
-.tabpanel[data-fresh] .rows > * {
-  animation: cascade .34s cubic-bezier(.2, .9, .25, 1) both;
-  animation-delay: calc(var(--i, 0) * 40ms);
-}
-
-@keyframes cascade {
-  from { opacity: 0; transform: translateY(14px) scale(.97); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tabpanel[data-fresh] .tobeat,
-  .tabpanel[data-fresh] .rows > * { animation: none; }
-}
-
-@media (min-width: 560px) {
-  .tabs__grid { gap: 8px; padding: 10px 0; }
-  .tab { padding: 24px 6px 16px; font-size: 13px; border-radius: 14px; gap: 8px; }
-  .tab svg { width: min(132px, 82%); }
-  .tab__n { font-size: 11px; }
-}
-
 /* ------------------------------------------------------------- board head */
-
-.board {
-  padding: 18px 0 120px;
-}
 
 .tobeat {
   display: flex;
@@ -487,155 +325,6 @@ img { max-width: 100%; }
 
 /* Ten places, two rows of five, no scrolling. A Top 10 you have to scroll is
    not a Top 10 you can read at a glance, and the whole product is the glance. */
-.rows {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-}
-
-.row {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-width: 0;
-  padding: 20px 3px 8px;
-  border: 1px solid var(--line-soft);
-  border-radius: 12px;
-  background: var(--elev);
-  text-align: center;
-  transition: border-color .2s, transform .2s, background .2s;
-}
-
-.row--top { border-color: var(--line); background: var(--elev-2); }
-
-.row--1 {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 12%, var(--elev-2)), var(--elev));
-}
-
-.row__rank {
-  position: absolute;
-  top: 4px;
-  left: 0; right: 0;
-  font-family: var(--num);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -.03em;
-  color: var(--dim);
-}
-
-.row--top .row__rank { color: var(--muted); }
-.row--1 .row__rank { color: var(--accent); }
-
-/* The platform's own mark, so a tile still says where it lives once it is
-   screenshotted or shared away from its board. */
-.row__brand {
-  position: absolute;
-  top: 4px; right: 4px;
-  line-height: 0;
-  opacity: 1;
-}
-
-.row__brand svg { width: 22px; height: 22px; display: block; }
-.row--free .row__brand { opacity: .55; }
-.row--1 .row__brand { opacity: 1; }
-
-@media (min-width: 560px) {
-  .row__brand { top: 7px; right: 8px; }
-  .row__brand svg { width: 26px; height: 26px; }
-}
-
-.row__av {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: var(--elev-2);
-  border: 1px solid var(--line);
-  object-fit: cover;
-  display: block;
-}
-
-.row--1 .row__av { border-color: var(--accent); }
-
-.row__main { min-width: 0; width: 100%; }
-
-.row__handle {
-  display: block;
-  width: 100%;
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: -.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Sits above the full-tile button, so the handle opens the profile and
-   everywhere else on the tile means "add money". */
-.row__handle a { text-decoration: none; position: relative; z-index: 2; }
-
-/* No room for a tagline in a tile; it lives on the badge and the waiting list. */
-.row__tagline { display: none; }
-
-.row__amt {
-  font-family: var(--num);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  white-space: nowrap;
-  color: var(--muted);
-}
-
-.row--top .row__amt { color: var(--text); }
-.row--1 .row__amt { color: var(--accent); }
-
-/* The whole tile is the tap target on a phone; the explicit button is for pointers. */
-.row__add {
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  border: 0;
-  background: none;
-  font-size: 0;
-  color: transparent;
-}
-
-.row__add:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); }
-.row__meta { display: none; }
-
-/* An unclaimed place is still a place. Showing it empty is the invitation. */
-.row--free {
-  border-style: dashed;
-  border-color: var(--line);
-  background: transparent;
-}
-
-.row--free .row__slot {
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: var(--dim);
-}
-
-.row--free .row__av {
-  border-style: dashed;
-  background: transparent;
-}
-
-@media (min-width: 560px) {
-  .rows { gap: 10px; }
-  .row { padding: 26px 6px 12px; gap: 4px; }
-  .row__rank { font-size: 15px; top: 7px; }
-  .row__av { width: 46px; height: 46px; }
-  .row__handle { font-size: 12px; }
-  .row__amt { font-size: 14px; }
-  .row--free .row__slot { font-size: 11px; }
-}
-
-/* an existing row that just lost or gained a position */
 .row--bumped { animation: bump .7s cubic-bezier(.2, .9, .25, 1); }
 .row--sunk { animation: sink .7s cubic-bezier(.2, .9, .25, 1); }
 
@@ -718,7 +407,7 @@ img { max-width: 100%; }
   left: 0; right: 0; bottom: 0;
   z-index: 45;
   padding: 7px var(--pad) calc(7px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, transparent, rgba(8, 9, 12, .94) 34%);
+  background: linear-gradient(180deg, transparent, var(--veil-strong) 34%);
   pointer-events: none;
 }
 
@@ -766,7 +455,7 @@ img { max-width: 100%; }
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(4, 5, 7, .72);
+  background: var(--scrim);
   backdrop-filter: blur(6px);
   padding: 0;
 }
@@ -903,6 +592,10 @@ img { max-width: 100%; }
 
 .pick svg { width: min(57px, 74%); height: auto; aspect-ratio: 1 / 1; }
 .pick[aria-pressed="true"] { border-color: var(--pick-brand); color: var(--pick-brand); background: var(--elev-2); }
+:root[data-theme="dark"] .pick[aria-pressed="true"] {
+  border-color: var(--pick-brand-d, var(--pick-brand));
+  color: var(--pick-brand-d, var(--pick-brand));
+}
 
 /* Ten platforms, five over five — the same shape as the boards themselves. */
 
@@ -1397,22 +1090,6 @@ img { max-width: 100%; }
   .tobeat__cta { padding: 8px 12px; font-size: 12.5px; }
 }
 
-/* The two kinds of board, kept apart. Ten social networks and three consoles
-   in one strip read as thirteen of the same thing. */
-.tabs__group + .tabs__group {
-  border-top: 1px solid var(--line-soft);
-}
-
-.tabs__label {
-  margin: 0;
-  padding: 10px 0 0;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-
 /* The club and player list. An arrow that opens all thirty-two and a box
    that narrows them as you type -- the same shape as the country list on
    Rotabo, because it is the same problem: a closed set too long to scroll
@@ -1451,7 +1128,7 @@ img { max-width: 100%; }
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--elev-2);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, .55);
+  box-shadow: 0 18px 44px var(--scrim);
 }
 
 .cascade__opt {
@@ -1519,3 +1196,367 @@ img { max-width: 100%; }
   min-width: 0;
 }
 .cascade__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+
+/* =====================================================  the market table
+
+   Everything below draws one dense ranked table and the chip row that
+   filters it. It replaced a grid of board tiles: the tiles made you pick a
+   room before being shown anything, and the first job of a leaderboard is
+   to show the leader.                                                    */
+
+/* -------------------------------------------------------- the top strip */
+
+.stats {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 12px;
+}
+
+.stats__row {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  scrollbar-width: none;
+}
+
+.stats__row::-webkit-scrollbar { display: none; }
+
+.stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.stat__k { font-weight: 500; }
+
+.stat__v {
+  color: var(--text);
+  font-weight: 700;
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat--online .stat__v { color: var(--ok); }
+
+/* ------------------------------------------------------------- the head */
+
+.hero { padding: 26px 0 14px; text-align: left; }
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.1;
+}
+
+.hero h1 em { font-style: normal; color: var(--accent); }
+
+.hero__tag { display: none; }
+
+.hero__sub {
+  margin: 8px 0 0;
+  max-width: 60ch;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+/* --------------------------------------------------------- board filter */
+
+/* Not .chip: that name was already taken by the round club badge in the
+   roster list, whose 30px width was quietly clipping every board label to
+   two letters. Two things called chip in one stylesheet is one too many. */
+.chips {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+
+.chips__track {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 4px 0 10px;
+  scrollbar-width: none;
+}
+
+.chips__track::-webkit-scrollbar { display: none; }
+
+.bfilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  flex: 0 0 auto;
+  transition: background .12s, color .12s;
+}
+
+.bfilter svg { width: 15px; height: 15px; display: block; color: var(--chip, currentColor); }
+
+.bfilter b {
+  font-family: var(--num);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.bfilter:hover { background: var(--elev-2); color: var(--text); }
+
+.bfilter--on {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.bfilter--on b { color: var(--accent); }
+
+/* -------------------------------------------------------------- the table
+
+   It scrolls sideways rather than reflowing into cards: a market table is
+   read by running down one column, and cards destroy the column.          */
+
+.mwrap {
+  overflow-x: auto;
+  margin: 0 calc(var(--pad) * -1);
+  padding: 0 var(--pad) 130px;
+}
+
+.market {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.market thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg);
+  padding: 11px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+
+.market th.c-n, .market th.c-name,
+.market td.c-n, .market td.c-name { text-align: left; }
+
+.market td {
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  vertical-align: middle;
+}
+
+.mrow { transition: background .1s; }
+.mrow:hover { background: var(--elev-2); }
+
+.c-n {
+  width: 48px;
+  text-align: left;
+  font-family: var(--num);
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.mrow--1 .c-n { color: var(--gold); font-weight: 800; }
+
+/* --------------------------------------------------------- the name cell */
+
+.c-name { text-align: left; min-width: 210px; }
+
+.mname { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
+.mname__pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex: none;
+  object-fit: cover;
+  background: var(--elev-2);
+}
+
+/* The badge that stands in for a logo this site does not own. */
+.token {
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  background: var(--token);
+  color: var(--token-ink, #fff);
+}
+
+.mname__pic--empty { border: 1px dashed var(--line); background: none; }
+
+.mname__txt { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+
+.mname__h {
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 42vw;
+}
+
+a.mname__h:hover { color: var(--accent); }
+
+.mname__t {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 42vw;
+}
+
+/* ------------------------------------------------------------ the money */
+
+.c-paid {
+  font-family: var(--num);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mrow--1 .c-paid { color: var(--text); }
+.mrow--free .c-paid { color: var(--accent); font-weight: 600; }
+
+/* "Open" set in the numeral font reads as "0pen": the O and the zero are the
+   same width and very nearly the same shape. A word in a money column is
+   still a word. */
+.c-paid--word { font-family: var(--sans); font-weight: 500; color: var(--dim); }
+.mrow--free { color: var(--dim); }
+
+.mv {
+  font-family: var(--num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mv--up { color: var(--ok); }
+.mv--flat { color: var(--dim); }
+
+/* ------------------------------------------------------- board and shape */
+
+.c-board { white-space: nowrap; }
+
+.bchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+/* X is #e7e9ea and NHL Teams is #d9dde2: on a white page those marks are
+   invisible. --chip is the colour that survives the light theme, --chip-d
+   the brand's own, used where the page is dark enough to carry it. */
+.bchip svg { width: 15px; height: 15px; display: block; color: var(--chip); }
+:root[data-theme="dark"] .bchip svg,
+:root[data-theme="dark"] .bfilter svg,
+:root[data-theme="dark"] .detail__brand svg { color: var(--chip-d, var(--chip)); }
+.detail__brand svg { color: var(--chip); }
+
+/* The ticker and the platform picker carry the same pair for the same
+   reason: a mark light enough to vanish on white keeps its own colour only
+   where the page is dark enough to hold it. */
+:root[data-theme="dark"] .tick__i svg { color: var(--tick-d, var(--tick)); }
+.bchip:hover { color: var(--text); }
+
+.c-board__r {
+  font-family: var(--num);
+  font-size: 12px;
+  color: var(--dim);
+  margin-left: 8px;
+}
+
+.c-spark { width: 132px; }
+.spark { width: 112px; height: 32px; display: block; margin-left: auto; }
+.spark--none { color: var(--dim); }
+
+/* ----------------------------------------------------------- the buttons */
+
+.c-act { white-space: nowrap; width: 1%; }
+
+.mbtn {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--bg);
+  transition: border-color .12s, color .12s;
+}
+
+.mbtn:hover { border-color: var(--accent); color: var(--accent); }
+
+.mbtn--go {
+  margin-left: 6px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.mbtn--go:hover { color: var(--accent-ink); filter: brightness(1.08); }
+
+/* Rows arrive one after another the first time a view is drawn: a whole
+   table landing at once reads as a page that reloaded, a cascade reads as a
+   board being dealt. A live update does not get it -- that would drown out
+   the bump and sink that say something actually moved. */
+#market-body[data-fresh] > tr {
+  animation: cascade .3s cubic-bezier(.2, .9, .25, 1) both;
+  animation-delay: calc(var(--i, 0) * 26ms);
+}
+
+@keyframes cascade {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #market-body[data-fresh] > tr { animation: none; }
+}
+
+/* ------------------------------------------------------------- narrower
+
+   Columns drop from the right, in order of how much each is worth on a
+   phone: the shape goes first, then the board name, then the week. What
+   never drops is rank, name and what was paid.                          */
+
+@media (max-width: 1080px) {
+  .c-spark, th.c-spark { display: none; }
+}
+
+@media (max-width: 900px) {
+  .c-board, th.c-board { display: none; }
+}
+
+@media (max-width: 700px) {
+  .c-d7, th.c-d7 { display: none; }
+  .market td, .market thead th { padding-left: 7px; padding-right: 7px; }
+  .mbtn { padding: 6px 9px; }
+  .c-act .mbtn:not(.mbtn--go) { display: none; }
+}
+
+@media (max-width: 460px) {
+  .c-d1, th.c-d1 { display: none; }
+  .mname__pic { width: 28px; height: 28px; }
+  .market { font-size: 13px; }
+}

@@ -54,6 +54,31 @@
      with a number in it is a handle, and this is not a handle board. */
   const NAME_RE = /^(?=.{2,40}$)[\p{L}][\p{L}.'’-]*(?: [\p{L}.'’-]+){0,5}$/u;
 
+  /* A coin is not a person. It carries digits ("0x0.ai"), a dollar sign
+     ("$WIF"), and is very often one lower-case word somebody typed at two in
+     the morning -- so NAME_RE, which forbids all three, would throw out half
+     the market. What stays enforced is that it is a name and not a sentence:
+     forty characters, no slashes, no URL. */
+  const COIN_RE = /^(?=.{1,40}$)\$?[\p{L}\p{N}][\p{L}\p{N}.\-_' ]*$/u;
+
+  /* Titles, which is what most of the newer boards list: a game, a city, a
+     restaurant, a podcast. Same shape as a name but digits are allowed and
+     ampersands survive, because "Grand Theft Auto VI", "Bar 1969" and
+     "Ben & Jerry's" are all how the thing is actually written. */
+  const TITLE_RE = /^(?=.{2,40}$)[\p{L}\p{N}][\p{L}\p{N}.,'’&\- ]*$/u;
+
+  /* A handle on the four big platforms: two to thirty characters, letters,
+     digits, dot, underscore, hyphen, and an optional @ people type out of
+     habit. Deliberately not NAME_RE -- a creator's handle is not their name,
+     and half of them carry a number. */
+  const HANDLE_RE = /^@?[A-Za-z0-9][A-Za-z0-9._-]{1,29}$/;
+
+  /* The profile the handle points at. Lower-cased on the way in, because the
+     unique key is (platform, url) and @MrBeast and @mrbeast are one creator
+     on every one of these platforms -- two rows for one person is the single
+     thing a board of real people must not do. */
+  const creatorAt = base => tag => base + tag.replace(/^@/, '').toLowerCase();
+
   /* One name, one row. Lower case, accents off, punctuation out, spaces
      collapsed -- so "LeBron James", "lebron  james" and "Montreal" against
      "Montreal" all agree, and the fans bidding for one man are never split
@@ -61,7 +86,7 @@
      reads on the board is a proper spelling. */
   const fold = s => String(s).toLowerCase()
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .replace(/[.'’-]/g, '')
+    .replace(/[$.'’-]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -276,6 +301,152 @@
         hint:  'Connor McDavid',
         re:    NAME_RE,
         profile: null
+      } },
+
+    /* Crypto. Three boards, not one, because they answer three questions
+       that have nothing to do with each other: what the market rates, what
+       the internet is laughing at this week, and who is actually handing
+       something out. Put Bitcoin on the same sheet as a dog coin launched
+       this morning and the ranking says nothing about either.
+
+       No profile to paste. A coin has no page its holders control -- the
+       same ticker exists on twenty chains and the official site is a claim
+       like any other -- so what is typed is the coin's own name, and the
+       optional link is where the project wants people to go. */
+    { slug: 'crypto', name: 'Crypto', color: '#f7931a', fan: true, tag: {
+        label: 'Coin',
+        hint:  'Bitcoin',
+        re:    COIN_RE,
+        profile: null
+      } },
+    { slug: 'memecoins', name: 'Memecoins', color: '#c2a633', fan: true, tag: {
+        label: 'Memecoin',
+        hint:  'Dogecoin',
+        re:    COIN_RE,
+        profile: null
+      } },
+    /* The only board where the listing is an offer rather than a name: the
+       project says what it is giving, and the link is where to claim it.
+       Not a fan board -- nobody bids for somebody else's airdrop. */
+    { slug: 'gifts', name: 'Gifts & Airdrops', color: '#16c784', tag: {
+        label: 'Project',
+        hint:  'Jupiter',
+        re:    COIN_RE,
+        profile: null
+      } },
+
+    /* Ten more, chosen for one thing: somebody already argues about the
+       ranking for free. Where that argument is about somebody else -- a
+       club, a driver, a band, a city, a dog -- the board is a fan board and
+       the money is a vote. Where it is about the payer's own thing -- a
+       startup, a restaurant, a podcast -- it is advertising, and they list
+       themselves. Those are two different sentences on the button, which is
+       what `fan` decides. */
+
+    { slug: 'football-clubs', name: 'Football Clubs', color: '#22a06b', fan: true,
+      noun: 'club', tag: {
+        label: 'Club',
+        hint:  'Real Madrid',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'football-players', name: 'Football Players', color: '#5ec269', fan: true, tag: {
+        label: 'Player name',
+        hint:  'Lionel Messi',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'f1-drivers', name: 'F1 Drivers', color: '#e10600', fan: true, tag: {
+        label: 'Driver',
+        hint:  'Max Verstappen',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'artists', name: 'Artists', color: '#ec4899', fan: true,
+      noun: 'artist', tag: {
+        label: 'Artist or band',
+        hint:  'Fleetwood Mac',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'games', name: 'Games', color: '#7c5cff', fan: true,
+      noun: 'game', tag: {
+        label: 'Game',
+        hint:  'Elden Ring',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'cities', name: 'Cities', color: '#64748b', fan: true,
+      noun: 'city', tag: {
+        label: 'City',
+        hint:  'Lisbon',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'pets', name: 'Pets', color: '#f97316', fan: true,
+      noun: 'pet', tag: {
+        label: 'Name',
+        hint:  'Bruno',
+        re:    TITLE_RE,
+        profile: null
+      } },
+
+    /* The three that list themselves. No `fan`: the button says take #1,
+       not bid for somebody. */
+    { slug: 'startups', name: 'Startups', color: '#0ea5e9', tag: {
+        label: 'Startup',
+        hint:  'Acme Robotics',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'restaurants', name: 'Restaurants', color: '#b45309', tag: {
+        label: 'Restaurant',
+        hint:  'Trattoria Bruno',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'podcasts', name: 'Podcasts', color: '#0d9488', tag: {
+        label: 'Podcast',
+        hint:  'The Weekly Show',
+        re:    TITLE_RE,
+        profile: null
+      } },
+
+    /* The four influencer boards, which are not the four platform boards
+       they sit next to. On /x/ you list your own profile and the money buys
+       your own place; on /x-influencers/ the person ranked is not the person
+       paying, and what the board settles is an argument that already happens
+       for free every day -- who the biggest creator on the platform is.
+
+       Same identity either way: a handle, turned into the real profile link
+       so the row goes somewhere. */
+    { slug: 'x-influencers', name: 'X Influencers', color: '#e7e9ea',
+      fan: true, noun: 'creator', face: 'x', tag: {
+        label: 'Handle on X',
+        hint:  '@MrBeast',
+        re:    HANDLE_RE,
+        profile: creatorAt('https://x.com/')
+      } },
+    { slug: 'tiktok-influencers', name: 'TikTok Influencers', color: '#fe2c55',
+      fan: true, noun: 'creator', face: 'tiktok', tag: {
+        label: 'Handle on TikTok',
+        hint:  '@khaby.lame',
+        re:    HANDLE_RE,
+        profile: creatorAt('https://www.tiktok.com/@')
+      } },
+    { slug: 'youtube-influencers', name: 'YouTube Influencers', color: '#ff0000',
+      fan: true, noun: 'creator', face: 'youtube', tag: {
+        label: 'Handle on YouTube',
+        hint:  '@MrBeast',
+        re:    HANDLE_RE,
+        profile: creatorAt('https://www.youtube.com/@')
+      } },
+    { slug: 'facebook-influencers', name: 'Facebook Influencers', color: '#1877f2',
+      fan: true, noun: 'creator', face: 'facebook', tag: {
+        label: 'Page or handle',
+        hint:  '@leomessi',
+        re:    HANDLE_RE,
+        profile: creatorAt('https://www.facebook.com/')
       } }
   ];
 
@@ -319,8 +490,44 @@
     'nba-teams': '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 2.8v18.4M2.8 12h18.4M5.5 5.5c2.3 2 3.7 4.4 3.7 6.5s-1.4 4.5-3.7 6.5M18.5 5.5c-2.3 2-3.7 4.4-3.7 6.5s1.4 4.5 3.7 6.5"/>',
     'nba-players': '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 2.8v18.4M2.8 12h18.4M5.5 5.5c2.3 2 3.7 4.4 3.7 6.5s-1.4 4.5-3.7 6.5M18.5 5.5c-2.3 2-3.7 4.4-3.7 6.5s1.4 4.5 3.7 6.5"/>',
     'nhl-teams': '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 3.4 14.4 13H19M19 3.4 9.6 13H5"/><ellipse cx="12" cy="18.6" rx="5" ry="2.1" fill="currentColor"/>',
-    'nhl-players': '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 3.4 14.4 13H19M19 3.4 9.6 13H5"/><ellipse cx="12" cy="18.6" rx="5" ry="2.1" fill="currentColor"/>'
+    'nhl-players': '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 3.4 14.4 13H19M19 3.4 9.6 13H5"/><ellipse cx="12" cy="18.6" rx="5" ry="2.1" fill="currentColor"/>',
+    /* Crypto, drawn for the same reason as the leagues: every coin logo on
+       the market is somebody's registered mark, and this site sells rank.
+       A coin, a coin grinning, a box with a ribbon -- each reads at 20px and
+       belongs to nobody. */
+    crypto: '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M12 6.4v11.2M9.6 9.2h4.2a1.9 1.9 0 0 1 0 3.8H9.6h4.5a1.9 1.9 0 0 1 0 3.8H9.6"/>',
+    memecoins: '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="10" r="1.2" fill="currentColor"/><circle cx="15" cy="10" r="1.2" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M8 14.2a4.6 4.6 0 0 0 8 0"/>',
+    gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
+    /* The ten newest boards. Same rule as the leagues and the coins: a crest,
+       a team badge, a record label's mark and a city's coat of arms are all
+       registered artwork, so each board gets a drawn object instead -- a
+       shield, a ball, a flag, a microphone. They read at 15px, which is the
+       size a filter chip gives them, and belong to nobody. */
+    'football-clubs': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M12 2.8 4.6 5.4v7.1c0 4.2 3 7 7.4 8.7 4.4-1.7 7.4-4.5 7.4-8.7V5.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M12 8.4v6M9 11.4h6"/>',
+    'football-players': '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="m12 7.4 3.5 2.5-1.3 4.1H9.8L8.5 9.9zM12 2.9v4.5M4 9.6l4.5.3M20 9.6l-4.5.3M7.2 19.6l2.6-5.6M16.8 19.6l-2.6-5.6"/>',
+    'f1-drivers': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M5 3.6v17"/><path fill="currentColor" d="M6.6 4.2h4.6v3.4H6.6zM11.2 7.6h4.6V11h-4.6zM15.8 4.2h4.6v3.4h-4.6zM6.6 11h4.6v3.4H6.6zM11.2 14.4h4.6v3.4h-4.6zM15.8 11h4.6v3.4h-4.6z"/>',
+    artists: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M12 3.2a2.9 2.9 0 0 1 2.9 2.9v5.4a2.9 2.9 0 0 1-5.8 0V6.1A2.9 2.9 0 0 1 12 3.2zM6.4 11.2a5.6 5.6 0 0 0 11.2 0M12 16.8v4M9.2 20.8h5.6"/>',
+    games: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M8.2 7.4h7.6a5 5 0 0 1 4.9 4l.9 4.6a2.6 2.6 0 0 1-4.7 2l-1.5-2.2H8.6L7.1 18a2.6 2.6 0 0 1-4.7-2l.9-4.6a5 5 0 0 1 4.9-4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M7.2 11v2.6M5.9 12.3h2.6"/><circle cx="16.2" cy="11.6" r="1.1" fill="currentColor"/><circle cx="18.1" cy="13.6" r="1.1" fill="currentColor"/>',
+    cities: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.2 20.8V9.6l5-2.6v13.8M8.2 20.8V4.2l6.4 2.8v13.8M14.6 20.8v-8l6.2 2v6z"/><path fill="currentColor" d="M5.3 11.8h1.5v1.5H5.3zM5.3 15.2h1.5v1.5H5.3zM10.4 8.4h1.5v1.6h-1.5zM10.4 12.2h1.5v1.6h-1.5zM10.4 16h1.5v1.6h-1.5z"/>',
+    pets: '<ellipse cx="12" cy="16.4" rx="4.1" ry="3.4" fill="currentColor"/><ellipse cx="6.2" cy="11.4" rx="2.2" ry="2.7" fill="currentColor"/><ellipse cx="17.8" cy="11.4" rx="2.2" ry="2.7" fill="currentColor"/><ellipse cx="9.4" cy="6.8" rx="2.1" ry="2.6" fill="currentColor"/><ellipse cx="14.6" cy="6.8" rx="2.1" ry="2.6" fill="currentColor"/>',
+    startups: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M12 2.6c3 2.3 4.7 5.7 4.7 9.4l-1.4 4.4H8.7l-1.4-4.4c0-3.7 1.7-7.1 4.7-9.4z"/><circle cx="12" cy="10" r="2.1" fill="none" stroke="currentColor" stroke-width="1.5"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M8.7 16.4 6.2 19l2.8.5.6 2.1 2-3.2M15.3 16.4 17.8 19l-2.8.5-.6 2.1-2-3.2"/>',
+    restaurants: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M6.6 2.8v6.6a2.4 2.4 0 0 0 4.8 0V2.8M9 2.8v6M17.4 2.8c-1.6 1.4-2.4 3.4-2.4 5.6 0 1.7.8 2.6 2.4 2.8M6.6 12.2v9M17.4 11.2v10"/>',
+    /* The influencer boards borrow their platform's own mark: that is the
+       thing being pointed at, and a second drawing of it would only be a
+       worse one. */
+    'x-influencers': '',
+    'tiktok-influencers': '',
+    'youtube-influencers': '',
+    'facebook-influencers': '',
+    podcasts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M4.4 15.2v-3a7.6 7.6 0 0 1 15.2 0v3"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M4.4 13.6h1.8a1.4 1.4 0 0 1 1.4 1.4v3.4a1.4 1.4 0 0 1-1.4 1.4H4.4a1.4 1.4 0 0 1-1.4-1.4V15a1.4 1.4 0 0 1 1.4-1.4zM19.6 13.6h-1.8a1.4 1.4 0 0 0-1.4 1.4v3.4a1.4 1.4 0 0 0 1.4 1.4h1.8a1.4 1.4 0 0 0 1.4-1.4V15a1.4 1.4 0 0 0-1.4-1.4z"/>'
   };
+
+  /* Filled in after the fact: an object literal cannot refer to itself while
+     it is still being written, and these four are the platform's own mark. */
+  for (const [copie, sursa] of [
+    ['x-influencers', 'x'], ['tiktok-influencers', 'tiktok'],
+    ['youtube-influencers', 'youtube'], ['facebook-influencers', 'facebook']
+  ]) ICONS[copie] = ICONS[sursa];
 
   /* The marks that are not one colour. Drawn full-size on the tiles and tabs
      because "official logo" means the real thing, not a tinted silhouette.
@@ -351,11 +558,22 @@
       '<path fill="#fffc00" d="M12 2.2c2.7 0 4.6 2 4.8 4.7v2c.3.1.7 0 1-.1.4-.2.9 0 1.1.4.2.4 0 .9-.4 1.1-.5.2-1 .4-1.5.5-.2.1-.3.3-.2.5.5 1.5 1.6 2.7 3 3.4.3.2.4.5.3.8-.3.8-1.4 1.1-2.2 1.2l-.2.9c-.1.2-.3.4-.5.4-.5 0-1-.1-1.5 0-.5.1-.9.4-1.3.7-.6.5-1.4.8-2.2.8s-1.6-.3-2.2-.8c-.4-.3-.8-.6-1.3-.7-.5-.1-1 0-1.5 0-.2 0-.4-.2-.5-.4l-.2-.9c-.8-.1-1.9-.4-2.2-1.2-.1-.3 0-.6.3-.8 1.4-.7 2.5-1.9 3-3.4.1-.2 0-.4-.2-.5-.5-.1-1-.3-1.5-.5-.4-.2-.6-.7-.4-1.1.2-.4.7-.6 1.1-.4.3.1.7.2 1 .1v-2c.2-2.7 2.1-4.7 4.8-4.7"/>',
     twitch:
       '<path fill="#9146ff" d="M4.3 3 3 6.4v12.2h4.2V21h2.3l2.3-2.4h3.4L20 14.3V3zm14 10.5-2.6 2.6h-3.9l-2.3 2.3v-2.3H6.9V4.7h11.4zM15.4 7.6v4.7h-1.7V7.6zm-4.5 0v4.7H9.2V7.6z"/>',
+    /* These two are one-colour marks and the colour is the page's, not
+       theirs: X is black on white and white on black, and so is Threads.
+       Hard-coded #fff was correct while the site only had a dark theme and
+       invisible the moment it got a light one. */
     x:
-      '<path fill="#fff" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/>',
+      '<path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/>',
     threads:
-      '<path fill="#fff" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>'
+      '<path fill="currentColor" d="M16.7 11.1h-.2c-.2-3-1.8-4.8-4.6-4.8a4.6 4.6 0 0 0-3.9 2l1.5 1a2.8 2.8 0 0 1 2.4-1.2c.8 0 1.5.3 1.9.7.3.4.5.9.6 1.5a12 12 0 0 0-2.1-.2c-2.7 0-4.4 1.6-4.3 3.7a3.2 3.2 0 0 0 1.3 2.4 3.8 3.8 0 0 0 2.5.7 3.6 3.6 0 0 0 2.8-1.4 4.5 4.5 0 0 0 .8-2c.7.4 1.2 1 1.5 1.7.3 1 .4 2.7-1 4.2-1.2 1.2-2.8 1.7-5 1.7-2.5 0-4.4-.8-5.6-2.4A8.7 8.7 0 0 1 3.5 12c0-2.7.6-4.8 1.7-6.2 1.3-1.6 3-2.4 5.5-2.4s4.5.8 5.7 2.5a7 7 0 0 1 1.2 2.5l1.8-.5a8.9 8.9 0 0 0-1.5-3.2C16.3 2.6 13.9 1.5 10.7 1.5 7.6 1.5 5.2 2.6 3.6 4.8 2.2 6.7 1.5 9.2 1.5 12s.7 5.2 2.1 7.1c1.7 2.2 4.1 3.3 7.1 3.3 2.8 0 4.7-.7 6.3-2.3 2.2-2.2 2.1-4.9 1.4-6.5a5.3 5.3 0 0 0-1.7-2.5m-4.8 4.1a1.9 1.9 0 0 1-1.3-.4 1.3 1.3 0 0 1-.5-1.1c0-.8.6-1.7 2.5-1.7a10 10 0 0 1 2 .2c-.2 2.3-1.4 3-2.7 3"/>'
   };
+
+  /* And the same four in the full-colour set, so an influencer chip carries
+     the platform's real mark exactly like the platform's own chip does. */
+  for (const [copie, sursa] of [
+    ['x-influencers', 'x'], ['tiktok-influencers', 'tiktok'],
+    ['youtube-influencers', 'youtube'], ['facebook-influencers', 'facebook']
+  ]) if (ICONS_FULL[sursa]) ICONS_FULL[copie] = ICONS_FULL[sursa];
 
   const $ = sel => document.querySelector(sel);
   const view = $('#view');
@@ -438,7 +656,7 @@
   }
 
   const FALLBACK_AV = 'data:image/svg+xml;utf8,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#171a22"/><circle cx="22" cy="17" r="7" fill="#2b303b"/><path d="M8 42c2-8 7-12 14-12s12 4 14 12z" fill="#2b303b"/></svg>');
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#8c98a4" fill-opacity=".22"/><circle cx="22" cy="17" r="7" fill="#8c98a4"/><path d="M8 42c2-8 7-12 14-12s12 4 14 12z" fill="#8c98a4"/></svg>');
 
   /**
    * crypto.randomUUID() only exists in a secure context, and GitHub Pages
@@ -643,14 +861,28 @@
     prevRanks: {}
   };
 
+  /* market() is the board view plus movement: what each listing took in the
+     last 24 hours, what it took over seven days, and the seven daily figures
+     behind that as an array. All three come from the same rolling 24h
+     buckets, so the sparkline and the number beside it can never disagree.
+
+     The view is still there and still correct; it just cannot carry a
+     sparkline, and a market that shows only a standing total says nothing
+     about which way anything is going. If the function is missing we fall
+     back to it rather than showing an empty site: the movement columns go
+     quiet, the ranking does not. */
   async function loadBoards() {
     if (!sb) return;
-    const { data, error } = await sb
-      .from('board')
-      .select('id,platform,handle,url,tagline,link,total_cents,last_paid_at,rank')
-      .order('platform', { ascending: true })
-      .order('rank', { ascending: true })
-      .limit(2000);
+
+    let { data, error } = await sb.rpc('market');
+
+    if (error) {
+      console.warn('market() unavailable, falling back to the board view', error);
+      ({ data, error } = await sb
+        .from('board')
+        .select('id,platform,handle,url,tagline,link,total_cents,last_paid_at')
+        .limit(2000));
+    }
 
     if (error) { console.error('board load failed', error); connectionError = 'query'; return; }
 
@@ -662,6 +894,11 @@
       next[slug].sort((a, b) =>
         b.total_cents - a.total_cents ||
         new Date(a.last_paid_at) - new Date(b.last_paid_at));
+      /* Rank is the row's place in the order just applied. The view computed
+         the same number in SQL; doing it here means the fallback query and
+         the function agree, and that a row's rank always matches the list it
+         is actually sitting in. */
+      next[slug].forEach((row, i) => { row.rank = i + 1; });
     }
     state.boards = next;
     state.loaded = true;
@@ -696,16 +933,22 @@
 
   /* ---------------------------------------------------------- rendering */
 
+  /* The thin line across the very top, the way a market states its own size
+     before showing anything in it: label first, figure after, small. It was
+     five big cards, and five big cards above a table push the table off the
+     first screen -- which on a leaderboard is the whole product. */
   function renderStats() {
     const s = stats();
+    const cell = (k, v, cls) =>
+      `<span class="stat${cls ? ' ' + cls : ''}"><span class="stat__k">${k}</span><span class="stat__v">${v}</span></span>`;
     return `
-    <div class="stats">
-      <div class="stat"><span class="stat__v">${s.count}</span><span class="stat__k">Listings</span></div>
-      <div class="stat"><span class="stat__v">${money(s.total)}</span><span class="stat__k">On the boards</span></div>
-      <div class="stat"><span class="stat__v">${money(s.top)}</span><span class="stat__k">Highest</span></div>
-      <div class="stat stat--count"><span class="stat__v">${state.visitors === null ? '—' : state.visitors.toLocaleString()}</span><span class="stat__k">Visitors</span></div>
-      <div class="stat stat--online"><span class="stat__v">${state.online === null ? '—' : state.online.toLocaleString()}</span><span class="stat__k">Online now</span></div>
-    </div>`;
+    <div class="stats"><div class="shell stats__row">
+      ${cell('Listings', s.count)}
+      ${cell('Paid in', money(s.total))}
+      ${cell('Highest', money(s.top))}
+      ${cell('Visitors', state.visitors === null ? '—' : state.visitors.toLocaleString(), 'stat--count')}
+      ${cell('Online', state.online === null ? '—' : state.online.toLocaleString(), 'stat--online')}
+    </div></div>`;
   }
 
 
@@ -733,7 +976,7 @@
     if (!items.length) return;
 
     const cell = ({ p, row, rank }) => `
-      <span class="tick" style="--tick:${p.color}">
+      <span class="tick" style="${brandVars(p.color, '--tick')}">
         <span class="tick__i">${icon(p.slug, true)}</span>
         <span class="tick__h">${esc(row.handle)}</span>
         <span class="tick__r">#${rank}</span>
@@ -761,19 +1004,36 @@
      with a second list saying the same thing. */
   const LEAGUES = new Set(['nba-teams', 'nba-players', 'nhl-teams', 'nhl-players']);
 
+  /* Same job as LEAGUES: keep the crypto boards out of Gaming, which would
+     otherwise take them for being tag boards that are not a league. */
+  const CRYPTO = new Set(['crypto', 'memecoins', 'gifts']);
+
+  /* The rest of the groups, in the same shape and for the same reason: a
+     board lands in Gaming by default, which is right for a console and
+     wrong for everything else that happens to be a tag board. */
+  const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players', 'f1-drivers']);
+  const CULTURE = new Set(['artists', 'podcasts']);
+  const TRADE = new Set(['startups', 'restaurants']);
+  const LIFE = new Set(['cities', 'pets']);
+  const STARS = new Set(['x-influencers', 'tiktok-influencers',
+                         'youtube-influencers', 'facebook-influencers']);
+  const NOT_GAMING = new Set([...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE, ...STARS]);
+  // 'games' is culture by any reading, but it sits where people look for it.
+
   const GROUPS = [
     { label: 'Social networks', rows: 2, has: p => !p.tag },
-    { label: 'Gaming',          rows: 1, has: p => p.tag && !LEAGUES.has(p.slug) },
-    { label: 'Sport',           rows: 1, has: p => LEAGUES.has(p.slug) }
+    { label: 'Influencers',     rows: 1, has: p => STARS.has(p.slug) },
+    { label: 'Gaming',          rows: 1, has: p => p.tag && !NOT_GAMING.has(p.slug) },
+    { label: 'Sport',           rows: 1, has: p => SPORT.has(p.slug) },
+    { label: 'Crypto',          rows: 1, has: p => CRYPTO.has(p.slug) },
+    { label: 'Culture',         rows: 1, has: p => CULTURE.has(p.slug) },
+    { label: 'Business',        rows: 1, has: p => TRADE.has(p.slug) },
+    { label: 'Life',            rows: 1, has: p => LIFE.has(p.slug) }
   ];
 
-  /* The strip's layout, worked out once: which platforms sit in which group,
-     how each group splits into rows, and which panel each row owns.
-
-     openBoard has to reach the same answer renderTabs used. It used to
-     recompute it from PLATFORMS.length, which was correct for exactly as long
-     as there was one group -- adding the consoles would have opened the wrong
-     panel with nothing to show for it. */
+  /* The boards in the order they are offered: social first, then gaming,
+     sport and crypto. The grouping used to lay out a grid of tiles; what it
+     does now is order one scrolling row of filter chips. */
   const TAB_ROWS = (() => {
     const rows = [];
     GROUPS.forEach(g => {
@@ -786,9 +1046,6 @@
     });
     return rows;
   })();
-
-  const PANEL_OF = new Map();
-  TAB_ROWS.forEach((r, i) => r.items.forEach(p => PANEL_OF.set(p.slug, i)));
 
   /* Two models, two sentences. On a social board you list yourself and the
      money buys your own place. On a player board the person ranked is not
@@ -803,10 +1060,21 @@
   /* A board of clubs is not a board of players, and asking somebody to bid
      for their favourite player on the NHL Teams board reads as a mistake --
      because it is one. */
-  const fanNoun = slug => (CLOSED_LIST.has(slug) ? 'club' : 'player');
+  /* What the button calls the thing being bid for. A board can name its own
+     -- "bid for your favourite city" -- and the rest fall back to the two
+     the site started with. Getting this wrong is not cosmetic: asking
+     somebody to bid for their favourite player on the Cities board reads as
+     a mistake, because it is one. */
+  const fanNoun = slug => {
+    const p = BY_SLUG[slug];
+    if (p && p.noun) return p.noun;
+    if (CLOSED_LIST.has(slug)) return 'club';
+    if (CRYPTO.has(slug)) return 'coin';
+    return 'player';
+  };
 
   const ctaFor = slug => {
-    if (!slug) return 'Claim your rank';
+    if (!slug || !BY_SLUG[slug]) return 'Claim your rank';
     const n = board(slug).length;
     const top = money(clampMin(nextDollarAbove(topCents(slug))));
     if (isFan(slug)) {
@@ -815,85 +1083,267 @@
     return n ? `Take #1 on ${BY_SLUG[slug].name} for ${top}` : 'Claim your rank';
   };
 
-  function renderTabs() {
-    const cell = (p, panelId) => {
-      const n = board(p.slug).length;
-      return `<button class="tab" aria-expanded="false" aria-controls="tp-${panelId}" data-tab="${esc(p.slug)}"
-                style="--tab-brand:${p.color}" title="${esc(p.name)}">${icon(p.slug, true)}<span class="tab__name">${esc(p.name)}</span>${n ? `<span class="tab__n">${n}</span>` : ''}</button>`;
-    };
+  /* ------------------------------------------------------- the market */
 
-    /* A panel after each row of tiles rather than one at the bottom: a board
-       opened from a row belongs under that row, not below tiles it has
-       nothing to do with. */
-    const panel = i => `<div class="tabpanel" id="tp-${i}" data-panel="${i}" role="region" aria-label="The board that is open" hidden></div>`;
+  /* The front page is the table. It used to be a grid of board tiles that
+     opened a panel underneath, which meant choosing a room before being
+     shown anything -- and the one thing a leaderboard has to do on first
+     sight is show the leader. So: every listing on every board, most-paid
+     first, and the boards become a filter across the top of it.
 
-    let html = '';
-    let openGroup = null;
-    TAB_ROWS.forEach((r, i) => {
-      if (r.group !== openGroup) {
-        if (openGroup !== null) html += '</div>';
-        html += `<div class="tabs__group"><p class="tabs__label">${esc(r.group)}</p>`;
-        openGroup = r.group;
-      }
-      html += `<div class="tabs__grid" style="--tab-cols:${r.cols}">${r.items.map(p => cell(p, i)).join('')}${panel(i)}</div>`;
-    });
-    if (openGroup !== null) html += '</div>';
+     A board chip is a real URL. /crypto/ is a page with its own title and
+     canonical, not a tab state, so it can be linked, shared and crawled. */
 
-    return `<div class="tabs"><div class="shell">${html}</div></div>`;
+  /* A round mark for a listing with no picture to fetch. unavatar can find a
+     face for @handle on a social network; it can find nothing at all for
+     "Bitcoin", and a silhouette of a person standing in for a coin reads as
+     a broken image. So the tag boards -- coins, clubs, players, gamertags --
+     get the first two letters of the name in the board's own colour.
+
+     It is also the honest answer to wanting a market's coin logos in this
+     column. Every one of those is somebody's registered mark and this site
+     takes money for rank, so it draws its own badge instead: same circle,
+     same size, same place in the row. */
+  /* Board colours run from Bitcoin orange to the near-white the NHL board
+     uses, so the letters cannot always be white. Relative luminance decides,
+     the way the contrast rules do: dark ink on a light badge, light on a
+     dark one, computed once per row rather than guessed per board. */
+  function inkFor(hex) {
+    const m = /^#([0-9a-f]{6})$/i.exec(String(hex || ''));
+    if (!m) return '#fff';
+    const n = parseInt(m[1], 16);
+    const lin = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+    const L = .2126 * lin(n >> 16 & 255) + .7152 * lin(n >> 8 & 255) + .0722 * lin(n & 255);
+    return L > .45 ? '#0d1421' : '#ffffff';
   }
 
-  function renderRow(row, idx) {
-    const rank = idx + 1;
-    const cls = ['row', 'row--top', rank === 1 ? 'row--1' : ''].filter(Boolean).join(' ');
+  /* The same luminance test, used the other way round: a brand colour too
+     pale to be seen on a white page is swapped for the page's own ink, and
+     the real one is handed over as --chip-d for the dark theme to use. */
+  function brandVars(colour, name) {
+    const c = colour || '#8c98a4';
+    const pale = inkFor(c) === '#0d1421';
+    const v = name || '--chip';
+    return `${v}:${pale ? 'var(--muted)' : c};${v}-d:${c}`;
+  }
+
+  const chipVars = c => brandVars(c, '--chip');
+
+  function tokenBadge(slug, handle, cls) {
+    const colour = (BY_SLUG[slug] && BY_SLUG[slug].color) || '#8c98a4';
+    const initials = String(handle || '?')
+      .replace(/^[@$]/, '').trim().slice(0, 2).toUpperCase() || '?';
+    return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
+                  aria-hidden="true">${esc(initials)}</span>`;
+  }
+
+  /* Which boards have a face to fetch. A social board looks itself up; an
+     influencer board looks up the platform it ranks, because @MrBeast on the
+     X Influencers board is @MrBeast on X and unavatar has never heard of
+     "x-influencers". Everything else -- coins, clubs, cities, dogs -- has no
+     face anywhere and gets the badge. */
+  const faceOn = slug => {
+    const p = BY_SLUG[slug];
+    if (!p) return null;
+    if (p.face) return p.face;
+    return p.tag ? null : slug;
+  };
+
+  const facePic = (slug, handle, cls) => {
+    const on = faceOn(slug);
+    return on
+      ? `<img class="${cls}" loading="lazy" width="32" height="32" alt=""
+              src="${esc(avatarUrl(on, handle))}"
+              onerror="this.onerror=null;this.src='${FALLBACK_AV}'">`
+      : tokenBadge(slug, handle, cls);
+  };
+
+  /* Money that arrived, not money something is worth. A total here can only
+     go up -- no payment is ever taken back -- so the red half of a market
+     table has nothing truthful to put in it and is not drawn. A day when
+     nothing came in prints a dash, which is what happened. */
+  const mover = cents => Number(cents) > 0
+    ? `<span class="mv mv--up">+${money(cents)}</span>`
+    : '<span class="mv mv--flat">—</span>';
+
+  /* Seven days of takings, oldest on the left, straight out of market(). The
+     scale is the row's own best day, so the shape reads within one listing
+     and never claims a comparison between two of them. A week with nothing
+     in it draws its flat line rather than an empty cell. */
+  function sparkline(spark) {
+    const v = Array.isArray(spark) ? spark.map(n => Math.max(0, Number(n) || 0)) : [];
+    if (v.length < 2) return '<span class="spark spark--none">—</span>';
+    const hi = Math.max(...v, 1);
+    const W = 112, H = 32;
+    const pts = v.map((n, i) =>
+      `${(i * W / (v.length - 1)).toFixed(1)},${(H - 4 - (n / hi) * (H - 8)).toFixed(1)}`
+    ).join(' ');
+    const live = v.some(n => n > 0);
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"
+                 preserveAspectRatio="none" aria-hidden="true">
+      <polyline fill="none" stroke="${live ? 'var(--ok)' : 'var(--dim)'}" stroke-width="1.7"
+                stroke-linejoin="round" stroke-linecap="round" points="${pts}"/></svg>`;
+  }
+
+  /* The filter. One flat scrolling row in group order -- social, gaming,
+     sport, crypto -- because a chip row that wraps into four labelled blocks
+     is the tile grid again with smaller tiles. */
+  function renderChips(active) {
+    const chip = (href, on, brand, inner, count) =>
+      `<a class="bfilter${on ? ' bfilter--on' : ''}" href="${href}" data-link${brand ? ` style="${chipVars(brand)}"` : ''}
+          ${on ? 'aria-current="page"' : ''}>${inner}${count ? `<b>${count}</b>` : ''}</a>`;
+
+    const total = Object.values(state.boards).reduce((n, r) => n + r.length, 0);
+    let html = chip('/', !active, '', '<span>All</span>', total);
+
+    for (const row of TAB_ROWS) {
+      for (const p of row.items) {
+        html += chip(`/${p.slug}/`, active === p.slug, p.color,
+          `${icon(p.slug, true)}<span>${esc(p.name)}</span>`, board(p.slug).length);
+      }
+    }
+    return `<nav class="chips" aria-label="Boards"><div class="chips__track">${html}</div></nav>`;
+  }
+
+  /* n is the row's place in the list on screen, which is what the gold on
+     the number marks. row.rank is its place on its own board, which is what
+     the Board column prints -- on the whole market a dozen rows are #1 of
+     something, and gilding all twelve says nothing. */
+  function marketRow(row, n, solo) {
+    const p = BY_SLUG[row.platform];
+    const name = linkable(row.url)
+      ? `<a class="mname__h" href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a>`
+      : `<span class="mname__h">${esc(row.handle)}</span>`;
+
     return `
-    <div class="${cls}" data-row="${esc(row.id)}" title="${esc(row.handle)} — ${money(row.total_cents)}">
-      <span class="row__rank">${rank}</span>
-      <span class="row__brand" style="color:${BY_SLUG[row.platform]?.color || 'var(--dim)'}">${icon(row.platform, true)}</span>
-      <img class="row__av" loading="lazy" width="34" height="34" alt=""
-           src="${esc(avatarUrl(row.platform, row.handle))}" onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
-      <span class="row__handle">${linkable(row.url)
-        ? `<a href="${esc(row.url)}" target="_blank" rel="nofollow noopener">${esc(row.handle)}</a>`
-        : esc(row.handle)}</span>
-      <span class="row__amt">${money(row.total_cents)}</span>
-      <button class="row__add" data-open="${esc(row.id)}" aria-label="See ${esc(row.handle)}">Details</button>
-    </div>`;
+    <tr class="mrow${n === 1 ? ' mrow--1' : ''}" data-row="${esc(row.id)}">
+      <td class="c-n">${n}</td>
+      <td class="c-name">
+        <span class="mname">
+          ${facePic(row.platform, row.handle, 'mname__pic')}
+          <span class="mname__txt">
+            ${name}
+            ${row.tagline ? `<span class="mname__t">${esc(row.tagline)}</span>` : ''}
+          </span>
+        </span>
+      </td>
+      <td class="c-paid">${money(row.total_cents)}</td>
+      <td class="c-d1">${mover(row.d1_cents)}</td>
+      <td class="c-d7">${mover(row.d7_cents)}</td>
+      ${solo ? '' : `<td class="c-board">
+        <a class="bchip" href="/${esc(row.platform)}/" data-link
+           style="${chipVars(p && p.color)}">${icon(row.platform, true)}<span>${esc(p ? p.name : row.platform)}</span></a>
+        <span class="c-board__r">#${row.rank}</span>
+      </td>`}
+      <td class="c-spark">${sparkline(row.spark)}</td>
+      <td class="c-act">
+        <button class="mbtn" data-open="${esc(row.id)}">Details</button>
+        <button class="mbtn mbtn--go" data-add="${esc(row.id)}">Add</button>
+      </td>
+    </tr>`;
   }
 
   /**
-   * An unclaimed place. Showing it beats hiding it, but only one empty place
-   * can honestly carry a price: the first one after the last listing. Paying
-   * the minimum lands you exactly there. Any place below it is unreachable —
-   * whatever you pay, you land at the first gap — and any place above it costs
-   * whatever it takes to pass the listing sitting in it, which is a price the
-   * occupied tiles already show.
+   * An unclaimed place, drawn only on a single board. Showing it beats hiding
+   * it, but only one empty place can honestly carry a price: the first one
+   * after the last listing. Paying the minimum lands you exactly there. Any
+   * place below it is unreachable — whatever you pay, you land at the first
+   * gap — and any place above it costs whatever it takes to pass the listing
+   * sitting in it, which is a price the rows above already show.
+   *
+   * The whole market has no such row: it is not ten places long, so there is
+   * no gap in it to price.
    */
-  function renderFreeSlot(rank, slug) {
+  function marketFree(rank, slug, solo) {
     const taken = board(slug).length;
     const label = rank === taken + 1 ? money(MIN_CENTS) : 'Open';
     return `
-    <div class="row row--free" title="Place ${rank} is open">
-      <span class="row__rank">${rank}</span>
-      <span class="row__brand" style="color:${BY_SLUG[slug]?.color || 'var(--dim)'}">${icon(slug, true)}</span>
-      <span class="row__av"></span>
-      <span class="row__slot">${esc(label)}</span>
-      <button class="row__add" data-claim="1" aria-label="Claim place ${rank}">Claim</button>
+    <tr class="mrow mrow--free">
+      <td class="c-n">${rank}</td>
+      <td class="c-name">
+        <span class="mname">
+          <span class="mname__pic mname__pic--empty" aria-hidden="true"></span>
+          <span class="mname__txt"><span class="mname__h">Place ${rank} is open</span></span>
+        </span>
+      </td>
+      <td class="c-paid${rank === taken + 1 ? '' : ' c-paid--word'}">${esc(label)}</td>
+      <td class="c-d1"><span class="mv mv--flat">—</span></td>
+      <td class="c-d7"><span class="mv mv--flat">—</span></td>
+      ${solo ? '' : '<td class="c-board"></td>'}
+      <td class="c-spark"></td>
+      <td class="c-act"><button class="mbtn mbtn--go" data-claim="1">Claim</button></td>
+    </tr>`;
+  }
+
+  /** Every listing on every board, most-paid first. Same order the boards use. */
+  const wholeMarket = () => Object.values(state.boards).flat().sort((a, b) =>
+    b.total_cents - a.total_cents ||
+    new Date(a.last_paid_at) - new Date(b.last_paid_at));
+
+  /* Just the rows. Kept apart from the table around them because a live
+     update replaces these and nothing else: the header, the chips and the
+     wrapper have not changed, and repainting them throws away the scroll. */
+  function marketBody(slug) {
+    if (slug) {
+      // Always ten places on a board. A half-drawn board reads as broken; ten
+      // places with gaps reads as an invitation, and one gap prints its price.
+      const rows = board(slug);
+      const cells = [];
+      for (let i = 0; i < 10; i++) {
+        cells.push(rows[i] ? marketRow(rows[i], i + 1, true) : marketFree(i + 1, slug, true));
+      }
+      return cells.join('');
+    }
+
+    const rows = wholeMarket();
+    if (rows.length) return rows.map((r, i) => marketRow(r, i + 1)).join('');
+
+    return `<tr class="mrow mrow--free">
+      <td class="c-n">1</td>
+      <td class="c-name"><span class="mname">
+        <span class="mname__pic mname__pic--empty" aria-hidden="true"></span>
+        <span class="mname__txt"><span class="mname__h">Nobody has paid yet</span>
+        <span class="mname__t">The first ${money(MIN_CENTS)} takes #1 on any board</span></span>
+      </span></td>
+      <td class="c-paid">${money(MIN_CENTS)}</td>
+      <td class="c-d1"></td><td class="c-d7"></td><td class="c-board"></td><td class="c-spark"></td>
+      <td class="c-act"><button class="mbtn mbtn--go" data-claim="1">Claim</button></td>
+    </tr>`;
+  }
+
+  function renderMarket(slug) {
+    if (connectionError === 'config') {
+      return `<div class="empty">
+        <h3>Not connected yet</h3>
+        <p>Fill in <code>config.js</code> with the Supabase URL, the anon key and the Stripe payment link, then reload.</p>
+      </div>`;
+    }
+
+    return `
+    <div class="mwrap">
+      <table class="market">
+        <thead>
+          <tr>
+            <th class="c-n" scope="col">#</th>
+            <th class="c-name" scope="col">Name</th>
+            <th class="c-paid" scope="col">Paid</th>
+            <th class="c-d1" scope="col">24h</th>
+            <th class="c-d7" scope="col">7d</th>
+            ${slug ? '' : '<th class="c-board" scope="col">Board</th>'}
+            <th class="c-spark" scope="col">Last 7 days</th>
+            <th class="c-act" scope="col"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody id="market-body">${marketBody(slug)}</tbody>
+      </table>
     </div>`;
   }
 
-  function renderBoard() {
-    const slug = state.platform;
+  /** The line above a single board: what #1 costs to take off whoever holds it. */
+  function renderLead(slug) {
     const p = BY_SLUG[slug];
-    const rows = board(slug);
-    const lead = rows[0];
-
-    if (connectionError === 'config') {
-      return `<div class="shell board"><div class="empty">
-        <h3>Not connected yet</h3>
-        <p>Fill in <code>config.js</code> with the Supabase URL, the anon key and the Stripe payment link, then reload.</p>
-      </div></div>`;
-    }
-
-    const head = lead ? `
+    const lead = board(slug)[0];
+    return lead ? `
       <div class="tobeat">
         <div>
           <span class="tobeat__k">Holding #1 on ${esc(p.name)}</span>
@@ -910,20 +1360,14 @@
         </div>
         <button class="tobeat__cta" data-claim="1">Take #1</button>
       </div>`;
+  }
 
-    const rest = rows.slice(10);
-
-    // Always ten tiles. A half-drawn board reads as broken; ten places with
-    // gaps reads as an invitation, and each gap prints its own price.
-    const tiles = [];
-    for (let i = 0; i < 10; i++) {
-      tiles.push(rows[i] ? renderRow(rows[i], i) : renderFreeSlot(i + 1, slug));
-    }
-    const body = `<div class="rows">${tiles.join('')}</div>`;
-
-    const gap = rows.length >= 10 ? clampMin(nextDollarAbove(cutoffCents(slug))) : MIN_CENTS;
-
-    const waiting = rest.length ? `
+  /** Everyone on a board below tenth place. Only a board has one of these. */
+  function renderWaiting(slug) {
+    const rest = board(slug).slice(10);
+    if (!rest.length) return '';
+    const gap = board(slug).length >= 10 ? clampMin(nextDollarAbove(cutoffCents(slug))) : MIN_CENTS;
+    return `
       <details class="waiting">
         <summary>
           <span>Waiting list · ${rest.length}</span>
@@ -936,69 +1380,13 @@
             <span class="wrow__a">${money(r.total_cents)}</span>
             <button class="wrow__add" data-add="${esc(r.id)}">Add</button>
           </div>`).join('')}
-      </details>` : '';
-
-    return `<div class="shell board" style="--brand:${p.color}">${head}${body}${waiting}</div>`;
+      </details>`;
   }
 
-  /* The board lives inside the tile grid now: opening one fills the panel that
-     sits under that tile's row, and the other panel closes, so there is only
-     ever one board on screen. Tapping the open tile again closes it. */
-  function openBoard(slug) {
-    state.platform = slug;
-    // The layout worked this out once; recomputing it here is how the two
-    // answers drift the next time a board is added.
-    const which = PANEL_OF.get(slug);
-
-    document.querySelectorAll('.tabpanel').forEach(el => {
-      const mine = Number(el.dataset.panel) === which;
-      el.hidden = !mine;
-      el.innerHTML = mine ? renderBoard() : '';
-      /* data-fresh is what the cascade keys off. Set only here, so a live
-         update repaints the board without dealing it out again. */
-      if (mine) el.dataset.fresh = ''; else delete el.dataset.fresh;
-    });
-    stampCascade();
-
-    document.querySelectorAll('[data-tab]').forEach(t =>
-      t.setAttribute('aria-expanded', String(t.dataset.tab === slug)));
-
-    sticky.hidden = false;
-    $('#cta-claim').textContent = ctaFor(slug);
-    document.title = `Top 10 on ${BY_SLUG[slug].name} — TopTen.one`;
-    // Baseline for the outbid animation, once the rows exist to compare against.
-    snapshotRanks();
-  }
-
-  function closeBoard() {
-    document.querySelectorAll('.tabpanel').forEach(el => {
-      el.hidden = true;
-      el.innerHTML = '';
-      delete el.dataset.fresh;
-    });
-    document.querySelectorAll('[data-tab]').forEach(t => t.setAttribute('aria-expanded', 'false'));
-
-    /* The button stays. The home page is where an advert lands, and a site whose
-       whole purpose is being paid should not make someone open a board first to
-       find out how. The form carries its own platform picker. */
-    sticky.hidden = false;
-    $('#cta-claim').textContent = 'Claim your rank';
-    document.title = 'TopTen.one — Be the one.';
-  }
-
-  /* One delay step per place. Set from here rather than written into the
-     markup, so renderRow and renderFreeSlot stay unaware of how they arrive. */
-  function stampCascade() {
-    const open = document.querySelector('.tabpanel:not([hidden])');
-    if (!open) return;
-    open.querySelectorAll('.rows > *').forEach((el, i) => el.style.setProperty('--i', i + 1));
-  }
-
-
-  /* One share row per view, and on the boards it belongs directly under the
-     platform strip: that is the moment someone has just understood what the
-     place is. At the bottom of the page it was past everything, including the
-     reason to pass it on. */
+  /* One share row per view, and here it belongs directly under the table:
+     that is the moment someone has just understood what the place is. At the
+     bottom of the page it was past everything, including the reason to pass
+     it on. */
   function renderShareBar() {
     return `
     <div class="shell">
@@ -1014,66 +1402,90 @@
   }
 
   function renderHome(openSlug) {
+    const p = openSlug ? BY_SLUG[openSlug] : null;
+    state.platform = openSlug || null;
+
     view.innerHTML = `
+      ${renderStats()}
       ${renderTicker()}
       <div class="shell">
         <section class="hero">
-          <h1>TopTen<em>.one</em></h1>
-          <p class="hero__tag">Be the one.</p>
-          <p class="hero__sub">Pay to be seen. Top 10 per platform. No algorithm.</p>
+          ${p
+            ? `<h1>Top 10 on <em>${esc(p.name)}</em></h1>
+               <p class="hero__sub">Rank is decided by money paid, not by an algorithm.</p>`
+            : `<h1>TopTen<em>.one</em></h1>
+               <p class="hero__sub">Pay to be seen. Top 10 per board. No algorithm.</p>`}
         </section>
-        ${renderStats()}
+        ${renderChips(openSlug)}
+        ${openSlug ? renderLead(openSlug) : ''}
+        ${renderMarket(openSlug)}
+        ${openSlug ? renderWaiting(openSlug) : ''}
       </div>
-      ${renderTabs()}
       ${renderShareBar()}`;
 
     fillTicker();
+    stampCascade(true);
+    revealChip();
 
-    /* A platform named in the address opens its board. The bare home page opens
-       nothing, so the ten marks are the whole of the first screen. */
-    if (openSlug) openBoard(openSlug); else closeBoard();
+    sticky.hidden = false;
+    $('#cta-claim').textContent = ctaFor(openSlug);
+    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — Be the one.';
+    snapshotRanks();
   }
 
-  /** Re-render only the open board, animating rows whose position moved. */
+  /* One delay step per row, set from here rather than written into the markup
+     so marketRow stays unaware of how it arrives. Capped: past the first
+     screen the stagger is a wait, not an entrance. */
+  function stampCascade(fresh) {
+    const body = document.getElementById('market-body');
+    if (!body) return;
+    body.querySelectorAll(':scope > tr')
+      .forEach((el, i) => el.style.setProperty('--i', Math.min(i + 1, 14)));
+    if (fresh) body.dataset.fresh = ''; else delete body.dataset.fresh;
+  }
+
+  /* Thirty boards do not fit across a screen, so the one being looked at can
+     easily be off the right-hand end of its own filter row -- which reads as
+     the filter having nothing to do with the page. Scroll it into the middle
+     without moving the page itself. */
+  function revealChip() {
+    const on = document.querySelector('.bfilter--on');
+    const track = on && on.parentElement;
+    if (!on || !track) return;
+    track.scrollLeft = on.offsetLeft - (track.clientWidth - on.offsetWidth) / 2;
+  }
+
+  /** The rows the view is showing, in the order it shows them. */
+  const currentRows = () => state.platform ? board(state.platform) : wholeMarket();
+
+  /** Repaint the table body, animating rows whose position moved. */
   function refreshBoard() {
-    /* Nothing open means nothing to refresh: on the bare home page the boards
-       are closed, and a live change has no panel to land in. */
-    const slot = document.querySelector(".tabpanel:not([hidden])");
-    if (!slot) return;
-    /* The cascade is for opening. A row that moved gets bump or sink below;
-       re-dealing all ten on every live change would drown that out. */
-    delete slot.dataset.fresh;
+    const body = document.getElementById('market-body');
+    if (!body) return;
+
     const before = state.prevRanks;
-    slot.innerHTML = renderBoard();
+    body.innerHTML = marketBody(state.platform);
+    stampCascade(false);
 
     const now = {};
-    board(state.platform).forEach((r, i) => { now[r.id] = i + 1; });
+    currentRows().forEach((r, i) => { now[r.id] = i + 1; });
     for (const [id, rank] of Object.entries(now)) {
       const was = before[id];
       if (was === undefined || was === rank) continue;
-      const el = slot.querySelector(`[data-row="${CSS.escape(id)}"]`);
+      const el = body.querySelector(`[data-row="${CSS.escape(id)}"]`);
       if (el) el.classList.add(rank < was ? 'row--bumped' : 'row--sunk');
     }
     state.prevRanks = now;
 
     const statsEl = document.querySelector('.stats');
     if (statsEl) statsEl.outerHTML = renderStats();
-    PLATFORMS.forEach(p => {
-      const tab = document.querySelector(`[data-tab="${p.slug}"]`);
-      if (!tab) return;
-      const n = board(p.slug).length;
-      let badge = tab.querySelector('.tab__n');
-      // A board that just got its first listing has no badge to update yet.
-      if (n && !badge) {
-        badge = document.createElement('span');
-        badge.className = 'tab__n';
-        tab.appendChild(badge);
-      }
-      if (badge) {
-        if (n) badge.textContent = String(n);
-        else badge.remove();
-      }
-    });
+
+    /* The chip counts move with the boards. Rebuilt rather than patched:
+       there are twenty of them, three spans each, and the whole row is
+       cheaper to write than the bookkeeping to find the one that changed. */
+    const chips = document.querySelector('.chips');
+    if (chips) chips.outerHTML = renderChips(state.platform);
+
     const cta = $('#cta-claim');
     if (cta) cta.textContent = ctaFor(state.platform);
   }
@@ -1081,7 +1493,7 @@
   /** Remember where every listing sits, so the next refresh can animate movement. */
   function snapshotRanks() {
     state.prevRanks = {};
-    board(state.platform).forEach((r, i) => { state.prevRanks[r.id] = i + 1; });
+    currentRows().forEach((r, i) => { state.prevRanks[r.id] = i + 1; });
   }
 
   /* ------------------------------------------------------------- modals */
@@ -1327,8 +1739,15 @@
     });
   }
 
+  /* The form always opens on some board. The home page has none selected --
+     that is the point of a market view -- and the old code took state.platform
+     on faith, which used to be 'x' and is now null: every field in the form
+     reads BY_SLUG[slug].something, so opening it from the front page threw
+     before a single input was wired and the pay button never came alive.
+     The picker is right there; this only decides which one starts pressed. */
   function submitModal(preslug) {
-    state.draft = { slug: preslug || state.platform, url: '', handle: '', tagline: '', cents: 0 };
+    const start = preslug || state.platform || PLATFORMS[0].slug;
+    state.draft = { slug: start, url: '', handle: '', tagline: '', cents: 0 };
     const slug = state.draft.slug;
     openModal(`
       <div class="modal__head">
@@ -1344,7 +1763,7 @@
         <div class="picker" id="picker">
           ${PLATFORMS.map(p => `
             <button type="button" class="pick" data-pick="${p.slug}" aria-pressed="${p.slug === slug}"
-                    style="--pick-brand:${p.color}" title="${esc(p.name)}"
+                    style="${brandVars(p.color, '--pick-brand')}" title="${esc(p.name)}"
                     aria-label="${esc(p.name)}">${icon(p.slug, true)}</button>`).join('')}
         </div>
       </div>
@@ -1413,7 +1832,7 @@
       <div class="modal__head">
         <div>
           <h2 id="modal-title">${esc(row.handle)}</h2>
-          <p><span class="detail__brand" style="color:${p.color}">${icon(row.platform, true)}</span> ${esc(p.name)} · #${pos} with ${money(row.total_cents)}</p>
+          <p><span class="detail__brand" style="${chipVars(p.color)}">${icon(row.platform, true)}</span> ${esc(p.name)} · #${pos} with ${money(row.total_cents)}</p>
         </div>
         <button class="modal__x" data-close aria-label="Close">&times;</button>
       </div>
@@ -2171,6 +2590,17 @@
     scrollTo({ top: 0, behavior: 'instant' });
   }
 
+  /* The theme. The head has already applied whichever one is in force before
+     the first paint; all this does is flip it and remember the choice, so a
+     visitor who wants the dark table gets it on every later visit too. The
+     stored value is a deliberate choice and outranks the system setting --
+     somebody on a dark laptop who asked for the light table meant it. */
+  function toggleTheme() {
+    const now = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = now;
+    try { localStorage.setItem('topten_theme', now); } catch (e) { /* private mode */ }
+  }
+
   addEventListener('popstate', route);
 
   document.addEventListener('click', e => {
@@ -2181,21 +2611,7 @@
       return;
     }
     if (e.target.closest('[data-close]')) { closeModal(); return; }
-
-    const tab = e.target.closest('[data-tab]');
-    if (tab) {
-      const slug = tab.dataset.tab;
-      /* Tapping the open one closes it, so the ten marks come back without
-         anyone having to hunt for a way out of the board. */
-      if (tab.getAttribute('aria-expanded') === 'true') {
-        closeBoard();
-        history.replaceState({}, '', '/');
-      } else {
-        openBoard(slug);
-        history.replaceState({}, '', `/${slug}`);
-      }
-      return;
-    }
+    if (e.target.closest('#themer')) { toggleTheme(); return; }
 
     const edit = e.target.closest('[data-edit]');
     if (edit) {

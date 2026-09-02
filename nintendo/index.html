@@ -4,10 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Top 10 on Nintendo — TopTen.one</title>
-<meta name="description" content="The ten most-paid Nintendo profiles right now. Listings are ordered by the amount paid for the advertising space. Add yours from $2.">
+<meta name="description" content="The ten most-paid Nintendo friend codes right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <link rel="canonical" href="https://topten.one/nintendo/">
 
-<meta name="theme-color" content="#08090c">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1421" media="(prefers-color-scheme: dark)">
+
+<!-- Before the first paint, not after. A stylesheet cannot read localStorage,
+     so a saved dark theme applied from app.js would arrive one frame late and
+     the page would flash white on every single load. Four lines in the head,
+     ahead of the stylesheet, is the only place this can go. -->
+<script>
+try {
+  var t = localStorage.getItem('topten_theme');
+  if (t !== 'light' && t !== 'dark') {
+    t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = t;
+} catch (e) { document.documentElement.dataset.theme = 'light'; }
+</script>
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
@@ -16,18 +31,18 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TopTen.one">
 <meta property="og:title" content="Top 10 on Nintendo — TopTen.one">
-<meta property="og:description" content="The ten most-paid Nintendo profiles right now. Listings are ordered by the amount paid for the advertising space. Add yours from $2.">
+<meta property="og:description" content="The ten most-paid Nintendo friend codes right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <meta property="og:image" content="https://topten.one/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://topten.one/nintendo/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Top 10 on Nintendo — TopTen.one">
-<meta name="twitter:description" content="The ten most-paid Nintendo profiles right now. Listings are ordered by the amount paid for the advertising space. Add yours from $2.">
+<meta name="twitter:description" content="The ten most-paid Nintendo friend codes right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <meta name="twitter:image" content="https://topten.one/og-image.png">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=a02dc79406">
+<link rel="stylesheet" href="/styles.css?v=cfc8bd47ca">
 </head>
 <body>
 
@@ -40,16 +55,18 @@
 <header class="masthead">
   <div class="shell masthead__row">
     <a class="wordmark" href="/" data-link>TopTen<b>.one</b></a>
+    <button class="themer" id="themer" type="button" aria-label="Switch between light and dark">
+      <svg class="themer__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.6" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg>
+      <svg class="themer__moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 14.2A9.2 9.2 0 0 1 9.8 3 9.2 9.2 0 1 0 21 14.2"/></svg>
+    </button>
   </div>
 </header>
 
 <main id="view" aria-live="polite">
-  <div class="shell board">
-    <div class="rows">
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-      <div class="skeleton"></div>
-    </div>
+  <div class="shell" style="padding-top:26px">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
   </div>
 </main>
 
@@ -60,12 +77,11 @@
       <svg class="sponsor__logo sponsor__logo--rotabo" viewBox="0 0 430 260" width="43" height="26" aria-hidden="true"><defs><radialGradient id="rotaboViolet" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#rotaboViolet)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
       <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
     </div>
-    <!-- The ten boards as real links. The tiles above them are buttons, because
-         they open a board in place rather than navigate to it, and Googlebot does
-         not press buttons: Search Console reported every board as discovered from
-         the sitemap with "referring page: none". These give each board a way in
-         from every page the site serves, including the other nine boards. -->
-    <nav class="foot__boards" aria-label="All ten boards">
+    <!-- Every board as a real link. The chips above them navigate, but they
+         are drawn by JavaScript after load, and Search Console reported every
+         board as discovered from the sitemap with "referring page: none".
+         These give each board a way in from every page the site serves. -->
+    <nav class="foot__boards" aria-label="Every board">
       <a href="/x/" data-link>X</a>
       <a href="/instagram/" data-link>Instagram</a>
       <a href="/tiktok/" data-link>TikTok</a>
@@ -76,6 +92,30 @@
       <a href="/twitch/" data-link>Twitch</a>
       <a href="/linkedin/" data-link>LinkedIn</a>
       <a href="/threads/" data-link>Threads</a>
+      <a href="/playstation/" data-link>PlayStation</a>
+      <a href="/xbox/" data-link>Xbox</a>
+      <a href="/nintendo/" data-link>Nintendo</a>
+      <a href="/nba-teams/" data-link>NBA Teams</a>
+      <a href="/nba-players/" data-link>NBA Players</a>
+      <a href="/nhl-teams/" data-link>NHL Teams</a>
+      <a href="/nhl-players/" data-link>NHL Players</a>
+      <a href="/crypto/" data-link>Crypto</a>
+      <a href="/memecoins/" data-link>Memecoins</a>
+      <a href="/gifts/" data-link>Gifts &amp; Airdrops</a>
+      <a href="/football-clubs/" data-link>Football Clubs</a>
+      <a href="/football-players/" data-link>Football Players</a>
+      <a href="/f1-drivers/" data-link>F1 Drivers</a>
+      <a href="/artists/" data-link>Artists</a>
+      <a href="/games/" data-link>Games</a>
+      <a href="/cities/" data-link>Cities</a>
+      <a href="/pets/" data-link>Pets</a>
+      <a href="/startups/" data-link>Startups</a>
+      <a href="/restaurants/" data-link>Restaurants</a>
+      <a href="/podcasts/" data-link>Podcasts</a>
+      <a href="/x-influencers/" data-link>X Influencers</a>
+      <a href="/tiktok-influencers/" data-link>TikTok Influencers</a>
+      <a href="/youtube-influencers/" data-link>YouTube Influencers</a>
+      <a href="/facebook-influencers/" data-link>Facebook Influencers</a>
     </nav>
     <nav>
       <a href="/about.html">About</a>
@@ -86,7 +126,13 @@
     <p>🇨🇭 Made in Switzerland · Available worldwide</p>
     <p style="font-size:11px;max-width:56ch;margin:8px auto 0">
       Not affiliated with X, Instagram, TikTok, YouTube, Facebook, Telegram, Snapchat, Twitch,
-  LinkedIn or Threads.
+      LinkedIn, Threads, PlayStation, Xbox, Nintendo, the NBA, the NHL, FIFA, UEFA, Formula 1
+      or any club, league or competition named here, and not affiliated with, endorsed by or
+      connected to any cryptocurrency, token, exchange, project, artist, game, business or
+      other name a listing may carry.
+      Nothing here is financial advice, an offer, or a recommendation to buy anything, and a listing
+      is not a claim that any gift or airdrop it describes is genuine — check that yourself before
+      you connect a wallet or send anything to anyone.
       Listings are ordered by the amount paid for the advertising space. All payments are final.
     </p>
   </div>
@@ -104,8 +150,8 @@
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=a02dc79406"></script>
+<script src="/config.js?v=cfc8bd47ca"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=a02dc79406"></script>
+<script defer src="/app.js?v=cfc8bd47ca"></script>
 </body>
 </html>

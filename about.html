@@ -6,7 +6,21 @@
 <title>About — TopTen.one</title>
 <meta name="description" content="One board per platform, ten places on it, and money is the only thing that moves you.">
 <link rel="canonical" href="https://topten.one/about.html">
-<meta name="theme-color" content="#08090c">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1421" media="(prefers-color-scheme: dark)">
+
+<!-- Before the first paint, not after: a stylesheet cannot read localStorage,
+     so a saved dark theme applied later would flash the page white on every
+     load. Same four lines as the home page, and they have to stay the same. -->
+<script>
+try {
+  var t = localStorage.getItem('topten_theme');
+  if (t !== 'light' && t !== 'dark') {
+    t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = t;
+} catch (e) { document.documentElement.dataset.theme = 'light'; }
+</script>
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
 <meta property="og:type" content="article">
@@ -15,7 +29,7 @@
 <meta property="og:image" content="https://topten.one/og-image.png">
 <meta property="og:url" content="https://topten.one/about.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css?v=a02dc79406">
+<link rel="stylesheet" href="/styles.css?v=cfc8bd47ca">
 </head>
 <body>
 
