@@ -1195,6 +1195,10 @@
     return 'player';
   };
 
+  /* "Who should be #1?" only where the answer is somebody else. On a board
+     where you list yourself the question has one obvious answer and asking it
+     is a way of not saying "take it"; on a fan board it is the whole
+     proposition — thirty names and the money decides. */
   const ctaFor = slug => {
     /* The button that follows you down the page says the price, because
        "Claim my rank" asks somebody to imagine a number and "Be #1
@@ -1205,7 +1209,10 @@
     const n = board(slug).length;
     const top = money(clampMin(nextDollarAbove(topCents(slug))));
     if (isFan(slug)) {
-      return n ? `Put your ${fanNoun(slug)} at #1 for ${top}` : `Bid for your favourite ${fanNoun(slug)}`;
+      /* The price needs a verb after a question mark. "…on Actors? $41" reads
+         as a number that fell off the end of a sentence. */
+      return n ? `Who should be #1 on ${BY_SLUG[slug].name}? ${top} decides`
+               : `Who should be #1 on ${BY_SLUG[slug].name}?`;
     }
     return n ? `Take #1 on ${BY_SLUG[slug].name} for ${top}` : 'Claim my rank';
   };
@@ -1785,7 +1792,9 @@
           <span class="tobeat__v">${money(MIN_CENTS)}</span>
           <span class="tobeat__who">takes #1 right now</span>
         </div>
-        <button class="tobeat__cta" data-claim="1">Take #1</button>
+        <button class="tobeat__cta" data-claim="1">${isFan(slug)
+          ? 'Who should be #1?'
+          : 'Take #1'}</button>
       </div>`;
   }
 
@@ -1996,11 +2005,16 @@
       });
     };
 
+    /* The same option, asked or told. On a fan board the top of the ladder is
+       an answer to a question — who should be first — and on a board where
+       you list yourself it is an instruction, because the answer is you. */
+    const varf = isFan(slug) ? 'Who should be #1?' : 'Take #1';
+
     if (rows[0] && rows[0].total_cents >= current) {
-      push('Take #1', exceptId ? 'Pass everyone above you' : 'Straight to the top of the board',
+      push(varf, exceptId ? 'Pass everyone above you' : 'Straight to the top of the board',
         nextDollarAbove(rows[0].total_cents));
     } else {
-      push('Take #1', rows.length ? 'You are already #1 — extend the lead' : 'The board is empty',
+      push(varf, rows.length ? 'You are already #1 — extend the lead' : 'The board is empty',
         Math.max(nextDollarAbove(current), current + MIN_CENTS));
     }
 
