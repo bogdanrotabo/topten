@@ -171,6 +171,7 @@ node "$(dirname "$0")/rosters.mjs" --check
 node "$(dirname "$0")/build-game-art.mjs" --check
 node "$(dirname "$0")/build-people-art.mjs" --check
 node "$(dirname "$0")/build-congress.mjs" --check
+node "$(dirname "$0")/build-worker-boards.mjs" --check
 
 # 5. And check that the boards actually agree, everywhere they are written
 #    down. A board drawn in app.js that the database rejects takes somebody's

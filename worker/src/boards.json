@@ -1,0 +1,174 @@
+{
+  "x": {
+    "name": "X",
+    "color": "#e7e9ea"
+  },
+  "instagram": {
+    "name": "Instagram",
+    "color": "#e1306c"
+  },
+  "tiktok": {
+    "name": "TikTok",
+    "color": "#fe2c55"
+  },
+  "youtube": {
+    "name": "YouTube",
+    "color": "#ff0000"
+  },
+  "facebook": {
+    "name": "Facebook",
+    "color": "#1877f2"
+  },
+  "telegram": {
+    "name": "Telegram",
+    "color": "#26a5e4"
+  },
+  "snapchat": {
+    "name": "Snapchat",
+    "color": "#fffc00"
+  },
+  "twitch": {
+    "name": "Twitch",
+    "color": "#9146ff"
+  },
+  "linkedin": {
+    "name": "LinkedIn",
+    "color": "#0a66c2"
+  },
+  "threads": {
+    "name": "Threads",
+    "color": "#c9c9c9"
+  },
+  "playstation": {
+    "name": "PlayStation",
+    "color": "#0070d1"
+  },
+  "xbox": {
+    "name": "Xbox",
+    "color": "#107c10"
+  },
+  "nintendo": {
+    "name": "Nintendo",
+    "color": "#e60012"
+  },
+  "nba-teams": {
+    "name": "NBA Teams",
+    "color": "#c8102e"
+  },
+  "nba-players": {
+    "name": "NBA Players",
+    "color": "#5b8ae6"
+  },
+  "nhl-teams": {
+    "name": "NHL Teams",
+    "color": "#d9dde2"
+  },
+  "nhl-players": {
+    "name": "NHL Players",
+    "color": "#4a7fe0"
+  },
+  "crypto": {
+    "name": "Crypto",
+    "color": "#f7931a"
+  },
+  "memecoins": {
+    "name": "Memecoins",
+    "color": "#c2a633"
+  },
+  "exchanges": {
+    "name": "Exchanges",
+    "color": "#2775ca"
+  },
+  "gifts": {
+    "name": "Gifts & Airdrops",
+    "color": "#16c784"
+  },
+  "football-clubs": {
+    "name": "Football Clubs",
+    "color": "#22a06b"
+  },
+  "football-players": {
+    "name": "Football Players",
+    "color": "#5ec269"
+  },
+  "f1-drivers": {
+    "name": "F1 Drivers",
+    "color": "#e10600"
+  },
+  "artists": {
+    "name": "Artists",
+    "color": "#ec4899"
+  },
+  "games": {
+    "name": "Games",
+    "color": "#7c5cff"
+  },
+  "cities": {
+    "name": "Cities",
+    "color": "#64748b"
+  },
+  "pets": {
+    "name": "Pets",
+    "color": "#f97316"
+  },
+  "startups": {
+    "name": "Startups",
+    "color": "#0ea5e9"
+  },
+  "restaurants": {
+    "name": "Restaurants",
+    "color": "#b45309"
+  },
+  "actors": {
+    "name": "Actors",
+    "color": "#e11d48"
+  },
+  "movies": {
+    "name": "Movies",
+    "color": "#4338ca"
+  },
+  "cars": {
+    "name": "Cars",
+    "color": "#b91c1c"
+  },
+  "boats": {
+    "name": "Boats",
+    "color": "#0369a1"
+  },
+  "golf-players": {
+    "name": "Golf Players",
+    "color": "#4d7c0f"
+  },
+  "us-parties": {
+    "name": "U.S. Political Parties",
+    "color": "#7f1d1d"
+  },
+  "us-politicians": {
+    "name": "U.S. Political Figures",
+    "color": "#1e3a8a"
+  },
+  "podcasts": {
+    "name": "Podcasts",
+    "color": "#0d9488"
+  },
+  "x-influencers": {
+    "name": "X Influencers",
+    "color": "#e7e9ea"
+  },
+  "instagram-influencers": {
+    "name": "Instagram Influencers",
+    "color": "#d62976"
+  },
+  "tiktok-influencers": {
+    "name": "TikTok Influencers",
+    "color": "#fe2c55"
+  },
+  "youtube-influencers": {
+    "name": "YouTube Influencers",
+    "color": "#ff0000"
+  },
+  "facebook-influencers": {
+    "name": "Facebook Influencers",
+    "color": "#1877f2"
+  }
+}

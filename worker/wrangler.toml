@@ -1,0 +1,43 @@
+# The badge-preview Worker. It runs only on /badge, in front of GitHub Pages.
+#
+#   cd worker
+#   npx wrangler deploy
+#
+# The first deploy asks to log in and opens a browser. Nothing else here needs
+# filling in: the account is chosen at login and the routes are below.
+
+name = "topten-badge"
+main = "src/index.js"
+compatibility_date = "2026-09-02"
+
+# Both spellings of the badge address, and nothing else on the site. Every
+# other path goes straight to GitHub Pages as it does today, without this
+# Worker in the way.
+#
+# zone_name is the zone in Cloudflare, which is the apex domain; the pattern is
+# what actually matches. /badge with no slash is the same page, so it is here
+# too -- a link written by hand rather than by the site will still preview.
+[[routes]]
+pattern = "topten.one/badge"
+zone_name = "topten.one"
+
+[[routes]]
+pattern = "topten.one/badge/*"
+zone_name = "topten.one"
+
+[[routes]]
+pattern = "www.topten.one/badge"
+zone_name = "topten.one"
+
+[[routes]]
+pattern = "www.topten.one/badge/*"
+zone_name = "topten.one"
+
+# Supabase is read with the same public anon key config.js already serves to
+# every browser, so there is no secret to set. These two exist so a different
+# project can be pointed at without editing the code.
+[vars]
+SUPABASE_URL = "https://iezclmijwrtjibgflfqj.supabase.co"
+
+[observability]
+enabled = true
