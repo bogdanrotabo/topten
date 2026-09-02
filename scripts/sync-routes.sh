@@ -24,6 +24,32 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# slug|Board-Name|noun. Three fields, space separated, so every field is one
+# word: a board name written with hyphens is put back with spaces below, and
+# the noun is what that board actually lists. "The ten most-paid Crypto
+# profiles" describes nothing -- coins do not have profiles.
+PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins exchanges|Exchanges|exchanges gifts|Gifts-+-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups us-parties|U.S.-Political-Parties|parties us-politicians|U.S.-Political-Figures|names actors|Actors|actors movies|Movies|films cars|Cars|marques boats|Boats|builders golf-players|Golf-Players|players restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators instagram-influencers|Instagram-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
+
+# The number of boards, written into the three descriptions in the head.
+#
+# It said "Forty-three" because somebody typed it, and a number typed into a
+# sentence is a number nobody updates -- this one goes out in every search
+# result and every link preview. It is counted here now, from the same list
+# the routes are built from, and the copies below inherit it.
+N=$(echo $PLATFORMS | wc -w)
+sed -i -E -e "s#(name=\"description\" content=\")[A-Za-z0-9-]+ boards#\\1$N boards#" \
+          -e "s#(og:description\" content=\")[A-Za-z0-9-]+ boards#\\1$N boards#" \
+          -e "s#(twitter:description\" content=\")[A-Za-z0-9-]+ boards#\\1$N boards#" index.html
+echo "  $N boards, written into the head"
+
+# And the same for the price, which is quoted in all three of them. It is one
+# number in one place in app.js; every other copy of it should be a copy.
+CENTS=$(grep -oE "MIN_CENTS = [0-9]+" app.js | grep -oE "[0-9]+$" | head -1)
+[ -n "$CENTS" ] || { echo "  cannot read MIN_CENTS from app.js"; exit 1; }
+if [ $((CENTS % 100)) -eq 0 ]; then P=$((CENTS / 100)); else P=$(printf "%d.%02d" $((CENTS / 100)) $((CENTS % 100))); fi
+sed -i -E "s~(#1 from \\$)[0-9]+(\\.[0-9]+)?~\\1$P~g" index.html
+echo "  #1 from \$$P, written into the head"
+
 STAMP=$(cat app.js styles.css config.js | sha1sum | cut -c1-10)
 echo "  asset stamp: $STAMP"
 
@@ -47,12 +73,6 @@ done
 #    drawn by JavaScript after load, so the only thing that makes these separate
 #    documents is a head of their own: title, description and canonical. Those
 #    are rewritten here rather than kept in eleven hand-edited files.
-
-# slug|Board-Name|noun. Three fields, space separated, so every field is one
-# word: a board name written with hyphens is put back with spaces below, and
-# the noun is what that board actually lists. "The ten most-paid Crypto
-# profiles" describes nothing -- coins do not have profiles.
-PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins exchanges|Exchanges|exchanges gifts|Gifts-+-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups us-parties|U.S.-Political-Parties|parties us-politicians|U.S.-Political-Figures|names actors|Actors|actors movies|Movies|films cars|Cars|marques boats|Boats|builders golf-players|Golf-Players|players restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators instagram-influencers|Instagram-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
 
 SITEMAP=sitemap.xml
 {
