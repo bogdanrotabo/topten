@@ -1770,7 +1770,14 @@
        thing that page exists to show, and a leaderboard you have to scroll to
        reach is not a leaderboard. So the board page opens on its ten with the
        list one summary line away, saying how many are behind it. */
-    return `<details class="chips" ${active ? '' : 'open'}>
+    /* Open on the front page when there is room for it, folded when there is
+       not. Bigger type made the block taller, and on a 1024px laptop that put
+       the first row of the table below the fold — a leaderboard you have to
+       scroll to reach. The fold is one summary line away and says how many
+       boards are behind it, which is the trade: legible chips, and the table
+       still on screen. A board page is always folded; it opens on its ten. */
+    const incape = typeof innerWidth === 'number' ? innerWidth >= 1180 : true;
+    return `<details class="chips" ${!active && incape ? 'open' : ''}>
       <summary class="chips__sum">
         <span>${active ? `${esc(acum)} — all ${PLATFORMS.length} boards` : 'Boards'}</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m6 9 6 6 6-6z"/></svg>
