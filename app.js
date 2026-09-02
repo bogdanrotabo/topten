@@ -2192,9 +2192,7 @@
       </div>
 
       <div class="detail">
-        <img class="detail__av" width="64" height="64" alt=""
-             src="${esc(avatarUrl(row.platform, row.handle))}"
-             onerror="this.onerror=null;this.src='${FALLBACK_AV}'">
+        ${facePic(row.platform, row.handle, 'detail__av', row)}
         <div class="detail__body">
           ${row.tagline
             ? `<p class="detail__tagline">${esc(row.tagline)}</p>`

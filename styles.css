@@ -699,12 +699,17 @@ img { max-width: 100%; }
   margin-bottom: 10px;
 }
 
+/* Now a badge with a picture over it rather than a bare <img>, the same as
+   every row in the table — so a coin opens on its own logo instead of on the
+   silhouette of a person, which is what unavatar returns when asked for a
+   face for "Bitcoin". */
 .detail__av {
   width: 64px; height: 64px;
   flex: 0 0 auto;
   border-radius: 50%;
   border: 1px solid var(--line);
   object-fit: cover;
+  font-size: 19px;
 }
 
 .detail__body { min-width: 0; }
@@ -1583,7 +1588,16 @@ img { max-width: 100%; }
    through it and one circle carried two marks. It has to come after .token,
    not before: both are one class deep, so source order is the whole of the
    argument between them. */
-.token--on { color: transparent; }
+.token--on {
+  color: transparent;
+  /* And the disc goes with the letters. --token paints the board's colour
+     behind every badge on it, so on the crypto board each coin's transparent
+     logo was sitting on the same orange circle — Ethereum's mark on Bitcoin's
+     background, which is the "logo over what was already there" that letters
+     alone did not explain. A real logo carries its own shape; it does not
+     need a coloured plate under it. */
+  background: none;
+}
 
 .mname__pic--empty { border: 1px dashed var(--line); background: none; }
 
