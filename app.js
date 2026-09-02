@@ -2003,14 +2003,9 @@
      more than a promise you cannot. */
   function heroHome() {
     const c = cheapestTop();
-    const goale = c.goale
-      ? `${c.goale} of the ${PLATFORMS.length} boards have nobody on them at all.`
-      : `Every board has somebody on it. Passing them is a payment.`;
     return `<h1>Rankings decided by <em>money</em></h1>
-      <p class="hero__sub">Thirty-four boards, ten places each, ordered by what
-      people paid to stand there. No followers, no algorithm, no waiting —
-      <b>#1 somewhere on this site costs ${money(c.cost)} right now.</b>
-      ${goale}</p>`;
+      <p class="hero__sub"><b>Pay more than the person above you. That's the
+      whole algorithm.</b> Who should be #1? Take a place — ${money(c.cost)}.</p>`;
   }
 
   function heroBoard(slug) {

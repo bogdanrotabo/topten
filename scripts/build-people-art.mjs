@@ -25,7 +25,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(root, 'people-art.json');
 const MAX_AGE_DAYS = 60;
-const GAP = 700;
+const GAP = 1100;
 const UA = 'TopTenOne/1.0 (https://topten.one; support@rotabo.app)';
 
 const fold = s => String(s).toLowerCase()
@@ -39,8 +39,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 /* Every board whose subject is a person or an organisation with a page. Kept
    in one file but keyed by board, because a name can mean two different
    things on two different boards and each should get its own picture. */
-const BOARDS = ['actors', 'us-politicians', 'us-parties', 'football-players',
-                'f1-drivers', 'golf-players', 'artists'];
+const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
+               'f1-drivers', 'golf-players', 'artists'];
+
+/* Name boards on the command line to rebuild only those; without any, all of
+   them. Rebuilding seven boards to check one costs ten minutes of somebody
+   else's rate limit. Whatever is not rebuilt is carried over from the file
+   that is already there, so a partial run never loses the rest. */
+const cerute = process.argv.slice(2).filter(a => !a.startsWith('--'));
+const BOARDS = cerute.length ? TOATE.filter(b => cerute.includes(b)) : TOATE;
 
 /* Both quote styles. A name with an apostrophe in it — Baldur's Gate,
    Schindler's List — has to be written with double quotes in the roster, and
@@ -63,6 +70,116 @@ const get = async (u, attempt = 1) => {
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 };
+
+/* Parties are looked up differently, and the reason is a trap I fell into.
+ *
+ * A party's Wikipedia article shows its official logo, and that logo is the
+ * committee's registered mark — hosted locally, non-free, refused. Taking the
+ * article thumbnail therefore found nothing for the Republicans, the
+ * Democrats, the Libertarians or the Greens: the four that matter most.
+ *
+ * But Commons does hold party marks — "Republican Disc.svg" and the 2025
+ * Democratic logo are both public domain there — they simply are not what the
+ * article puts at the top. So this searches the file namespace by name, keeps
+ * only what is freely licensed, and takes the file whose title is closest to
+ * the party's own. A state chapter's logo is a near miss and a wrong answer,
+ * so a title that folds to something other than the party name is refused.
+ */
+/* Files checked by hand because Commons search will not surface them.
+ *
+ * "Republican Disc.svg" is public domain and is the national mark, and the
+ * search returns eight state chapters before it — ranking, not licensing. A
+ * name in this list is not a guess: each was fetched and its licence read
+ * before being written down. The search runs first regardless, so a better
+ * answer found live still wins. */
+const STIUTE = {
+  'republican party': 'File:Republican Disc.svg'
+};
+
+async function lookParty(name) {
+  /* Two searches, because the wording decides what comes back: "Republican
+     Party logo" finds state chapters, and "Republican Party" finds the disc
+     that is actually the national mark. Both, deduplicated, then judged. */
+  const hits = [];
+  for (const q of [`${name} logo`, name]) {
+    try {
+      const found = await get('https://commons.wikimedia.org/w/api.php?action=query&format=json'
+        + '&origin=*&list=search&srnamespace=6&srlimit=8&srsearch=' + encodeURIComponent(q));
+      for (const h of found.query?.search || []) if (!hits.includes(h.title)) hits.push(h.title);
+    } catch (e) { /* one query failing is not both failing */ }
+    await sleep(GAP);
+  }
+  if (!hits.length) return null;
+
+  await sleep(GAP);
+  const meta = await get('https://commons.wikimedia.org/w/api.php?action=query&format=json'
+    + '&origin=*&prop=imageinfo&iiprop=extmetadata|url&iiurlwidth=200&titles='
+    + encodeURIComponent(hits.slice(0, 12).join('|')));
+
+  const cheie = fold(name);
+  let best = null;
+  for (const page of Object.values(meta.query?.pages || {})) {
+    const ii = (page.imageinfo || [])[0];
+    if (!ii) continue;
+    const ex = ii.extmetadata || {};
+    const plain = v => String(v?.value || '').replace(/<[^>]*>/g, '').trim();
+    const lic = plain(ex.LicenseShortName) || plain(ex.License);
+    /* Free or nothing. "Fair use" and "Non-free" are the words that matter. */
+    if (!lic || /non-?free|fair use|copyright/i.test(lic)) continue;
+
+    const titlu = fold(String(page.title || '')
+      .replace(/^File:/i, '').replace(/\.(svg|png|jpe?g)$/i, '')
+      .replace(/\b(logo|disc|symbol|emblem|seal|us|usa|united states|alternate|positive|profile|\d{4})\b/gi, ''));
+
+    /* Every word in the file's title has to be a word in the party's name.
+       "Republican Disc" keeps only "republican", which is in "republican
+       party", so it passes; "Arizona Republican Party" carries "arizona",
+       which is not, so it does not — and a state chapter's logo on the
+       national party would be a near miss, which is the worst kind of wrong
+       answer because it looks right. */
+    const cuvinte = titlu.split(' ').filter(Boolean);
+    const aleLui = new Set(cheie.split(' '));
+    if (!cuvinte.length || !cuvinte.every(w => aleLui.has(w))) continue;
+
+    /* More of the party's name matched is a better match, and an SVG beats a
+       bitmap at 32px. */
+    const scor = cuvinte.length * 10 + (/\.svg$/i.test(page.title) ? 2 : 1);
+    if (!best || scor > best.scor) {
+      /* Commons appends its own tracking query to thumbnails. It is not part
+         of the address and it doubles the length of every one of them. */
+      const curat = String(ii.thumburl || ii.url || '').split('?')[0];
+      best = { scor, img: curat, autor: plain(ex.Artist) || 'Unknown',
+               licenta: lic, pagina: ii.descriptionurl || ('https://commons.wikimedia.org/wiki/'
+                 + encodeURIComponent(page.title)) };
+    }
+  }
+  if (best) {
+    const { scor, ...rest } = best;
+    return rest;
+  }
+
+  const stiut = STIUTE[fold(name)];
+  if (!stiut) return null;
+  await sleep(GAP);
+  const m = await get('https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*'
+    + '&prop=imageinfo&iiprop=extmetadata|url&iiurlwidth=200&titles=' + encodeURIComponent(stiut));
+  const pg = Object.values(m.query?.pages || {})[0] || {};
+  const ii = (pg.imageinfo || [])[0];
+  if (!ii) return null;
+  const ex = ii.extmetadata || {};
+  const plain = v => String(v?.value || '').replace(/<[^>]*>/g, '').trim();
+  const lic = plain(ex.LicenseShortName) || plain(ex.License);
+  /* Even a file I looked at myself is checked again here. A licence can be
+     re-tagged, and a hard-coded name is exactly the kind of thing that stops
+     being true without anybody noticing. */
+  if (!lic || /non-?free|fair use|copyright/i.test(lic)) return null;
+  return {
+    img: String(ii.thumburl || ii.url || '').split('?')[0],
+    autor: plain(ex.Artist) || 'Unknown',
+    licenta: lic,
+    pagina: ii.descriptionurl || ('https://commons.wikimedia.org/wiki/' + encodeURIComponent(stiut))
+  };
+}
 
 /** The file behind the summary thumbnail, and what Commons says about it. */
 async function look(name) {
@@ -107,7 +224,9 @@ if (process.argv.includes('--check')) {
   process.exit(0);
 }
 
-const art = {};
+const art = existsSync(OUT)
+  ? (JSON.parse(readFileSync(OUT, 'utf8')).art || {})
+  : {};
 let gasit = 0, refuzat = 0;
 
 for (const board of BOARDS) {
@@ -115,7 +234,7 @@ for (const board of BOARDS) {
   let g = 0, r = 0;
   for (const n of wanted(board)) {
     try {
-      const hit = await look(n);
+      const hit = board === 'us-parties' ? await lookParty(n) : await look(n);
       if (hit) { art[board][fold(n)] = hit; g++; }
       else r++;
     } catch (e) {

@@ -76,6 +76,18 @@ async function look(name, attempt = 1) {
       return cut > 0 && fold(full.slice(0, cut)) === key;
     });
   }
+
+  /* And a trailing edition number: "EA SPORTS FC 25" for "EA Sports FC",
+     "Football Manager 2024" for "Football Manager". A number is a year or an
+     instalment of the same game; a trailing word is a different game, which
+     is why "Elden Ring Nightreign" still does not answer for "Elden Ring". */
+  if (!hit) {
+    hit = (d.items || []).find(i => {
+      const t = fold(i.name).replace(/\s+(?:\d{1,4}|[ivx]{1,5})$/i, '').trim();
+      return t === key;
+    });
+  }
+
   if (!hit) return null;
   /* Its own capsule, without the ?t= cache-buster: same bytes, shorter file,
      and one fewer thing to go stale. */
