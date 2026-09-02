@@ -42,7 +42,7 @@ try {
 <meta name="twitter:image" content="https://topten.one/og-image.png">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=c94e0e23a3">
+<link rel="stylesheet" href="/styles.css?v=8f17626753">
 </head>
 <body>
 
@@ -77,10 +77,13 @@ try {
       <svg class="sponsor__logo sponsor__logo--rotabo" viewBox="0 0 430 260" width="43" height="26" aria-hidden="true"><defs><radialGradient id="rotaboViolet" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#rotaboViolet)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
       <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
     </div>
-    <!-- Every board as a real link. The chips above them navigate, but they
-         are drawn by JavaScript after load, and Search Console reported every
-         board as discovered from the sitemap with "referring page: none".
-         These give each board a way in from every page the site serves. -->
+    <!-- Every board as a real link, and the reason they are down here rather
+         than being the place you pick a board: the chips under the headline
+         do that job, and they do it with icons, counts and a live filter.
+         But they are drawn by JavaScript after load, and Search Console
+         reported every board as discovered from the sitemap with "referring
+         page: none" until these existed. So they stay, small, at the bottom,
+         where a crawler reads them and a reader does not have to. -->
     <nav class="foot__boards" aria-label="Every board">
       <a href="/x/" data-link>X</a>
       <a href="/instagram/" data-link>Instagram</a>
@@ -150,8 +153,8 @@ try {
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=c94e0e23a3"></script>
+<script src="/config.js?v=8f17626753"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=c94e0e23a3"></script>
+<script defer src="/app.js?v=8f17626753"></script>
 </body>
 </html>

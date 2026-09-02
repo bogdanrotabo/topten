@@ -902,6 +902,11 @@
     }
     state.boards = next;
     state.loaded = true;
+
+    /* Before the first paint, not after: facePic is synchronous, and a map
+       arriving later would mean every coin drawn once as a badge and again as
+       a logo. Only fetched when there is a coin to draw. */
+    if (CRYPTO_LIST.some(slug => next[slug] && next[slug].length)) await loadCoinLogos();
   }
 
   const board = slug => state.boards[slug] || [];
@@ -1024,7 +1029,8 @@
 
   /* Same job as LEAGUES: keep the crypto boards out of Gaming, which would
      otherwise take them for being tag boards that are not a league. */
-  const CRYPTO = new Set(['crypto', 'memecoins', 'gifts']);
+  const CRYPTO_LIST = ['crypto', 'memecoins', 'gifts'];
+  const CRYPTO = new Set(CRYPTO_LIST);
 
   /* The rest of the groups, in the same shape and for the same reason: a
      board lands in Gaming by default, which is right for a console and
@@ -1152,12 +1158,74 @@
 
   const chipVars = c => brandVars(c, '--chip');
 
-  function tokenBadge(slug, handle, cls) {
-    const colour = (BY_SLUG[slug] && BY_SLUG[slug].color) || '#8c98a4';
-    const initials = String(handle || '?')
-      .replace(/^[@$]/, '').trim().slice(0, 2).toUpperCase() || '?';
-    return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
-                  aria-hidden="true">${esc(initials)}</span>`;
+  /* Coin logos, fetched once and only when there is a coin on screen. 64 KB
+     is nothing next to a page of avatars and everything next to nothing, so
+     the home page does not pay for it unless a crypto listing is actually
+     being drawn. Failure is silent: no map, and the coins keep their badges. */
+  let COIN_LOGOS = null;
+  async function loadCoinLogos() {
+    if (COIN_LOGOS) return COIN_LOGOS;
+    try {
+      const r = await fetch('/coin-logos.json', { cache: 'force-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      COIN_LOGOS = await r.json();
+    } catch (e) {
+      console.warn('coin logos unavailable', e);
+      COIN_LOGOS = { base: '', size: 'small', logos: {} };
+    }
+    return COIN_LOGOS;
+  }
+
+  /* The project's own mark, matched on the name or the ticker exactly as the
+     lister typed it, through the same fold the boards use. No near-misses: a
+     wrong logo over a paid listing is worse than no logo, so anything that
+     does not match keeps its badge. */
+  function coinLogo(handle) {
+    if (!COIN_LOGOS || !COIN_LOGOS.base) return null;
+    const hit = COIN_LOGOS.logos[fold(handle)];
+    return hit ? COIN_LOGOS.base + hit.replace('/', `/${COIN_LOGOS.size}/`) : null;
+  }
+
+  /* Every coin CoinGecko ranks, for the claim form's picker: a thousand on
+     the crypto board, the five hundred it files as memecoins on the memecoin
+     one. Fetched only when that form is opened on one of those boards, which
+     is why it is a second file and not part of the logo map.
+
+     Deliberately not a closed list. The club boards refuse anything not in
+     the league because there is no thirty-first club; a coin board that
+     refused anything not in a file built last Tuesday would turn away the
+     exact new listing somebody arrived to pay for. The list is for spelling
+     and for finding one, and typing past it is allowed. */
+  let COIN_LIST = null;
+  async function loadCoinList() {
+    if (COIN_LIST) return COIN_LIST;
+    try {
+      const r = await fetch('/coin-list.json', { cache: 'force-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const d = await r.json();
+      /* Shaped like a club roster -- [name, mark, colour, colour] -- so the
+         cascade that already exists needs nothing new to draw it. */
+      const asRoster = rows => rows.map(([name, sym]) =>
+        [name, sym, '#f7931a', '#ffffff']);
+      COIN_LIST = { crypto: asRoster(d.names), memecoins: asRoster(d.meme) };
+      ROSTERS.crypto = COIN_LIST.crypto;
+      ROSTERS.memecoins = COIN_LIST.memecoins;
+    } catch (e) {
+      console.warn('coin list unavailable', e);
+      COIN_LIST = { crypto: null, memecoins: null };
+    }
+    return COIN_LIST;
+  }
+
+  /* The icon of the site a listing points at — for a business, a project or a
+     podcast that is its own logo, published by the people who own it. Costs a
+     listing nothing and needs no new field: the link is already in the form. */
+  function siteLogo(link) {
+    if (!linkable(link)) return null;
+    try {
+      const host = new URL(link).hostname.replace(/^www\./, '');
+      return host ? `https://unavatar.io/${encodeURIComponent(host)}?fallback=false` : null;
+    } catch (e) { return null; }
   }
 
   /* Which boards have a face to fetch. A social board looks itself up; an
@@ -1172,14 +1240,34 @@
     return p.tag ? null : slug;
   };
 
-  const facePic = (slug, handle, cls) => {
+  /* Four ways a row gets a real picture, in order of how certain each is: the
+     coin's own logo, the icon of the site it links to, the profile picture on
+     the platform being ranked, and the drawn badge underneath all of them.
+
+     The badge is not a fallback that gets swapped in on failure. It is the
+     floor: always drawn, the picture layered over it, and a picture that 404s
+     removes itself and reveals what was already there. No broken-image glyph,
+     no flash of the wrong thing, no second request. */
+  function facePic(slug, handle, cls, row) {
+    const colour = (BY_SLUG[slug] && BY_SLUG[slug].color) || '#8c98a4';
+    const initials = String(handle || '?')
+      .replace(/^[@$]/, '').trim().slice(0, 2).toUpperCase() || '?';
+
     const on = faceOn(slug);
-    return on
-      ? `<img class="${cls}" loading="lazy" width="32" height="32" alt=""
-              src="${esc(avatarUrl(on, handle))}"
-              onerror="this.onerror=null;this.src='${FALLBACK_AV}'">`
-      : tokenBadge(slug, handle, cls);
-  };
+    /* Order matters: a person's own face beats their company's favicon.
+       @supportrotabo links to rotabo.app, and taking the site icon first put
+       a logo where a profile picture belonged. The site icon is what a board
+       with no profile to look up falls back on -- a startup, a restaurant, a
+       podcast, a project giving something away. */
+    const src = (CRYPTO.has(slug) && coinLogo(handle))
+      || (on ? avatarUrl(on, handle) : null)
+      || siteLogo(row && row.link);
+
+    return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
+                  aria-hidden="true">${esc(initials)}${src
+      ? `<img loading="lazy" width="32" height="32" alt="" src="${esc(src)}" onerror="this.remove()">`
+      : ''}</span>`;
+  }
 
   /* Money that arrived, not money something is worth. A total here can only
      go up -- no payment is ever taken back -- so the red half of a market
@@ -1208,24 +1296,38 @@
                 stroke-linejoin="round" stroke-linecap="round" points="${pts}"/></svg>`;
   }
 
-  /* The filter. One flat scrolling row in group order -- social, gaming,
-     sport, crypto -- because a chip row that wraps into four labelled blocks
-     is the tile grid again with smaller tiles. */
+  /* The filter, and every board in it visible at once.
+     
+     It was one flat row that scrolled sideways, which on any normal screen
+     showed about nine of the thirty-four and gave no sign the other
+     twenty-five existed -- the boards were live, indexed and paid-for, and
+     invisible. A leaderboard site whose list of leaderboards has to be
+     dragged into view is hiding its own product.
+     
+     So the chips wrap, and they wrap under the labels the boards were
+     grouped by anyway: eight headings, thirty-four chips, no scrolling. */
   function renderChips(active) {
     const chip = (href, on, brand, inner, count) =>
       `<a class="bfilter${on ? ' bfilter--on' : ''}" href="${href}" data-link${brand ? ` style="${chipVars(brand)}"` : ''}
           ${on ? 'aria-current="page"' : ''}>${inner}${count ? `<b>${count}</b>` : ''}</a>`;
 
     const total = Object.values(state.boards).reduce((n, r) => n + r.length, 0);
-    let html = chip('/', !active, '', '<span>All</span>', total);
+    let html = `<div class="chips__row">${
+      chip('/', !active, '', '<span>All boards</span>', total)}</div>`;
 
+    let deschis = null;
     for (const row of TAB_ROWS) {
-      for (const p of row.items) {
-        html += chip(`/${p.slug}/`, active === p.slug, p.color,
-          `${icon(p.slug, true)}<span>${esc(p.name)}</span>`, board(p.slug).length);
+      if (row.group !== deschis) {
+        if (deschis !== null) html += '</div></div>';
+        html += `<div class="chips__group"><p class="chips__label">${esc(row.group)}</p><div class="chips__row">`;
+        deschis = row.group;
       }
+      html += row.items.map(p => chip(`/${p.slug}/`, active === p.slug, p.color,
+        `${icon(p.slug, true)}<span>${esc(p.name)}</span>`, board(p.slug).length)).join('');
     }
-    return `<nav class="chips" aria-label="Boards"><div class="chips__track">${html}</div></nav>`;
+    if (deschis !== null) html += '</div></div>';
+
+    return `<nav class="chips" aria-label="Boards">${html}</nav>`;
   }
 
   /* n is the row's place in the list on screen, which is what the gold on
@@ -1243,7 +1345,7 @@
       <td class="c-n">${n}</td>
       <td class="c-name">
         <span class="mname">
-          ${facePic(row.platform, row.handle, 'mname__pic')}
+          ${facePic(row.platform, row.handle, 'mname__pic', row)}
           <span class="mname__txt">
             ${name}
             ${row.tagline ? `<span class="mname__t">${esc(row.tagline)}</span>` : ''}
@@ -1499,12 +1601,7 @@
      easily be off the right-hand end of its own filter row -- which reads as
      the filter having nothing to do with the page. Scroll it into the middle
      without moving the page itself. */
-  function revealChip() {
-    const on = document.querySelector('.bfilter--on');
-    const track = on && on.parentElement;
-    if (!on || !track) return;
-    track.scrollLeft = on.offsetLeft - (track.clientWidth - on.offsetWidth) / 2;
-  }
+  function revealChip() { /* every chip is on screen now; nothing to scroll */ }
 
   /** The rows the view is showing, in the order it shows them. */
   const currentRows = () => state.platform ? board(state.platform) : wholeMarket();
@@ -1658,6 +1755,18 @@
 
     cascadeList = ROSTERS[slug] || null;
 
+    /* The two coin boards have a list, it just is not in the bundle. Ask for
+       it, and run this again once it lands -- but only if the form is still
+       open on the same board, because by then somebody may have picked
+       another one or closed it altogether. */
+    if (!cascadeList && (slug === 'crypto' || slug === 'memecoins')) {
+      loadCoinList().then(() => {
+        if (!modal.hidden && state.draft && state.draft.slug === slug && ROSTERS[slug]) {
+          setupCascade(slug, document.getElementById('url-input'));
+        }
+      });
+    }
+
     /* One listener for the whole page, not one per modal: the nodes are
        looked up when the click happens, so it keeps working across every
        later opening instead of holding on to the first modal's dead ones. */
@@ -1715,7 +1824,14 @@
         ? shown.map(t => `
             <button type="button" class="cascade__opt" role="option" aria-selected="false"
                     data-club="${esc(teamName(t))}">
-              <span class="chip" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}</span>
+              <span class="chip" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}${
+                /* A coin in this list gets its own logo over the ticker, the
+                   same way a row in the table does — same trick, same floor:
+                   the ticker is drawn first and the picture sits on top of
+                   it, so one that fails to load simply is not there. Clubs
+                   keep their abbreviation; a crest is not ours to fetch. */
+                (n => n ? `<img loading="lazy" alt="" src="${esc(n)}" onerror="this.remove()">` : '')(coinLogo(teamName(t)))
+              }</span>
               <span class="cascade__who">
                 <span class="cascade__name">${esc(teamName(t))}</span>
                 ${teamClub(t) ? `<span class="cascade__club">${esc(teamClub(t))}${teamNo(t) ? ` &middot; #${esc(teamNo(t))}` : ''}</span>` : ''}
@@ -1815,7 +1931,7 @@
           ${PLATFORMS.map(p => `
             <button type="button" class="pick" data-pick="${p.slug}" aria-pressed="${p.slug === slug}"
                     style="${brandVars(p.color, '--pick-brand')}" title="${esc(p.name)}"
-                    aria-label="${esc(p.name)}">${icon(p.slug, true)}</button>`).join('')}
+                    aria-label="${esc(p.name)}">${icon(p.slug, true)}<span class="pick__name">${esc(p.name)}</span></button>`).join('')}
         </div>
       </div>
 

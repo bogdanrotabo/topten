@@ -1,39 +1,46 @@
-/* TopTen.one — a market table. Light by default, dark on request. Mobile first.
+/* TopTen.one — a market table in Rotabo's colours. Light by default, dark on
+   request. Mobile first.
 
-   The palette is CoinMarketCap's, because that is the room this site is
-   asking to be read in: white page, one blue for anything you can act on,
-   #16C784 for money that moved and #EA3943 for money that went the other
-   way, and a grey scale that stays legible at 12px across a dense table.
-   Those are colours, not marks -- the wordmark, the coin badges and the
-   board icons on this site are its own, and none of them are borrowed. */
+   The palette is the brand's own, sampled from the mark on @supportrotabo:
+   #f4e8f7 for the pale ground it sits on, #ead7f0 a shade under it, and the
+   violet family #af4dd2 / #a33bca / #9d35c4 / #9632ba that the rhombus is
+   painted in — plus the #fdd321 gold of the second rhombus, kept for the one
+   thing gold should mean on a leaderboard, which is first place.
+
+   The layout is a market's: white rows, one accent for anything you can act
+   on, green for money that arrived, and a grey scale that stays legible at
+   12px across a dense table. The only colours on the page that are not from
+   this list are the logos — a coin's, a platform's, a board's mark is its
+   own, and recolouring somebody's logo to match a theme is not a theme, it
+   is a different logo. */
 
 :root {
   color-scheme: light;
 
   --bg: #ffffff;
   --elev: #ffffff;
-  --elev-2: #f8fafd;
-  --line: #eff2f5;
-  --line-soft: #f4f6f9;
-  --text: #0d1421;
-  --muted: #616e85;
-  --dim: #8c98a4;
-  --accent: #3861fb;
+  --elev-2: #f7eefa;
+  --line: #ecdff1;
+  --line-soft: #f4e8f7;
+  --text: #1e1923;
+  --muted: #6b5c74;
+  --dim: #9d8ea6;
+  --accent: #9632ba;
   --accent-ink: #ffffff;
-  --accent-soft: #eef2ff;
-  --danger: #ea3943;
-  --ok: #16c784;
-  --gold: #f0b90b;
-  --brand: #3861fb;
+  --accent-soft: #f4e8f7;
+  --danger: #d23b48;
+  --ok: #0f9d63;
+  --gold: #e9b800;
+  --brand: #9632ba;
 
   /* The four surfaces that sit over something: masthead, sticky bar, modal
      scrim, tile veil. Held as variables so the dark theme can invert them
      without a second copy of the rule. */
   --veil: rgba(255, 255, 255, .92);
   --veil-strong: rgba(255, 255, 255, .96);
-  --veil-soft: rgba(248, 250, 253, .88);
-  --scrim: rgba(13, 20, 33, .45);
-  --shadow: 0 1px 2px rgba(88, 102, 126, .08), 0 4px 12px rgba(88, 102, 126, .06);
+  --veil-soft: rgba(250, 245, 251, .9);
+  --scrim: rgba(30, 25, 35, .46);
+  --shadow: 0 1px 2px rgba(124, 52, 154, .09), 0 4px 14px rgba(124, 52, 154, .07);
 
   --radius: 8px;
   --radius-lg: 12px;
@@ -44,30 +51,34 @@
   --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Dark is the same table with the greys turned over: CoinMarketCap's own
-   night values, the two money colours unchanged because they have to mean
-   the same thing in both. */
+/* Dark is the same table with the greys turned over — violet-black rather
+   than neutral black, because a neutral dark under a violet accent reads as
+   two brands. The accent lifts to #c161df, the lighter end of the same
+   family, since #9632ba on a dark ground is a hole rather than a link. The
+   two money colours barely move: they have to mean the same thing in both. */
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #0d1421;
-  --elev: #171924;
-  --elev-2: #1f2230;
-  --line: #232a3b;
-  --line-soft: #1b2130;
-  --text: #ffffff;
-  --muted: #a1a7bb;
-  --dim: #808a9d;
-  --accent: #3861fb;
-  --accent-ink: #ffffff;
-  --accent-soft: #1c2540;
-  --gold: #f0b90b;
+  --bg: #16101b;
+  --elev: #1e1726;
+  --elev-2: #291f33;
+  --line: #352943;
+  --line-soft: #241c2e;
+  --text: #f7f0fa;
+  --muted: #b3a4bd;
+  --dim: #8b7c95;
+  --accent: #c161df;
+  --accent-ink: #1a1020;
+  --accent-soft: #2c1c38;
+  --danger: #ef5a66;
+  --ok: #21c98a;
+  --gold: #fdd321;
 
-  --veil: rgba(13, 20, 33, .92);
-  --veil-strong: rgba(13, 20, 33, .96);
-  --veil-soft: rgba(23, 25, 36, .88);
-  --scrim: rgba(4, 7, 13, .68);
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 12px rgba(0, 0, 0, .24);
+  --veil: rgba(22, 16, 27, .92);
+  --veil-strong: rgba(22, 16, 27, .96);
+  --veil-soft: rgba(30, 23, 38, .9);
+  --scrim: rgba(9, 5, 13, .7);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .34), 0 4px 14px rgba(0, 0, 0, .26);
 }
 
 * { box-sizing: border-box; }
@@ -573,24 +584,50 @@ img { max-width: 100%; }
 .hint--bad { color: var(--danger); }
 .hint--good { color: var(--ok); }
 
+/* Thirty-four boards, not seventeen. At five to a row and one square each the
+   picker filled the whole modal and pushed the field somebody actually came
+   to type in below the fold -- and four of those squares were a second X,
+   TikTok, YouTube and Facebook that looked exactly like the first four. So:
+   smaller tiles, a name under each so the two kinds are told apart, and a
+   height it scrolls inside, because the picker is the second thing on this
+   form and what you are listing is the first. */
 .picker {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 7px;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 6px;
+  max-height: 218px;
+  overflow-y: auto;
+  padding: 2px;
+  scrollbar-width: thin;
 }
 
 .pick {
-  aspect-ratio: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 11px;
+  gap: 5px;
+  padding: 9px 4px 7px;
+  border-radius: 10px;
   border: 1px solid var(--line);
   background: var(--bg);
   color: var(--muted);
 }
 
-.pick svg { width: min(57px, 74%); height: auto; aspect-ratio: 1 / 1; }
+.pick__name {
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--muted);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.pick[aria-pressed="true"] .pick__name { color: inherit; }
+
+.pick svg { width: 26px; height: 26px; }
 .pick[aria-pressed="true"] { border-color: var(--pick-brand); color: var(--pick-brand); background: var(--elev-2); }
 :root[data-theme="dark"] .pick[aria-pressed="true"] {
   border-color: var(--pick-brand-d, var(--pick-brand));
@@ -1171,10 +1208,12 @@ img { max-width: 100%; }
    and gold read as Boston. */
 .chip {
   flex: none;
+  position: relative;
   display: grid;
   place-items: center;
   width: 30px;
   height: 30px;
+  overflow: hidden;
   border-radius: 50%;
   border: 2px solid var(--chip-trim, var(--line));
   background: var(--chip-ink, var(--elev));
@@ -1282,15 +1321,27 @@ img { max-width: 100%; }
   margin-bottom: 4px;
 }
 
-.chips__track {
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  padding: 4px 0 10px;
-  scrollbar-width: none;
+/* Wrapped, not scrolled: all thirty-four boards on screen at once, under the
+   eight headings they are grouped by. */
+.chips { padding-bottom: 8px; }
+
+.chips__group { margin-top: 8px; }
+
+.chips__label {
+  margin: 0 0 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--dim);
 }
 
-.chips__track::-webkit-scrollbar { display: none; }
+.chips__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px 0;
+}
 
 .bfilter {
   display: inline-flex;
@@ -1396,6 +1447,25 @@ img { max-width: 100%; }
 }
 
 /* The badge that stands in for a logo this site does not own. */
+/* The badge is the floor and the picture is the layer over it: always drawn,
+   always underneath, revealed again the moment an image 404s and removes
+   itself. No broken-image glyph and no second request. */
+.token, .chip { position: relative; overflow: hidden; }
+
+.token > img,
+.chip > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  /* No background. A picture that is still loading, or blocked, or slow used
+     to paint an opaque circle over the initials and leave a blank disc where
+     a badge belonged. Transparent means the badge shows until the image
+     actually has pixels to put there. */
+}
+
 .token {
   display: grid;
   place-items: center;
