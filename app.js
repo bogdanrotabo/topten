@@ -1078,13 +1078,13 @@
     state.boards = next;
     state.loaded = true;
 
-    /* Before the first paint, not after: facePic is synchronous, and a map
-       arriving later would mean every coin drawn once as a badge and again as
-       a logo. Only fetched when there is a coin to draw. */
-    if (CRYPTO_LIST.some(slug => next[slug] && next[slug].length)) await loadCoinLogos();
-    if (next.games && next.games.length) await loadGameArt();
-    if (PEOPLE_BOARDS.some(b => next[b] && next[b].length)) await loadPeopleArt();
-    if (next['us-politicians'] && next['us-politicians'].length) await loadCongress();
+    /* The picture files are not fetched here.
+    
+       This runs once for the whole site, so asking "is there a coin anywhere"
+       pulled the coin map, the photographs and all 537 members of Congress
+       onto every page — 186 KB of it on /x/, which draws none of them. What
+       a view needs is decided by the rows that view is about to draw, which
+       is artFor, below. */
   }
 
   const board = slug => state.boards[slug] || [];
@@ -1474,7 +1474,6 @@
     (PEOPLE_ART && PEOPLE_ART.art && PEOPLE_ART.art[slug]
       && PEOPLE_ART.art[slug][fold(handle)]) || null;
 
-  const hasPersonArt = slug => !!(PEOPLE_ART && PEOPLE_ART.art && PEOPLE_ART.art[slug]);
 
   /* The publisher's own cover art for a game, from Steam's store search,
      built into a file the same way the coin logos are. Not every game is on
@@ -2081,6 +2080,26 @@
                 payment, so it takes two — totals add up`}.`
         : `Nobody has taken this board yet. <b>${money(cost)} makes you #1</b>,
            and #1 is the row everybody sees first.`}</p>`;
+  }
+
+  /* Only what this view actually draws.
+  
+     facePic is synchronous, so whatever it needs has to be in memory before
+     the row is drawn — otherwise every coin appears once as a badge and again
+     as a logo a moment later. But "before it is drawn" is not the same as "on
+     every page": a board page draws one board and the market draws whatever
+     has been paid for, and both are known here, from the rows themselves. */
+  async function artFor(openSlug) {
+    const randuri = openSlug ? board(openSlug) : wholeMarket();
+    const boarduri = new Set(randuri.map(r => r.platform));
+    const treaba = [];
+    if ([...boarduri].some(b => CRYPTO.has(b))) treaba.push(loadCoinLogos());
+    if (boarduri.has('games')) treaba.push(loadGameArt());
+    if ([...boarduri].some(b => PEOPLE_BOARDS.includes(b))) treaba.push(loadPeopleArt());
+    if (boarduri.has('us-politicians')) treaba.push(loadCongress());
+    if (!treaba.length) return false;
+    await Promise.all(treaba);
+    return true;
   }
 
   function renderHome(openSlug) {
@@ -3356,7 +3375,12 @@
     /* The address decides what is open: /tiktok opens TikTok, / opens nothing. */
     const open = p && BY_SLUG[p] ? p : null;
     if (open) state.platform = open;
+    /* Drawn first, filled in after. The table is the page; making a ranking
+       wait on a picture file would be the wrong way round. Where a fetch is
+       needed the rows redraw once it lands, and where it is not — which is
+       most board pages — nothing is fetched and nothing redraws. */
     renderHome(open);
+    artFor(open).then(nevoie => { if (nevoie && state.platform === open) refreshBoard(); });
   }
 
   function navigate(href) {
