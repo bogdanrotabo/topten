@@ -1287,7 +1287,7 @@ img { max-width: 100%; }
 
 /* ------------------------------------------------------------- the head */
 
-.hero { padding: 26px 0 14px; text-align: left; }
+.hero { padding: 20px 0 12px; text-align: left; }
 
 /* On a board the headline comes after the chips and sits on its own ten, so
    it needs the space above it that the chips took, and less below. */
@@ -1329,6 +1329,25 @@ img { max-width: 100%; }
    eight headings they are grouped by. */
 .chips { padding-bottom: 8px; }
 
+.chips__sum {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.chips__sum::-webkit-details-marker { display: none; }
+.chips__sum:hover { color: var(--text); }
+.chips__sum svg { width: 16px; height: 16px; transition: transform .15s; }
+.chips[open] .chips__sum svg { transform: rotate(180deg); }
+
 /* Label beside the chips, not above them. Eight headings each on their own
    line made the block half a screen tall, and on a board page that pushed the
    ten it is a filter for below the fold. Same information, half the height. */
@@ -1336,13 +1355,13 @@ img { max-width: 100%; }
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 3px 0;
+  padding: 1px 0;
 }
 
 .chips__label {
-  flex: 0 0 78px;
+  flex: 0 0 74px;
   margin: 0;
-  padding-top: 9px;
+  padding-top: 7px;
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: .1em;
@@ -1353,7 +1372,7 @@ img { max-width: 100%; }
 .chips__row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
 }
 
@@ -1369,10 +1388,10 @@ img { max-width: 100%; }
 .bfilter {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 12px;
+  gap: 6px;
+  padding: 5px 9px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--muted);
   text-decoration: none;
@@ -1422,8 +1441,8 @@ img { max-width: 100%; }
   top: 0;
   z-index: 2;
   background: var(--bg);
-  padding: 11px 10px;
-  font-size: 12px;
+  padding: 10px 8px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--muted);
   text-align: right;
@@ -1435,7 +1454,7 @@ img { max-width: 100%; }
 .market td.c-n, .market td.c-name { text-align: left; }
 
 .market td {
-  padding: 13px 10px;
+  padding: 11px 8px;
   border-bottom: 1px solid var(--line);
   text-align: right;
   vertical-align: middle;
@@ -1456,7 +1475,7 @@ img { max-width: 100%; }
 
 /* --------------------------------------------------------- the name cell */
 
-.c-name { text-align: left; min-width: 210px; }
+.c-name { text-align: left; min-width: 180px; }
 
 .mname { display: flex; align-items: center; gap: 10px; min-width: 0; }
 
@@ -1586,8 +1605,8 @@ a.mname__h:hover { color: var(--accent); }
   margin-left: 8px;
 }
 
-.c-spark { width: 132px; }
-.spark { width: 112px; height: 32px; display: block; margin-left: auto; }
+.c-spark { width: 110px; }
+.spark { width: 96px; height: 28px; display: block; margin-left: auto; }
 .spark--none { color: var(--dim); }
 
 /* ----------------------------------------------------------- the buttons */
@@ -1639,22 +1658,40 @@ a.mname__h:hover { color: var(--accent); }
    phone: the shape goes first, then the board name, then the week. What
    never drops is rank, name and what was paid.                          */
 
-@media (max-width: 1080px) {
+/* The breakpoints were set by looking at a 1280px window and they were far
+   too eager: a laptop at 125% or 150% OS scaling reports well under 1080 CSS
+   pixels, so the shape column — the one thing that says which way a listing
+   is going — vanished on an ordinary screen while there was room for it.
+   
+   Every threshold is the width at which that column genuinely stops fitting,
+   measured against the widest row the table draws, not a round number. The
+   board column disappears on a board page anyway, which buys the shape
+   another 150px there. */
+@media (max-width: 900px) {
   .c-spark, th.c-spark { display: none; }
+
+  /* A board page has no Board column — every row is on the same board — so
+     the hundred and fifty pixels that column would take belong to the shape
+     instead, and it survives another 120px of narrowing here. */
+  .market--solo .c-spark, .market--solo th.c-spark { display: table-cell; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 780px) {
+  .market--solo .c-spark, .market--solo th.c-spark { display: none; }
+}
+
+@media (max-width: 780px) {
   .c-board, th.c-board { display: none; }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 640px) {
   .c-d7, th.c-d7 { display: none; }
   .market td, .market thead th { padding-left: 7px; padding-right: 7px; }
   .mbtn { padding: 6px 9px; }
   .c-act .mbtn:not(.mbtn--go) { display: none; }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 430px) {
   .c-d1, th.c-d1 { display: none; }
   .mname__pic { width: 28px; height: 28px; }
   .market { font-size: 13px; }

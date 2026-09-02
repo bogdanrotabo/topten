@@ -1261,6 +1261,46 @@
      refused anything not in a file built last Tuesday would turn away the
      exact new listing somebody arrived to pay for. The list is for spelling
      and for finding one, and typing past it is allowed. */
+  /* The suggestion lists for the boards where you bid for somebody else:
+     clubs, players, drivers, artists, games, cities, podcasts and the four
+     influencer boards. Their job is spelling and finding one, not ranking —
+     the board decides who is biggest, by what was paid — so they are open
+     lists and typing a name that is not on one is expected.
+
+     The boards where you list yourself get none. A menu of other people's
+     profiles under "your own X profile" is an invitation to list something
+     that is not yours. */
+  let ROSTER_FILE = null;
+  async function loadRosterFile() {
+    if (ROSTER_FILE) return ROSTER_FILE;
+    try {
+      const r = await fetch('/rosters.json', { cache: 'force-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      ROSTER_FILE = await r.json();
+      for (const [slug, list] of Object.entries(ROSTER_FILE)) {
+        if (!ROSTERS[slug]) ROSTERS[slug] = list;
+      }
+    } catch (e) {
+      console.warn('rosters unavailable', e);
+      ROSTER_FILE = {};
+    }
+    return ROSTER_FILE;
+  }
+
+  /* Which boards have a list that is not already in the bundle, and where it
+     comes from. Two files because they are two different sizes and two very
+     different rates of change: a thousand coins that move weekly, and three
+     hundred names that barely move at all. */
+  const LISTED_LATER = new Set([
+    'crypto', 'memecoins',
+    'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
+    'cities', 'podcasts',
+    'x-influencers', 'tiktok-influencers', 'youtube-influencers', 'facebook-influencers'
+  ]);
+
+  const fetchRoster = slug =>
+    CRYPTO.has(slug) ? loadCoinList() : loadRosterFile();
+
   let COIN_LIST = null;
   async function loadCoinList() {
     if (COIN_LIST) return COIN_LIST;
@@ -1379,6 +1419,7 @@
     const total = Object.values(state.boards).reduce((n, r) => n + r.length, 0);
     let html = `<div class="chips__row">${
       chip('/', !active, '', '<span>All boards</span>', total)}</div>`;
+    const acum = active && BY_SLUG[active] ? BY_SLUG[active].name : null;
 
     let deschis = null;
     for (const row of TAB_ROWS) {
@@ -1392,7 +1433,22 @@
     }
     if (deschis !== null) html += '</div></div>';
 
-    return `<nav class="chips" aria-label="Boards">${html}</nav>`;
+    /* Open on the front page, folded on a board — and the whole point of the
+       fold is that it is one click, not a hiding place.
+
+       Wrapped, all thirty-four fill about 460 pixels. On the front page that
+       is the right trade: browsing is what you came for. On a board page it
+       pushed the ten below the fold on an ordinary laptop, which is the one
+       thing that page exists to show, and a leaderboard you have to scroll to
+       reach is not a leaderboard. So the board page opens on its ten with the
+       list one summary line away, saying how many are behind it. */
+    return `<details class="chips" ${active ? '' : 'open'}>
+      <summary class="chips__sum">
+        <span>${active ? `${esc(acum)} — all ${PLATFORMS.length} boards` : 'Boards'}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m6 9 6 6 6-6z"/></svg>
+      </summary>
+      ${html}
+    </details>`;
   }
 
   /* n is the row's place in the list on screen, which is what the gold on
@@ -1511,7 +1567,7 @@
 
     return `
     <div class="mwrap">
-      <table class="market">
+      <table class="market${slug ? ' market--solo' : ''}">
         <thead>
           <tr>
             <th class="c-n" scope="col">#</th>
@@ -1831,12 +1887,12 @@
 
     cascadeList = ROSTERS[slug] || null;
 
-    /* The two coin boards have a list, it just is not in the bundle. Ask for
-       it, and run this again once it lands -- but only if the form is still
-       open on the same board, because by then somebody may have picked
-       another one or closed it altogether. */
-    if (!cascadeList && (slug === 'crypto' || slug === 'memecoins')) {
-      loadCoinList().then(() => {
+    /* Thirteen boards have a list that is not in the bundle. Ask for it, and
+       run this again once it lands -- but only if the form is still open on
+       the same board, because by then somebody may have picked another one
+       or closed it altogether. */
+    if (!cascadeList && LISTED_LATER.has(slug)) {
+      fetchRoster(slug).then(() => {
         if (!modal.hidden && state.draft && state.draft.slug === slug && ROSTERS[slug]) {
           setupCascade(slug, document.getElementById('url-input'));
         }
@@ -2020,7 +2076,7 @@
                   aria-expanded="false" aria-controls="roster-list" aria-label="Show the whole list">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m6 9 6 6 6-6z"/></svg>
           </button>
-          <div class="cascade__list" id="roster-list" role="listbox" aria-label="Clubs and players" hidden></div>
+          <div class="cascade__list" id="roster-list" role="listbox" aria-label="Suggestions — you can also type your own" hidden></div>
         </div>
         <div class="hint" id="url-hint"></div>
       </div>

@@ -140,6 +140,12 @@ fi
 #    deploy through — their outage is not a reason a CSS fix cannot ship.
 node "$(dirname "$0")/build-coin-logos.mjs" --check
 
+#    Same for the suggestion lists the fan boards offer. These are checked
+#    against the generator rather than for age: they are written by hand, so
+#    a stale rosters.json means somebody edited the script and forgot to run
+#    it, which is a mistake and not a schedule.
+node "$(dirname "$0")/rosters.mjs" --check
+
 # 5. And check that the boards actually agree, everywhere they are written
 #    down. A board drawn in app.js that the database rejects takes somebody's
 #    money for a listing that cannot be inserted; this is where that gets
