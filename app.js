@@ -919,6 +919,22 @@
     return ahead + 1;
   }
 
+  /* The cheapest #1 on the whole site, and how many boards are still empty.
+     This is the one number that answers the question everybody arrives with
+     -- what would it take -- and it is real: an empty board's first place
+     costs the minimum, and a board with somebody on it costs a dollar more
+     than whoever is holding it. Nothing here is rounded up to sound better. */
+  function cheapestTop() {
+    let best = Infinity, goale = 0;
+    for (const p of PLATFORMS) {
+      const held = topCents(p.slug);
+      if (!held) goale++;
+      const cost = held ? clampMin(nextDollarAbove(held)) : MIN_CENTS;
+      if (cost < best) best = cost;
+    }
+    return { cost: best === Infinity ? MIN_CENTS : best, goale };
+  }
+
   function stats() {
     let count = 0, total = 0, top = 0;
     for (const slug of Object.keys(state.boards)) {
@@ -941,12 +957,14 @@
     const s = stats();
     const cell = (k, v, cls) =>
       `<span class="stat${cls ? ' ' + cls : ''}"><span class="stat__k">${k}</span><span class="stat__v">${v}</span></span>`;
+    const c = cheapestTop();
     return `
     <div class="stats"><div class="shell stats__row">
+      ${cell('Boards', PLATFORMS.length)}
       ${cell('Listings', s.count)}
       ${cell('Paid in', money(s.total))}
-      ${cell('Highest', money(s.top))}
-      ${cell('Visitors', state.visitors === null ? '—' : state.visitors.toLocaleString(), 'stat--count')}
+      ${cell('Holding #1', money(s.top))}
+      ${cell('Cheapest #1', money(c.cost), 'stat--deal')}
       ${cell('Online', state.online === null ? '—' : state.online.toLocaleString(), 'stat--online')}
     </div></div>`;
   }
@@ -1074,7 +1092,12 @@
   };
 
   const ctaFor = slug => {
-    if (!slug || !BY_SLUG[slug]) return 'Claim your rank';
+    /* The button that follows you down the page says the price, because
+       "Claim your rank" asks somebody to imagine a number and "Be #1
+       somewhere for $2" hands them one they can check on the row above. */
+    if (!slug || !BY_SLUG[slug]) {
+      return state.loaded ? `Be #1 somewhere for ${money(cheapestTop().cost)}` : 'Claim your rank';
+    }
     const n = board(slug).length;
     const top = money(clampMin(nextDollarAbove(topCents(slug))));
     if (isFan(slug)) {
@@ -1401,6 +1424,38 @@
     </div>`;
   }
 
+  /* The headline's job is to answer, in one line, the question somebody
+     arrives with: what would it cost me to be first. So it says the number.
+     It is a live number -- the cheapest unheld #1 on the site right now, or a
+     dollar more than whoever is holding the one you are looking at -- and it
+     is never rounded, dressed up or invented. A price you can check is worth
+     more than a promise you cannot. */
+  function heroHome() {
+    const c = cheapestTop();
+    const goale = c.goale
+      ? `${c.goale} of the ${PLATFORMS.length} boards have nobody on them at all.`
+      : `Every board has somebody on it. Passing them is a payment.`;
+    return `<h1>Rankings decided by <em>money</em></h1>
+      <p class="hero__sub">Thirty-four boards, ten places each, ordered by what
+      people paid to stand there. No followers, no algorithm, no waiting —
+      <b>#1 somewhere on this site costs ${money(c.cost)} right now.</b>
+      ${goale}</p>`;
+  }
+
+  function heroBoard(slug) {
+    const p = BY_SLUG[slug];
+    const held = topCents(slug);
+    const cost = held ? clampMin(nextDollarAbove(held)) : MIN_CENTS;
+    const n = board(slug).length;
+    return `<h1>Top 10 on <em>${esc(p.name)}</em></h1>
+      <p class="hero__sub">${n
+        ? `${n} ${n === 1 ? 'listing is' : 'listings are'} on this board.
+           <b>First place costs ${money(cost)}</b> — one dollar more than the
+           listing holding it, and the change is instant.`
+        : `Nobody has taken this board yet. <b>${money(cost)} makes you #1</b>,
+           and #1 is the row everybody sees first.`}</p>`;
+  }
+
   function renderHome(openSlug) {
     const p = openSlug ? BY_SLUG[openSlug] : null;
     state.platform = openSlug || null;
@@ -1410,11 +1465,7 @@
       ${renderTicker()}
       <div class="shell">
         <section class="hero">
-          ${p
-            ? `<h1>Top 10 on <em>${esc(p.name)}</em></h1>
-               <p class="hero__sub">Rank is decided by money paid, not by an algorithm.</p>`
-            : `<h1>TopTen<em>.one</em></h1>
-               <p class="hero__sub">Pay to be seen. Top 10 per board. No algorithm.</p>`}
+          ${p ? heroBoard(openSlug) : heroHome()}
         </section>
         ${renderChips(openSlug)}
         ${openSlug ? renderLead(openSlug) : ''}
@@ -1429,7 +1480,7 @@
 
     sticky.hidden = false;
     $('#cta-claim').textContent = ctaFor(openSlug);
-    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — Be the one.';
+    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — rankings decided by money';
     snapshotRanks();
   }
 
@@ -1753,7 +1804,7 @@
       <div class="modal__head">
         <div>
           <h2 id="modal-title">Claim your rank</h2>
-          <p id="modal-sub">Paste a profile, pick an amount. The money is the rank.</p>
+          <p id="modal-sub">Pick a board, pick an amount. Pay more than the listing above you and you are above it — the moment the payment clears.</p>
         </div>
         <button class="modal__x" data-close aria-label="Close">&times;</button>
       </div>
@@ -2139,14 +2190,18 @@
         // Three things are being asked for here and only one of them is a
         // tag: a club is picked, a player is named, a console player has a
         // gamertag. Saying "tag" to somebody typing Connor McDavid is wrong.
-        if (mSub) mSub.textContent = CLOSED_LIST.has(slug)
-          ? 'Pick the club, pick an amount. The money is the rank.'
-          : ROSTERS[slug]
-            ? 'Add their name, pick an amount. The money is the rank.'
-            : 'Add their tag, pick an amount. The money is the rank.';
+        /* fanNoun already knows what each board calls the thing being bid
+           for -- club, player, coin, creator, city, pet -- so this cannot
+           drift the way a second hand-written list would. A closed roster is
+           picked from a list rather than typed, which is a different verb. */
+        const cum = CLOSED_LIST.has(slug)
+          ? `Pick the ${fanNoun(slug)}`
+          : `Name the ${fanNoun(slug)}`;
+        if (mSub) mSub.textContent =
+          `${cum}, pick an amount. Pay more than the listing above them and they are above it — the moment the payment clears.`;
       } else {
         if (mTitle) mTitle.textContent = 'Claim your rank';
-        if (mSub) mSub.textContent = 'Paste a profile, pick an amount. The money is the rank.';
+        if (mSub) mSub.textContent = 'Pick a board, pick an amount. Pay more than the listing above you and you are above it — the moment the payment clears.';
       }
       if (picked.tag) {
         if (urlLabel) urlLabel.textContent = picked.tag.label;
@@ -2404,7 +2459,7 @@
   ];
 
   /* What the site says about itself when the whole site is what is shared. */
-  const SITE_PITCH = 'Pay to be seen on our board. Ten places per board. No algorithm.';
+  const SITE_PITCH = 'Thirty-four boards, ten places each, ranked by what people paid. #1 from $2. No algorithm.';
 
   function shareButtons(text, url, cls) {
     const c = cls ? ` class="${cls}"` : '';

@@ -1243,6 +1243,9 @@ img { max-width: 100%; }
 
 .stat--online .stat__v { color: var(--ok); }
 
+/* The one figure in the strip that is an offer rather than a report. */
+.stat--deal .stat__v { color: var(--accent); }
+
 /* ------------------------------------------------------------- the head */
 
 .hero { padding: 26px 0 14px; text-align: left; }
@@ -1261,10 +1264,13 @@ img { max-width: 100%; }
 
 .hero__sub {
   margin: 8px 0 0;
-  max-width: 60ch;
+  max-width: 68ch;
   color: var(--muted);
   font-size: 15px;
+  line-height: 1.55;
 }
+
+.hero__sub b { color: var(--text); font-weight: 700; }
 
 /* --------------------------------------------------------- board filter */
 
