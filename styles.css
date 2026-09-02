@@ -1289,6 +1289,10 @@ img { max-width: 100%; }
 
 .hero { padding: 26px 0 14px; text-align: left; }
 
+/* On a board the headline comes after the chips and sits on its own ten, so
+   it needs the space above it that the chips took, and less below. */
+.chips + .hero { padding: 16px 0 10px; }
+
 .hero h1 {
   margin: 0;
   font-size: clamp(26px, 5vw, 36px);
@@ -1325,13 +1329,23 @@ img { max-width: 100%; }
    eight headings they are grouped by. */
 .chips { padding-bottom: 8px; }
 
-.chips__group { margin-top: 8px; }
+/* Label beside the chips, not above them. Eight headings each on their own
+   line made the block half a screen tall, and on a board page that pushed the
+   ten it is a filter for below the fold. Same information, half the height. */
+.chips__group {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 3px 0;
+}
 
 .chips__label {
-  margin: 0 0 3px;
-  font-size: 10px;
+  flex: 0 0 78px;
+  margin: 0;
+  padding-top: 9px;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: .13em;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--dim);
 }
@@ -1340,7 +1354,16 @@ img { max-width: 100%; }
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  padding: 2px 0;
+  min-width: 0;
+}
+
+.chips__group .chips__row { flex: 1; }
+
+@media (max-width: 620px) {
+  /* Too narrow for a column of labels beside a wrapping row: they stack, and
+     the label goes back on top of the chips it names. */
+  .chips__group { display: block; }
+  .chips__label { padding: 6px 0 2px; }
 }
 
 .bfilter {

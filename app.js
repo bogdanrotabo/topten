@@ -1562,15 +1562,24 @@
     const p = openSlug ? BY_SLUG[openSlug] : null;
     state.platform = openSlug || null;
 
+    /* Two orders, because the headline is doing two different jobs.
+    
+       On the front page it introduces the site, so it comes first and the
+       board chips follow it as the way in.
+    
+       On a board it introduces that board's ten -- "Top 10 on X, first place
+       costs $219" -- and a heading belongs against the thing it heads. Sitting
+       above the chips it read as a title for the list of all thirty-four
+       boards, which is not what it says. So on a board the chips come first,
+       as navigation, and the headline sits directly on top of its own ten. */
+    const cap = `<section class="hero">${p ? heroBoard(openSlug) : heroHome()}</section>`;
+
     view.innerHTML = `
       ${renderStats()}
       ${renderTicker()}
       <div class="shell">
-        <section class="hero">
-          ${p ? heroBoard(openSlug) : heroHome()}
-        </section>
-        ${renderChips(openSlug)}
-        ${openSlug ? renderLead(openSlug) : ''}
+        ${p ? renderChips(openSlug) + cap + renderLead(openSlug)
+            : cap + renderChips(null)}
         ${renderMarket(openSlug)}
         ${openSlug ? renderWaiting(openSlug) : ''}
       </div>
