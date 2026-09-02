@@ -3121,6 +3121,12 @@
    * Everything is inlined, gradient included, because this same markup gets
    * turned into a PNG with no page around it to resolve references against.
    */
+  /* The badge carries its own palette, because it leaves the site: it is
+     downloaded as a PNG and posted somewhere with no stylesheet. Which is
+     also how it came to be the last thing on the site still wearing the old
+     black and gold — somebody paid, shared it, and got a card from a design
+     that no longer exists anywhere else. Variables cannot reach in here, so
+     these values have to be changed by hand whenever the palette moves. */
   function badgeSvg(rank, handle, platformName, color, amount, activeSlug) {
     const SANS = '-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif';
     const MONO = 'ui-monospace,SFMono-Regular,Menlo,monospace';
@@ -3162,27 +3168,30 @@
        here: every icon now brings its own. -->
   <defs>
     <linearGradient id="ttbadgebg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#12141b"/><stop offset="1" stop-color="#07080b"/>
+      <stop offset="0" stop-color="#2a1b38"/><stop offset="1" stop-color="#140d1c"/>
     </linearGradient>
     <linearGradient id="ttbadgeig" x1="0" y1="1" x2="1" y2="0">${IG_STOPS}</linearGradient>
   </defs>
 
   <rect width="600" height="315" fill="url(#ttbadgebg)"/>
   <rect x="0" y="0" width="600" height="5" fill="${color}"/>
+  <!-- The brand's violet, low and wide, so the card has the site's ground
+       under it rather than a neutral black that could belong to anything. -->
+  <rect x="0" y="310" width="600" height="5" fill="#8a1fb2"/>
 
-  <text x="40" y="56" font-family="${SANS}" font-size="38" font-weight="800" letter-spacing="-1.4"><tspan fill="#f2f3f5">TopTen</tspan><tspan fill="#ffc233">.one</tspan></text>
-  <text x="40" y="82" fill="#9aa0ad" font-family="${SANS}" font-size="15" font-weight="600">Rankings decided by money. ${PLATFORMS.length} boards, ten places each.</text>
+  <text x="40" y="56" font-family="${SANS}" font-size="38" font-weight="800" letter-spacing="-1.4"><tspan fill="#fbf6fd">TopTen</tspan><tspan fill="#cd6ff0">.one</tspan></text>
+  <text x="40" y="82" fill="#c3b5cd" font-family="${SANS}" font-size="15" font-weight="600">Rankings decided by money. ${PLATFORMS.length} boards, ten places each.</text>
 
   ${marks}
 
-  <line x1="40" y1="162" x2="560" y2="162" stroke="#23262f" stroke-width="1"/>
+  <line x1="40" y1="162" x2="560" y2="162" stroke="#4c3c63" stroke-width="1"/>
 
-  <text x="40" y="244" fill="#ffc233" font-family="${MONO}" font-size="76" font-weight="800" letter-spacing="-4">#${rank}</text>
-  <text x="${rank > 9 ? 200 : 155}" y="222" fill="#f2f3f5" font-family="${SANS}" font-size="27" font-weight="700">${esc(handle)}</text>
+  <text x="40" y="244" fill="#fdd321" font-family="${MONO}" font-size="76" font-weight="800" letter-spacing="-4">#${rank}</text>
+  <text x="${rank > 9 ? 200 : 155}" y="222" fill="#fbf6fd" font-family="${SANS}" font-size="27" font-weight="700">${esc(handle)}</text>
   <text x="${rank > 9 ? 200 : 155}" y="248" fill="${color}" font-family="${SANS}" font-size="17" font-weight="600">on ${esc(platformName)}</text>
 
-  <text x="40" y="290" fill="#6b7280" font-family="${MONO}" font-size="15">${esc(amount)} paid</text>
-  <text x="560" y="290" fill="#6b7280" font-family="${SANS}" font-size="15" font-weight="600" text-anchor="end">Be the one.</text>
+  <text x="40" y="290" fill="#9a8ba5" font-family="${MONO}" font-size="15">${esc(amount)} paid</text>
+  <text x="560" y="290" fill="#9a8ba5" font-family="${SANS}" font-size="15" font-weight="600" text-anchor="end">Pay more than the person above you.</text>
 </svg>`;
   }
 
