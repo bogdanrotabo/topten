@@ -1768,17 +1768,39 @@ a.mname__h:hover { color: var(--accent); }
    measured against the widest row the table draws, not a round number. The
    board column disappears on a board page anyway, which buys the shape
    another 150px there. */
-@media (max-width: 900px) {
-  .c-spark, th.c-spark { display: none; }
+/* The market view is the wide one: it carries a Board column the board pages
+   do not, and at 188px that column alone was pushing the Add button off the
+   right edge of a tablet — the table scrolled sideways inside its wrapper and
+   the thing somebody taps to pay was cut in half.
+   
+   So the two widest passengers go first, in the order of what they cost to
+   lose: the Details button, which repeats what tapping the row already does,
+   and then the board's name, which the icon beside it already says. */
+@media (max-width: 1200px) {
+  .c-act .mbtn:not(.mbtn--go) { display: none; }
+}
 
-  /* A board page has no Board column — every row is on the same board — so
-     the hundred and fifty pixels that column would take belong to the shape
-     instead, and it survives another 120px of narrowing here. */
+@media (max-width: 1024px) {
+  .bchip__n { display: none; }
+  .c-board__r { margin-left: 5px; }
+}
+
+/* The shape goes early on the market view and late on a board page, because
+   they are not the same table: the market carries a Board column and the
+   board page does not, so the same shape column costs 112px the market
+   cannot spare and the board page can. Measured against the widest row each
+   actually draws, not against a round number. */
+@media (max-width: 1120px) {
+  .c-spark, th.c-spark { display: none; }
   .market--solo .c-spark, .market--solo th.c-spark { display: table-cell; }
 }
 
-@media (max-width: 780px) {
+@media (max-width: 900px) {
   .market--solo .c-spark, .market--solo th.c-spark { display: none; }
+}
+
+@media (max-width: 860px) {
+  .c-board, th.c-board { display: none; }
 }
 
 @media (max-width: 780px) {
@@ -1792,8 +1814,32 @@ a.mname__h:hover { color: var(--accent); }
   .c-act .mbtn:not(.mbtn--go) { display: none; }
 }
 
-@media (max-width: 430px) {
+/* On a phone the table gets the whole width. The wrapper's negative margin
+   and matching padding buy the rows a bleed to the edge on a wide screen and
+   cost 32 of the 360 pixels a phone has, which was the last thing keeping
+   the Add button — the one anybody taps to pay — half off the screen. The
+   name gives up its floor at the same time: on a 360px screen a 180px
+   minimum is not a minimum, it is half the table. */
+@media (max-width: 560px) {
+  /* Keep the negative margin — that is what cancels .shell's padding — and
+     drop the wrapper's own. Removing both, as the first attempt did, left
+     .shell's 32px in place and made the table narrower, not wider. */
+  .mwrap { padding-left: 0; padding-right: 0; }
+  .c-name { min-width: 0; }
+  .mname__h, .mname__t { max-width: 46vw; }
+}
+
+/* 24h goes here rather than at 430: at 480 the row still measured 27px wider
+   than the screen with it in, and a column of dashes is not worth the button
+   somebody taps to pay. */
+@media (max-width: 500px) {
   .c-d1, th.c-d1 { display: none; }
+}
+
+@media (max-width: 430px) {
   .mname__pic { width: 28px; height: 28px; }
+  .mname { gap: 7px; }
+  .mname__h, .mname__t { max-width: 40vw; }
   .market { font-size: 13px; }
+  .market td, .market thead th { padding-left: 5px; padding-right: 5px; }
 }

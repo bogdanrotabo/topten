@@ -1531,7 +1531,7 @@
       <td class="c-d7">${mover(row.d7_cents)}</td>
       ${solo ? '' : `<td class="c-board">
         <a class="bchip" href="/${esc(row.platform)}/" data-link
-           style="${chipVars(p && p.color)}">${icon(row.platform, true)}<span>${esc(p ? p.name : row.platform)}</span></a>
+           style="${chipVars(p && p.color)}">${icon(row.platform, true)}<span class="bchip__n">${esc(p ? p.name : row.platform)}</span></a>
         <span class="c-board__r">#${row.rank}</span>
       </td>`}
       <td class="c-spark">${sparkline(row.spark)}</td>
