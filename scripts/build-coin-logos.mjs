@@ -84,8 +84,47 @@ async function fetchPage(page, category, attempt = 1) {
   return r.json();
 }
 
-async function build() {
+/* A key is only worth answering if it can only mean one coin — but "only one"
+ * is a different question for a name than for a ticker.
+ *
+ * Names are strict. The market holds "USDai" and "USD.AI", "USDa" and "USDA",
+ * "IOTA" and "iota": different projects whose names fold together, with no
+ * honest way to pick between them. Those keys answer nothing, and the badge
+ * with the coin's letters on it stands.
+ *
+ * Tickers are not. Dozens of coins claim DOGE and a meme coin's ticker is
+ * literally BITCOIN, but somebody typing DOGE means Dogecoin — market rank is
+ * a real signal of what a ticker means, where two spellings of a name are
+ * just two spellings. So the highest-ranked claimant takes it.
+ *
+ * What no ticker may do is take a key a name already ruled ambiguous. That
+ * was the hole in the first version of this: USD.AI and USDai cancelled each
+ * other out at the name level and then one of their tickers quietly picked
+ * the key back up, which is the exact wrong answer wearing a rule.
+ */
+function resolve(byName, bySym) {
+  const nume = new Map();
+  for (const [key, name, short] of byName) {
+    if (!key) continue;
+    const had = nume.get(key);
+    if (!had) nume.set(key, { name, short });
+    else if (had.name !== name) had.ambiguous = true;
+  }
+
   const map = {};
+  for (const [key, v] of nume) if (!v.ambiguous) map[key] = v.short;
+
+  /* byName and bySym arrive in market-cap order, so the first claimant of a
+     ticker is the biggest coin that calls itself that. */
+  for (const [key, , short] of bySym) {
+    if (!key || key in map || nume.has(key)) continue;
+    map[key] = short;
+  }
+  return map;
+}
+
+async function build() {
+  const byName = [], bySym = [];
   /* The list the claim form offers, market-cap order. Not a closed set: these
      boards are not a league, new coins appear daily, and refusing one because
      it is not in a file built last Tuesday would turn away the exact listing
@@ -102,12 +141,11 @@ async function build() {
       if (!short) continue;
       coins++;
       names.push([c.name, String(c.symbol || '').toUpperCase()]);
-      /* Name first, symbol second, and neither overwrites an entry a
-         higher-ranked coin already claimed. Dozens of coins call themselves
-         BTC; the one at rank 1 is the one somebody typing BTC means. */
-      for (const key of [fold(c.name), fold(c.symbol)]) {
-        if (key && !(key in map)) map[key] = short;
-      }
+      /* Collected, not decided. Two passes below work out which keys are safe
+         to answer, because deciding here — first writer wins — quietly hands
+         one coin another coin's logo whenever their names fold together. */
+      byName.push([fold(c.name), c.name, short]);
+      bySym.push([fold(c.symbol), c.name, short]);
     }
     if (page < PAGES) await sleep(GAP); // free tier
   }
@@ -119,8 +157,9 @@ async function build() {
   for (let page = 1; page <= 2; page++) {
     for (const c of await fetchPage(page, 'meme-token')) {
       const short = shorten(c.image);
-      if (short) for (const key of [fold(c.name), fold(c.symbol)]) {
-        if (key && !(key in map)) map[key] = short;
+      if (short) {
+        byName.push([fold(c.name), c.name, short]);
+        bySym.push([fold(c.symbol), c.name, short]);
       }
       meme.push([c.name, String(c.symbol || '').toUpperCase()]);
     }
@@ -131,6 +170,11 @@ async function build() {
     console.error(`build-coin-logos: only ${coins} coins came back, expected ~${PAGES * PER}.`);
     process.exit(2);
   }
+  const map = resolve(byName, bySym);
+  const toate = new Set(byName.map(x => x[0]).concat(bySym.map(x => x[0])));
+  toate.delete('');
+  const pierdute = toate.size - Object.keys(map).length;
+  if (pierdute) console.log(`  ${pierdute} names two projects could both mean — dropped rather than guessed`);
   return { base: BASE, size: 'small', coins, logos: map, names, meme };
 }
 

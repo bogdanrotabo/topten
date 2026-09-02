@@ -1167,7 +1167,6 @@ img { max-width: 100%; }
 @media (max-height: 760px) {
   .hero { padding: 8px 0 4px; }
   .hero h1 { font-size: clamp(26px, 7vw, 40px); }
-  .hero__tag { font-size: 18px; margin: 2px 0 0; }
   .hero__sub { font-size: 13px; margin-top: 4px; }
 
   .tobeat { padding: 7px 11px; margin-bottom: 8px; }
@@ -1373,8 +1372,6 @@ img { max-width: 100%; }
 }
 
 .hero h1 em { font-style: normal; color: var(--accent); }
-
-.hero__tag { display: none; }
 
 .hero__sub {
   margin: 8px 0 0;

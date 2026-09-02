@@ -2734,7 +2734,13 @@
       const parts = location.pathname.split('/').filter(Boolean);
       if (parts[0] === 'badge') { slug = parts[1] || ''; handle = decodeURIComponent(parts[2] || ''); }
     }
-    return { slug, handle: handle.startsWith('@') || !handle ? handle : '@' + handle };
+    /* No @ is forced on. It was, back when every board was a social network
+       and every handle was stored with one — and it quietly broke the badge
+       for the twenty boards added since, whose handles are names: "Bitcoin"
+       became "@Bitcoin" and matched nothing, so a coin's own share link led
+       to "not on the board". The handle is returned as the link carries it
+       and the lookup below is what tolerates the difference. */
+    return { slug, handle };
   }
 
   /* Always the live domain, never location.origin: a badge shared from
@@ -2804,7 +2810,23 @@
     const MONO = 'ui-monospace,SFMono-Regular,Menlo,monospace';
 
     const SIZE = 26, GAP = 28, START = 40, ROW_Y = 108;
-    const marks = PLATFORMS.map((p, i) => {
+
+    /* A window of the boards, not all of them. This row was written when
+       there were ten: it starts at x=40 and steps 54px, which put the
+       thirty-fourth mark at x=1822 on a 600px badge — two dozen marks drawn
+       past the right edge, invisible, and the row ending wherever it happened
+       to run out of picture.
+       
+       Nine fit legibly, so nine are drawn, centred on the board being bragged
+       about. Shrinking thirty-four into the same space would make every mark
+       a smudge, and the badge exists to be read at a glance in somebody
+       else's feed. */
+    const FIT = 9;
+    const at = Math.max(0, PLATFORMS.findIndex(p => p.slug === activeSlug));
+    const from = Math.min(Math.max(0, at - (FIT >> 1)), Math.max(0, PLATFORMS.length - FIT));
+    const shown = PLATFORMS.slice(from, from + FIT);
+
+    const marks = shown.map((p, i) => {
       const x = START + i * (SIZE + GAP);
       const on = p.slug === activeSlug;
       /* The raw mark, not icon(): this is one flat svg rather than ten nested
@@ -2833,7 +2855,7 @@
   <rect x="0" y="0" width="600" height="5" fill="${color}"/>
 
   <text x="40" y="56" font-family="${SANS}" font-size="38" font-weight="800" letter-spacing="-1.4"><tspan fill="#f2f3f5">TopTen</tspan><tspan fill="#ffc233">.one</tspan></text>
-  <text x="40" y="82" fill="#9aa0ad" font-family="${SANS}" font-size="15" font-weight="600">Pay to be seen. Top 10 per platform. No algorithm.</text>
+  <text x="40" y="82" fill="#9aa0ad" font-family="${SANS}" font-size="15" font-weight="600">Rankings decided by money. ${PLATFORMS.length} boards, ten places each.</text>
 
   ${marks}
 
@@ -2861,7 +2883,12 @@
     }
 
     if (!state.loaded) await loadBoards();
-    const idx = board(slug).findIndex(r => r.handle.toLowerCase() === handle.toLowerCase());
+    /* Matched with the @ off both sides. Links have been shared with it and
+       without it for as long as the badge has existed, and half the boards
+       store handles that never had one — neither spelling should be the one
+       that fails. */
+    const bare = h => String(h || '').replace(/^@/, '').toLowerCase();
+    const idx = board(slug).findIndex(r => bare(r.handle) === bare(handle));
     const row = idx >= 0 ? board(slug)[idx] : null;
     const rank = idx >= 0 ? idx + 1 : null;
 
