@@ -1896,6 +1896,14 @@ a.mname__h:hover { color: var(--accent); }
   .c-d1, th.c-d1 { display: none; }
 }
 
+/* Under 360px the row still ran wider than the screen and clipped Add. The
+   name is the only cell that can give ground, so below here it gives it. */
+@media (max-width: 380px) {
+  .mname__h, .mname__t { max-width: 32vw; }
+  .market td, .market thead th { padding-left: 4px; padding-right: 4px; }
+  .mbtn { padding: 6px 8px; font-size: 11.5px; }
+}
+
 @media (max-width: 430px) {
   .mname__pic { width: 28px; height: 28px; }
   .mname { gap: 7px; }

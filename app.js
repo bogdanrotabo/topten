@@ -802,9 +802,27 @@
 
   const clampMin = cents => Math.max(MIN_CENTS, Math.round(cents));
 
+  /* A week number on the end of every avatar.
+  
+     unavatar caches, and so does the browser, which is right for a picture
+     that rarely changes — until somebody changes theirs and the board keeps
+     showing the old one with no way to ask for the new. Without this the only
+     cure is waiting for two caches to expire, which can be a very long time.
+  
+     A key that moves once a week is the trade: a changed profile picture
+     appears within seven days at the latest, and between Mondays every visit
+     still hits the cache. Not a timestamp — that would fetch every avatar
+     fresh on every load, for nothing. */
+  const avatarWeek = () => {
+    const d = new Date();
+    return `${d.getUTCFullYear()}${String(Math.floor(
+      ((d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7)).padStart(2, '0')}`;
+  };
+
   function avatarUrl(platform, handle) {
     const h = String(handle || '').replace(/^@/, '');
-    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}?fallback=false`;
+    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}`
+      + `?fallback=false&v=${avatarWeek()}`;
   }
 
   const FALLBACK_AV = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -1776,7 +1794,13 @@
        scroll to reach. The fold is one summary line away and says how many
        boards are behind it, which is the trade: legible chips, and the table
        still on screen. A board page is always folded; it opens on its ten. */
-    const incape = typeof innerWidth === 'number' ? innerWidth >= 1180 : true;
+    /* 1180 was measured against the block before the type grew, and at
+       exactly that width the table's first row still landed below the fold.
+       Height matters as much as width — a short window loses the row on a
+       wide screen too — so both are asked. */
+    const incape = typeof innerWidth === 'number'
+      ? (innerWidth >= 1260 && innerHeight >= 900)
+      : true;
     return `<details class="chips" ${!active && incape ? 'open' : ''}>
       <summary class="chips__sum">
         <span>${active ? `${esc(acum)} — all ${PLATFORMS.length} boards` : 'Boards'}</span>
