@@ -188,6 +188,14 @@ const H = {
     '@MrBeast','@nasa','@BBCBreaking','@CNN','@espn','@NBA','@FIFAcom',
     '@sundarpichai','@tim_cook','@supportrotabo',
   ],
+  'instagram-influencers': [
+    '@cristiano','@leomessi','@selenagomez','@kyliejenner','@therock',
+    '@arianagrande','@kimkardashian','@beyonce','@khloekardashian','@justinbieber',
+    '@taylorswift','@kendalljenner','@jlo','@nike','@virat.kohli',
+    '@neymarjr','@nickiminaj','@kourtneykardash','@mileycyrus','@katyperry',
+    '@zendaya','@kevinhart4real','@ddlovato','@badgalriri','@natgeo',
+    '@championsleague','@realmadrid','@fcbarcelona','@9gag','@rotabo.app',
+  ],
   'tiktok-influencers': [
     '@khaby.lame','@charlidamelio','@mrbeast','@bellapoarch','@addisonre',
     '@zachking','@kimberly.loaiza','@tiktok','@cznburak','@dominik',

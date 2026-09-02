@@ -489,6 +489,13 @@
         re:    HANDLE_RE,
         profile: creatorAt('https://x.com/')
       } },
+    { slug: 'instagram-influencers', name: 'Instagram Influencers', color: '#d62976',
+      fan: true, noun: 'creator', face: 'instagram', tag: {
+        label: 'Handle on Instagram',
+        hint:  '@cristiano',
+        re:    HANDLE_RE,
+        profile: creatorAt('https://www.instagram.com/')
+      } },
     { slug: 'tiktok-influencers', name: 'TikTok Influencers', color: '#fe2c55',
       fan: true, noun: 'creator', face: 'tiktok', tag: {
         label: 'Handle on TikTok',
@@ -589,6 +596,7 @@
        thing being pointed at, and a second drawing of it would only be a
        worse one. */
     'x-influencers': '',
+    'instagram-influencers': '',
     'tiktok-influencers': '',
     'youtube-influencers': '',
     'facebook-influencers': '',
@@ -598,7 +606,8 @@
   /* Filled in after the fact: an object literal cannot refer to itself while
      it is still being written, and these four are the platform's own mark. */
   for (const [copie, sursa] of [
-    ['x-influencers', 'x'], ['tiktok-influencers', 'tiktok'],
+    ['x-influencers', 'x'], ['instagram-influencers', 'instagram'],
+    ['tiktok-influencers', 'tiktok'],
     ['youtube-influencers', 'youtube'], ['facebook-influencers', 'facebook']
   ]) ICONS[copie] = ICONS[sursa];
 
@@ -653,7 +662,8 @@
   /* And the same four in the full-colour set, so an influencer chip carries
      the platform's real mark exactly like the platform's own chip does. */
   for (const [copie, sursa] of [
-    ['x-influencers', 'x'], ['tiktok-influencers', 'tiktok'],
+    ['x-influencers', 'x'], ['instagram-influencers', 'instagram'],
+    ['tiktok-influencers', 'tiktok'],
     ['youtube-influencers', 'youtube'], ['facebook-influencers', 'facebook']
   ]) if (ICONS_FULL[sursa]) ICONS_FULL[copie] = ICONS_FULL[sursa];
 
@@ -1125,7 +1135,7 @@
   const MACHINES = new Set(['cars', 'boats']);
   const TRADE = new Set(['startups', 'restaurants']);
   const LIFE = new Set(['cities', 'pets']);
-  const STARS = new Set(['x-influencers', 'tiktok-influencers',
+  const STARS = new Set(['x-influencers', 'instagram-influencers', 'tiktok-influencers',
                          'youtube-influencers', 'facebook-influencers']);
   const NOT_GAMING = new Set([...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE,
                               ...STARS, ...MACHINES]);
@@ -1440,7 +1450,8 @@
     'crypto', 'memecoins', 'exchanges',
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
-    'x-influencers', 'tiktok-influencers', 'youtube-influencers', 'facebook-influencers'
+    'x-influencers', 'instagram-influencers', 'tiktok-influencers',
+    'youtube-influencers', 'facebook-influencers'
   ]);
 
   const fetchRoster = slug =>
