@@ -52,7 +52,7 @@ done
 # word: a board name written with hyphens is put back with spaces below, and
 # the noun is what that board actually lists. "The ten most-paid Crypto
 # profiles" describes nothing -- coins do not have profiles.
-PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins exchanges|Exchanges|exchanges gifts|Gifts-+-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
+PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins exchanges|Exchanges|exchanges gifts|Gifts-+-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups actors|Actors|actors movies|Movies|films cars|Cars|marques boats|Boats|builders golf-players|Golf-Players|players restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators"
 
 SITEMAP=sitemap.xml
 {
@@ -149,6 +149,7 @@ node "$(dirname "$0")/rosters.mjs" --check
 #    And the game art, which only warns: Steam is not in this site's critical
 #    path and a month-old capsule is not a reason to block a CSS fix.
 node "$(dirname "$0")/build-game-art.mjs" --check
+node "$(dirname "$0")/build-people-art.mjs" --check
 
 # 5. And check that the boards actually agree, everywhere they are written
 #    down. A board drawn in app.js that the database rejects takes somebody's

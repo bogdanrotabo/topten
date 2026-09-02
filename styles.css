@@ -725,6 +725,17 @@ img { max-width: 100%; }
 
 .detail__tagline--none { color: var(--dim); font-size: 14px; font-style: italic; }
 
+/* The licence asks for the author's name, the licence and a way back to the
+   file. All three, under the photograph they belong to. */
+.detail__credit {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--dim);
+}
+
+.detail__credit a { color: var(--muted); }
+
 .detail__brand { display: inline-block; vertical-align: -2px; line-height: 0; }
 .detail__brand svg { width: 39px; height: 39px; }
 

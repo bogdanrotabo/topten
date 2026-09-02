@@ -429,6 +429,44 @@
         re:    TITLE_RE,
         profile: null
       } },
+    /* Five more, all fan boards: the thing ranked is never the thing paying.
+       Cars and boats are marques rather than models — somebody bids for
+       Porsche, not for one particular 911 — and both are lists people already
+       argue about for free, which is the only test a board has to pass. */
+    { slug: 'actors', name: 'Actors', color: '#e11d48', fan: true,
+      noun: 'actor', tag: {
+        label: 'Actor',
+        hint:  'Meryl Streep',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'movies', name: 'Movies', color: '#4338ca', fan: true,
+      noun: 'film', tag: {
+        label: 'Film',
+        hint:  'The Godfather',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'cars', name: 'Cars', color: '#b91c1c', fan: true,
+      noun: 'marque', tag: {
+        label: 'Make',
+        hint:  'Porsche',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'boats', name: 'Boats', color: '#0369a1', fan: true,
+      noun: 'yard', tag: {
+        label: 'Builder',
+        hint:  'Sunseeker',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'golf-players', name: 'Golf Players', color: '#4d7c0f', fan: true, tag: {
+        label: 'Player name',
+        hint:  'Tiger Woods',
+        re:    NAME_RE,
+        profile: null
+      } },
     { slug: 'podcasts', name: 'Podcasts', color: '#0d9488', tag: {
         label: 'Podcast',
         hint:  'The Weekly Show',
@@ -523,6 +561,14 @@
     memecoins: '<circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="10" r="1.2" fill="currentColor"/><circle cx="15" cy="10" r="1.2" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M8 14.2a4.6 4.6 0 0 0 8 0"/>',
     /* Two arrows crossing: the thing an exchange does, and the one drawing
        that is nobody's registered mark. */
+    /* Drawn, like every other board whose subject is somebody's registered
+       mark. A car badge and a shipyard's crest are trademarks; a clapperboard
+       and a hull are not. */
+    actors: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 8.6h17.2v12H3.4zM3.4 8.6 6 3.6l3.6 4M9.6 8.6 12.2 3.6l3.6 4M15.8 8.6l2.6-5 2.2 3.4v1.6"/>',
+    movies: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 4.4h17.2v15.2H3.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7.4 4.4v15.2M16.6 4.4v15.2M3.4 12h17.2"/><path fill="currentColor" d="M4.6 6h1.6v1.6H4.6zM4.6 9h1.6v1.6H4.6zM4.6 13.4h1.6V15H4.6zM4.6 16.4h1.6V18H4.6zM17.8 6h1.6v1.6h-1.6zM17.8 9h1.6v1.6h-1.6zM17.8 13.4h1.6V15h-1.6zM17.8 16.4h1.6V18h-1.6z"/>',
+    cars: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 15.4v-2.2l1.8-4A2.4 2.4 0 0 1 7 7.6h10a2.4 2.4 0 0 1 2.2 1.6l1.8 4v2.2a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 15.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M4.8 13.2h14.4"/><circle cx="7.2" cy="16.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16.8" cy="16.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+    boats: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 16.4h18l-2.4 4H5.4zM12 3.2v10.6M12 13.8H5.6L12 3.2M12.8 13.8h5.6l-5.6-7.4z"/>',
+    'golf-players': '<circle cx="17.4" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M6.2 3.4v14.4M6.2 3.4l7.4 2.4-7.4 2.6"/><ellipse cx="10" cy="19.4" rx="6.4" ry="1.9" fill="none" stroke="currentColor" stroke-width="1.5"/>',
     exchanges: '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8.4h13.2l-3.4-3.4M20 15.6H6.8l3.4 3.4"/>',
     gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
     /* The ten newest boards. Same rule as the leagues and the coins: a crest,
@@ -944,6 +990,7 @@
        a logo. Only fetched when there is a coin to draw. */
     if (CRYPTO_LIST.some(slug => next[slug] && next[slug].length)) await loadCoinLogos();
     if (next.games && next.games.length) await loadGameArt();
+    if (next.actors && next.actors.length) await loadPeopleArt();
   }
 
   const board = slug => state.boards[slug] || [];
@@ -1072,13 +1119,16 @@
   /* The rest of the groups, in the same shape and for the same reason: a
      board lands in Gaming by default, which is right for a console and
      wrong for everything else that happens to be a tag board. */
-  const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players', 'f1-drivers']);
-  const CULTURE = new Set(['artists', 'podcasts']);
+  const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players',
+                         'f1-drivers', 'golf-players']);
+  const CULTURE = new Set(['artists', 'podcasts', 'actors', 'movies']);
+  const MACHINES = new Set(['cars', 'boats']);
   const TRADE = new Set(['startups', 'restaurants']);
   const LIFE = new Set(['cities', 'pets']);
   const STARS = new Set(['x-influencers', 'tiktok-influencers',
                          'youtube-influencers', 'facebook-influencers']);
-  const NOT_GAMING = new Set([...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE, ...STARS]);
+  const NOT_GAMING = new Set([...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE,
+                              ...STARS, ...MACHINES]);
   // 'games' is culture by any reading, but it sits where people look for it.
 
   const GROUPS = [
@@ -1089,6 +1139,7 @@
     { label: 'Crypto',          rows: 1, has: p => CRYPTO.has(p.slug) },
     { label: 'Culture',         rows: 1, has: p => CULTURE.has(p.slug) },
     { label: 'Business',        rows: 1, has: p => TRADE.has(p.slug) },
+    { label: 'Machines',        rows: 1, has: p => MACHINES.has(p.slug) },
     { label: 'Life',            rows: 1, has: p => LIFE.has(p.slug) }
   ];
 
@@ -1229,6 +1280,34 @@
   const exchangeLogo = handle =>
     (COIN_LOGOS && COIN_LOGOS.exchanges && COIN_LOGOS.exchanges[fold(handle)]) || null;
 
+  /* Photographs for the Actors board, from Wikimedia Commons and nowhere
+     else. Wikipedia serves two kinds of image from one host and the path says
+     which: /wikipedia/commons/ is freely licensed, /wikipedia/en/ is the local
+     upload area that exists to hold non-free files used under US fair use —
+     which is where every film poster lives, and which is why the Movies board
+     has drawings rather than posters. Fair use on an encyclopaedia does not
+     carry over to a site that sells rank.
+     
+     The credit travels with the file because the licences ask for it. A
+     CC-BY photograph shown without its author is not a free photograph, it
+     is somebody's work taken. */
+  let PEOPLE_ART = null;
+  async function loadPeopleArt() {
+    if (PEOPLE_ART) return PEOPLE_ART;
+    try {
+      const r = await fetch('/people-art.json', { cache: 'force-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      PEOPLE_ART = await r.json();
+    } catch (e) {
+      console.warn('people art unavailable', e);
+      PEOPLE_ART = { art: {} };
+    }
+    return PEOPLE_ART;
+  }
+
+  const personArt = handle =>
+    (PEOPLE_ART && PEOPLE_ART.art && PEOPLE_ART.art[fold(handle)]) || null;
+
   /* The publisher's own cover art for a game, from Steam's store search,
      built into a file the same way the coin logos are. Not every game is on
      Steam — Minecraft, Fortnite and Roblox sell elsewhere — so those keep
@@ -1360,13 +1439,14 @@
   const LISTED_LATER = new Set([
     'crypto', 'memecoins', 'exchanges',
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
-    'cities', 'podcasts',
+    'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
     'x-influencers', 'tiktok-influencers', 'youtube-influencers', 'facebook-influencers'
   ]);
 
   const fetchRoster = slug =>
     CRYPTO.has(slug) ? loadCoinList()
-    : slug === 'games' ? Promise.all([loadRosterFile(), loadGameArt()])
+    : slug === 'games'  ? Promise.all([loadRosterFile(), loadGameArt()])
+    : slug === 'actors' ? Promise.all([loadRosterFile(), loadPeopleArt()])
     : loadRosterFile();
 
   let COIN_LIST = null;
@@ -1452,6 +1532,7 @@
     const src = (slug === 'exchanges' && exchangeLogo(handle))
       || (slug !== 'exchanges' && CRYPTO.has(slug) && coinLogo(handle))
       || (slug === 'games' && gameArt(handle))
+      || (slug === 'actors' && (personArt(handle) || {}).img)
       || (on ? avatarUrl(on, handle) : null)
       || siteLogo(row && row.link);
 
@@ -2066,6 +2147,7 @@
                      onload="this.parentNode.classList.add('token--on')"
                      onerror="this.remove()">` : '')(
                        slug === 'exchanges' ? exchangeLogo(teamName(t))
+                     : slug === 'actors'    ? (personArt(teamName(t)) || {}).img
                                             : (coinLogo(teamName(t)) || gameArt(teamName(t))))
               }</span>
               <span class="cascade__who">
@@ -2247,6 +2329,9 @@
           ${row.tagline
             ? `<p class="detail__tagline">${esc(row.tagline)}</p>`
             : `<p class="detail__tagline detail__tagline--none">No tagline on this listing.</p>`}
+          ${(a => a ? `<p class="detail__credit">Photo: <a href="${esc(a.pagina)}"
+               target="_blank" rel="noopener">${esc(a.autor)}</a>, ${esc(a.licenta)},
+               via Wikimedia Commons</p>` : '')(row.platform === 'actors' ? personArt(row.handle) : null)}
         </div>
       </div>
 
