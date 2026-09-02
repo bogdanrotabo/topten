@@ -1186,6 +1186,71 @@
     return hit ? COIN_LOGOS.base + hit.replace('/', `/${COIN_LOGOS.size}/`) : null;
   }
 
+  /* The map holds the top thousand. Somebody will list the one that is not in
+     it — a coin that launched this week, or one at rank 4000 that its holders
+     care about anyway — and that listing deserves its logo as much as
+     Bitcoin's. So anything the map does not know is asked for by name, one
+     coin at a time, against the same search CoinGecko's own site uses.
+
+     Three things keep this from becoming a request storm. It runs only for
+     rows the map missed. Every answer is remembered in this browser, the
+     misses included, so a name is asked about exactly once ever. And the
+     match is still exact — the search happily returns "dogwifhat Eth" and
+     "DogWifHat" when asked for "dogwifhat", and putting either of those over
+     somebody's paid listing would be worse than the badge it replaces. */
+  const LOGO_CACHE = 'topten_coin_logo:';
+
+  function cachedLogo(key) {
+    try { return localStorage.getItem(LOGO_CACHE + key); } catch (e) { return null; }
+  }
+  function rememberLogo(key, url) {
+    try { localStorage.setItem(LOGO_CACHE + key, url || ''); } catch (e) { /* full or private */ }
+  }
+
+  async function findCoinLogo(handle) {
+    const key = fold(handle);
+    if (!key) return null;
+
+    const seen = cachedLogo(key);
+    if (seen !== null) return seen || null;
+
+    try {
+      const r = await fetch('https://api.coingecko.com/api/v3/search?query='
+        + encodeURIComponent(String(handle).replace(/^\$/, '')));
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const d = await r.json();
+      const hit = (d.coins || []).find(c => fold(c.name) === key || fold(c.symbol) === key);
+      /* thumb is 25px and small is 50px; the row draws at 32 and the picker
+         at 30, so ask for the bigger one by name rather than upscaling. */
+      const url = hit && (hit.large || hit.thumb || '').replace('/thumb/', '/small/') || null;
+      rememberLogo(key, url);
+      return url;
+    } catch (e) {
+      /* A rate limit or an outage is not a permanent answer, so it is not
+         remembered: the badge stands, and the next visit asks again. */
+      return null;
+    }
+  }
+
+  /* After the table is drawn, fill in the coins the map did not know. The row
+     already shows its badge, so nothing is missing while this runs and
+     nothing moves when it finishes — the logo simply appears over the badge,
+     the same place it would have been. */
+  async function upgradeCoinLogos() {
+    const rows = currentRows().filter(r => CRYPTO.has(r.platform) && !coinLogo(r.handle));
+    for (const row of rows) {
+      const url = await findCoinLogo(row.handle);
+      if (!url) continue;
+      const cell = document.querySelector(`[data-row="${CSS.escape(row.id)}"] .mname__pic`);
+      if (!cell || cell.querySelector('img')) continue;
+      const img = document.createElement('img');
+      img.loading = 'lazy'; img.width = 32; img.height = 32; img.alt = '';
+      img.onerror = () => img.remove();
+      img.src = url;
+      cell.appendChild(img);
+    }
+  }
+
   /* Every coin CoinGecko ranks, for the claim form's picker: a thousand on
      the crypto board, the five hundred it files as memecoins on the memecoin
      one. Fetched only when that form is opened on one of those boards, which
@@ -1588,6 +1653,7 @@
     fillTicker();
     stampCascade(true);
     revealChip();
+    upgradeCoinLogos();
 
     sticky.hidden = false;
     $('#cta-claim').textContent = ctaFor(openSlug);
@@ -1623,6 +1689,7 @@
     const before = state.prevRanks;
     body.innerHTML = marketBody(state.platform);
     stampCascade(false);
+    upgradeCoinLogos();
 
     const now = {};
     currentRows().forEach((r, i) => { now[r.id] = i + 1; });

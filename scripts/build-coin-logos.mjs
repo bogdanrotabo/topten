@@ -37,6 +37,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(root, 'coin-logos.json');
 const OUT_LIST = join(root, 'coin-list.json');
 const MAX_AGE_DAYS = 10;
+const GAP = 6000;          // between pages, well inside the free tier's budget
 const PAGES = 4;            // 4 x 250 = the top 1000 by market cap
 const PER = 250;
 const BASE = 'https://coin-images.coingecko.com/coins/images/';
@@ -58,11 +59,27 @@ function shorten(url) {
   return m ? `${m[1]}/${m[2]}` : null;
 }
 
-async function fetchPage(page, category) {
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* CoinGecko's free tier is rate limited per IP, and a GitHub runner's IP is
+   shared with everybody else's workflows — the first scheduled run failed on
+   a 429 that never happens from a laptop. So: back off and try again, and
+   believe their Retry-After when they send one. Five attempts spanning about
+   two and a half minutes; past that it really is not going to work now. */
+async function fetchPage(page, category, attempt = 1) {
   const u = 'https://api.coingecko.com/api/v3/coins/markets'
     + `?vs_currency=usd&order=market_cap_desc&per_page=${PER}&page=${page}`
     + (category ? `&category=${category}` : '');
   const r = await fetch(u, { headers: { accept: 'application/json' } });
+
+  if (r.status === 429 && attempt <= 5) {
+    const told = Number(r.headers.get('retry-after'));
+    const wait = Number.isFinite(told) && told > 0 ? told * 1000 : 6000 * 2 ** (attempt - 1);
+    console.warn(`  rate limited on ${category || 'all'} page ${page}, waiting ${(wait / 1000).toFixed(0)}s (try ${attempt}/5)`);
+    await sleep(wait);
+    return fetchPage(page, category, attempt + 1);
+  }
+
   if (!r.ok) throw new Error(`CoinGecko ${category || 'all'} page ${page}: HTTP ${r.status}`);
   return r.json();
 }
@@ -92,13 +109,13 @@ async function build() {
         if (key && !(key in map)) map[key] = short;
       }
     }
-    if (page < PAGES) await new Promise(r => setTimeout(r, 2500)); // free tier
+    if (page < PAGES) await sleep(GAP); // free tier
   }
 
   /* The memecoin board gets its own list, because "all the memecoins" is a
      question CoinGecko already answers and picking them out of the top 1000
      by eye is not something a build script can do. */
-  await new Promise(r => setTimeout(r, 2500));
+  await sleep(GAP);
   for (let page = 1; page <= 2; page++) {
     for (const c of await fetchPage(page, 'meme-token')) {
       const short = shorten(c.image);
@@ -107,7 +124,7 @@ async function build() {
       }
       meme.push([c.name, String(c.symbol || '').toUpperCase()]);
     }
-    if (page < 2) await new Promise(r => setTimeout(r, 2500));
+    if (page < 2) await sleep(GAP);
   }
 
   if (coins < PAGES * PER * 0.9) {
