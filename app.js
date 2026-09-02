@@ -802,27 +802,22 @@
 
   const clampMin = cents => Math.max(MIN_CENTS, Math.round(cents));
 
-  /* A week number on the end of every avatar.
-  
-     unavatar caches, and so does the browser, which is right for a picture
-     that rarely changes — until somebody changes theirs and the board keeps
-     showing the old one with no way to ask for the new. Without this the only
-     cure is waiting for two caches to expire, which can be a very long time.
-  
-     A key that moves once a week is the trade: a changed profile picture
-     appears within seven days at the latest, and between Mondays every visit
-     still hits the cache. Not a timestamp — that would fetch every avatar
-     fresh on every load, for nothing. */
-  const avatarWeek = () => {
-    const d = new Date();
-    return `${d.getUTCFullYear()}${String(Math.floor(
-      ((d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7)).padStart(2, '0')}`;
-  };
+  /* A stable address, deliberately, and it was not always.
 
+     A week number used to hang off the end so a changed profile picture would
+     appear within seven days instead of never. That was the right trade
+     against a source that answers — and unavatar has stopped being one. It
+     now returns 403 EPRO, "this provider requires a pro plan", for a good
+     half of the handles on this board, and per handle rather than per
+     network: one TikTok account resolves, the next does not.
+
+     With the source refusing, the browser's cache is the only thing keeping
+     those faces on the page at all, and a key that moves every Monday is a
+     promise to throw them away. So the address is stable again. Put the key
+     back the day the avatars are paid for. */
   function avatarUrl(platform, handle) {
     const h = String(handle || '').replace(/^@/, '');
-    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}`
-      + `?fallback=false&v=${avatarWeek()}`;
+    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}?fallback=false`;
   }
 
   const FALLBACK_AV = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -1712,11 +1707,21 @@
       || (on ? avatarUrl(on, handle) : null)
       || siteLogo(row && row.link);
 
+    /* Where to go when the first choice fails. A profile picture that 403s
+       used to leave the badge even on a listing that links to a site with a
+       perfectly good icon: the fallback was picked once, up front, and never
+       reconsidered when the pick did not load. The image carries its next
+       address with it now — which matters more than it used to, because
+       unavatar answers 403 for half these handles. */
+    const rezerva = siteLogo(row && row.link);
+
     return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
                   aria-hidden="true">${esc(initials)}${src
       ? `<img loading="lazy" width="32" height="32" alt="" src="${esc(src)}"
               onload="this.parentNode.classList.add('token--on')"
-              onerror="this.remove()">`
+              onerror="${rezerva && rezerva !== src
+                ? `if(this.dataset.tried){this.remove()}else{this.dataset.tried=1;this.src='${esc(rezerva)}'}`
+                : 'this.remove()'}">`
       : ''}</span>`;
   }
 
