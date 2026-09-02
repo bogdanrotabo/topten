@@ -771,6 +771,15 @@
   /** Smallest whole-dollar amount strictly greater than `cents`. */
   const nextDollarAbove = cents => Math.floor(Number(cents || 0) / 100) * 100 + 100;
 
+  /* What it costs to pass a listing, and whether one payment can do it.
+     Stripe caps a single payment; totals are cumulative and do not care. Past
+     that ceiling the price is still the price — it just takes two goes, and
+     saying so beats a button that dies at checkout. */
+  const toBeat = cents => {
+    const need = clampMin(nextDollarAbove(cents));
+    return { need, oneGo: need <= MAX_CENTS };
+  };
+
   const clampMin = cents => Math.max(MIN_CENTS, Math.round(cents));
 
   function avatarUrl(platform, handle) {
@@ -1175,6 +1184,10 @@
   // 'games' is culture by any reading, but it sits where people look for it.
 
   const GROUPS = [
+    /* Politics first. It is the loudest argument on the site and the one
+       somebody arrives already holding a side in — and a board nobody has to
+       scroll to find is a board that gets played. */
+    { label: 'Politics',        rows: 1, has: p => POLITICS.has(p.slug) },
     { label: 'Social networks', rows: 2, has: p => !p.tag },
     { label: 'Influencers',     rows: 1, has: p => STARS.has(p.slug) },
     { label: 'Gaming',          rows: 1, has: p => p.tag && !NOT_GAMING.has(p.slug) },
@@ -1183,7 +1196,6 @@
     { label: 'Culture',         rows: 1, has: p => CULTURE.has(p.slug) },
     { label: 'Business',        rows: 1, has: p => TRADE.has(p.slug) },
     { label: 'Machines',        rows: 1, has: p => MACHINES.has(p.slug) },
-    { label: 'Politics',        rows: 1, has: p => POLITICS.has(p.slug) },
     { label: 'Life',            rows: 1, has: p => LIFE.has(p.slug) }
   ];
 
@@ -1241,7 +1253,8 @@
       return state.loaded ? `Be #1 somewhere for ${money(cheapestTop().cost)}` : 'Claim my rank';
     }
     const n = board(slug).length;
-    const top = money(clampMin(nextDollarAbove(topCents(slug))));
+    const b = toBeat(topCents(slug));
+    const top = money(b.need) + (b.oneGo ? '' : ' over two payments');
     if (isFan(slug)) {
       /* The price needs a verb after a question mark. "…on Actors? $41" reads
          as a number that fell off the end of a sentence. */
@@ -1892,7 +1905,9 @@
           <span class="tobeat__v">${money(lead.total_cents)}</span>
           <span class="tobeat__who">${esc(lead.handle)}</span>
         </div>
-        <button class="tobeat__cta" data-claim="1">Beat it for ${money(clampMin(nextDollarAbove(lead.total_cents)))}</button>
+        <button class="tobeat__cta" data-claim="1">${(b => b.oneGo
+          ? `Beat it for ${money(b.need)}`
+          : `Beat it for ${money(b.need)} — more than one payment`)(toBeat(lead.total_cents))}</button>
       </div>` : `
       <div class="tobeat">
         <div>
@@ -1966,13 +1981,17 @@
   function heroBoard(slug) {
     const p = BY_SLUG[slug];
     const held = topCents(slug);
-    const cost = held ? clampMin(nextDollarAbove(held)) : MIN_CENTS;
+    const b = held ? toBeat(held) : { need: MIN_CENTS, oneGo: true };
+    const cost = b.need;
     const n = board(slug).length;
     return `<h1>Top 10 on <em>${esc(p.name)}</em></h1>
       <p class="hero__sub">${n
         ? `${n} ${n === 1 ? 'listing is' : 'listings are'} on this board.
            <b>First place costs ${money(cost)}</b> — one dollar more than the
-           listing holding it, and the change is instant.`
+           listing holding it${b.oneGo
+             ? ', and the change is instant'
+             : `, which is over Stripe's ${money(MAX_CENTS)} limit for a single
+                payment, so it takes two — totals add up`}.`
         : `Nobody has taken this board yet. <b>${money(cost)} makes you #1</b>,
            and #1 is the row everybody sees first.`}</p>`;
   }
@@ -2759,7 +2778,10 @@
       setupCascade(state.draft.slug, urlInput);
 
       if (picked.fan) {
-        if (mTitle) mTitle.textContent = `Bid for your favourite ${fanNoun(slug)}`;
+        /* The same question the button asks. "Bid for your favourite party"
+           is the phrasing the political boards exist to avoid, and on every
+           other fan board it says less than the question does. */
+        if (mTitle) mTitle.textContent = 'Who should be #1?';
         // Three things are being asked for here and only one of them is a
         // tag: a club is picked, a player is named, a console player has a
         // gamertag. Saying "tag" to somebody typing Connor McDavid is wrong.
