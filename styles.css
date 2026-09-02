@@ -256,14 +256,17 @@ img { max-width: 100%; }
   font-size: 12px;
   white-space: nowrap;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .tick__i { line-height: 0; }
 .tick__i svg { width: 22px; height: 22px; display: block; color: var(--tick); }
-.tick__h { font-weight: 700; color: var(--text); }
-.tick__r { font-family: var(--num); font-weight: 800; color: var(--tick); }
-.tick__a { font-family: var(--num); font-weight: 800; color: var(--text); }
+/* The handle at 700 was the heaviest thing on a strip that is supposed to
+   drift past. It is a name, not a headline: enough weight to be a name, and
+   the figures beside it keep theirs, because those are the point. */
+.tick__h { font-weight: 500; color: var(--text); }
+.tick__r { font-family: var(--num); font-weight: 700; color: var(--tick); }
+.tick__a { font-family: var(--num); font-weight: 700; color: var(--text); }
 
 @media (min-width: 560px) {
   .ticker { padding: 9px 0; }
