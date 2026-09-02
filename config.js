@@ -18,19 +18,24 @@ window.TOPTEN_CONFIG = {
   // Where reports and contact go.
   CONTACT_EMAIL: "hello@topten.one",
 
-  /* unavatar, which fetches the profile picture for every social listing.
-     It answers free for some handles and 403 "requires a pro plan" for
-     others, per handle rather than per network — so half the faces on the
-     boards are currently missing and the drawn badge stands in for them.
+  /* unavatar fetches the profile picture for every social listing, and its
+     paid tier cannot be used from this file.
 
-     Paste the key from unavatar's dashboard here and they come back. The
-     parameter name is what their dashboard calls it: it is apiKey on the
-     plans documented today, and the second value exists so a rename on
-     their side is one word here rather than a code change.
+     Their documentation is explicit: the key travels as an "x-api-key"
+     request header, and a browser cannot put a header on an <img>. An
+     earlier version of this config hung the key on the URL as a query
+     parameter, which unavatar ignores — it would have looked configured and
+     changed nothing.
 
-     Public by design, like everything else in this file — the key travels
-     in the image URL, which is visible to anyone who opens the page. Do not
-     put a key here that can do anything but fetch avatars. */
-  UNAVATAR_KEY: "",
-  UNAVATAR_KEY_PARAM: "apiKey"
+     The key also arrives only after payment; there is no free API key, and
+     anonymous traffic is 25 requests a day per visitor IP with cache hits
+     free. That is why some handles resolve and others answer 403.
+
+     So the paid tier needs a proxy: something server-side that holds the key,
+     sets the header, and hands back the image, with the page asking it for
+     /avatar/<network>/<handle> instead of unavatar directly. Set the base URL
+     of that proxy here once it exists and every avatar goes through it. Empty
+     means the page asks unavatar directly, anonymously, which is what it does
+     today. */
+  UNAVATAR_PROXY: ""
 };

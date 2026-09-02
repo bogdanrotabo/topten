@@ -815,19 +815,20 @@
      those faces on the page at all, and a key that moves every Monday is a
      promise to throw them away. So the address is stable again. Put the key
      back the day the avatars are paid for. */
-  /* The key, when there is one. Empty is the normal state and costs nothing:
-     the free tier still answers for a good number of handles, and the badge
-     stands in for the rest. */
-  const unavatarAuth = () => {
-    const k = CFG.UNAVATAR_KEY;
-    if (!k) return '';
-    return `&${encodeURIComponent(CFG.UNAVATAR_KEY_PARAM || 'apiKey')}=${encodeURIComponent(k)}`;
+  /* Where avatars come from. unavatar directly when nothing else is
+     configured — anonymous, 25 a day per visitor with cache hits free, which
+     is why some handles resolve and others answer 403 — or a proxy that holds
+     the paid key, since that key is an x-api-key header and no <img> can send
+     one. Setting UNAVATAR_PROXY moves every avatar onto it, including the
+     site-icon fallback below. */
+  const avatarBase = () => {
+    const p = String(CFG.UNAVATAR_PROXY || '').replace(/\/+$/, '');
+    return p || 'https://unavatar.io';
   };
 
   function avatarUrl(platform, handle) {
     const h = String(handle || '').replace(/^@/, '');
-    return `https://unavatar.io/${encodeURIComponent(platform)}/${encodeURIComponent(h)}`
-      + `?fallback=false${unavatarAuth()}`;
+    return `${avatarBase()}/${encodeURIComponent(platform)}/${encodeURIComponent(h)}?fallback=false`;
   }
 
   const FALLBACK_AV = 'data:image/svg+xml;utf8,' + encodeURIComponent(
@@ -1667,9 +1668,7 @@
     if (!linkable(link)) return null;
     try {
       const host = new URL(link).hostname.replace(/^www\./, '');
-      return host
-        ? `https://unavatar.io/${encodeURIComponent(host)}?fallback=false${unavatarAuth()}`
-        : null;
+      return host ? `${avatarBase()}/${encodeURIComponent(host)}?fallback=false` : null;
     } catch (e) { return null; }
   }
 
