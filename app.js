@@ -563,6 +563,23 @@
 
   // The platforms' own marks, used to say which board a listing sits on.
   // Single-path where the brand allows it, so they scale down to 12px cleanly.
+  /* Thirteen stripes and a canton, drawn to read at 15px: fifty stars at that
+     size is a grey smudge, so the canton carries nine — enough to be a field
+     of stars and not a fake count anyone would mistake for the real one. */
+  const US_FLAG =
+    '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#f2f2f2"/>' +
+    '<g fill="#b22234">' +
+    '<rect x="1.6" y="4.4" width="20.8" height="2.17"/><rect x="1.6" y="8.74" width="20.8" height="2.17"/>' +
+    '<rect x="1.6" y="13.08" width="20.8" height="2.17"/><rect x="1.6" y="17.42" width="20.8" height="2.18"/>' +
+    '</g>' +
+    '<rect x="1.6" y="4.4" width="9.4" height="8.68" fill="#3c3b6e"/>' +
+    '<g fill="#fff">' +
+    '<circle cx="3.7" cy="6.3" r=".62"/><circle cx="6.3" cy="6.3" r=".62"/><circle cx="8.9" cy="6.3" r=".62"/>' +
+    '<circle cx="3.7" cy="8.74" r=".62"/><circle cx="6.3" cy="8.74" r=".62"/><circle cx="8.9" cy="8.74" r=".62"/>' +
+    '<circle cx="3.7" cy="11.18" r=".62"/><circle cx="6.3" cy="11.18" r=".62"/><circle cx="8.9" cy="11.18" r=".62"/>' +
+    '</g>' +
+    '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>';
+
   const ICONS = {
     x: '<path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/>',
     instagram: '<path fill="currentColor" d="M12 2c2.7 0 3 0 4.1.1 1 0 1.7.2 2.3.4.6.3 1.1.6 1.6 1.1s.8 1 1.1 1.6c.2.6.4 1.3.4 2.3.1 1.1.1 1.4.1 4.1s0 3-.1 4.1c0 1-.2 1.7-.4 2.3-.3.6-.6 1.1-1.1 1.6s-1 .8-1.6 1.1c-.6.2-1.3.4-2.3.4-1.1.1-1.4.1-4.1.1s-3 0-4.1-.1c-1 0-1.7-.2-2.3-.4-.6-.3-1.1-.6-1.6-1.1s-.8-1-1.1-1.6c-.2-.6-.4-1.3-.4-2.3C2 15 2 14.7 2 12s0-3 .1-4.1c0-1 .2-1.7.4-2.3.3-.6.6-1.1 1.1-1.6s1-.8 1.6-1.1c.6-.2 1.3-.4 2.3-.4C8.6 2 8.9 2 12 2m0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.4-1 .7s-.5.6-.7 1c-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.4.7.7 1s.6.5 1 .7c.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.4 1-.7s.5-.6.7-1c.1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7a2.8 2.8 0 0 0-1.7-1.7c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1m0 3.1a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2m0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6m5.3-3.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4"/>',
@@ -601,11 +618,14 @@
     movies: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 4.4h17.2v15.2H3.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7.4 4.4v15.2M16.6 4.4v15.2M3.4 12h17.2"/><path fill="currentColor" d="M4.6 6h1.6v1.6H4.6zM4.6 9h1.6v1.6H4.6zM4.6 13.4h1.6V15H4.6zM4.6 16.4h1.6V18H4.6zM17.8 6h1.6v1.6h-1.6zM17.8 9h1.6v1.6h-1.6zM17.8 13.4h1.6V15h-1.6zM17.8 16.4h1.6V18h-1.6z"/>',
     cars: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 15.4v-2.2l1.8-4A2.4 2.4 0 0 1 7 7.6h10a2.4 2.4 0 0 1 2.2 1.6l1.8 4v2.2a1.2 1.2 0 0 1-1.2 1.2H4.2A1.2 1.2 0 0 1 3 15.4z"/><path fill="none" stroke="currentColor" stroke-width="1.5" d="M4.8 13.2h14.4"/><circle cx="7.2" cy="16.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="16.8" cy="16.6" r="1.9" fill="none" stroke="currentColor" stroke-width="1.6"/>',
     boats: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 16.4h18l-2.4 4H5.4zM12 3.2v10.6M12 13.8H5.6L12 3.2M12.8 13.8h5.6l-5.6-7.4z"/>',
-    /* A ballot box and a lectern. Party emblems are registered marks of the
-       committees that own them, and this site takes money — the same line the
-       club crests are on. */
-    'us-parties': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.6 9.4h16.8v11H3.6zM7.4 9.4l1.6-6h6l1.6 6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M9.4 13.4h5.2"/>',
-    'us-politicians': '<circle cx="12" cy="5.4" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M8.2 20.6v-6.4a3.8 3.8 0 0 1 7.6 0v6.4M6 20.6h12M9.4 11.2 12 9.2l2.6 2"/>',
+    /* The flag, for both American boards. It is the one mark that says which
+       country's politics this is without taking sides inside it — and unlike
+       a party emblem it belongs to nobody, being a work of the United States
+       government and a national flag besides. The ballot box and the lectern
+       it replaces said "politics" but not "American politics", which is the
+       distinction the next country's boards will need. */
+    'us-parties': US_FLAG,
+    'us-politicians': US_FLAG,
     'golf-players': '<circle cx="17.4" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M6.2 3.4v14.4M6.2 3.4l7.4 2.4-7.4 2.6"/><ellipse cx="10" cy="19.4" rx="6.4" ry="1.9" fill="none" stroke="currentColor" stroke-width="1.5"/>',
     exchanges: '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8.4h13.2l-3.4-3.4M20 15.6H6.8l3.4 3.4"/>',
     gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
@@ -1173,7 +1193,18 @@
   const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players',
                          'f1-drivers', 'golf-players']);
   const CULTURE = new Set(['artists', 'podcasts', 'actors', 'movies']);
-  const POLITICS = new Set(['us-parties', 'us-politicians']);
+  /* Politics is grouped by country, not by subject, because that is the axis
+     it grows along: the next addition is Romania or the UK with a parties
+     board and a figures board of its own, not a thirty-first kind of American
+     politics. One line per country here, and the strip lays itself out.
+     
+     Parties before figures inside each: a party is the argument somebody
+     arrives holding, and the people are how it is fought. */
+  const COUNTRIES = [
+    { label: 'USA', boards: ['us-parties', 'us-politicians'] }
+  ];
+
+  const POLITICS = new Set(COUNTRIES.flatMap(c => c.boards));
   const MACHINES = new Set(['cars', 'boats']);
   const TRADE = new Set(['startups', 'restaurants']);
   const LIFE = new Set(['cities', 'pets']);
@@ -1184,10 +1215,14 @@
   // 'games' is culture by any reading, but it sits where people look for it.
 
   const GROUPS = [
-    /* Politics first. It is the loudest argument on the site and the one
-       somebody arrives already holding a side in — and a board nobody has to
-       scroll to find is a board that gets played. */
-    { label: 'Politics',        rows: 1, has: p => POLITICS.has(p.slug) },
+    /* Politics first, by country. It is the loudest argument on the site and
+       the one somebody arrives already holding a side in — and a board nobody
+       has to scroll to find is a board that gets played. */
+    ...COUNTRIES.map(c => ({
+      label: c.label,
+      rows: 1,
+      has: p => c.boards.includes(p.slug)
+    })),
     { label: 'Social networks', rows: 2, has: p => !p.tag },
     { label: 'Influencers',     rows: 1, has: p => STARS.has(p.slug) },
     { label: 'Gaming',          rows: 1, has: p => p.tag && !NOT_GAMING.has(p.slug) },

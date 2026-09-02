@@ -34,11 +34,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /* The names come from the board's own suggestion list, so the two cannot
    drift: every game offered in the picker is a game this has looked up. */
+/* Both quote styles. A name with an apostrophe in it — Baldur's Gate,
+   Schindler's List — has to be written with double quotes in the roster, and
+   the first version of this only ever looked for single ones, so those names
+   were silently skipped and their art never fetched. */
 function wanted() {
   const src = readFileSync(join(root, 'scripts/rosters.mjs'), 'utf8');
   const m = /games: \[([\s\S]*?)\n  \],/.exec(src);
   if (!m) { console.error('build-game-art: no games list in scripts/rosters.mjs'); process.exit(2); }
-  return [...m[1].matchAll(/\['([^']+)'/g)].map(x => x[1]);
+  return [...m[1].matchAll(/\[\s*(?:'([^']*)'|"([^"]*)")/g)].map(x => x[1] ?? x[2]);
 }
 
 async function look(name, attempt = 1) {

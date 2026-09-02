@@ -42,12 +42,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const BOARDS = ['actors', 'us-politicians', 'us-parties', 'football-players',
                 'f1-drivers', 'golf-players', 'artists'];
 
+/* Both quote styles. A name with an apostrophe in it — Baldur's Gate,
+   Schindler's List — has to be written with double quotes in the roster, and
+   the first version of this only ever looked for single ones, so those names
+   were silently skipped and their art never fetched. */
 function wanted(board) {
   const src = readFileSync(join(root, 'scripts/rosters.mjs'), 'utf8');
   const re = new RegExp(`'?${board}'?: \\[([\\s\\S]*?)\\n  \\],`);
   const m = re.exec(src);
   if (!m) { console.error(`build-people-art: no ${board} list in scripts/rosters.mjs`); process.exit(2); }
-  return [...m[1].matchAll(/\['([^']+)'/g)].map(x => x[1]);
+  return [...m[1].matchAll(/\[\s*(?:'([^']*)'|"([^"]*)")/g)].map(x => x[1] ?? x[2]);
 }
 
 const get = async (u, attempt = 1) => {
