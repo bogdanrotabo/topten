@@ -1500,7 +1500,7 @@
        already by the time the row it belongs to is drawn. */
     const cell = ({ p, row, rank }) => `
       <span class="tick" style="${brandVars(p.color, '--tick')}">
-        ${facePic(p.slug, row.handle, 'tick__pic', row, false)}
+        ${facePic(p.slug, row.handle, 'tick__pic', row, false, 120)}
         <span class="tick__h">${esc(row.handle)}</span>
         <span class="tick__r">#${rank}</span>
         <span class="tick__a">${money(row.total_cents)}</span>
@@ -2257,7 +2257,28 @@
      browser deciding what is visible sees almost all of them as off screen
      and never asks for them. Eleven pictures out of sixty-one had loaded
      after fifteen seconds, and the rest never would have. */
-  function facePic(slug, handle, cls, row, lene = true) {
+  /* A Commons picture at the width it will be shown, not the width the
+     lookup happened to return. The portraits are filed as 330-pixel
+     thumbnails, which is right for a table row and ten times too much for a
+     34-pixel circle drawn two hundred times in the strip; Commons makes a
+     thumbnail at any width on request, and the address says which. Both
+     spellings of a Commons address are handled: a thumbnail's width is
+     replaced, an original is asked for as a thumbnail. Anything not on
+     Commons is left as it came.
+
+     Not any width: Commons answers 400 to a size it does not keep, and 96
+     was one. 120 is the smallest it does, and at 120 a portrait is seven
+     kilobytes where the 330 was thirty. */
+  const laLatime = (url, w) => {
+    if (!w || !/^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\//.test(url || '')) return url;
+    if (/\/thumb\//.test(url)) return url.replace(/\/(\d+)px-([^/]*)$/, `/${w}px-$2`);
+    const m = /^(https:\/\/upload\.wikimedia\.org\/wikipedia\/commons)\/([0-9a-f]\/[0-9a-f]{2})\/([^/?#]+)$/.exec(url);
+    if (!m) return url;
+    const nume = m[3];
+    return `${m[1]}/thumb/${m[2]}/${nume}/${w}px-${nume}${/\.svg$/i.test(nume) ? '.png' : ''}`;
+  };
+
+  function facePic(slug, handle, cls, row, lene = true, latime = 0) {
     const colour = (BY_SLUG[slug] && BY_SLUG[slug].color) || '#8c98a4';
     const initials = String(handle || '?')
       .replace(/^[@$]/, '').trim().slice(0, 2).toUpperCase() || '?';
@@ -2268,14 +2289,14 @@
        a logo where a profile picture belonged. The site icon is what a board
        with no profile to look up falls back on -- a startup, a restaurant, a
        podcast, a project giving something away. */
-    const src = (slug === 'exchanges' && exchangeLogo(handle))
+    const src = laLatime((slug === 'exchanges' && exchangeLogo(handle))
       || (slug !== 'exchanges' && CRYPTO.has(slug) && coinLogo(handle))
       || (slug === 'games' && gameArt(handle))
       || (personArt(slug, handle) || {}).img
       || (slug === 'us-politicians' && congressPhoto(handle))
       || (slug === 'movements' && MISCARI_X[fold(handle)] && avatarUrl('x', MISCARI_X[fold(handle)]))
       || (on ? avatarUrl(on, handle) : null)
-      || siteLogo(row && row.link);
+      || siteLogo(row && row.link), latime);
 
     /* Where to go when the first choice fails. A profile picture that 403s
        used to leave the badge even on a listing that links to a site with a
@@ -2630,15 +2651,20 @@
            and #1 is the row everybody sees first.`}</p>`;
   }
 
-  /* Only what this view actually draws.
-  
+  /* Only what this view actually draws -- and every view draws the strip.
+
      facePic is synchronous, so whatever it needs has to be in memory before
-     the row is drawn — otherwise every coin appears once as a badge and again
-     as a logo a moment later. But "before it is drawn" is not the same as "on
-     every page": a board page draws one board and the market draws whatever
-     has been paid for, and both are known here, from the rows themselves. */
+     the row is drawn, or every coin appears once as a badge and again as a
+     logo a moment later. This used to ask only what the open board's rows
+     needed, on the reasoning that a board page draws one board. It does, and
+     under it the strip draws the top of every board there is. So a visitor
+     who landed on /movies/ -- which is where a payment's thank-you sends you
+     -- saw a strip of initials where the faces were: Musk, Bezos and Obama
+     had portraits on file and nothing had asked for the file. The rows the
+     strip draws are the rows that decide what is fetched, whichever page is
+     open; the open board's own rows are among them. */
   async function artFor(openSlug) {
-    const randuri = openSlug ? board(openSlug) : wholeMarket();
+    const randuri = wholeMarket();
     const boarduri = new Set(randuri.map(r => r.platform));
     const treaba = [];
     if ([...boarduri].some(b => CRYPTO.has(b))) treaba.push(loadCoinLogos());
@@ -4316,7 +4342,17 @@
 
   /* ------------------------------------------------------ live plumbing */
 
-  const refresh = debounce(async () => { await loadBoards(); fillTicker(); if (!modal.hidden) return; refreshBoard(); }, 450);
+  /* A payment that lands on a board nothing on the page needed a picture
+     for -- the first coin, the first billionaire -- brings its own need with
+     it, so the pictures are asked for again before the strip is redrawn.
+     Everything already in memory answers at once. */
+  const refresh = debounce(async () => {
+    await loadBoards();
+    await artFor(state.platform);
+    fillTicker();
+    if (!modal.hidden) return;
+    refreshBoard();
+  }, 450);
 
   function subscribe() {
     if (!sb) return;
