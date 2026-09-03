@@ -478,6 +478,31 @@
         re:    NAME_RE,
         profile: null
       } },
+
+    /* The three promotions that are not the UFC. A fighter can be on the MMA
+       board and on the board of whoever pays them, and those are different
+       arguments: one is about the sport, the other about the roster. */
+    { slug: 'bellator', name: 'Bellator Fighters', color: '#c2410c', fan: true,
+      noun: 'fighter', tag: {
+        label: 'Fighter',
+        hint:  'Patricio Freire',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'one-championship', name: 'ONE Fighters', color: '#b91c1c', fan: true,
+      noun: 'fighter', tag: {
+        label: 'Fighter',
+        hint:  'Rodtang Jitmuangnon',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'pfl', name: 'PFL Fighters', color: '#1d4ed8', fan: true,
+      noun: 'fighter', tag: {
+        label: 'Fighter',
+        hint:  'Kayla Harrison',
+        re:    NAME_RE,
+        profile: null
+      } },
     /* Politics, in two boards rather than one, and never as a poll.
     
        "Republicans vs Democrats" as a single board is two rows and nothing to
@@ -646,6 +671,15 @@
     'ufc-fighters': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M8.4 2.4h7.2l5.2 5.2v7.2l-5.2 5.2H8.4l-5.2-5.2V7.6z"/>',
     'mma-fighters': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M6.2 12V9.8a2.1 2.1 0 0 1 4.2 0V9a2.1 2.1 0 0 1 4.2 0v.8a2.1 2.1 0 0 1 4.2 0v4.9a4.5 4.5 0 0 1-4.5 4.5h-3.4a4.7 4.7 0 0 1-4.7-4.7z"/>' + '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M6.4 13.2h4a1.8 1.8 0 0 1 0 3.6H6.6"/>',
     'boxers': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M7.4 7.2a4.6 4.6 0 0 1 9.2 0v3.9a5 5 0 0 1-.9 2.9l-.5.7v3.6a1.7 1.7 0 0 1-1.7 1.7h-3a1.7 1.7 0 0 1-1.7-1.7v-3.6l-.5-.7a5 5 0 0 1-.9-2.9V9.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7.4 9.6H6.2a1.9 1.9 0 0 0 0 3.8h1.2"/>',
+
+    /* ONE and PFL are drawn: neither has a freely licensed mark anywhere, and
+       the only thing Commons offers under "PFL logo" is a Ukrainian football
+       league. A circle broken by a bar for ONE, whose whole identity is the
+       word; a shield for the PFL, whose logo is one. */
+    'one-championship': '<circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+      + '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 7.4v9.2"/>',
+    'pfl': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M12 2.6l7.4 2.6v6.2c0 4.2-3 7.6-7.4 9.4-4.4-1.8-7.4-5.2-7.4-9.4V5.2z"/>'
+      + '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M9.3 9.2h5.4M9.3 12.4h3.6"/>',
     exchanges: '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8.4h13.2l-3.4-3.4M20 15.6H6.8l3.4 3.4"/>',
     gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
     /* The ten newest boards. Same rule as the leagues and the coins: a crest,
@@ -689,6 +723,11 @@
      domain on Commons, tagged PD-textlogo. It is also nearly three times as
      wide as it is tall, which every other mark here is not -- see WIDE. */
   const ICONS_FULL = {
+    /* Bellator's wordmark, public domain on Commons and five times wider than
+       it is tall. Its own file carries no fill at all, so the letters take the
+       board's colour rather than the black they are drawn in -- which is what
+       keeps them visible on the dark theme, where black is nothing. */
+    'bellator': '<path fill="currentColor" d="M94.4,24.4c27.9-16,59.9-24.5,92-24.4c30.3-0.2,60.5,7.4,87.2,21.5c-8.8,17-17.7,34-26.8,50.8 c-24.2-12.9-52.6-17.7-79.6-13.5c-28,4.2-54.4,18-73.9,38.5c-22.8,23.6-36.1,56.3-35.8,89.1c-0.2,26.3,8.3,52.3,23.1,73.9 c-15.7,10.9-31.4,21.9-47.1,32.7C14.9,266.5,3.3,235,0.7,202.6c-3.2-36.6,4.7-74,22.6-106.1C39.8,66.6,64.7,41.3,94.4,24.4z"/><path fill="currentColor" d="M1144.5,130.9c19.9,0,39.8,0,59.7,0c7.2,21.3,14.3,42.5,21.4,63.8c1.3-0.6,1.4-2.1,1.9-3.2 c7.1-20.2,14.5-40.3,21.6-60.5c19.4-0.1,38.7,0,58.1,0c-4.4,8.2-3.6,17.7-3.7,26.7c0,21,0,42,0,63c0,8.1-0.3,16.6,3.7,24 c-16.9,0.2-33.8,0.2-50.6,0c3.9-7.7,3.6-16.6,3.5-25c-0.1-21.5,0.1-42.9-0.1-64.4c-10.7,29.7-21,59.6-31.5,89.4 c-10,0.1-20.1,0.2-30.2,0c-10.2-29.8-20.2-59.6-30.5-89.3c-0.3,29.8-0.1,59.5-0.1,89.3c-6.3,0.2-12.7,0.1-19,0c0-31,0-62,0-92.9 C1148.9,144.5,1149.2,136.7,1144.5,130.9z"/><path fill="currentColor" d="M1318.5,130.9c19.9,0,39.8,0,59.7,0c7.3,21.4,14.5,42.9,21.6,64.4c3.3-7.4,5.6-15.3,8.5-22.9 c4.9-13.8,9.9-27.6,14.8-41.4c19.4-0.1,38.8,0,58.1,0c-4.3,7.8-3.7,17-3.7,25.6c0,23.3,0,46.7,0,70c0,6.1,0.7,12.5,3.7,17.9 c-16.9,0.1-33.8,0.2-50.6,0c4.1-8,3.5-17.2,3.6-25.9c-0.1-21.1,0.1-42.3-0.1-63.4c-10.8,29.7-21,59.6-31.5,89.4 c-10.1,0.1-20.1,0.2-30.2,0c-10.2-29.7-20.1-59.5-30.5-89.2c-0.3,29.7-0.1,59.4-0.1,89.2c-6.3,0.2-12.7,0.1-19,0 c0-32.6,0-65.3,0-97.9C1322.8,141.1,1322,135.3,1318.5,130.9z"/><path fill="currentColor" d="M1533.2,130.9c17,0,34,0,51,0c12.6,30.4,25.1,60.9,37.7,91.3c3,8.1,6.9,15.9,12.6,22.4c-19,0-38,0.1-57-0.1 c3-4.4,3.1-10.1,1.2-15c-2.1-5.2-4.3-10.3-6.6-15.4c-16.6,0.1-33.3-0.2-49.9,0.2c-2.4,5.6-5.4,10.9-7.9,16.5 c-2,4.5-1.5,9.9,1.4,13.9c-10.8,0-21.5,0-32.3,0c4.2-5.5,8.4-11.1,11.4-17.4c14.3-29.9,28.6-59.9,42.9-89.8 C1536.2,135.3,1534.5,133.2,1533.2,130.9 M1545.1,165.2c-4.5,10-9.1,19.9-13.6,29.9c11,0,22,0,33,0c-4.7-12.8-10.5-25.1-15.6-37.7 C1547.2,159.7,1546.3,162.5,1545.1,165.2z"/><path fill="currentColor" d="M96.1,101.1c20.9-22.2,50.1-36.4,80.5-38.7c23.5-2,47.4,3.1,68.4,13.9c-3.3,6-6.4,12.1-9.6,18.1 c-22.4-11.9-49.2-15.2-73.8-9c-26.6,6.5-50.3,24.2-64.3,47.7c-10.9,18-16,39.4-14.6,60.4c1.2,18.8,7.7,37.2,18.5,52.5 c-5.8,4.1-11.6,8.2-17.4,12.1c0-0.4-0.1-1.2-0.1-1.6c-16.7-24-24.1-54.2-20.9-83.2C65.5,146.5,77.5,120.7,96.1,101.1z"/><path fill="currentColor" d="M249.1,91.6c1.3-2,2.6-4,4-6c11.3,7.5,21.3,16.8,29.5,27.6c-1.9,1.4-3.8,2.9-5.7,4.4C269.1,107.5,259.7,98.7,249.1,91.6z"/><path fill="currentColor" d="M1609.5,124.2c5.1,0,10.2,0,15.3,0c0,0.9,0,2.6,0,3.4c-1.8,0-3.6,0-5.4,0c0,3.8,0,7.7,0,11.5c-1.5,0-3,0-4.4,0 c0-3.8,0-7.7,0-11.5c-1.8,0-3.7,0-5.5,0C1609.5,126.8,1609.5,125,1609.5,124.2z"/><path fill="currentColor" d="M1627.4,124.2c2,0,4,0,6,0.1c1.3,3.1,2.8,6.2,4.2,9.2c1.4-3.1,2.8-6.3,4.3-9.4c1.9,0,3.8,0.1,5.7,0.1c0,5,0,9.9,0,14.9 c-1.5,0-2.9,0-4.3,0c0-3.2,0-6.5-0.1-9.7c-1.4,3.3-3,6.5-4.5,9.8c-0.7,0-2-0.1-2.6-0.1c-1.8-3.1-3.2-6.3-4.4-9.6 c-0.4,3.2-0.4,6.5-0.3,9.7c-1.3,0-2.7,0-3.9,0C1627.4,134.2,1627.5,129.2,1627.4,124.2z"/><path fill="currentColor" d="M131.2,130.9c31.1,0.1,62.1,0,93.2,0c8.5,0.1,18.1,0.9,24.3,7.4c5.5,6,4.9,14.7,4.9,22.2c-0.1,6.4,0.9,14-4.1,19 c-5.5,5.1-13.4,4.8-20.2,6.1c6.5,1.2,13.5,1.4,19.3,4.8c3.5,2,5,6.3,5,10.1c0.1,7.3,0.1,14.6,0,21.9c-0.1,6-1.8,12.6-6.7,16.4 c-6.3,4.9-14.7,5.5-22.4,5.7c-31.1,0-62.3,0-93.4,0c2.6-5.3,3.5-11.2,3.5-17c0-22.8,0-45.6,0-68.4c14.5-0.1,29,0,43.4,0 c0,5.8,0,11.5,0,17.3c8.8,0,17.6,0,26.4,0c2.2,0.1,5.1-0.6,5.5-3.1c0.6-4.5,0.1-9.1,0.3-13.6c-0.1-2.4,0.3-4.9-0.5-7.2 c-0.9-2.5-4-2.5-6.3-2.6c-22.9,0-45.9,0-68.8,0C134.7,143.3,133.9,136.8,131.2,130.9 M178,195.2c0,10.1,0,20.3,0,30.4 c9.2-0.1,18.3,0.1,27.5-0.1c2.4,0.1,4.6-1.6,4.6-4.1c0.3-6.3,0-12.6,0.1-18.9c-0.1-2.1,0.2-4.7-1.5-6.3c-1.5-1.1-3.5-1-5.2-1.1 C195,195.2,186.5,195.2,178,195.2z"/><path fill="currentColor" d="M265.8,130.9c32.8,0,65.5,0,98.3,0c1.2,7.3,2.4,14.6,3.5,21.9c-6.2-2-12.7-3.1-19.3-3c-26.4,0-52.7,0-79.1,0 C269.2,143.4,268.6,136.8,265.8,130.9z"/><path fill="currentColor" d="M379.3,130.9c16.8,0,33.6,0,50.4,0c-3,5.7-3.6,12.3-3.6,18.6c0,25.4,0,50.7,0,76.1c12.1,0,24.2,0,36.3,0 c6.3-0.1,12.8-0.8,18.6-3.6c-1.3,7.5-2.5,15-3.7,22.5c-32.7,0-65.3,0-98,0c2.9-5.9,3.6-12.6,3.6-19.1c0-25.3,0-50.6,0-75.9 C382.8,143.2,382,136.7,379.3,130.9z"/><path fill="currentColor" d="M487.6,130.8c16.8,0,33.6,0,50.4,0c-3,6.1-3.6,13-3.5,19.7c0,25,0,50.1,0,75.1c12,0,24,0,36,0c6.4-0.1,13.1-0.7,18.9-3.7 c-1.3,7.5-2.5,15.1-3.8,22.6c-32.7,0-65.3,0-98,0c2.7-5.6,3.5-11.8,3.5-17.9c0-25,0-50,0-75.1C491.2,144.5,490.8,137.2,487.6,130.8 z"/><path fill="currentColor" d="M639.9,130.9c17.1,0,34.2,0,51.3,0c13.5,32.6,26.9,65.2,40.4,97.7c2.4,5.8,5.9,11.2,10.1,16c-19,0-38,0-57.1,0 c2.7-4.2,3.1-9.3,1.6-13.9c-2-5.6-4.7-11-6.8-16.5c-16.6-0.1-33.2,0-49.8,0c-2.6,5.2-5.1,10.4-7.7,15.6c-2.3,4.7-2.2,10.6,0.9,14.9 c-10.8,0-21.5,0-32.3,0c9.6-11,14.8-24.8,21.2-37.8c11-23.1,22.1-46.3,33.1-69.4C643.1,135.2,641.4,133.1,639.9,130.9 M653,162.9 c-4.9,10.7-9.7,21.4-14.6,32.2c11.1-0.1,22.3,0.2,33.4-0.1c-5.5-12.5-10.7-25.1-16-37.7C654.5,159,653.8,161,653,162.9z"/><path fill="currentColor" d="M722.8,130.9c31.9,0,63.8,0,95.7,0c4.1,0.2,8.3-0.4,12.3,0.3c1.3,7.7,2.3,15.5,3.6,23.3c-4-2.5-8.4-4.4-13.1-4.5 c-7.6-0.2-15.2,0-22.8-0.1c0,24.6,0,49.2,0,73.7c0,7.1,0.3,14.5,3.6,21c-16.8,0-33.6,0-50.4,0c2.9-5.9,3.5-12.6,3.5-19.1 c0-25.2,0-50.4,0-75.6c-7.8,0.1-15.6-0.2-23.4,0.1c-4.5,0.2-8.7,2.1-12.5,4.4C720.4,146.5,721.6,138.7,722.8,130.9z"/><path fill="currentColor" d="M854.9,134.9c5.5-3.4,12.2-4.1,18.5-4.1c21.3,0,42.7-0.1,64.1,0c7.5,0,15.7,1.8,20.9,7.6c5.8,6.5,7.1,15.6,7.3,24 c0,17,0,34,0,51c-0.3,8.3-1.7,17.3-7.5,23.7c-5.2,5.6-13.2,7.3-20.6,7.4c-22,0-44,0-66.1,0c-8.3,0-17.5-2.3-22.4-9.5 c-6.4-9.2-5.9-20.9-5.8-31.5c0.2-14.8-0.4-29.7,0.3-44.5c14.4,0.2,28.8-0.1,43.1,0.2c-0.1,20.1-0.1,40.3,0,60.4 c-0.1,3.2,2.6,5.8,5.7,5.9c6.3,0.4,12.7,0,19.1,0.2c2.9-0.1,6,0.3,8.5-1.4c2.1-1.5,2.3-4.3,2.3-6.6c0-19.7,0-39.3,0-59 c-0.1-2.2,0.1-4.8-1.5-6.6c-1.8-2.1-4.8-2.2-7.4-2.2c-22.9,0-45.8,0-68.7,0C846.4,143.9,849.6,138.1,854.9,134.9z"/><path fill="currentColor" d="M972.8,130.9c32.2,0.1,64.4,0,96.6,0.1c8.1,0.3,17.6,1.8,22.4,9.2c5.2,8.1,3.4,18.2,3.8,27.4c-0.3,7.2,1.1,15-2.6,21.6 c-3,5-9.4,5.8-14.6,6c4.5,10.2,9.7,20.2,14.5,30.3c3.3,6.4,5.6,13.4,10.2,19.1c-16.2,0-32.3,0-48.5,0 c-6.9-16.3-13.6-32.8-20.6-49.1c-4.3-0.7-8.8,0-13.2-0.3c-0.1,10.5,0,20.9,0,31.4c0,6.1,0.8,12.4,3.5,18c-16.8,0-33.6,0-50.5,0 c4.5-9,3.4-19.3,3.5-29c0.1-18.9-0.2-37.7,0.1-56.6c14.4,0.2,28.8,0,43.3,0.1c0,5.8,0,11.5,0,17.3c8.9,0,17.8,0.1,26.7-0.1 c2.2,0.1,4.5-1.3,4.6-3.7c0.3-6.3,0.3-12.6,0-18.9c-0.1-2.9-3.2-3.9-5.6-3.8c-23-0.1-46,0-69.1,0 C977.4,143.3,976.8,136.4,972.8,130.9z"/><path fill="currentColor" d="M269.2,159.1c14.5-0.1,28.9-0.1,43.4-0.1c0,5.7,0,11.5,0,17.2c11,0,21.9,0,32.9,0c6,0,11.9-1.2,17.5-3 c-0.1,8.3,0,16.6,0,24.9c-5.7-1.9-11.6-2.9-17.6-3c-11-0.1-21.9,0-32.9,0c0,10.1,0,20.3,0,30.4c12.9,0,25.9,0,38.8,0 c6.2,0,12.4-1,18.3-3c-1.3,7.3-2.6,14.7-4,22c-33.4-0.1-66.7,0-100.1,0c3.1-6.2,3.6-13.2,3.6-20 C269.2,202.8,269.3,180.9,269.2,159.1z"/><path fill="currentColor" d="M95.7,266.1c1.8-1.6,3.6-3.2,5.5-4.8c17.8,20.4,43,34.2,69.8,37.9c26,3.7,53.2-2,75.5-15.9c9.3-5.7,17.6-12.8,25-20.9 c1.8,1.6,3.5,3.2,5.3,4.8c-19.1,21.4-45.9,35.7-74.3,39.3c-24.8,3.3-50.7-1.4-72.7-13.3C116.8,286.4,105.3,277.1,95.7,266.1z"/>',
     'ufc-fighters': '<path fill="#d20a0a" d=" M 135.91 0.00 L 334.60 0.00 C 295.13 141.90 255.88 283.86 216.45 425.78 C 214.77 430.82 214.72 436.66 217.82 441.19 C 222.83 448.79 232.35 451.80 241.04 452.28 C 251.36 452.55 261.68 452.32 272.01 452.40 C 283.21 452.34 294.84 452.76 305.48 448.69 C 312.84 445.81 317.37 438.55 319.34 431.19 C 359.30 287.47 399.08 143.70 439.10 0.00 L 636.62 0.00 C 594.62 151.00 552.77 302.04 510.82 453.06 C 506.30 469.09 502.04 485.20 497.34 501.18 C 491.29 520.62 481.30 539.53 465.42 552.70 C 453.68 562.69 438.98 568.35 424.16 571.96 C 403.20 577.19 381.56 578.58 360.08 580.00 L 104.20 580.00 C 78.95 578.42 53.09 572.63 32.04 557.98 C 18.23 548.61 7.12 534.81 2.60 518.59 C 0.37 511.62 0.81 504.21 0.85 497.00 C 0.89 488.41 3.84 480.25 6.00 472.04 C 49.63 314.70 93.30 157.36 136.91 0.01 L 135.91 0.00 Z"/><path fill="#d20a0a" d=" M 730.61 0.00 L 1157.59 0.00 C 1145.73 42.45 1134.02 84.95 1122.21 127.42 C 979.87 127.45 837.54 127.44 695.20 127.43 C 706.99 84.95 718.71 42.45 730.61 0.00 Z"/><path fill="#d20a0a" d=" M 1350.38 0.00 L 1674.29 0.00 C 1669.62 19.27 1663.78 38.27 1658.65 57.43 C 1652.17 80.76 1645.69 104.09 1639.22 127.42 C 1569.14 127.44 1499.05 127.42 1428.97 127.43 C 1418.71 127.52 1408.04 127.43 1398.39 131.40 C 1390.53 134.72 1386.44 142.95 1384.45 150.80 C 1358.88 243.01 1333.28 335.23 1307.73 427.45 C 1305.87 433.18 1307.46 439.73 1311.73 443.97 C 1318.00 450.38 1327.37 452.39 1336.04 452.39 C 1412.37 452.41 1488.70 452.39 1565.03 452.41 C 1553.25 494.94 1541.44 537.47 1529.64 580.00 L 1205.22 580.00 C 1180.92 578.46 1156.12 573.09 1135.49 559.60 C 1121.95 550.94 1110.56 538.36 1105.11 523.09 C 1100.11 509.98 1100.53 495.37 1104.31 482.01 C 1140.98 349.87 1177.66 217.73 1214.35 85.59 C 1219.67 66.15 1228.16 46.98 1242.50 32.47 C 1251.97 22.76 1263.99 15.80 1276.82 11.56 C 1300.50 3.58 1325.61 1.64 1350.38 0.00 Z"/><path fill="#d20a0a" d=" M 670.69 215.39 C 813.05 215.37 955.41 215.38 1097.77 215.39 C 1085.96 257.97 1074.14 300.54 1062.32 343.11 C 985.82 343.14 909.33 343.11 832.83 343.13 C 810.91 422.08 789.04 501.04 767.12 579.99 L 768.47 580.00 L 569.52 580.00 C 603.31 458.48 636.96 336.93 670.69 215.39 Z"/>',
     tiktok:
       '<path fill="#25f4ee" d="M15.6 5.8a4.8 4.8 0 0 1-1.1-1.2A4.6 4.6 0 0 1 13.7 2h-3.3v13.1a2.7 2.7 0 1 1-1.9-2.6V9.2a6 6 0 1 0 5.2 5.9V8.8A7.5 7.5 0 0 0 18 10.2V6.9a4.4 4.4 0 0 1-2.4-1.1"/>' +
@@ -776,7 +815,7 @@
      into a smear. The viewBox comes from the file, the height stays 1em, and
      the width follows -- which is what an svg with a viewBox does on its own
      once the stylesheet stops insisting on a square. */
-  const WIDE = { 'ufc-fighters': '0 0 1675 580' };
+  const WIDE = { 'ufc-fighters': '0 0 1675 580', 'bellator': '0 0 1647.7 307.6' };
 
   const icon = (slug, full) => {
     let body = (full && ICONS_FULL[slug]) || ICONS[slug] || '';
@@ -1235,11 +1274,12 @@
        listings ambled. Fifteen went three times quicker for no reason anybody
        could see, and it would have kept accelerating.
 
-       So: pixels per second, fixed. The half-track is what one loop travels,
-       and at 42 px/s a name is readable as it goes by. Clamped at both ends
-       so an almost-empty site does not flicker and a very full one does not
-       look stopped. */
-    const VITEZA = 42;
+       So: pixels per second, fixed. The half-track is what one loop travels.
+       Forty-two was the first number and it read as stopped; seventy is a
+       name crossing in three and a half seconds, which is quick enough to
+       look alive and slow enough to read. Clamped at both ends so an
+       almost-empty site does not flicker and a very full one still moves. */
+    const VITEZA = 70;
     const drum = track.scrollWidth / 2;
     const secunde = Math.min(600, Math.max(30, Math.round(drum / VITEZA)));
     track.style.setProperty('--tick-dur', secunde + 's');
@@ -1265,7 +1305,8 @@
      wrong for everything else that happens to be a tag board. */
   const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players',
                          'f1-drivers', 'golf-players',
-                         'ufc-fighters', 'mma-fighters', 'boxers']);
+                         'ufc-fighters', 'mma-fighters', 'boxers',
+                         'bellator', 'one-championship', 'pfl']);
   const CULTURE = new Set(['artists', 'podcasts', 'actors', 'movies']);
   /* Politics is grouped by country, not by subject, because that is the axis
      it grows along: the next addition is Romania or the UK with a parties
@@ -1500,7 +1541,7 @@
      whole name; UFC is the first word of one, and "UFC Fighters" beside the
      UFC logo prints it twice the same way. Only the repeated part goes off
      the screen, and it stays in the markup: a mark carries no text. */
-  const SPUS_DE_MARCA = { 'x': 'X', 'ufc-fighters': 'UFC' };
+  const SPUS_DE_MARCA = { 'x': 'X', 'ufc-fighters': 'UFC', 'bellator': 'Bellator' };
   const numeLangaMarca = p => {
     const spus = SPUS_DE_MARCA[p.slug];
     if (!spus || !p.name.startsWith(spus)) return esc(p.name);
@@ -1559,7 +1600,8 @@
   const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties',
                          'football-players', 'f1-drivers', 'golf-players', 'artists',
                          'nba-players', 'nhl-players', 'football-clubs',
-                         'ufc-fighters', 'mma-fighters', 'boxers'];
+                         'ufc-fighters', 'mma-fighters', 'boxers',
+                         'bellator', 'one-championship', 'pfl'];
 
   /* Every sitting member of Congress, kept current by the public-domain
      dataset the civic-tech world maintains rather than by a list I typed once
@@ -1599,7 +1641,7 @@
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
     try {
-      const r = await fetch('/people-art.json?v=7f66e0580b', { cache: 'force-cache' });
+      const r = await fetch('/people-art.json?v=c01bec1c26', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       PEOPLE_ART = await r.json();
     } catch (e) {
@@ -1728,7 +1770,7 @@
   async function loadRosterFile() {
     if (ROSTER_FILE) return ROSTER_FILE;
     try {
-      const r = await fetch('/rosters.json?v=a40e52550b', { cache: 'force-cache' });
+      const r = await fetch('/rosters.json?v=6236b10e94', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ROSTER_FILE = await r.json();
       for (const [slug, list] of Object.entries(ROSTER_FILE)) {
@@ -1754,6 +1796,7 @@
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
     'startups', 'ufc-fighters', 'mma-fighters', 'boxers',
+    'bellator', 'one-championship', 'pfl',
     'us-parties', 'us-politicians',
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'youtube-influencers', 'facebook-influencers'

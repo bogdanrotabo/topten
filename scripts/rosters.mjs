@@ -224,6 +224,47 @@ const R = {
     ['Naoya Inoue','NI'], ['Terence Crawford','TC'], ['Gennadiy Golovkin','GG'],
     ['Deontay Wilder','DW'], ['Larry Holmes','LH'], ['Henry Armstrong','HA'],
   ],
+  /* The three promotions that are not the UFC. Rosters move faster here than
+     anywhere else on this site -- Bellator was folded into the PFL, fighters
+     cross between all three -- so these are the names the promotion is known
+     by rather than a claim about who is under contract this week. Anyone can
+     type a name that is not on the list. */
+  'bellator': [
+    ['Patricio Freire','PF'], ['Ryan Bader','RB'], ['Vadim Nemkov','VN'],
+    ['AJ McKee','AM'], ['Michael Chandler','MC'], ['Douglas Lima','DL'],
+    ['Cris Cyborg','CC'], ['Yaroslav Amosov','YA'], ['Corey Anderson','CA'],
+    ['Gegard Mousasi','GM'], ['Sergio Pettis','SP'], ['Johnny Eblen','JE'],
+    ['Usman Nurmagomedov','UN'], ['Liam McGeary','LM'], ['Rafael Lovato Jr','RL'],
+    ['Ilima-Lei Macfarlane','IM'], ['Juliana Velasquez','JV'], ['Eduardo Dantas','ED'],
+    ['Daniel Straus','DS'], ['Michael Page','MP'], ['Paul Daley','PD'],
+    ['Rory MacDonald','RM'], ['Aaron Pico','AP'], ['Patrick Mix','PM'],
+    ['Leandro Higo','LH'], ['Linton Vassell','LV'], ['Valentin Moldavsky','VM'],
+    ['Anatoly Tokov','AT'], ['Cat Zingano','CZ'], ['Liz Carmouche','LC'],
+  ],
+  'one-championship': [
+    ['Rodtang Jitmuangnon','RJ'], ['Superlek Kiatmoo9','SK'], ['Stamp Fairtex','SF'],
+    ['Angela Lee','AL'], ['Christian Lee','CL'], ['Demetrious Johnson','DJ'],
+    ['Aung La Nsang','AN'], ['Bibiano Fernandes','BF'], ['Anatoly Malykhin','AM'],
+    ['Reinier de Ridder','RR'], ['Regian Eersel','RE'], ['Nong-O Hama','NH'],
+    ['Tawanchai PK Saenchai','TS'], ['Jonathan Haggerty','JH'], ['Fabricio Andrade','FA'],
+    ['Xiong Jing Nan','XN'], ['Denice Zamboanga','DZ'], ['Danielle Kelly','DK'],
+    ['Mikey Musumeci','MM'], ['Roman Kryklia','RK'], ['Sitthichai Sitsongpeenong','SS'],
+    ['Superbon Singha Mawynn','SB'], ['Adriano Moraes','AM'], ['Kade Ruotolo','KR'],
+    ['Tye Ruotolo','TR'], ['Ham Seo Hee','HH'], ['Itsuki Hirata','IH'],
+    ['Ok Rae Yoon','OY'], ['John Lineker','JL'], ['Shinya Aoki','SA'],
+  ],
+  'pfl': [
+    ['Kayla Harrison','KH'], ['Francis Ngannou','FN'], ['Olivier Aubin-Mercier','OM'],
+    ['Larissa Pacheco','LP'], ['Bruno Cappelozza','BC'], ['Ray Cooper III','RC'],
+    ['Movlid Khaybulaev','MK'], ['Clay Collard','CC'], ['Rob Wilkinson','RW'],
+    ['Denis Goltsov','DG'], ['Renan Ferreira','RF'], ['Jesus Pinedo','JP'],
+    ['Gabriel Braga','GB'], ['Impa Kasanganay','IK'], ['Josh Silveira','JS'],
+    ['Dakota Ditcheva','DD'], ['Cedric Doumbe','CD'], ['Thiago Santos','TS'],
+    ['Anthony Pettis','AP'], ['Sadibou Sy','SY'], ['Magomed Magomedkerimov','MM'],
+    ['Ante Delija','AD'], ['Biaggio Ali Walsh','BW'], ['Marina Mokhnatkina','MO'],
+    ['Taylor Guardado','TG'], ['Julia Budd','JB'], ['Natan Schulte','NS'],
+    ['Lance Palmer','LP'], ['Kai Kamaka III','KK'], ['Brendan Loughnane','BL'],
+  ],
   'golf-players': [
     ['Tiger Woods','TW'], ['Jack Nicklaus','JN'], ['Arnold Palmer','AP'],
     ['Ben Hogan','BH'], ['Gary Player','GP'], ['Sam Snead','SS'],

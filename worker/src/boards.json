@@ -151,6 +151,18 @@
     "name": "Boxers",
     "color": "#a16207"
   },
+  "bellator": {
+    "name": "Bellator Fighters",
+    "color": "#c2410c"
+  },
+  "one-championship": {
+    "name": "ONE Fighters",
+    "color": "#b91c1c"
+  },
+  "pfl": {
+    "name": "PFL Fighters",
+    "color": "#1d4ed8"
+  },
   "us-parties": {
     "name": "U.S. Political Parties",
     "color": "#7f1d1d"
