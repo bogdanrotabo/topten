@@ -1768,6 +1768,44 @@
     else img.remove();
   }, true);
 
+  /* And the pictures that fail without saying so.
+
+     A server answering 200 with an empty body -- which unavatar does for
+     some Facebook profiles, instead of the 404 that fallback=false asks for
+     -- produces an image that fires neither load nor error. The browser
+     marks it complete with a natural width of zero and says nothing at all.
+     Neither handler above ever runs: the reserve is never tried, the badge
+     underneath is never uncovered, and the row keeps an invisible broken
+     image exactly where a face belongs. Two of the five listings on the
+     Facebook board were in that state.
+
+     So they are swept. Whenever anything is added to the page, look again a
+     couple of seconds later for pictures that are finished and empty, and
+     give them what the error handler would have given them. An image still
+     honestly loading is not complete yet and is left alone, so this cannot
+     take a slow picture away from anybody. */
+  let ceasPoze = null;
+  const treceP = adanc => {
+    let inZbor = 0;
+    for (const img of document.querySelectorAll('img[data-pic]')) {
+      if (!img.complete) { inZbor++; continue; }
+      if (img.naturalWidth > 0) continue;
+      const rezerva = img.dataset.rezerva;
+      if (rezerva && !img.dataset.tried) { img.dataset.tried = '1'; img.src = rezerva; inZbor++; }
+      else img.remove();
+    }
+    /* Another look while anything is still in flight. An image going empty
+       after the sweep has run is not a change to the page, so nothing would
+       schedule a second one -- and the ones that answer slowest are exactly
+       the ones that answer with nothing. Three more passes, then stop. */
+    if (inZbor && adanc < 3) setTimeout(() => treceP(adanc + 1), 3000);
+  };
+  const maturaPozele = () => {
+    clearTimeout(ceasPoze);
+    ceasPoze = setTimeout(() => treceP(0), 2500);
+  };
+  new MutationObserver(maturaPozele).observe(document.body, { childList: true, subtree: true });
+
   const faceOn = slug => {
     const p = BY_SLUG[slug];
     if (!p) return null;
@@ -2648,11 +2686,35 @@
       }
     });
 
+    /* A finger that travels is scrolling, not choosing.
+
+       The choice is taken on mousedown and has to be: the input loses focus
+       first, and its blur closes the list out from under the pointer before a
+       click could ever land. But on a touch screen the browser synthesises a
+       mousedown on whatever the finger started on -- so a drag down the list
+       could arrive here as a choice, take a name and shut the list, which is
+       indistinguishable from a list that refuses to scroll.
+
+       So the pointer is watched between going down and coming up, and a
+       journey of more than a few pixels means the mousedown that follows is
+       the tail of a scroll and not a tap. A mouse never moves between its own
+       pointerdown and mousedown, so nothing changes there. */
+    let pornire = null, calatorit = false;
+    list.addEventListener('pointerdown', e => {
+      pornire = { x: e.clientX, y: e.clientY };
+      calatorit = false;
+    });
+    list.addEventListener('pointermove', e => {
+      if (!pornire) return;
+      if (Math.abs(e.clientY - pornire.y) > 8 || Math.abs(e.clientX - pornire.x) > 8) calatorit = true;
+    });
+    list.addEventListener('pointerup', () => { pornire = null; });
+    list.addEventListener('pointercancel', () => { pornire = null; calatorit = true; });
+
     list.addEventListener('mousedown', e => {
-      // mousedown, not click: the input's blur would close the list out from
-      // under the pointer before the click ever landed.
       const opt = e.target.closest('.cascade__opt');
       if (!opt) return;
+      if (calatorit) { calatorit = false; return; }
       e.preventDefault();
       take(opt.dataset.club);
     });

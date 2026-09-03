@@ -497,6 +497,8 @@ img { max-width: 100%; }
   max-width: 520px;
   max-height: 92vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   background: var(--elev);
   border: 1px solid var(--line);
   border-bottom: 0;
@@ -1205,6 +1207,14 @@ img { max-width: 100%; }
 .cascade__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 .cascade__toggle:hover { color: var(--text); }
 
+/* The three lines under overflow-y are for one browser and cost nothing in
+   the others. On iPadOS a scrollable box inside a fixed overlay, with the
+   page behind it locked, will sometimes refuse the drag and rubber-band the
+   whole page instead -- which is exactly what "the list does not scroll"
+   looks like on a tablet. overscroll-behavior keeps the gesture in the box,
+   touch-action tells the browser a vertical drag here is a scroll and not
+   something it has to wait to find out about, and -webkit-overflow-scrolling
+   is what older iOS needs to give a nested box momentum at all. */
 .cascade__list {
   position: absolute;
   z-index: 40;
@@ -1213,6 +1223,9 @@ img { max-width: 100%; }
   top: calc(100% + 6px);
   max-height: 288px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 12px;
