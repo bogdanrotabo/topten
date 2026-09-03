@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-PMmpIYbmqBS8JoVLpsJpkiJVqZe64SS3awIgSe3vWu8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
+<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-dlt+X6jEtNnmuRphM/hF1qdn3yRv277VCvSX46czPY8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
 <title>Top 10 on Football Clubs — TopTen.one</title>
 <meta name="description" content="The ten most-paid Football Clubs clubs right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <link rel="canonical" href="https://topten.one/football-clubs/">
@@ -21,6 +21,25 @@
      the page would flash white on every single load. Four lines in the head,
      ahead of the stylesheet, is the only place this can go. -->
 <script>
+/* Nobody frames this page.
+
+   The proper way to say that is a header -- frame-ancestors, or the older
+   X-Frame-Options -- and GitHub Pages does not let this repository set one.
+   Until that goes in at the edge, this is what is left, and it is aimed at a
+   real attack rather than a checkbox: somebody puts topten.one in an invisible
+   iframe under their own page, lines their button up with a Claim button here,
+   and a click meant for them lands on a payment.
+
+   Two moves, because either can be blocked on its own. Try to take the top
+   window back -- which a sandboxed frame can refuse -- and, refused or not,
+   draw nothing. A page that renders nothing has no button to line anything up
+   with. The check runs before the first paint, so there is no frame in which
+   the trap could be sprung. */
+if (window.top !== window.self) {
+  try { window.top.location = window.self.location; } catch (e) { /* cross-origin: refused */ }
+  document.documentElement.style.display = 'none';
+}
+
 try {
   var t = localStorage.getItem('topten_theme');
   if (t !== 'light' && t !== 'dark') {
