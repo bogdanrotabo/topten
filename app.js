@@ -1677,7 +1677,7 @@
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
     try {
-      const r = await fetch('/people-art.json?v=1886cadeca', { cache: 'force-cache' });
+      const r = await fetch('/people-art.json?v=bed73f531d', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       PEOPLE_ART = await r.json();
     } catch (e) {
@@ -1806,7 +1806,7 @@
   async function loadRosterFile() {
     if (ROSTER_FILE) return ROSTER_FILE;
     try {
-      const r = await fetch('/rosters.json?v=6fef8b3a42', { cache: 'force-cache' });
+      const r = await fetch('/rosters.json?v=e3ee18b028', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ROSTER_FILE = await r.json();
       for (const [slug, list] of Object.entries(ROSTER_FILE)) {
@@ -2015,6 +2015,7 @@
       || (slug === 'games' && gameArt(handle))
       || (personArt(slug, handle) || {}).img
       || (slug === 'us-politicians' && congressPhoto(handle))
+      || (slug === 'movements' && MISCARI_X[fold(handle)] && avatarUrl('x', MISCARI_X[fold(handle)]))
       || (on ? avatarUrl(on, handle) : null)
       || siteLogo(row && row.link);
 
@@ -2599,6 +2600,23 @@
      where a creator's picture actually is, and which this site pays for.
      One chain now, so a board cannot have a face in the table and initials
      in the list that offers it. */
+  /* Two movements whose own account is the movement itself rather than an
+     organisation inside it: the me too. Movement and March for Life are the
+     names on the tin. Their pictures arrive the way every social listing's
+     does -- from unavatar, which shows what the platform itself shows -- so
+     nothing is copied anywhere.
+
+     Not @NRA for gun rights and not @Greenpeace for the environment. Those
+     are organisations of a movement, not the movement, and one standing in
+     for the other is the mistake this site keeps catching. Nor @aim_movement
+     for the American Indian Movement: that account turned out to be an
+     unrelated "AIM Love Movement", which is why every one of these was opened
+     and looked at before it was written down. */
+  const MISCARI_X = {
+    'metoo': 'MeTooMVMT',
+    'march for life': 'March_for_Life',
+  };
+
   function rosterPic(slug, name) {
     const on = faceOn(slug);
     return (slug === 'exchanges' && exchangeLogo(name))
@@ -2606,6 +2624,7 @@
       || (slug === 'games' && gameArt(name))
       || (personArt(slug, name) || {}).img
       || (slug === 'us-politicians' && congressPhoto(name))
+      || (slug === 'movements' && MISCARI_X[fold(name)] && avatarUrl('x', MISCARI_X[fold(name)]))
       || (on ? avatarUrl(on, name) : null)
       || null;
   }

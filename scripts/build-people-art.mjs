@@ -204,7 +204,14 @@ async function fisierStiut(stiut) {
   const ex = ii.extmetadata || {};
   const plain = v => String(v?.value || '').replace(/<[^>]*>/g, '').trim();
   const lic = plain(ex.LicenseShortName) || plain(ex.License);
-  if (!lic || /non-?free|fair use|copyright/i.test(lic)) return null;
+  /* "Copyrighted free use" is a Commons licence tag, and it means the holder
+     released the file for any use, commercial included. The guard below
+     rejects anything with "copyright" in it, which is right for "Copyrighted"
+     on its own and wrong for this one exact phrase -- it threw out the rainbow
+     flag, which is as free as anything else here. Named exactly rather than by
+     loosening the test, so nothing else slips through beside it. */
+  const liber = /^copyrighted free use$/i.test(String(lic).trim());
+  if (!liber && (!lic || /non-?free|fair use|copyright/i.test(lic))) return null;
   return {
     img: String(ii.thumburl || ii.url || '').split('?')[0],
     autor: plain(ex.Artist) || 'Unknown',
@@ -266,6 +273,15 @@ const CLUBURI = {
    search runs here, so nothing can quietly become the wrong organisation. */
 const MISCARI = {
   'maga': 'File:Trump logo (red).png',
+  'black lives matter': 'File:Black Lives Matter logo 2024.svg',
+  /* Emblems rather than logos, and each one is the emblem that movement is
+     actually known by: the peace sign for the anti-war movement, the rainbow
+     flag for gay rights, the Gadsden flag for the Tea Party. All older than
+     the movements that carry them and all free, which is why they can be
+     here at all. */
+  'antiwar movement': 'File:Peace symbol.svg',
+  'lgbtq rights movement': 'File:Gay Pride Flag.svg',
+  'tea party': 'File:Gadsden flag.svg',
 };
 
 async function lookMovement(name) {

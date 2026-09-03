@@ -297,17 +297,13 @@ const R = {
      movements, which is why several are hashtags and several are older than
      anybody reading. Anyone can type one that is not on the list. */
   'movements': [
-    ['MAGA','MA'], ['Black Lives Matter','BL'], ['MeToo','MT'],
-    ['Extinction Rebellion','XR'], ['Fridays for Future','FF'], ['Occupy Wall Street','OW'],
-    ['Tea Party','TP'], ['March for Life','ML'], ['Pro-Choice','PC'],
-    ['Second Amendment','2A'], ['Libertarianism','LB'], ['Effective Altruism','EA'],
-    ['Open Source','OS'], ['Right to Repair','RR'], ['Veganism','VG'],
-    ['Zero Waste','ZW'], ['Pride','PR'], ['Feminism','FE'],
-    ['Civil Rights Movement','CR'], ['Suffragettes','SU'], ['Solidarity','SO'],
-    ['Yellow Vests','YV'], ['Arab Spring','AS'], ['Umbrella Movement','UM'],
-    ['Farmers Protests','FP'], ['Trucker Convoy','TC'], ['Degrowth','DG'],
-    ['Transhumanism','TH'], ['Minimalism','MI'], ['Slow Food','SF'],
+    ['MAGA','MA'], ['Civil Rights Movement','CR'], ['Black Lives Matter','BL'],
+    ["Women's Suffrage",'WS'], ['Labor Movement','LM'], ['Abolitionism','AB'],
+    ['Tea Party','TP'], ['Occupy Wall Street','OW'], ['MeToo','MT'],
+    ['LGBTQ Rights Movement','LG'], ['Environmental Movement','EN'], ['Anti-War Movement','AW'],
+    ['American Indian Movement','AI'], ['March for Life','ML'], ['Gun Rights Movement','GR'],
   ],
+
   'us-parties': [
     ['Republican Party','GOP'], ['Democratic Party','DEM'],
     ['Libertarian Party','LP'], ['Green Party','GRN'],
