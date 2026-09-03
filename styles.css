@@ -37,7 +37,7 @@
   --accent-ink: #ffffff;
   --accent-soft: #f2e2f8;
   --danger: #cf2f3e;
-  --ok: #06945a;
+  --ok: #057344;
   --gold: #dfae00;
   --brand: #8a1fb2;
 
@@ -1803,6 +1803,16 @@ a.mname__h:hover { color: var(--accent); }
    reason: a mark light enough to vanish on white keeps its own colour only
    where the page is dark enough to hold it. */
 :root[data-theme="dark"] .tick__i svg { color: var(--tick-d, var(--tick)); }
+
+/* The other two that carry a board colour and were never given the dark
+   variant. It did not show while the light value was the raw brand colour
+   -- that reads well enough on a dark ground by accident. The moment the
+   light value started being darkened so it could be read on a white page,
+   the ticker's rank became #af2554 on #271c34, which is 2.5:1, and the
+   board filter marks went the same way. A colour made for a light page has
+   no business on a dark one. */
+:root[data-theme="dark"] .tick__r { color: var(--tick-d, var(--tick)); }
+:root[data-theme="dark"] .bfilter svg { color: var(--chip-d, var(--chip)); }
 .bchip:hover { color: var(--text); }
 
 .c-board__r {

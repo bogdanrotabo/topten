@@ -1356,14 +1356,80 @@
     return L > .45 ? '#0d1421' : '#ffffff';
   }
 
-  /* The same luminance test, used the other way round: a brand colour too
-     pale to be seen on a white page is swapped for the page's own ink, and
-     the real one is handed over as --chip-d for the dark theme to use. */
+  /* Relative luminance, and the contrast between two colours by the formula
+     WCAG states. Written out here because the answer decides what a person
+     with poor sight can actually read, and a guess about that is worthless. */
+  function lumOf(hex) {
+    const m = /^#([0-9a-f]{6})$/i.exec(String(hex || ''));
+    if (!m) return 0;
+    const n = parseInt(m[1], 16);
+    const lin = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+    return .2126 * lin(n >> 16 & 255) + .7152 * lin(n >> 8 & 255) + .0722 * lin(n & 255);
+  }
+
+  const contrast = (a, b) => {
+    const x = lumOf(a), y = lumOf(b);
+    return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
+  };
+
+  /* One ground per theme: the hardest one each has to work against.
+
+     Light: band two, under the running ticker, the darkest light surface --
+     a colour readable there is readable on the white page too.
+     Dark: band zero, the lightest dark surface, for the same reason the
+     other way round. */
+  const GROUND = '#e7d4f0';
+  const GROUND_DARK = '#2b1f39';
+
+  /* The same hue, moved until it can be read -- and the ground decides which
+     way. A light page wants the colour taken down toward black; a dark one
+     wants it brought up toward white. Scaling or blending the three channels
+     together is the crude way and the right one here: it holds the hue and
+     only spends lightness, so Instagram stays Instagram pink and TikTok stays
+     TikTok red -- they simply stop being 3:1 against whatever is behind them.
+
+     Getting this wrong in one direction is what the dark theme did for a
+     while: it was handed the colour made for the white page, so the ticker's
+     rank sat at 2.5:1 on the dark band. Two grounds, two answers. */
+  function readable(c, ground, target) {
+    const m = /^#([0-9a-f]{6})$/i.exec(c);
+    if (!m) return c;
+    const n = parseInt(m[1], 16);
+    const rgb = [n >> 16 & 255, n >> 8 & 255, n & 255];
+    const spreLumina = lumOf(ground) < .18;
+    for (let k = 0; k <= 1.0001; k += .02) {
+      const t = '#' + rgb.map(v => Math.round(spreLumina ? v + (255 - v) * k : v * (1 - k))
+        .toString(16).padStart(2, '0')).join('');
+      if (contrast(t, ground) >= target) return t;
+    }
+    return spreLumina ? '#ffffff' : '#000000';
+  }
+
+  /* Three outcomes, not two.
+
+     A colour too pale to be seen at all -- Snapchat's yellow, X's near-white,
+     a club's silver -- becomes the page's own ink, as it always did. Taking
+     that one down until it reads would make Snapchat olive, which is not a
+     rescue, it is a different brand.
+
+     What was missing was the middle. Instagram's pink read at 3.1:1 against
+     the ticker and TikTok's red at 2.6:1, both under the 4.5 somebody with
+     poor sight needs, and neither was pale enough for the old test to catch:
+     thirty-nine of the forty-three board colours were in that gap. They are
+     taken down to where they can be read, and no further.
+
+     The untouched colour always goes out as --chip-d, which is what the dark
+     theme uses. None of this applies there: a brand colour on a dark ground
+     has the opposite problem and already passes. */
   function brandVars(colour, name) {
     const c = colour || '#8c98a4';
-    const pale = inkFor(c) === '#0d1421';
     const v = name || '--chip';
-    return `${v}:${pale ? 'var(--muted)' : c};${v}-d:${c}`;
+    const pale = inkFor(c) === '#0d1421';
+    const fata = pale ? 'var(--muted)' : readable(c, GROUND, 4.5);
+    /* A pale colour needs nothing done to it on a dark ground -- pale is
+       exactly what reads there. Everything else is brought up until it does. */
+    const noapte = pale ? c : readable(c, GROUND_DARK, 4.5);
+    return `${v}:${fata};${v}-d:${noapte}`;
   }
 
   const chipVars = c => brandVars(c, '--chip');
