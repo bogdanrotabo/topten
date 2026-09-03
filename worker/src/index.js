@@ -2,7 +2,7 @@
  *
  * The site is static. Every page is the same index.html, so /badge/?p=x&h=name
  * shared to X, WhatsApp or LinkedIn previewed as the site itself: "TopTen.one
- * — rankings decided by money", the generic picture, and not one word about
+ * — Who should be #1?", the generic picture, and not one word about
  * who is first or what they paid. Somebody pays to be #1 and shares it, and
  * the share says nothing about them. That is the whole point of the badge and
  * it was the one thing missing.

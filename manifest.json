@@ -1,7 +1,7 @@
 {
   "name": "TopTen.one",
   "short_name": "TopTen",
-  "description": "Rankings decided by money. Pay more than the person above you: that is the whole algorithm.",
+  "description": "Who should be #1? Ten places on every board. Pay more than the person above you: that is the whole algorithm.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

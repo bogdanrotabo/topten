@@ -44,7 +44,7 @@ preserves the total, so one new payment restores the full historical amount.
 | `supabase/functions/stripe-webhook/index.ts` | The only path that credits money. |
 | `scripts/stripe-setup.sh` | Creates the Stripe objects with plain `curl`. |
 | `scripts/stripe-setup.ts` | Same thing for Deno / Node 22+. |
-| `scripts/make-icons.ps1` | Generates the PNG icons and `og-image.png`. |
+| `scripts/make-icons.mjs` | Draws `icons/favicon.svg`, the PNG icons and `og-image.png` from one mark. |
 | `scripts/serve.ps1` | Local static server that mimics GitHub Pages routing. |
 | `scripts/sync-routes.sh` | Re-copies `index.html` into the route files. |
 

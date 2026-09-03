@@ -2355,12 +2355,12 @@
      rounded, dressed up or invented. A price you can check is worth more than
      a promise you cannot, but it does not have to be the first thing said. */
   function heroHome() {
-    /* One line, and it is the question. The tagline -- rankings decided by
-       money -- was the title above it until it was cut; it is still the
-       site's name in the tab, the share card and the badge, but the page
-       itself opens on what it asks rather than on what it is called. The
-       rule and the price used to stand here too and are both still on the
-       page: the price is a live figure in the strip below and on the button. */
+    /* One line, and it is the question. "Rankings decided by money" was the
+       title above it until it was cut, and the tab, the share card, the badge
+       and the manifest followed it out: the site opens on what it asks, not
+       on what it is called. The rule and the price used to stand here too and
+       are both still on the page: the price is a live figure in the strip
+       below and on the button. */
     return `<h1>Who should be <em class="hero__rank">#1</em>?</h1>`;
   }
 
@@ -2441,7 +2441,7 @@
 
     sticky.hidden = false;
     $('#cta-claim').textContent = ctaFor(openSlug);
-    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — rankings decided by money';
+    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — Who should be #1?';
     snapshotRanks();
   }
 
@@ -3692,7 +3692,7 @@
   <rect x="0" y="310" width="600" height="5" fill="#8a1fb2"/>
 
   <text x="40" y="56" font-family="${SANS}" font-size="38" font-weight="800" letter-spacing="-1.4"><tspan fill="#fbf6fd">TopTen</tspan><tspan fill="#cd6ff0">.one</tspan></text>
-  <text x="40" y="82" fill="#c3b5cd" font-family="${SANS}" font-size="15" font-weight="600">Rankings decided by money. ${PLATFORMS.length} boards, ten places each.</text>
+  <text x="40" y="82" fill="#c3b5cd" font-family="${SANS}" font-size="15" font-weight="600">Who should be #1? ${PLATFORMS.length} boards, ten places each.</text>
 
   ${marks}
 

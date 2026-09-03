@@ -3,7 +3,7 @@
 ## What it is for
 
 Somebody pays to be #1, shares their badge, and the preview says **"TopTen.one
-— rankings decided by money"** with the site's own picture. Not their name, not
+— Who should be #1?"** with the site's own picture. Not their name, not
 their rank, not what they paid. The badge is the thing people share, and the
 share said nothing about them.
 
@@ -17,7 +17,7 @@ listing, and rewrites the seven tags a preview reads:
 
 | Before | After |
 | --- | --- |
-| TopTen.one — rankings decided by money | @supportrotabo is #1 on X — TopTen.one |
+| TopTen.one — Who should be #1? | @supportrotabo is #1 on X — TopTen.one |
 | 43 boards, ten places each… | @supportrotabo holds #1 on the X board with $306.99 paid. Pay more than the person above you: $307.99 takes first place. |
 
 Everything else on the site goes straight to GitHub Pages, untouched, exactly
