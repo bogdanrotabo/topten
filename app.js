@@ -2528,17 +2528,81 @@
         : `<p class="cascade__none">Nothing by that name in the list. Type it out in full and it will be taken as it is.</p>`;
     };
 
+    /* Where the list goes, measured rather than assumed.
+
+       It was 288px hanging under the field, always downward. On a laptop
+       there is room for that. On a phone the field sits two thirds of the way
+       down the form, so half the box opened below the bottom of the screen:
+       three rows visible, a finger on them scrolling the other twenty-seven
+       into the part nobody can see. Which reads exactly as "the list does not
+       scroll", and is worse than that -- it scrolls, into nowhere.
+
+       So: how much room is under the field, how much over it, open toward
+       whichever is bigger, and take only what is there. visualViewport is the
+       measure and not innerHeight, because on a phone the on-screen keyboard
+       takes half the window and innerHeight does not notice. */
+    const AER = 12, MAX = 288, DESTUL = 168;
+
+    const aseaza = () => {
+      if (list.hidden) return;
+      const vv = window.visualViewport;
+      const inaltime = vv ? vv.height : innerHeight;
+      const r = input.getBoundingClientRect();
+      const dedesubt = inaltime - r.bottom - AER;
+      const deasupra = r.top - AER;
+      const jos = dedesubt >= DESTUL || dedesubt >= deasupra;
+      const loc = Math.max(96, jos ? dedesubt : deasupra);
+      list.style.top = jos ? 'calc(100% + 6px)' : 'auto';
+      list.style.bottom = jos ? 'auto' : 'calc(100% + 6px)';
+      list.style.maxHeight = Math.min(MAX, loc) + 'px';
+    };
+
+    /* The panel the form scrolls in. Bringing the field up inside it before
+       measuring is what turns a peephole into a list: there is plenty of room
+       on a phone, it is just all above the field rather than below it. */
+    const panou = (() => {
+      let e = input.parentElement;
+      while (e && e !== document.body) {
+        const o = getComputedStyle(e).overflowY;
+        if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight + 1) return e;
+        e = e.parentElement;
+      }
+      return null;
+    })();
+
     const open = all => {
+      /* Typing calls this on every keystroke, and the field should be moved
+         once, when the list appears -- not nudged again under the thumb with
+         every letter. */
+      const eraInchisa = list.hidden;
       draw(all ? '' : input.value);
       list.hidden = false;
       toggle.setAttribute('aria-expanded', 'true');
+
+      const vv = window.visualViewport;
+      const inaltime = vv ? vv.height : innerHeight;
+      const r = input.getBoundingClientRect();
+      if (eraInchisa && panou && inaltime - r.bottom - AER < DESTUL) {
+        /* Put the field a little under the top of the panel, so the list has
+           the whole screen beneath it instead of the last two centimetres. */
+        const p = panou.getBoundingClientRect();
+        panou.scrollTop += r.top - p.top - 16;
+      }
+      aseaza();
     };
 
     const close = () => {
       list.hidden = true;
       toggle.setAttribute('aria-expanded', 'false');
+      list.style.top = list.style.bottom = list.style.maxHeight = '';
       active = -1;
     };
+
+    /* The field moves whenever the form is scrolled or the window changes, and
+       a height worked out for where it used to be is a wrong height. */
+    if (panou) panou.addEventListener('scroll', aseaza, { passive: true });
+    addEventListener('resize', aseaza);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', aseaza);
 
     const opts = () => Array.prototype.slice.call(list.querySelectorAll('.cascade__opt'));
 
