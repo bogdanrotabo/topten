@@ -178,6 +178,52 @@ const R = {
     ['N26','N2'], ['Bolt','BO'], ['Checkout.com','CO'],
     ['Celonis','CE'], ['Personio','PE'], ['Vinted','VI'],
   ],
+  /* Three fighting boards, three different questions.
+
+     The UFC list is who is on top of that promotion. The MMA list is the
+     sport, which is older and wider than one company -- Fedor never signed
+     with them and a list of mixed martial arts without him would be a list
+     about contracts. Boxing shares nothing with either but a ring.
+
+     A few names are on two of them, and should be: being the best in the UFC
+     and among the best there has ever been are two separate claims, and the
+     boards let people argue them separately. */
+  'ufc-fighters': [
+    ['Jon Jones','JJ'], ['Islam Makhachev','IM'], ['Alex Pereira','AP'],
+    ['Ilia Topuria','IT'], ['Dricus du Plessis','DP'], ["Sean O'Malley",'SO'],
+    ['Merab Dvalishvili','MD'], ['Alexander Volkanovski','AV'], ['Tom Aspinall','TA'],
+    ['Charles Oliveira','CO'], ['Max Holloway','MH'], ['Justin Gaethje','JG'],
+    ['Dustin Poirier','DP'], ['Conor McGregor','CM'], ['Israel Adesanya','IA'],
+    ['Kamaru Usman','KU'], ['Leon Edwards','LE'], ['Belal Muhammad','BM'],
+    ['Sean Strickland','SS'], ['Robert Whittaker','RW'], ['Petr Yan','PY'],
+    ['Aljamain Sterling','AS'], ['Amanda Nunes','AN'], ['Valentina Shevchenko','VS'],
+    ['Zhang Weili','ZW'], ['Rose Namajunas','RN'], ['Alexa Grasso','AG'],
+    ['Stipe Miocic','SM'], ['Daniel Cormier','DC'], ['Paddy Pimblett','PP'],
+  ],
+  'mma-fighters': [
+    ['Fedor Emelianenko','FE'], ['Georges St-Pierre','GS'], ['Anderson Silva','AS'],
+    ['Khabib Nurmagomedov','KN'], ['Demetrious Johnson','DJ'], ['Cris Cyborg','CC'],
+    ['Ronda Rousey','RR'], ['BJ Penn','BP'], ['Chuck Liddell','CL'],
+    ['Randy Couture','RC'], ['Wanderlei Silva','WS'], ['Mirko Cro Cop','MC'],
+    ['Kazushi Sakuraba','KS'], ['Dan Henderson','DH'], ['Cain Velasquez','CV'],
+    ['Jose Aldo','JA'], ['Frankie Edgar','FE'], ['Tito Ortiz','TO'],
+    ['Matt Hughes','MH'], ['Rich Franklin','RF'], ['Urijah Faber','UF'],
+    ['Nick Diaz','ND'], ['Nate Diaz','NA'], ['Michael Bisping','MB'],
+    ['Junior dos Santos','JS'], ['Alistair Overeem','AO'], ['Francis Ngannou','FN'],
+    ['Eddie Alvarez','EA'], ['Patricio Freire','PF'], ['Rory MacDonald','RM'],
+  ],
+  'boxers': [
+    ['Muhammad Ali','MA'], ['Mike Tyson','MT'], ['Sugar Ray Robinson','SR'],
+    ['Floyd Mayweather','FM'], ['Manny Pacquiao','MP'], ['Joe Louis','JL'],
+    ['Rocky Marciano','RM'], ['Jack Dempsey','JD'], ['George Foreman','GF'],
+    ['Lennox Lewis','LL'], ['Evander Holyfield','EH'], ['Roberto Duran','RD'],
+    ['Marvin Hagler','MH'], ['Thomas Hearns','TH'], ['Sugar Ray Leonard','SL'],
+    ['Julio Cesar Chavez','JC'], ['Oscar De La Hoya','OD'], ['Bernard Hopkins','BH'],
+    ['Wladimir Klitschko','WK'], ['Vitali Klitschko','VK'], ['Canelo Alvarez','CA'],
+    ['Tyson Fury','TF'], ['Anthony Joshua','AJ'], ['Oleksandr Usyk','OU'],
+    ['Naoya Inoue','NI'], ['Terence Crawford','TC'], ['Gennadiy Golovkin','GG'],
+    ['Deontay Wilder','DW'], ['Larry Holmes','LH'], ['Henry Armstrong','HA'],
+  ],
   'golf-players': [
     ['Tiger Woods','TW'], ['Jack Nicklaus','JN'], ['Arnold Palmer','AP'],
     ['Ben Hogan','BH'], ['Gary Player','GP'], ['Sam Snead','SS'],

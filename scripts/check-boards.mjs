@@ -13,13 +13,14 @@
  *
  * Exits 1 and names what disagrees.
  */
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = f => readFileSync(join(root, f), 'utf8');
 
+let ULTIMA_MIGRATIE = '?';
 const set = a => new Set(a);
 const lipsa = (a, b) => [...a].filter(x => !b.has(x));
 
@@ -32,8 +33,17 @@ const app = (() => {
 
 /* The newest migration that rewrites the constraint. */
 const sql = (() => {
-  const m = /listings_platform_check check \(([\s\S]*?)\n\);/.exec(read('supabase/migrations/0011_all_boards.sql'));
-  if (!m) { console.error('check-boards: constraint not found in 0011_all_boards.sql'); process.exit(2); }
+  /* The newest migration that writes the constraint, found rather than named.
+     This used to name 0011 and would have gone on checking 0011 forever --
+     a later migration adding a board would have been invisible to the one
+     script whose job is to notice exactly that. */
+  const dir = join(root, 'supabase/migrations');
+  const fisier = readdirSync(dir).filter(f => f.endsWith('.sql')).sort().reverse()
+    .find(f => readFileSync(join(dir, f), 'utf8').includes('listings_platform_check check ('));
+  if (!fisier) { console.error('check-boards: no migration defines listings_platform_check'); process.exit(2); }
+  const m = /listings_platform_check check \(([\s\S]*?)\n\);/.exec(read('supabase/migrations/' + fisier));
+  if (!m) { console.error(`check-boards: constraint not found in ${fisier}`); process.exit(2); }
+  ULTIMA_MIGRATIE = fisier;
   return [...m[1].matchAll(/'([a-z0-9-]+)'/g)].map(x => x[1]);
 })();
 
@@ -55,7 +65,7 @@ const cere = (nume, lista) => {
   if (in_plus.length) { console.error(`  ${nume}: has ${in_plus.join(', ')}, which app.js does not offer`); rele++; }
 };
 
-cere('the database constraint (0011_all_boards.sql)', sql);
+cere(`the database constraint (${ULTIMA_MIGRATIE})`, sql);
 cere('scripts/sync-routes.sh', rute);
 cere('the footer in index.html', subsol);
 cere('sitemap.xml', harta);

@@ -139,6 +139,18 @@
     "name": "Golf Players",
     "color": "#4d7c0f"
   },
+  "ufc-fighters": {
+    "name": "UFC Fighters",
+    "color": "#d20a0a"
+  },
+  "mma-fighters": {
+    "name": "MMA Fighters",
+    "color": "#0f766e"
+  },
+  "boxers": {
+    "name": "Boxers",
+    "color": "#a16207"
+  },
   "us-parties": {
     "name": "U.S. Political Parties",
     "color": "#7f1d1d"

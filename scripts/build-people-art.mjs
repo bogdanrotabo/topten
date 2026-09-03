@@ -41,7 +41,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
    things on two different boards and each should get its own picture. */
 const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
                'f1-drivers', 'golf-players', 'artists',
-               'nba-players', 'nhl-players', 'football-clubs'];
+               'nba-players', 'nhl-players', 'football-clubs',
+               'ufc-fighters', 'mma-fighters', 'boxers'];
 
 /* Name boards on the command line to rebuild only those; without any, all of
    them. Rebuilding seven boards to check one costs ten minutes of somebody

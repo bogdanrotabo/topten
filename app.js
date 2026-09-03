@@ -443,6 +443,41 @@
         re:    NAME_RE,
         profile: null
       } },
+
+    /* Fighting, in three boards rather than one, and the reason is the same
+       one that split the parties from the politicians: they are different
+       questions with different answers.
+
+       UFC is a promotion and its roster is a roster -- who is on top there
+       this year. MMA is the sport, which is older and wider than that one
+       company, and a list of it that left out Fedor because he never signed
+       would be a list about contracts rather than fighting. Boxing is not
+       mixed martial arts at all and shares nothing but a ring.
+
+       Names overlap between the first two, and should: a fighter can be the
+       best in the UFC and among the best there has ever been. Two rows on
+       two boards for one man is two different claims. */
+    { slug: 'ufc-fighters', name: 'UFC Fighters', color: '#d20a0a', fan: true,
+      noun: 'fighter', tag: {
+        label: 'Fighter',
+        hint:  'Jon Jones',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'mma-fighters', name: 'MMA Fighters', color: '#0f766e', fan: true,
+      noun: 'fighter', tag: {
+        label: 'Fighter',
+        hint:  'Fedor Emelianenko',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'boxers', name: 'Boxers', color: '#a16207', fan: true,
+      noun: 'boxer', tag: {
+        label: 'Boxer',
+        hint:  'Muhammad Ali',
+        re:    NAME_RE,
+        profile: null
+      } },
     /* Politics, in two boards rather than one, and never as a poll.
     
        "Republicans vs Democrats" as a single board is two rows and nothing to
@@ -603,6 +638,14 @@
     'us-parties': US_FLAG,
     'us-politicians': US_FLAG,
     'golf-players': '<circle cx="17.4" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M6.2 3.4v14.4M6.2 3.4l7.4 2.4-7.4 2.6"/><ellipse cx="10" cy="19.4" rx="6.4" ry="1.9" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+
+    /* The cage, a pair of gloves, and one glove. Drawn rather than borrowed,
+       for the same reason the leagues are: a promotion's mark is registered
+       artwork and this site takes money for rank. An octagon says UFC to
+       anybody who has seen one and belongs to nobody. */
+    'ufc-fighters': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M8.4 2.4h7.2l5.2 5.2v7.2l-5.2 5.2H8.4l-5.2-5.2V7.6z"/>',
+    'mma-fighters': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M6.2 12V9.8a2.1 2.1 0 0 1 4.2 0V9a2.1 2.1 0 0 1 4.2 0v.8a2.1 2.1 0 0 1 4.2 0v4.9a4.5 4.5 0 0 1-4.5 4.5h-3.4a4.7 4.7 0 0 1-4.7-4.7z"/>' + '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M6.4 13.2h4a1.8 1.8 0 0 1 0 3.6H6.6"/>',
+    'boxers': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M7.4 7.2a4.6 4.6 0 0 1 9.2 0v3.9a5 5 0 0 1-.9 2.9l-.5.7v3.6a1.7 1.7 0 0 1-1.7 1.7h-3a1.7 1.7 0 0 1-1.7-1.7v-3.6l-.5-.7a5 5 0 0 1-.9-2.9V9.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7.4 9.6H6.2a1.9 1.9 0 0 0 0 3.8h1.2"/>',
     exchanges: '<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8.4h13.2l-3.4-3.4M20 15.6H6.8l3.4 3.4"/>',
     gifts: '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3.4 10.6h17.2v3H3.4zM4.8 13.6h14.4v7H4.8zM12 10.6v10"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 10.6S10.9 6.4 8.7 6.4a2.1 2.1 0 0 0 0 4.2zM12 10.6s1.1-4.2 3.3-4.2a2.1 2.1 0 0 1 0 4.2z"/>',
     /* The ten newest boards. Same rule as the leagues and the coins: a crest,
@@ -1190,7 +1233,8 @@
      board lands in Gaming by default, which is right for a console and
      wrong for everything else that happens to be a tag board. */
   const SPORT = new Set([...LEAGUES, 'football-clubs', 'football-players',
-                         'f1-drivers', 'golf-players']);
+                         'f1-drivers', 'golf-players',
+                         'ufc-fighters', 'mma-fighters', 'boxers']);
   const CULTURE = new Set(['artists', 'podcasts', 'actors', 'movies']);
   /* Politics is grouped by country, not by subject, because that is the axis
      it grows along: the next addition is Romania or the UK with a parties
@@ -1474,7 +1518,8 @@
      a fetch for one. */
   const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties',
                          'football-players', 'f1-drivers', 'golf-players', 'artists',
-                         'nba-players', 'nhl-players', 'football-clubs'];
+                         'nba-players', 'nhl-players', 'football-clubs',
+                         'ufc-fighters', 'mma-fighters', 'boxers'];
 
   /* Every sitting member of Congress, kept current by the public-domain
      dataset the civic-tech world maintains rather than by a list I typed once
@@ -1668,7 +1713,7 @@
     'crypto', 'memecoins', 'exchanges',
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
-    'startups',
+    'startups', 'ufc-fighters', 'mma-fighters', 'boxers',
     'us-parties', 'us-politicians',
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'youtube-influencers', 'facebook-influencers'
