@@ -64,17 +64,19 @@ function mark({ rx = 14, scale = 1 } = {}) {
 `;
 }
 
-/* The share card. The mark, the name, and the question -- and nothing that
-   goes stale: no count of boards, no list of platforms. */
+/* The share card. The name, and the question the front page asks -- with
+   the mark as the answer's place in it, so "#1" is written once, large, and
+   is both the logo and the end of the sentence. Nothing in it goes stale: no
+   count of boards, no list of platforms. */
 function card() {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <rect width="1200" height="630" fill="${BLACK}"/>
   <rect width="1200" height="8" fill="${VIOLET}"/>
-  <text x="76" y="212" font-family="${MONO}" font-size="168" font-weight="800" letter-spacing="-11" fill="${VIOLET}">#1</text>
-  <text x="352" y="212" font-family="${SANS}" font-size="66" font-weight="700" letter-spacing="-2.4"><tspan fill="${WHITE}">TopTen</tspan><tspan fill="${VIOLET}">.one</tspan></text>
-  <text x="80" y="402" font-family="${SANS}" font-size="82" font-weight="700" letter-spacing="-2.8" fill="${WHITE}">Who should be <tspan fill="${VIOLET}">#1</tspan>?</text>
-  <text x="82" y="470" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">Ten places on every board. Pay more than the person above you.</text>
-  <text x="82" y="562" font-family="${SANS}" font-size="24" font-weight="600" letter-spacing=".5" fill="${MUTED}">topten.one</text>
+  <text x="80" y="122" font-family="${SANS}" font-size="54" font-weight="700" letter-spacing="-2"><tspan fill="${WHITE}">TopTen</tspan><tspan fill="${VIOLET}">.one</tspan></text>
+  <text x="76" y="306" font-family="${SANS}" font-size="104" font-weight="700" letter-spacing="-3.6" fill="${WHITE}">Who should be</text>
+  <text x="70" y="532" font-family="${MONO}" font-size="250" font-weight="800" letter-spacing="-16" fill="${VIOLET}">#1<tspan font-family="${SANS}" font-weight="700" font-size="196" letter-spacing="0" fill="${WHITE}" dx="6">?</tspan></text>
+  <text x="520" y="476" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">Ten places on every board.</text>
+  <text x="520" y="522" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">Pay more than the person above you.</text>
 </svg>
 `;
 }
