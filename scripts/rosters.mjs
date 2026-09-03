@@ -158,6 +158,26 @@ const R = {
     ['Boston Whaler','BW'], ['Zodiac','ZO'], ['Axopar','AX'], ['Brabus Marine','BR'],
     ['Sealine','SE'], ['Galeon','GA'], ['Absolute','AB'], ['Cranchi','CR'],
   ],
+  /* Startups take a name, the same as Cities does, and had no list where
+     Cities has thirty. That is the inconsistency: the argument for a list is
+     spelling before it is discovery, and it applies here hardest of all --
+     SpaceX, Space X and spacex are three rows for one company, and the board
+     is meant to have one row per thing.
+
+     Well known, not biggest. Which of these is worth most is what the board
+     itself decides, and anyone can type a name that is not here. */
+  'startups': [
+    ['OpenAI','OA'], ['Anthropic','AN'], ['SpaceX','SX'],
+    ['xAI','XA'], ['Stripe','ST'], ['Databricks','DB'],
+    ['Canva','CA'], ['Revolut','RV'], ['Notion','NO'],
+    ['Discord','DC'], ['Epic Games','EG'], ['ByteDance','BD'],
+    ['Shein','SH'], ['Klarna','KL'], ['Rippling','RP'],
+    ['Deel','DE'], ['Ramp','RA'], ['Anduril','AD'],
+    ['Scale AI','SC'], ['Perplexity','PX'], ['Mistral AI','MI'],
+    ['Figma','FI'], ['Grammarly','GR'], ['Monzo','MZ'],
+    ['N26','N2'], ['Bolt','BO'], ['Checkout.com','CO'],
+    ['Celonis','CE'], ['Personio','PE'], ['Vinted','VI'],
+  ],
   'golf-players': [
     ['Tiger Woods','TW'], ['Jack Nicklaus','JN'], ['Arnold Palmer','AP'],
     ['Ben Hogan','BH'], ['Gary Player','GP'], ['Sam Snead','SS'],
