@@ -1091,8 +1091,21 @@ img { max-width: 100%; }
 /* The rotabo violet reads at 3.1:1 against the dark panel, and 4.5 is what
    somebody with low vision needs to read it at all. Same hue, lifted until it
    clears; the mark still reads as rotabo. */
+
 :root[data-theme="dark"] .sponsor__brand b,
 :root[data-theme="dark"] .sponsor__brand:hover { color: #c471db; }
+
+/* gift.ceo's own gold, not Rotabo's violet -- and after the rule above, not
+   before it. Both selectors weigh exactly the same, so the one written later
+   is the one that counts, and written first this lost silently: the dot came
+   out violet on the dark theme and gold on the light one. */
+/* #b8862b was 3.2:1 on this card and I put it there myself, an hour after
+   fixing every colour on the site for exactly that. This is gift.ceo's own
+   gold, the value that site uses after the same correction: 4.9:1. */
+.sponsor__brand--gift b { color: #8d6610; }
+.sponsor__brand--gift:hover { color: #8d6610; }
+:root[data-theme="dark"] .sponsor__brand--gift b,
+:root[data-theme="dark"] .sponsor__brand--gift:hover { color: #d9a63c; }
 
 .sponsor__tag { font-size: 12px; color: var(--muted); }
 
