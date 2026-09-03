@@ -1806,6 +1806,17 @@ a.mname__h:hover { color: var(--accent); }
    board filter marks went the same way. A colour made for a light page has
    no business on a dark one. */
 :root[data-theme="dark"] .tick__r { color: var(--tick-d, var(--tick)); }
+
+/* A mark that is a logo rather than a drawing keeps its own proportions. The
+   height is whatever the place it sits in asks for; the width follows from
+   the viewBox, which is the only way a wordmark stays readable. Every other
+   mark on this site is square and none of these rules touch it. */
+.bfilter svg.mark--wide,
+.bchip svg.mark--wide,
+.tick__i svg.mark--wide,
+.detail__brand svg.mark--wide,
+.hero__mark svg.mark--wide,
+.pick svg.mark--wide { width: auto; }
 :root[data-theme="dark"] .bfilter svg { color: var(--chip-d, var(--chip)); }
 .bchip:hover { color: var(--text); }
 
