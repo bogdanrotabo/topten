@@ -2361,7 +2361,7 @@
        itself opens on what it asks rather than on what it is called. The
        rule and the price used to stand here too and are both still on the
        page: the price is a live figure in the strip below and on the button. */
-    return `<h1>Who should be <em>#1</em>?</h1>`;
+    return `<h1>Who should be <em class="hero__rank">#1</em>?</h1>`;
   }
 
   function heroBoard(slug) {

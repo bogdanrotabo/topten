@@ -1448,6 +1448,16 @@ img { max-width: 100%; }
    silently and the X stayed violet. */
 .hero h1 .hero__mark + em { color: inherit; }
 
+/* A hair of air between the 1 and the question mark. The headline is set
+   tight -- letter-spacing -.03em at 800 weight -- and the two touched, so
+   "#1?" read as one lump. This is kerning, not a space: the text is still
+   "#1?", which is right in English, right when it is copied and right when
+   it is read aloud. A space before the mark is the French rule and reads as
+   a typo here. Scoped to the front page's rank: on a board the em is the
+   board's name at the end of the line, and a margin there would only nudge
+   the centring. */
+.hero h1 .hero__rank { margin-right: .07em; }
+
 /* The board's mark, set on the headline's own baseline rather than floated
    beside it, so it reads as part of the sentence and not as decoration. */
 .hero__mark {
