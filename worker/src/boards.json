@@ -175,6 +175,14 @@
     "name": "U.S. Political Figures",
     "color": "#1e3a8a"
   },
+  "eu-parties": {
+    "name": "EU Political Parties",
+    "color": "#003399"
+  },
+  "eu-politicians": {
+    "name": "EU Political Figures",
+    "color": "#2952c9"
+  },
   "us-billionaires": {
     "name": "U.S. Billionaires",
     "color": "#1d4ed8"

@@ -39,7 +39,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 /* Every board whose subject is a person or an organisation with a page. Kept
    in one file but keyed by board, because a name can mean two different
    things on two different boards and each should get its own picture. */
-const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
+const TOATE = ['actors', 'us-politicians', 'us-parties', 'eu-politicians', 'eu-parties', 'football-players',
                'f1-drivers', 'golf-players', 'artists',
                'nba-players', 'nhl-players', 'football-clubs',
                'ufc-fighters', 'mma-fighters', 'boxers',
@@ -92,7 +92,7 @@ if (necunoscute.length) {
    sport boards had no photographs at all -- not a decision, just a list the
    builder could not see -- so it now looks everywhere a roster can be. */
 function wanted(board) {
-  for (const f of ["scripts/sport-rosters.json", "scripts/rich-rosters.json"]) {
+  for (const f of ["scripts/sport-rosters.json", "scripts/rich-rosters.json", "scripts/eu-parliament.json"]) {
     const cale = join(root, f);
     if (!existsSync(cale)) continue;
     const d = JSON.parse(readFileSync(cale, "utf8"));
@@ -175,6 +175,12 @@ async function lookParty(name) {
     const lic = plain(ex.LicenseShortName) || plain(ex.License);
     /* Free or nothing. "Fair use" and "Non-free" are the words that matter. */
     if (!lic || /non-?free|fair use|copyright/i.test(lic)) continue;
+    /* A mark is a vector or a flat bitmap. A JPEG called "Volt Europa 9914"
+       is a photograph of a stack of flyers, and it passed the word test
+       because a camera's number is four digits and four digits are dropped
+       from a title before the words are read. A party's logo is never a
+       photograph; a photograph on the party's row is a wrong answer. */
+    if (/\.jpe?g$/i.test(String(page.title || ''))) continue;
 
     const titlu = fold(String(page.title || '')
       .replace(/^File:/i, '').replace(/\.(svg|png|jpe?g)$/i, '')
@@ -399,6 +405,48 @@ async function look(name, potrivit = null) {
   };
 }
 
+/* The Parliament is not looked up name by name. scripts/build-eu-parliament.mjs
+   already joined every sitting member to a Wikidata item on the Parliament's
+   own directory number and wrote down the Commons file each item points to,
+   so the only question left for Commons is the thumbnail and the credit --
+   asked fifty files at a time, which is fifteen requests for 719 faces
+   instead of 719. A member without a file simply has no picture. */
+async function lookMeps(intoArt) {
+  const cale = join(root, 'scripts/eu-parliament.json');
+  if (!existsSync(cale)) { console.error('build-people-art: scripts/eu-parliament.json is missing — run node scripts/build-eu-parliament.mjs'); process.exit(2); }
+  const randuri = JSON.parse(readFileSync(cale, 'utf8'))['eu-politicians'] || [];
+  const cuFisier = randuri.filter(r => r[6]);
+  const plain = v => String(v?.value || '').replace(/<[^>]*>/g, '').trim();
+  let g = 0;
+  for (let i = 0; i < cuFisier.length; i += 50) {
+    const lot = cuFisier.slice(i, i + 50);
+    const titluri = lot.map(r => 'File:' + r[6].replace(/_/g, ' '));
+    const meta = await get('https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*'
+      + '&prop=imageinfo&iiprop=extmetadata|url&iiurlwidth=330&titles=' + encodeURIComponent(titluri.join('|')));
+    const dupaTitlu = new Map();
+    for (const p of Object.values(meta.query?.pages || {})) dupaTitlu.set(p.title, p);
+    /* A title Commons spells slightly differently comes back under its own
+       spelling, with a note of what it was asked as. */
+    const normal = new Map((meta.query?.normalized || []).map(n => [n.from, n.to]));
+    for (const [k, r] of lot.entries()) {
+      const titlu = normal.get(titluri[k]) || titluri[k];
+      const p = dupaTitlu.get(titlu);
+      const info = p?.imageinfo?.[0];
+      if (!info?.thumburl) continue;
+      const ex = info.extmetadata || {};
+      intoArt[fold(r[0])] = {
+        img: info.thumburl,
+        autor: plain(ex.Artist) || 'Unknown',
+        licenta: plain(ex.LicenseShortName) || plain(ex.License) || 'see Commons',
+        pagina: 'https://commons.wikimedia.org/wiki/' + encodeURIComponent(titlu),
+      };
+      g++;
+    }
+    await sleep(GAP);
+  }
+  return { g, r: randuri.length - g };
+}
+
 if (process.argv.includes('--check')) {
   if (!existsSync(OUT)) {
     console.error('build-people-art: people-art.json is missing. Run: node scripts/build-people-art.mjs');
@@ -430,9 +478,15 @@ const LISTE = new Map(BOARDS.map(b => [b, wanted(b)]));
 for (const board of BOARDS) {
   art[board] = {};
   let g = 0, r = 0;
+  if (board === 'eu-politicians') {
+    ({ g, r } = await lookMeps(art[board]));
+    gasit += g; refuzat += r;
+    console.log(`  ${board.padEnd(18)} ${String(g).padStart(2)} from Commons` + (r ? `, ${r} without a portrait` : ''));
+    continue;
+  }
   for (const n of LISTE.get(board)) {
     try {
-      const hit = board === 'us-parties' ? await lookParty(n)
+      const hit = board.endsWith('-parties') ? await lookParty(n)
                 : board === 'movements' ? await lookMovement(n)
                 : board === 'football-clubs' ? await lookClub(n)
                 : board.endsWith('-billionaires') ? await lookRich(n, anNascut(board, n))

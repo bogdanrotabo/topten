@@ -321,6 +321,25 @@ const R = {
     ['Conservative Party of New York','CNY'], ['Liberal Party','LIB'],
     ['Justice for All Party','JFA'], ['Approval Voting Party','AVP'],
   ],
+  /* The Union's parties: the European political parties, and the groups the
+     Parliament actually sits in, because "Renew Europe" is what people say
+     and the party behind it is what is registered. Every name is written
+     under forty characters, which is what the form takes -- so the Alliance
+     of Liberals and Democrats for Europe Party is "ALDE Party", as it calls
+     itself. Anyone can type one that is not here. */
+  'eu-parties': [
+    ["European People's Party",'EPP'], ['EPP Group','EPP'],
+    ['Party of European Socialists','PES'], ['Socialists & Democrats','S&D'],
+    ['Renew Europe','RE'], ['ALDE Party','ALDE'],
+    ['European Democratic Party','EDP'], ['European Green Party','EGP'],
+    ['Greens-European Free Alliance','EFA'], ['European Free Alliance','EFA'],
+    ['European Conservatives & Reformists','ECR'], ['Patriots for Europe','PfE'],
+    ['Patriots.eu','PAT'], ['The Left in the European Parliament','LEFT'],
+    ['Party of the European Left','PEL'], ['European Left Alliance','ELA'],
+    ['Europe of Sovereign Nations','ESN'], ['European Christian Political Movement','ECPM'],
+    ['Volt Europa','VOLT'], ['European Pirate Party','PPEU'],
+    ['DiEM25','DiEM'],
+  ],
   /* Presidents and vice presidents. A closed, historical, entirely factual
      set — so the list is spelling help rather than a nomination, which is
      what a hand-picked roster of sitting politicians would be. Anyone can
@@ -423,6 +442,19 @@ if (!existsSync(RICH)) {
   process.exit(1);
 }
 for (const [slug, list] of Object.entries(JSON.parse(readFileSync(RICH, 'utf8')))) {
+  out[slug] = list.map(r => r.slice(0, 5));
+}
+
+/* Every sitting Member of the European Parliament, from the Parliament's own
+   list by way of scripts/build-eu-parliament.mjs. The rows carry the
+   member's directory number and the Commons file of their portrait for the
+   picture builder; the list ships without them. */
+const EU = join(root, 'scripts/eu-parliament.json');
+if (!existsSync(EU)) {
+  console.error('rosters: scripts/eu-parliament.json is missing. Run: node scripts/build-eu-parliament.mjs');
+  process.exit(1);
+}
+for (const [slug, list] of Object.entries(JSON.parse(readFileSync(EU, 'utf8')))) {
   out[slug] = list.map(r => r.slice(0, 5));
 }
 

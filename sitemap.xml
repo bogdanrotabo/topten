@@ -39,6 +39,8 @@
   <url><loc>https://topten.one/us-parties/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
   <url><loc>https://topten.one/movements/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
   <url><loc>https://topten.one/us-politicians/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/eu-parties/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://topten.one/eu-politicians/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
   <url><loc>https://topten.one/actors/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
   <url><loc>https://topten.one/movies/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
   <url><loc>https://topten.one/cars/</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>

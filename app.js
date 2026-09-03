@@ -545,6 +545,28 @@
         re:    NAME_RE,
         profile: null
       } },
+
+    /* The Union's politics, in the two boards the American politics has: the
+       parties -- the European parties and the groups they sit in -- and the
+       figures, who are every sitting Member of the European Parliament, from
+       the Parliament's own list by way of scripts/build-eu-parliament.mjs,
+       with the portrait Wikidata holds for each. The same notice as the
+       American boards, for the same reason: money paid here buys a place in
+       a private ranking and nothing else. */
+    { slug: 'eu-parties', name: 'EU Political Parties', color: '#003399',
+      fan: true, noun: 'party', notice: true, tag: {
+        label: 'Party',
+        hint:  'Renew Europe',
+        re:    TITLE_RE,
+        profile: null
+      } },
+    { slug: 'eu-politicians', name: 'EU Political Figures', color: '#2952c9',
+      fan: true, noun: 'name', notice: true, tag: {
+        label: 'Name',
+        hint:  'Roberta Metsola',
+        re:    NAME_RE,
+        profile: null
+      } },
     /* The rich, by country: twenty boards under one heading, each asking who
        should be #1 among a country's billionaires. Fan boards like the
        players and the politicians -- the person ranked is not the person
@@ -770,6 +792,13 @@
   /* Thirteen stripes and a canton, drawn to read at 15px: fifty stars at that
      size is a grey smudge, so the canton carries nine — enough to be a field
      of stars and not a fake count anyone would mistake for the real one. */
+  /* Twelve stars in a ring on blue. Twelve is the number on the flag and
+     twelve dots is what a ring of stars is at 15px; drawn as circles, the
+     way the American canton's are. */
+  const EU_FLAG =
+    '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#003399"/>' +
+    '<g fill="#ffcc00"><circle cx="17.00" cy="12.00" r=".62"/><circle cx="16.33" cy="14.50" r=".62"/><circle cx="14.50" cy="16.33" r=".62"/><circle cx="12.00" cy="17.00" r=".62"/><circle cx="9.50" cy="16.33" r=".62"/><circle cx="7.67" cy="14.50" r=".62"/><circle cx="7.00" cy="12.00" r=".62"/><circle cx="7.67" cy="9.50" r=".62"/><circle cx="9.50" cy="7.67" r=".62"/><circle cx="12.00" cy="7.00" r=".62"/><circle cx="14.50" cy="7.67" r=".62"/><circle cx="16.33" cy="9.50" r=".62"/></g>' +
+    '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>';
   const US_FLAG =
     '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#f2f2f2"/>' +
     '<g fill="#b22234">' +
@@ -830,6 +859,8 @@
        distinction the next country's boards will need. */
     'us-parties': US_FLAG,
     'us-politicians': US_FLAG,
+    'eu-parties': EU_FLAG,
+    'eu-politicians': EU_FLAG,
     /* Twenty flags, for the twenty billionaire boards, on the same frame as
        the one above and drawn the same way: what reads at 15px, and no more.
        The Union Jack keeps its crosses and loses their offset; Australia's
@@ -1535,7 +1566,8 @@
      Parties before figures inside each: a party is the argument somebody
      arrives holding, and the people are how it is fought. */
   const COUNTRIES = [
-    { label: 'USA', boards: ['us-parties', 'us-politicians'] }
+    { label: 'USA', boards: ['us-parties', 'us-politicians'] },
+    { label: 'EU',  boards: ['eu-parties', 'eu-politicians'] }
   ];
 
   const POLITICS = new Set(COUNTRIES.flatMap(c => c.boards));
@@ -1858,7 +1890,7 @@
   /* The boards that have pictures on Commons. Same list the build script
      walks; kept here so a board without a section in the file never triggers
      a fetch for one. */
-  const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties',
+  const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties', 'eu-politicians', 'eu-parties',
                          'football-players', 'f1-drivers', 'golf-players', 'artists',
                          'nba-players', 'nhl-players', 'football-clubs',
                          'ufc-fighters', 'mma-fighters', 'boxers',
@@ -1903,7 +1935,7 @@
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
     try {
-      const r = await fetch('/people-art.json?v=72fdbe6bfe', { cache: 'force-cache' });
+      const r = await fetch('/people-art.json?v=89fdc24108', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       PEOPLE_ART = await r.json();
     } catch (e) {
@@ -2032,7 +2064,7 @@
   async function loadRosterFile() {
     if (ROSTER_FILE) return ROSTER_FILE;
     try {
-      const r = await fetch('/rosters.json?v=b8e3227d91', { cache: 'force-cache' });
+      const r = await fetch('/rosters.json?v=3563de873e', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ROSTER_FILE = await r.json();
       for (const [slug, list] of Object.entries(ROSTER_FILE)) {
@@ -2059,7 +2091,7 @@
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
     'startups', 'ufc-fighters', 'mma-fighters', 'boxers',
     'bellator', 'one-championship', 'pfl', 'movements',
-    'us-parties', 'us-politicians', ...RICH,
+    'us-parties', 'us-politicians', 'eu-parties', 'eu-politicians', ...RICH,
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'youtube-influencers', 'facebook-influencers'
   ]);
