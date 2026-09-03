@@ -1700,6 +1700,14 @@ img { max-width: 100%; }
    itself. No broken-image glyph and no second request. */
 .token, .chip { position: relative; overflow: hidden; }
 
+/* A picture that is a wordmark rather than a face. Everything else here is
+   cropped to fill the circle, which is right for a photograph and wrong for a
+   logo three times wider than it is tall: the MAGA wordmark filled the badge
+   with "UI" and "RICA GRE", a slice of the middle of it. Movements are the
+   one board whose pictures are marks rather than people, so they are fitted
+   inside the circle instead of filling it. */
+[data-board="movements"] > img { object-fit: contain !important; padding: 2px; }
+
 .token > img,
 .chip > img {
   position: absolute;

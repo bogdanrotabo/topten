@@ -522,6 +522,22 @@
         re:    TITLE_RE,
         profile: null
       } },
+
+    /* Movements, under the parties and deliberately not inside the USA group:
+       a party belongs to a country and a movement does not. MAGA and the Tea
+       Party are American, Solidarity was Polish, the Yellow Vests French, and
+       Fridays for Future belongs to nobody. Filing them under a flag would be
+       the first thing wrong with the board.
+
+       It carries the same notice the political boards do, for the same reason:
+       money paid here buys a place in a private ranking and nothing else. */
+    { slug: 'movements', name: 'Movements', color: '#4338ca',
+      fan: true, noun: 'movement', notice: true, tag: {
+        label: 'Movement',
+        hint:  'Fridays for Future',
+        re:    TITLE_RE,
+        profile: null
+      } },
     { slug: 'us-politicians', name: 'U.S. Political Figures', color: '#1e3a8a',
       fan: true, noun: 'name', notice: true, tag: {
         label: 'Name',
@@ -669,6 +685,12 @@
        artwork and this site takes money for rank. An octagon says UFC to
        anybody who has seen one and belongs to nobody. */
     'ufc-fighters': '<path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M8.4 2.4h7.2l5.2 5.2v7.2l-5.2 5.2H8.4l-5.2-5.2V7.6z"/>',
+
+    /* A megaphone. A raised fist is the obvious glyph for a movement and it
+       belongs to one half of them; a megaphone is what all of them do. */
+    'movements': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M20.4 4.6v14.8l-11-3.9V8.5z"/>'
+      + '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M9.4 8.5H5.8A2.2 2.2 0 0 0 3.6 10.7v2.6a2.2 2.2 0 0 0 2.2 2.2h3.6"/>'
+      + '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M6.6 15.5l1.5 4.2"/>',
     'mma-fighters': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M6.2 12V9.8a2.1 2.1 0 0 1 4.2 0V9a2.1 2.1 0 0 1 4.2 0v.8a2.1 2.1 0 0 1 4.2 0v4.9a4.5 4.5 0 0 1-4.5 4.5h-3.4a4.7 4.7 0 0 1-4.7-4.7z"/>' + '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M6.4 13.2h4a1.8 1.8 0 0 1 0 3.6H6.6"/>',
     'boxers': '<path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M7.4 7.2a4.6 4.6 0 0 1 9.2 0v3.9a5 5 0 0 1-.9 2.9l-.5.7v3.6a1.7 1.7 0 0 1-1.7 1.7h-3a1.7 1.7 0 0 1-1.7-1.7v-3.6l-.5-.7a5 5 0 0 1-.9-2.9V9.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7.4 9.6H6.2a1.9 1.9 0 0 0 0 3.8h1.2"/>',
 
@@ -1333,7 +1355,8 @@
   const LIFE = new Set(['cities', 'pets']);
   const STARS = new Set(['x-influencers', 'instagram-influencers', 'tiktok-influencers',
                          'youtube-influencers', 'facebook-influencers']);
-  const NOT_GAMING = new Set([...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE,
+  const NOT_GAMING = new Set([
+    'movements',...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE,
                               ...STARS, ...MACHINES, ...POLITICS]);
   // 'games' is culture by any reading, but it sits where people look for it.
 
@@ -1346,6 +1369,10 @@
       rows: 1,
       has: p => c.boards.includes(p.slug)
     })),
+    /* Its own line, under the countries and above everything else, because a
+       movement is the same kind of argument as a party and belongs beside it,
+       but under no flag. */
+    { label: 'Movements',       rows: 1, has: p => p.slug === 'movements' },
     { label: 'Social networks', rows: 2, has: p => !p.tag },
     { label: 'Influencers',     rows: 1, has: p => STARS.has(p.slug) },
     { label: 'Gaming',          rows: 1, has: p => p.tag && !NOT_GAMING.has(p.slug) },
@@ -1609,7 +1636,8 @@
                          'football-players', 'f1-drivers', 'golf-players', 'artists',
                          'nba-players', 'nhl-players', 'football-clubs',
                          'ufc-fighters', 'mma-fighters', 'boxers',
-                         'bellator', 'one-championship', 'pfl'];
+                         'bellator', 'one-championship', 'pfl',
+                         'movements'];
 
   /* Every sitting member of Congress, kept current by the public-domain
      dataset the civic-tech world maintains rather than by a list I typed once
@@ -1649,7 +1677,7 @@
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
     try {
-      const r = await fetch('/people-art.json?v=c01bec1c26', { cache: 'force-cache' });
+      const r = await fetch('/people-art.json?v=1886cadeca', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       PEOPLE_ART = await r.json();
     } catch (e) {
@@ -1778,7 +1806,7 @@
   async function loadRosterFile() {
     if (ROSTER_FILE) return ROSTER_FILE;
     try {
-      const r = await fetch('/rosters.json?v=6236b10e94', { cache: 'force-cache' });
+      const r = await fetch('/rosters.json?v=6fef8b3a42', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ROSTER_FILE = await r.json();
       for (const [slug, list] of Object.entries(ROSTER_FILE)) {
@@ -1804,7 +1832,7 @@
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
     'startups', 'ufc-fighters', 'mma-fighters', 'boxers',
-    'bellator', 'one-championship', 'pfl',
+    'bellator', 'one-championship', 'pfl', 'movements',
     'us-parties', 'us-politicians',
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'youtube-influencers', 'facebook-influencers'
@@ -1998,7 +2026,8 @@
        unavatar answers 403 for half these handles. */
     const rezerva = siteLogo(row && row.link);
 
-    return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
+    return `<span class="${cls} token" data-board="${esc(slug)}"
+                  style="--token:${colour};--token-ink:${inkFor(colour)}"
                   aria-hidden="true">${esc(initials)}${src
       ? `<img data-pic${lene ? ' loading="lazy"' : ''} width="32" height="32" alt="" src="${esc(src)}"${
           rezerva && rezerva !== src ? ` data-rezerva="${esc(rezerva)}"` : ''}>`
@@ -2692,7 +2721,7 @@
         ? lista.map(t => `
             <button type="button" class="cascade__opt" role="option" aria-selected="false"
                     data-club="${esc(teamName(t))}">
-              <span class="chip" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}${
+              <span class="chip" data-board="${esc(slug)}" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}${
                 /* A coin in this list gets its own logo over the ticker, the
                    same way a row in the table does — same trick, same floor:
                    the ticker is drawn first and the picture sits on top of

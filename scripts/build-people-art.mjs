@@ -43,7 +43,7 @@ const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
                'f1-drivers', 'golf-players', 'artists',
                'nba-players', 'nhl-players', 'football-clubs',
                'ufc-fighters', 'mma-fighters', 'boxers',
-               'bellator', 'one-championship', 'pfl'];
+               'bellator', 'one-championship', 'pfl', 'movements'];
 
 /* Name boards on the command line to rebuild only those; without any, all of
    them. Rebuilding seven boards to check one costs ten minutes of somebody
@@ -252,6 +252,27 @@ const CLUBURI = {
   'dinamo bucuresti': 'File:FC Dinamo București - logo 2026.svg',
 };
 
+/* Movement marks, named one by one for the same reason the club crests are.
+
+   A movement is not an organisation and mostly has no mark at all -- what
+   Commons holds under these names is photographs of people holding things.
+   MAGA is the exception: the campaign wordmark carrying the slogan is public
+   domain there, categorised under Make America Great Again, and it is the
+   nearest thing to an official mark that exists. It is a campaign wordmark
+   and not a movement logo, because the movement has no logo; that is worth
+   knowing rather than papering over.
+
+   Everything else on that board keeps its initials, which is honest: no
+   search runs here, so nothing can quietly become the wrong organisation. */
+const MISCARI = {
+  'maga': 'File:Trump logo (red).png',
+};
+
+async function lookMovement(name) {
+  const stiut = MISCARI[fold(name)];
+  return stiut ? fisierStiut(stiut) : null;
+}
+
 async function lookClub(name) {
   const stiut = CLUBURI[fold(name)];
   if (!stiut) return null;
@@ -320,6 +341,7 @@ for (const board of BOARDS) {
   for (const n of LISTE.get(board)) {
     try {
       const hit = board === 'us-parties' ? await lookParty(n)
+                : board === 'movements' ? await lookMovement(n)
                 : board === 'football-clubs' ? await lookClub(n)
                 : await look(n);
       if (hit) { art[board][fold(n)] = hit; g++; }

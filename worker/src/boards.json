@@ -167,6 +167,10 @@
     "name": "U.S. Political Parties",
     "color": "#7f1d1d"
   },
+  "movements": {
+    "name": "Movements",
+    "color": "#4338ca"
+  },
   "us-politicians": {
     "name": "U.S. Political Figures",
     "color": "#1e3a8a"

@@ -288,6 +288,26 @@ const R = {
      the national committees and the parties with recognised ballot access in
      multiple states — a matter of public record rather than an opinion about
      who counts. Anyone can type a party that is not here. */
+  /* Movements, from every direction. A board where the whole list leans one
+     way is not a ranking, it is a poster -- and the site's own test for a
+     board is whether it argues with itself for free. MAGA and Black Lives
+     Matter on the same list is the board working, not a statement.
+
+     Nothing here is an organisation with members and a bank account; they are
+     movements, which is why several are hashtags and several are older than
+     anybody reading. Anyone can type one that is not on the list. */
+  'movements': [
+    ['MAGA','MA'], ['Black Lives Matter','BL'], ['MeToo','MT'],
+    ['Extinction Rebellion','XR'], ['Fridays for Future','FF'], ['Occupy Wall Street','OW'],
+    ['Tea Party','TP'], ['March for Life','ML'], ['Pro-Choice','PC'],
+    ['Second Amendment','2A'], ['Libertarianism','LB'], ['Effective Altruism','EA'],
+    ['Open Source','OS'], ['Right to Repair','RR'], ['Veganism','VG'],
+    ['Zero Waste','ZW'], ['Pride','PR'], ['Feminism','FE'],
+    ['Civil Rights Movement','CR'], ['Suffragettes','SU'], ['Solidarity','SO'],
+    ['Yellow Vests','YV'], ['Arab Spring','AS'], ['Umbrella Movement','UM'],
+    ['Farmers Protests','FP'], ['Trucker Convoy','TC'], ['Degrowth','DG'],
+    ['Transhumanism','TH'], ['Minimalism','MI'], ['Slow Food','SF'],
+  ],
   'us-parties': [
     ['Republican Party','GOP'], ['Democratic Party','DEM'],
     ['Libertarian Party','LP'], ['Green Party','GRN'],
