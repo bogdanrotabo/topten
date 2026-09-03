@@ -240,7 +240,10 @@ img { max-width: 100%; }
   display: flex;
   align-items: center;
   width: max-content;
-  animation: tick 45s linear infinite;
+  /* The duration is set from the track's own width when it is filled, so
+     the strip travels at a fixed speed however many listings are on it. This
+     is the fallback for the moment before that happens. */
+  animation: tick var(--tick-dur, 90s) linear infinite;
 }
 
 /* Half the track, because the track is the list twice over. */

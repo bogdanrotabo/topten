@@ -1224,8 +1224,25 @@
        Drawn twice rather than one string used twice, because each Instagram
        mark mints a gradient id as it is built. Reusing the string would put the
        first copy's ids in the second one's markup. */
-    el.querySelector('.ticker__track').innerHTML =
-      items.map(cell).join('') + items.map(cell).join('');
+    const track = el.querySelector('.ticker__track');
+    track.innerHTML = items.map(cell).join('') + items.map(cell).join('');
+
+    /* How long the loop takes, worked out from how far it has to go.
+
+       It was 45 seconds flat, which is a duration and not a speed: the track
+       is every listing on the site twice over, so each listing added made the
+       same 45 seconds cover more ground and the strip read faster. Five
+       listings ambled. Fifteen went three times quicker for no reason anybody
+       could see, and it would have kept accelerating.
+
+       So: pixels per second, fixed. The half-track is what one loop travels,
+       and at 42 px/s a name is readable as it goes by. Clamped at both ends
+       so an almost-empty site does not flicker and a very full one does not
+       look stopped. */
+    const VITEZA = 42;
+    const drum = track.scrollWidth / 2;
+    const secunde = Math.min(600, Math.max(30, Math.round(drum / VITEZA)));
+    track.style.setProperty('--tick-dur', secunde + 's');
   }
 
   /* Two kinds of board, said out loud. Ten social networks and three consoles
