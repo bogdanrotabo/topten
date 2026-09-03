@@ -1248,9 +1248,17 @@
     el.hidden = !items.length;
     if (!items.length) return;
 
+    /* The face of whoever paid, not the mark of the board they paid on. The
+       strip is a list of people and what they spent; the board is already
+       said by the colour the badge underneath is drawn in, and a name with a
+       face beside it is worth more on a moving strip than a logo repeated
+       eleven times in a row.
+
+       Same picture the table uses, same address, so the browser has it
+       already by the time the row it belongs to is drawn. */
     const cell = ({ p, row, rank }) => `
       <span class="tick" style="${brandVars(p.color, '--tick')}">
-        <span class="tick__i">${icon(p.slug, true)}</span>
+        ${facePic(p.slug, row.handle, 'tick__pic', row, false)}
         <span class="tick__h">${esc(row.handle)}</span>
         <span class="tick__r">#${rank}</span>
         <span class="tick__a">${money(row.total_cents)}</span>
@@ -1957,7 +1965,13 @@
      page knows an image has real pixels in it, so that is where the letters
      are told to stand down. A picture that never loads never fires it, and
      the badge stays exactly as it was. */
-  function facePic(slug, handle, cls, row) {
+  /* lene: whether the picture may wait until it is on screen. Everywhere on
+     the page it may, and should. On the running strip it may not: the cells
+     are moved by a transform inside a box with its own overflow, and a
+     browser deciding what is visible sees almost all of them as off screen
+     and never asks for them. Eleven pictures out of sixty-one had loaded
+     after fifteen seconds, and the rest never would have. */
+  function facePic(slug, handle, cls, row, lene = true) {
     const colour = (BY_SLUG[slug] && BY_SLUG[slug].color) || '#8c98a4';
     const initials = String(handle || '?')
       .replace(/^[@$]/, '').trim().slice(0, 2).toUpperCase() || '?';
@@ -1986,7 +2000,7 @@
 
     return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
                   aria-hidden="true">${esc(initials)}${src
-      ? `<img data-pic loading="lazy" width="32" height="32" alt="" src="${esc(src)}"${
+      ? `<img data-pic${lene ? ' loading="lazy"' : ''} width="32" height="32" alt="" src="${esc(src)}"${
           rezerva && rezerva !== src ? ` data-rezerva="${esc(rezerva)}"` : ''}>`
       : ''}</span>`;
   }
@@ -3744,7 +3758,14 @@
        needed the rows redraw once it lands, and where it is not — which is
        most board pages — nothing is fetched and nothing redraws. */
     renderHome(open);
-    artFor(open).then(nevoie => { if (nevoie && state.platform === open) refreshBoard(); });
+    /* The strip is drawn from the same pictures the table is, and it is drawn
+       first -- before the coin logos and the photographs have arrived. Without
+       this it keeps whatever it had at that moment, which is mostly initials. */
+    artFor(open).then(nevoie => {
+      if (!nevoie) return;
+      fillTicker();
+      if (state.platform === open) refreshBoard();
+    });
   }
 
   function navigate(href) {

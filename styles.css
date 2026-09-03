@@ -229,7 +229,10 @@ img { max-width: 100%; }
    height happen to add up to. */
 .ticker {
   overflow: hidden;
-  height: var(--band);
+  /* Taller than the two bands above it, and by a good deal: this one carries
+     the face of everybody who has paid, and a face at the size of the old
+     22px board mark is a thumbnail nobody can make out in passing. */
+  height: calc(var(--band) + 16px);
   display: flex;
   align-items: center;
   background: var(--band-2);
@@ -264,6 +267,16 @@ img { max-width: 100%; }
 
 .tick__i { line-height: 0; }
 .tick__i svg { width: 22px; height: 22px; display: block; color: var(--tick); }
+
+/* The listing's own picture on the strip, the same badge-with-a-photo-over-it
+   the table draws, at the size the board mark used to be. */
+.tick__pic {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex: none;
+  font-size: 11px;
+}
 /* The handle at 700 was the heaviest thing on a strip that is supposed to
    drift past. It is a name, not a headline: enough weight to be a name, and
    the figures beside it keep theirs, because those are the point. */
@@ -273,8 +286,9 @@ img { max-width: 100%; }
 
 @media (min-width: 560px) {
   .ticker { padding: 9px 0; }
-  .tick { font-size: 12.5px; padding: 0 17px; }
+  .tick { font-size: 13.5px; padding: 0 18px; }
   .tick__i svg { width: 22px; height: 22px; }
+  .tick__pic { width: 34px; height: 34px; }
 }
 
 /* Stopped, not hidden: the names and the money are the point, the motion is
