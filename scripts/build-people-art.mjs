@@ -43,7 +43,27 @@ const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
                'f1-drivers', 'golf-players', 'artists',
                'nba-players', 'nhl-players', 'football-clubs',
                'ufc-fighters', 'mma-fighters', 'boxers',
-               'bellator', 'one-championship', 'pfl', 'movements'];
+               'bellator', 'one-championship', 'pfl', 'movements',
+               'us-billionaires',
+               'uk-billionaires',
+               'switzerland-billionaires',
+               'uae-billionaires',
+               'japan-billionaires',
+               'australia-billionaires',
+               'china-billionaires',
+               'israel-billionaires',
+               'india-billionaires',
+               'germany-billionaires',
+               'france-billionaires',
+               'canada-billionaires',
+               'italy-billionaires',
+               'brazil-billionaires',
+               'russia-billionaires',
+               'saudi-arabia-billionaires',
+               'singapore-billionaires',
+               'south-korea-billionaires',
+               'spain-billionaires',
+               'mexico-billionaires'];
 
 /* Name boards on the command line to rebuild only those; without any, all of
    them. Rebuilding seven boards to check one costs ten minutes of somebody
@@ -72,9 +92,10 @@ if (necunoscute.length) {
    sport boards had no photographs at all -- not a decision, just a list the
    builder could not see -- so it now looks everywhere a roster can be. */
 function wanted(board) {
-  const sport = join(root, "scripts/sport-rosters.json");
-  if (existsSync(sport)) {
-    const d = JSON.parse(readFileSync(sport, "utf8"));
+  for (const f of ["scripts/sport-rosters.json", "scripts/rich-rosters.json"]) {
+    const cale = join(root, f);
+    if (!existsSync(cale)) continue;
+    const d = JSON.parse(readFileSync(cale, "utf8"));
     if (Array.isArray(d[board]) && d[board].length) return d[board].map(r => r[0]);
   }
   for (const [fisier, adancime] of [["scripts/rosters.mjs", "  "], ["app.js", "    "]]) {
@@ -296,9 +317,64 @@ async function lookClub(name) {
 }
 
 /** The file behind the summary thumbnail, and what Commons says about it. */
-async function look(name) {
+/* The birth year Forbes gives for a name on a billionaire board, for the
+   check below. Nothing else on the site carries one. */
+const RICH_ROSTER = existsSync(join(root, 'scripts/rich-rosters.json'))
+  ? JSON.parse(readFileSync(join(root, 'scripts/rich-rosters.json'), 'utf8')) : {};
+const anNascut = (board, name) => ((RICH_ROSTER[board] || []).find(r => r[0] === name) || [])[5] || null;
+
+/* The rich are looked up with a check the famous do not need. "Tom Morris"
+   on Wikipedia is a disambiguation page and safely finds nothing. "Ian
+   Livingstone" is an article with a portrait -- of the Games Workshop founder,
+   born 1949 -- and the Ian Livingstone on the list is a property investor
+   born in 1962. A club footballer or a golfer has an article and a face too.
+   So the article has to be about this person: its summary says when its
+   subject was born and Forbes says when ours was, and the two must agree;
+   where the article gives no year, its one-line description has to at least
+   say business. A wrong year is refused, and a refused name has no picture
+   rather than somebody else's. */
+const acestaE = (name, an) => sum => {
+  if (sum.type !== 'standard') return false;
+  const text = `${sum.description || ''} ${sum.extract || ''}`;
+  const nascut = /\bborn\b[^0-9]{0,40}?((?:18|19|20)\d\d)/.exec(text);
+  if (nascut) return !an || Math.abs(Number(nascut[1]) - an) <= 1;
+  return /business|entrepreneur|investor|billionaire|founder|executive|heir|magnate|tycoon|industrialist|philanthropist|financier|banker|chairman|owner|richest/i.test(text);
+};
+
+/* Forbes spells a name its own way and Wikipedia spells it another: "Germán
+   Larrea Mota Velasco" is filed under "Germán Larrea Mota-Velasco", "Mong-Koo
+   Chung" under "Chung Mong-koo", "Tomas Olivo Lopez" under "Tomás Olivo". A
+   name that has no article under Forbes's spelling is searched for, and the
+   first three answers get the same check as a direct hit -- the year, or the
+   trade -- plus one more: the article's title has to carry the surname, so a
+   search for one Kim does not come back with another. */
+async function lookRich(name, an) {
+  try {
+    return await look(name, acestaE(name, an));
+  } catch (e) {
+    if (!/HTTP 404/.test(e.message)) throw e;
+  }
+  await sleep(GAP);
+  const q = await get('https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=3&srsearch='
+    + encodeURIComponent(name));
+  const bucati = fold(name).split(' ').filter(b => b.length > 2);
+  const numeDeFamilie = bucati[bucati.length - 1] || '';
+  for (const r of (q.query || {}).search || []) {
+    const titlu = String(r.title || '');
+    if (numeDeFamilie && !fold(titlu).includes(numeDeFamilie)) continue;
+    await sleep(GAP);
+    try {
+      const hit = await look(titlu, acestaE(name, an));
+      if (hit) return hit;
+    } catch (e) { /* a search answer that 404s is just not there */ }
+  }
+  return null;
+}
+
+async function look(name, potrivit = null) {
   const title = encodeURIComponent(name.replace(/ /g, '_'));
   const sum = await get(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`);
+  if (potrivit && !potrivit(sum)) return null;
   const thumb = (sum.thumbnail || {}).source || '';
 
   /* The whole rule, in one line. Anything not on Commons is not ours. */
@@ -359,6 +435,7 @@ for (const board of BOARDS) {
       const hit = board === 'us-parties' ? await lookParty(n)
                 : board === 'movements' ? await lookMovement(n)
                 : board === 'football-clubs' ? await lookClub(n)
+                : board.endsWith('-billionaires') ? await lookRich(n, anNascut(board, n))
                 : await look(n);
       if (hit) { art[board][fold(n)] = hit; g++; }
       else r++;

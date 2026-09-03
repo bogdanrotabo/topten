@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-dlt+X6jEtNnmuRphM/hF1qdn3yRv277VCvSX46czPY8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
+<title>Top 10 on French Billionaires — TopTen.one</title>
+<meta name="description" content="The ten most-paid French Billionaires names right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
+<link rel="canonical" href="https://topten.one/france-billionaires/">
+
+<!-- The browser's own bar, painted the colour of the band the page starts
+     with. It said #ffffff and #0d1421: white above a masthead that is pale
+     violet, and a navy that this site stopped using when the palette moved
+     to Rotabo's. On a phone that is a stripe of the wrong colour across the
+     top of every page. These two are --band-0 in each theme. -->
+<meta name="theme-color" content="#dcc4e9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2b1f39" media="(prefers-color-scheme: dark)">
+
+<!-- Before the first paint, not after. A stylesheet cannot read localStorage,
+     so a saved dark theme applied from app.js would arrive one frame late and
+     the page would flash white on every single load. Four lines in the head,
+     ahead of the stylesheet, is the only place this can go. -->
+<script>
+/* Nobody frames this page.
+
+   The proper way to say that is a header -- frame-ancestors, or the older
+   X-Frame-Options -- and GitHub Pages does not let this repository set one.
+   Until that goes in at the edge, this is what is left, and it is aimed at a
+   real attack rather than a checkbox: somebody puts topten.one in an invisible
+   iframe under their own page, lines their button up with a Claim button here,
+   and a click meant for them lands on a payment.
+
+   Two moves, because either can be blocked on its own. Try to take the top
+   window back -- which a sandboxed frame can refuse -- and, refused or not,
+   draw nothing. A page that renders nothing has no button to line anything up
+   with. The check runs before the first paint, so there is no frame in which
+   the trap could be sprung. */
+if (window.top !== window.self) {
+  try { window.top.location = window.self.location; } catch (e) { /* cross-origin: refused */ }
+  document.documentElement.style.display = 'none';
+}
+
+try {
+  var t = localStorage.getItem('topten_theme');
+  if (t !== 'light' && t !== 'dark') {
+    t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.dataset.theme = t;
+} catch (e) { document.documentElement.dataset.theme = 'light'; }
+</script>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TopTen.one">
+<meta property="og:title" content="Top 10 on French Billionaires — TopTen.one">
+<meta property="og:description" content="The ten most-paid French Billionaires names right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
+<meta property="og:image" content="https://topten.one/og-image.png?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://topten.one/france-billionaires/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Top 10 on French Billionaires — TopTen.one">
+<meta name="twitter:description" content="The ten most-paid French Billionaires names right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
+<meta name="twitter:image" content="https://topten.one/og-image.png?v=3">
+
+<link rel="preconnect" href="https://unavatar.io" crossorigin>
+<link rel="stylesheet" href="/styles.css?v=2813075143">
+</head>
+<body>
+
+<!-- The Instagram gradient used to be defined once here and pointed at from
+     every copy of the icon. One definition is tidy right up until the pointer
+     stops resolving, and then Instagram is the only mark on the site that
+     vanishes while its own name still sits under the empty space. Each icon
+     carries its own gradient now, so there is nothing left to point at. -->
+
+<header class="masthead">
+  <div class="shell masthead__row">
+    <a class="wordmark" href="/" data-link>TopTen<b>.one</b></a>
+    <button class="themer" id="themer" type="button" aria-label="Switch between light and dark">
+      <svg class="themer__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.6" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></svg>
+      <svg class="themer__moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 14.2A9.2 9.2 0 0 1 9.8 3 9.2 9.2 0 1 0 21 14.2"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="view" aria-live="polite">
+  <div class="shell" style="padding-top:26px">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="shell">
+    <div class="sponsor">
+      <span class="sponsor__k">Official sponsor</span>
+      <svg class="sponsor__logo sponsor__logo--rotabo" viewBox="0 0 430 260" width="43" height="26" aria-hidden="true"><defs><radialGradient id="rotaboViolet" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#rotaboViolet)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
+      <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
+    </div>
+
+    <!-- gift.ceo, under Rotabo. Its own mark, the one in its own browser tab:
+         a dark tile, a white g and the gold dot. The tile is #1c1b19 and this
+         card is #1e1726 on the dark theme, which would be a black square on a
+         black square -- so the tile carries a hairline of its own. Nothing else
+         about the logo is touched. -->
+    <div class="sponsor">
+      <span class="sponsor__k">Official sponsor</span>
+      <svg class="sponsor__logo sponsor__logo--gift" viewBox="0 0 64 64" width="26" height="26" aria-hidden="true">
+        <rect x=".75" y=".75" width="62.5" height="62.5" rx="14" fill="#1c1b19" stroke="#4a4740" stroke-width="1.5"/>
+        <text x="30" y="45" font-family="Helvetica,Arial,sans-serif" font-size="38"
+              font-weight="700" fill="#faf9f7" text-anchor="middle">g</text>
+        <circle cx="47" cy="42" r="5" fill="#d9a63c"/>
+      </svg>
+      <a class="sponsor__brand sponsor__brand--gift" href="https://gift.ceo" target="_blank" rel="noopener">gift<b>.ceo</b></a>
+      <span class="sponsor__tag">Only CEOs give here.</span>
+    </div>
+    <!-- Every board as a real link, and the reason they are down here rather
+         than being the place you pick a board: the chips under the headline
+         do that job, and they do it with icons, counts and a live filter.
+         But they are drawn by JavaScript after load, and Search Console
+         reported every board as discovered from the sitemap with "referring
+         page: none" until these existed. So they stay, small, at the bottom,
+         where a crawler reads them and a reader does not have to. -->
+    <nav class="foot__boards" aria-label="Every board">
+      <a href="/x/" data-link>X</a>
+      <a href="/instagram/" data-link>Instagram</a>
+      <a href="/tiktok/" data-link>TikTok</a>
+      <a href="/youtube/" data-link>YouTube</a>
+      <a href="/facebook/" data-link>Facebook</a>
+      <a href="/telegram/" data-link>Telegram</a>
+      <a href="/snapchat/" data-link>Snapchat</a>
+      <a href="/twitch/" data-link>Twitch</a>
+      <a href="/linkedin/" data-link>LinkedIn</a>
+      <a href="/threads/" data-link>Threads</a>
+      <a href="/playstation/" data-link>PlayStation</a>
+      <a href="/xbox/" data-link>Xbox</a>
+      <a href="/nintendo/" data-link>Nintendo</a>
+      <a href="/nba-teams/" data-link>NBA Teams</a>
+      <a href="/nba-players/" data-link>NBA Players</a>
+      <a href="/nhl-teams/" data-link>NHL Teams</a>
+      <a href="/nhl-players/" data-link>NHL Players</a>
+      <a href="/crypto/" data-link>Crypto</a>
+      <a href="/memecoins/" data-link>Memecoins</a>
+      <a href="/exchanges/" data-link>Exchanges</a>
+      <a href="/gifts/" data-link>Gifts &amp; Airdrops</a>
+      <a href="/football-clubs/" data-link>Football Clubs</a>
+      <a href="/football-players/" data-link>Football Players</a>
+      <a href="/f1-drivers/" data-link>F1 Drivers</a>
+      <a href="/artists/" data-link>Artists</a>
+      <a href="/games/" data-link>Games</a>
+      <a href="/cities/" data-link>Cities</a>
+      <a href="/pets/" data-link>Pets</a>
+      <a href="/startups/" data-link>Startups</a>
+      <a href="/restaurants/" data-link>Restaurants</a>
+      <a href="/podcasts/" data-link>Podcasts</a>
+      <a href="/us-parties/" data-link>U.S. Political Parties</a>
+      <a href="/movements/" data-link>Movements</a>
+      <a href="/us-politicians/" data-link>U.S. Political Figures</a>
+      <a href="/us-billionaires/" data-link>U.S. Billionaires</a>
+      <a href="/uk-billionaires/" data-link>UK Billionaires</a>
+      <a href="/switzerland-billionaires/" data-link>Swiss Billionaires</a>
+      <a href="/uae-billionaires/" data-link>UAE Billionaires</a>
+      <a href="/japan-billionaires/" data-link>Japanese Billionaires</a>
+      <a href="/australia-billionaires/" data-link>Australian Billionaires</a>
+      <a href="/china-billionaires/" data-link>Chinese Billionaires</a>
+      <a href="/israel-billionaires/" data-link>Israeli Billionaires</a>
+      <a href="/india-billionaires/" data-link>Indian Billionaires</a>
+      <a href="/germany-billionaires/" data-link>German Billionaires</a>
+      <a href="/france-billionaires/" data-link>French Billionaires</a>
+      <a href="/canada-billionaires/" data-link>Canadian Billionaires</a>
+      <a href="/italy-billionaires/" data-link>Italian Billionaires</a>
+      <a href="/brazil-billionaires/" data-link>Brazilian Billionaires</a>
+      <a href="/russia-billionaires/" data-link>Russian Billionaires</a>
+      <a href="/saudi-arabia-billionaires/" data-link>Saudi Billionaires</a>
+      <a href="/singapore-billionaires/" data-link>Singapore Billionaires</a>
+      <a href="/south-korea-billionaires/" data-link>South Korean Billionaires</a>
+      <a href="/spain-billionaires/" data-link>Spanish Billionaires</a>
+      <a href="/mexico-billionaires/" data-link>Mexican Billionaires</a>
+      <a href="/actors/" data-link>Actors</a>
+      <a href="/movies/" data-link>Movies</a>
+      <a href="/cars/" data-link>Cars</a>
+      <a href="/boats/" data-link>Boats</a>
+      <a href="/golf-players/" data-link>Golf Players</a>
+      <a href="/ufc-fighters/" data-link>UFC Fighters</a>
+      <a href="/mma-fighters/" data-link>MMA Fighters</a>
+      <a href="/boxers/" data-link>Boxers</a>
+      <a href="/bellator/" data-link>Bellator Fighters</a>
+      <a href="/one-championship/" data-link>ONE Fighters</a>
+      <a href="/pfl/" data-link>PFL Fighters</a>
+      <a href="/x-influencers/" data-link>X Influencers</a>
+      <a href="/instagram-influencers/" data-link>Instagram Influencers</a>
+      <a href="/tiktok-influencers/" data-link>TikTok Influencers</a>
+      <a href="/youtube-influencers/" data-link>YouTube Influencers</a>
+      <a href="/facebook-influencers/" data-link>Facebook Influencers</a>
+    </nav>
+    <nav>
+      <a href="/about.html">About</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="#" id="foot-contact">Contact</a>
+    </nav>
+    <p>🇨🇭 Made in Switzerland · Available worldwide</p>
+    <!-- Required by CoinGecko's free plan, and fair regardless: the coin
+         logos and the list the crypto boards offer are their data. -->
+    <p style="font-size:11px">Coin, exchange and memecoin data from
+      <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>.
+      Game art from <a href="https://store.steampowered.com" target="_blank" rel="noopener">Steam</a>.
+      Actor photographs from <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia&nbsp;Commons</a>,
+      each credited to its author on the listing it appears on.</p>
+    <p style="font-size:11px;max-width:56ch;margin:8px auto 0">
+      Not affiliated with X, Instagram, TikTok, YouTube, Facebook, Telegram, Snapchat, Twitch,
+      LinkedIn, Threads, PlayStation, Xbox, Nintendo, the NBA, the NHL, FIFA, UEFA, Formula 1
+      or any club, league, competition, studio, marque or shipyard named here, and not affiliated with, endorsed by or
+      connected to any cryptocurrency, token, exchange, project, artist, game, business or
+      other name a listing may carry.
+      Nothing here is financial advice, an offer, or a recommendation to buy anything, and a listing
+      is not a claim that any gift or airdrop it describes is genuine — check that yourself before
+      you connect a wallet or send anything to anyone.
+      On the political boards, money paid buys a position in a ranking on this website
+      and nothing else: it reaches no party, campaign or candidate, it is not a political
+      contribution of any kind, and it counts as no vote anywhere. Nothing on this site is
+      an endorsement by TopTen.one of anyone listed on it.
+      Listings are ordered by the amount paid for the advertising space. All payments are final.
+    </p>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky" hidden>
+  <div class="sticky__inner">
+    <button class="btn" id="cta-claim">Claim my rank</button>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal__panel" id="modal-panel"></div>
+</div>
+
+<canvas id="confetti" hidden></canvas>
+
+<script src="/config.js?v=2813075143"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script defer src="/app.js?v=2813075143"></script>
+</body>
+</html>

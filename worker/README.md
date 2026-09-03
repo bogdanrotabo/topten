@@ -18,7 +18,7 @@ listing, and rewrites the seven tags a preview reads:
 | Before | After |
 | --- | --- |
 | TopTen.one — Who should be #1? | @supportrotabo is #1 on X — TopTen.one |
-| 43 boards, ten places each… | @supportrotabo holds #1 on the X board with $306.99 paid. Pay more than the person above you: $307.99 takes first place. |
+| 70 boards, ten places each… | @supportrotabo holds #1 on the X board with $306.99 paid. Pay more than the person above you: $307.99 takes first place. |
 
 Everything else on the site goes straight to GitHub Pages, untouched, exactly
 as it does today.
@@ -75,7 +75,7 @@ ever.
 
 Every path out of this returns the origin's own response, unmodified:
 
-- the board is not one of the 43
+- the board is not one the site offers
 - there is no handle in the link
 - the handle is not on that board
 - Supabase is down, slow, or answers with anything but a list
@@ -90,7 +90,7 @@ is the failure this is supposed to have.
 
 Generated from the `PLATFORMS` list in `app.js` by
 `scripts/build-worker-boards.mjs`, and checked by `scripts/sync-routes.sh`. A
-second hand-written list of forty-three boards is the kind of thing that goes
+second hand-written list of seventy boards is the kind of thing that goes
 stale quietly: a board added to app.js and forgotten here would share as
 `undefined`.
 

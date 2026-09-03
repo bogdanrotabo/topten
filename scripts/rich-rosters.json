@@ -1,0 +1,4570 @@
+{
+ "us-billionaires": [
+  [
+   "Elon Musk",
+   "EM",
+   "#7c349a",
+   "#ffffff",
+   "Tesla, SpaceX",
+   1971
+  ],
+  [
+   "Larry Page",
+   "LP",
+   "#7c349a",
+   "#ffffff",
+   "Google",
+   1973
+  ],
+  [
+   "Jeff Bezos",
+   "JB",
+   "#7c349a",
+   "#ffffff",
+   "Amazon",
+   1964
+  ],
+  [
+   "Sergey Brin",
+   "SB",
+   "#7c349a",
+   "#ffffff",
+   "Google",
+   1973
+  ],
+  [
+   "Michael Dell",
+   "MD",
+   "#7c349a",
+   "#ffffff",
+   "Dell Technologies",
+   1965
+  ],
+  [
+   "Mark Zuckerberg",
+   "MZ",
+   "#7c349a",
+   "#ffffff",
+   "Facebook",
+   1984
+  ],
+  [
+   "Larry Ellison",
+   "LE",
+   "#7c349a",
+   "#ffffff",
+   "Oracle",
+   1944
+  ],
+  [
+   "Jensen Huang",
+   "JH",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1963
+  ],
+  [
+   "Steve Ballmer",
+   "SB",
+   "#7c349a",
+   "#ffffff",
+   "Microsoft",
+   1956
+  ],
+  [
+   "Warren Buffett",
+   "WB",
+   "#7c349a",
+   "#ffffff",
+   "Berkshire Hathaway",
+   1930
+  ],
+  [
+   "Rob Walton",
+   "RW",
+   "#7c349a",
+   "#ffffff",
+   "Walmart",
+   1944
+  ],
+  [
+   "Jim Walton",
+   "JW",
+   "#7c349a",
+   "#ffffff",
+   "Walmart",
+   1948
+  ],
+  [
+   "Alice Walton",
+   "AW",
+   "#7c349a",
+   "#ffffff",
+   "Walmart",
+   1949
+  ],
+  [
+   "Bill Gates",
+   "BG",
+   "#7c349a",
+   "#ffffff",
+   "Microsoft",
+   1955
+  ],
+  [
+   "Michael Bloomberg",
+   "MB",
+   "#7c349a",
+   "#ffffff",
+   "Bloomberg LP",
+   1942
+  ],
+  [
+   "Thomas Peterffy",
+   "TP",
+   "#7c349a",
+   "#ffffff",
+   "Discount brokerage",
+   1944
+  ],
+  [
+   "Jeff Yass",
+   "JY",
+   "#7c349a",
+   "#ffffff",
+   "Trading, investments",
+   1958
+  ],
+  [
+   "Julia Koch",
+   "JK",
+   "#7c349a",
+   "#ffffff",
+   "Koch, Inc.",
+   1962
+  ],
+  [
+   "Charles Koch",
+   "CK",
+   "#7c349a",
+   "#ffffff",
+   "Koch, Inc.",
+   1935
+  ],
+  [
+   "Ken Griffin",
+   "KG",
+   "#7c349a",
+   "#ffffff",
+   "Hedge funds",
+   1968
+  ],
+  [
+   "Lukas Walton",
+   "LW",
+   "#7c349a",
+   "#ffffff",
+   "Walmart",
+   1986
+  ],
+  [
+   "Stephen Schwarzman",
+   "SS",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1947
+  ],
+  [
+   "Jacqueline Mars",
+   "JM",
+   "#7c349a",
+   "#ffffff",
+   "Candy, pet food",
+   1939
+  ],
+  [
+   "John Mars",
+   "JM",
+   "#7c349a",
+   "#ffffff",
+   "Candy, pet food",
+   1935
+  ],
+  [
+   "Abigail Johnson",
+   "AJ",
+   "#7c349a",
+   "#ffffff",
+   "Fidelity",
+   1961
+  ],
+  [
+   "Eric Schmidt",
+   "ES",
+   "#7c349a",
+   "#ffffff",
+   "Google",
+   1955
+  ],
+  [
+   "Miriam Adelson",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Casinos",
+   1945
+  ],
+  [
+   "Henry Samueli",
+   "HS",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1954
+  ],
+  [
+   "Peter Thiel",
+   "PT",
+   "#7c349a",
+   "#ffffff",
+   "Facebook, investments",
+   1967
+  ],
+  [
+   "Thomas Frist Jr",
+   "TJ",
+   "#7c349a",
+   "#ffffff",
+   "Hospitals",
+   1938
+  ]
+ ],
+ "uk-billionaires": [
+  [
+   "Michael Platt",
+   "MP",
+   "#7c349a",
+   "#ffffff",
+   "Hedge funds",
+   1968
+  ],
+  [
+   "Nik Storonsky",
+   "NS",
+   "#7c349a",
+   "#ffffff",
+   "Fintech",
+   1984
+  ],
+  [
+   "James Ratcliffe",
+   "JR",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1953
+  ],
+  [
+   "James Dyson",
+   "JD",
+   "#7c349a",
+   "#ffffff",
+   "Vacuums",
+   1947
+  ],
+  [
+   "Dmitri Bukhman",
+   "DB",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1985
+  ],
+  [
+   "Igor Bukhman",
+   "IB",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1982
+  ],
+  [
+   "David Reuben",
+   "DR",
+   "#7c349a",
+   "#ffffff",
+   "Investments, real estate",
+   1938
+  ],
+  [
+   "Simon Reuben",
+   "SR",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, investments",
+   1941
+  ],
+  [
+   "Alexander Gerko",
+   "AG",
+   "#7c349a",
+   "#ffffff",
+   "Trading",
+   1979
+  ],
+  [
+   "Christopher Hohn",
+   "CH",
+   "#7c349a",
+   "#ffffff",
+   "Hedge funds",
+   1966
+  ],
+  [
+   "Anthony Bamford",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Construction equipment",
+   1945
+  ],
+  [
+   "Denise Coates",
+   "DC",
+   "#7c349a",
+   "#ffffff",
+   "Online gambling",
+   1967
+  ],
+  [
+   "Joe Lewis",
+   "JL",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1937
+  ],
+  [
+   "Clive Calder",
+   "CC",
+   "#7c349a",
+   "#ffffff",
+   "Record label",
+   1946
+  ],
+  [
+   "Michael Ashley",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Sports retailing",
+   1964
+  ],
+  [
+   "Andrew Currie",
+   "AC",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1955
+  ],
+  [
+   "John Reece",
+   "JR",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1957
+  ],
+  [
+   "Tom Morris",
+   "TM",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1954
+  ],
+  [
+   "Ian Livingstone",
+   "IL",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1962
+  ],
+  [
+   "Richard Livingstone",
+   "RL",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1964
+  ],
+  [
+   "Laurence Graff",
+   "LG",
+   "#7c349a",
+   "#ffffff",
+   "Diamond jewelry",
+   1938
+  ],
+  [
+   "John Caudwell",
+   "JC",
+   "#7c349a",
+   "#ffffff",
+   "Mobile phones",
+   1952
+  ],
+  [
+   "Hilton Schlosberg",
+   "HS",
+   "#7c349a",
+   "#ffffff",
+   "Energy drinks",
+   1953
+  ],
+  [
+   "Peter Hargreaves",
+   "PH",
+   "#7c349a",
+   "#ffffff",
+   "Financial services",
+   1946
+  ],
+  [
+   "Anthony Langley",
+   "AL",
+   "#7c349a",
+   "#ffffff",
+   "Manufacturing",
+   1954
+  ],
+  [
+   "Alan Howard",
+   "AH",
+   "#7c349a",
+   "#ffffff",
+   "Hedge funds",
+   1963
+  ],
+  [
+   "Maritsa Lazari",
+   "ML",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1944
+  ],
+  [
+   "John Coates",
+   "JC",
+   "#7c349a",
+   "#ffffff",
+   "Online gambling",
+   1970
+  ],
+  [
+   "Richard Branson",
+   "RB",
+   "#7c349a",
+   "#ffffff",
+   "Virgin",
+   1950
+  ],
+  [
+   "Alex Beard",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Mining, commodities",
+   1967
+  ]
+ ],
+ "switzerland-billionaires": [
+  [
+   "Gianluigi Aponte",
+   "GA",
+   "#7c349a",
+   "#ffffff",
+   "Shipping",
+   1940
+  ],
+  [
+   "Rafaela Aponte-Diamant",
+   "RA",
+   "#7c349a",
+   "#ffffff",
+   "Shipping",
+   1945
+  ],
+  [
+   "Ivan Glasenberg",
+   "IG",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1957
+  ],
+  [
+   "Ernesto Bertarelli",
+   "EB",
+   "#7c349a",
+   "#ffffff",
+   "Biotech, investments",
+   1965
+  ],
+  [
+   "Magdalena Martullo-Blocher",
+   "MM",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1969
+  ],
+  [
+   "Thomas Schmidheiny",
+   "TS",
+   "#7c349a",
+   "#ffffff",
+   "Cement",
+   1945
+  ],
+  [
+   "Rahel Blocher",
+   "RB",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1976
+  ],
+  [
+   "Guillaume Pousaz",
+   "GP",
+   "#7c349a",
+   "#ffffff",
+   "Fintech",
+   1981
+  ],
+  [
+   "Dona Bertarelli",
+   "DB",
+   "#7c349a",
+   "#ffffff",
+   "Biotech and investments",
+   1968
+  ],
+  [
+   "Rudolf Maag",
+   "RM",
+   "#7c349a",
+   "#ffffff",
+   "Medical devices",
+   1946
+  ],
+  [
+   "Matthias Reinhart",
+   "MR",
+   "#7c349a",
+   "#ffffff",
+   "Financial services",
+   1960
+  ],
+  [
+   "Margarita Louis-Dreyfus",
+   "ML",
+   "#7c349a",
+   "#ffffff",
+   "Commodities",
+   1962
+  ],
+  [
+   "Willy Michel",
+   "WM",
+   "#7c349a",
+   "#ffffff",
+   "Medical devices",
+   1947
+  ],
+  [
+   "Thomas Straumann",
+   "TS",
+   "#7c349a",
+   "#ffffff",
+   "Dental implants",
+   1963
+  ],
+  [
+   "Martin Ebner",
+   "ME",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1945
+  ],
+  [
+   "Hansjoerg Wyss",
+   "HW",
+   "#7c349a",
+   "#ffffff",
+   "Medical devices",
+   1935
+  ],
+  [
+   "Martin Haefner",
+   "MH",
+   "#7c349a",
+   "#ffffff",
+   "Software, investments",
+   1954
+  ],
+  [
+   "Hans Peter Wild",
+   "HW",
+   "#7c349a",
+   "#ffffff",
+   "Flavorings",
+   1941
+  ],
+  [
+   "Michael Pieper",
+   "MP",
+   "#7c349a",
+   "#ffffff",
+   "Kitchen appliances",
+   1946
+  ],
+  [
+   "Walter Frey",
+   "WF",
+   "#7c349a",
+   "#ffffff",
+   "Car dealerships",
+   1943
+  ],
+  [
+   "Markus Blocher",
+   "MB",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1971
+  ],
+  [
+   "Miriam Baumann-Blocher",
+   "MB",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1975
+  ],
+  [
+   "Eva Maria Bucher-Haefner",
+   "EB",
+   "#7c349a",
+   "#ffffff",
+   "Software, investments",
+   1957
+  ],
+  [
+   "Alberto Siccardi",
+   "AS",
+   "#7c349a",
+   "#ffffff",
+   "Medical devices",
+   1944
+  ],
+  [
+   "Georg von Opel",
+   "GO",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, investments",
+   1966
+  ],
+  [
+   "Urs Wietlisbach",
+   "UW",
+   "#7c349a",
+   "#ffffff",
+   "Private equity",
+   1961
+  ],
+  [
+   "Alfred Gantner",
+   "AG",
+   "#7c349a",
+   "#ffffff",
+   "Private equity",
+   1968
+  ],
+  [
+   "Marcel Erni",
+   "ME",
+   "#7c349a",
+   "#ffffff",
+   "Private equity",
+   1965
+  ],
+  [
+   "Maja Oeri",
+   "MO",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1955
+  ],
+  [
+   "Mario Germano Giuliani",
+   "MG",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1972
+  ]
+ ],
+ "uae-billionaires": [
+  [
+   "Hussain Sajwani",
+   "HS",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1953
+  ],
+  [
+   "Pavel Durov",
+   "PD",
+   "#7c349a",
+   "#ffffff",
+   "Messaging app",
+   1984
+  ],
+  [
+   "Abdulla bin Ahmad Al Ghurair",
+   "AG",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1929
+  ],
+  [
+   "Abdulla Al Futtaim",
+   "AF",
+   "#7c349a",
+   "#ffffff",
+   "Auto dealers, investments",
+   1940
+  ],
+  [
+   "Waleed Mohammad Al Zaabi",
+   "WZ",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1964
+  ],
+  [
+   "Mohamed Alabbar",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, restaurants",
+   1956
+  ],
+  [
+   "Hussain Binghatti Aljbori",
+   "HA",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1956
+  ],
+  [
+   "Abbas Sajwani",
+   "AS",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1999
+  ],
+  [
+   "Changpeng Zhao",
+   "CZ",
+   "#7c349a",
+   "#ffffff",
+   "Cryptocurrency exchange",
+   1977
+  ],
+  [
+   "Vinod Adani",
+   "VA",
+   "#7c349a",
+   "#ffffff",
+   "Infrastructure, commodities",
+   1949
+  ],
+  [
+   "Andrey Melnichenko",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Fertilizers, coal",
+   1972
+  ],
+  [
+   "Nik Storonsky",
+   "NS",
+   "#7c349a",
+   "#ffffff",
+   "Fintech",
+   1984
+  ],
+  [
+   "M.A. Yusuff Ali",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1955
+  ],
+  [
+   "Renuka Jagtiani",
+   "RJ",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1954
+  ],
+  [
+   "Ravi Pillai",
+   "RP",
+   "#7c349a",
+   "#ffffff",
+   "Construction",
+   1953
+  ],
+  [
+   "Sunny Varkey",
+   "SV",
+   "#7c349a",
+   "#ffffff",
+   "Education",
+   1957
+  ],
+  [
+   "P.N.C. Menon",
+   "PM",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1948
+  ],
+  [
+   "Stephan Crétier",
+   "SC",
+   "#7c349a",
+   "#ffffff",
+   "Private security",
+   1963
+  ],
+  [
+   "Kabir Mulchandani",
+   "KM",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1972
+  ],
+  [
+   "Azad Moopen",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Healthcare",
+   1953
+  ],
+  [
+   "Shamsheer Vayalil",
+   "SV",
+   "#7c349a",
+   "#ffffff",
+   "Healthcare",
+   1977
+  ],
+  [
+   "Dhruv Sawhney",
+   "DS",
+   "#7c349a",
+   "#ffffff",
+   "Engineering, sugar",
+   1944
+  ],
+  [
+   "Mirwais Azizi",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1962
+  ],
+  [
+   "Michel Litvak",
+   "ML",
+   "#7c349a",
+   "#ffffff",
+   "Seaport",
+   1951
+  ]
+ ],
+ "japan-billionaires": [
+  [
+   "Masayoshi Son",
+   "MS",
+   "#7c349a",
+   "#ffffff",
+   "Telecom, Investments",
+   1957
+  ],
+  [
+   "Tadashi Yanai",
+   "TY",
+   "#7c349a",
+   "#ffffff",
+   "Fashion retail",
+   1949
+  ],
+  [
+   "Takemitsu Takizaki",
+   "TT",
+   "#7c349a",
+   "#ffffff",
+   "Sensors",
+   1945
+  ],
+  [
+   "Yasumitsu Shigeta",
+   "YS",
+   "#7c349a",
+   "#ffffff",
+   "Mobile phone retailer",
+   1965
+  ],
+  [
+   "Takao Yasuda",
+   "TY",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1949
+  ],
+  [
+   "Akira Mori",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1936
+  ],
+  [
+   "Masahiro Noda",
+   "MN",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1938
+  ],
+  [
+   "Takahisa Takahara",
+   "TT",
+   "#7c349a",
+   "#ffffff",
+   "Personal care goods",
+   1961
+  ],
+  [
+   "Masahiro Miki",
+   "MM",
+   "#7c349a",
+   "#ffffff",
+   "Shoes",
+   1955
+  ],
+  [
+   "Yuji Otsuka",
+   "YO",
+   "#7c349a",
+   "#ffffff",
+   "Copy machines, software",
+   1954
+  ],
+  [
+   "Hiroshi Mikitani",
+   "HM",
+   "#7c349a",
+   "#ffffff",
+   "Online retail",
+   1965
+  ],
+  [
+   "Kagemasa Kozuki",
+   "KK",
+   "#7c349a",
+   "#ffffff",
+   "Video games",
+   1940
+  ],
+  [
+   "Akio Nitori",
+   "AN",
+   "#7c349a",
+   "#ffffff",
+   "Home furnishings",
+   1944
+  ],
+  [
+   "Shigenobu Nagamori",
+   "SN",
+   "#7c349a",
+   "#ffffff",
+   "Motors",
+   1944
+  ],
+  [
+   "Hiroshi Ishibashi",
+   "HI",
+   "#7c349a",
+   "#ffffff",
+   "Tires",
+   1946
+  ],
+  [
+   "Katsumi Tada",
+   "KT",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1945
+  ],
+  [
+   "Masaaki Arai",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1965
+  ],
+  [
+   "Yasuhiro Fukushima",
+   "YF",
+   "#7c349a",
+   "#ffffff",
+   "Video games",
+   1947
+  ],
+  [
+   "Hisao Nagata",
+   "HN",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1956
+  ],
+  [
+   "Masateru Uno",
+   "MU",
+   "#7c349a",
+   "#ffffff",
+   "Drugstores",
+   1947
+  ],
+  [
+   "Fumio Kaneko",
+   "FK",
+   "#7c349a",
+   "#ffffff",
+   "Waste management",
+   1956
+  ],
+  [
+   "Yoshiaki Yoshida",
+   "YY",
+   "#7c349a",
+   "#ffffff",
+   "Cosmetics",
+   1941
+  ],
+  [
+   "Yusaku Maezawa",
+   "YM",
+   "#7c349a",
+   "#ffffff",
+   "Online retail",
+   1975
+  ],
+  [
+   "Hajime Satomi",
+   "HS",
+   "#7c349a",
+   "#ffffff",
+   "Video games, Pachinko",
+   1942
+  ],
+  [
+   "Fumio Sakiya",
+   "FS",
+   "#7c349a",
+   "#ffffff",
+   "Manufacturing",
+   1945
+  ],
+  [
+   "Kenzo Tsujimoto",
+   "KT",
+   "#7c349a",
+   "#ffffff",
+   "Video games",
+   1940
+  ],
+  [
+   "Shigefumi Wada",
+   "SW",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1952
+  ],
+  [
+   "Tsuyoshi Matsushita",
+   "TM",
+   "#7c349a",
+   "#ffffff",
+   "Fitness products",
+   1970
+  ],
+  [
+   "Nobutada Saji",
+   "NS",
+   "#7c349a",
+   "#ffffff",
+   "Beverages",
+   1945
+  ],
+  [
+   "Yuan Kokuei",
+   "YK",
+   "#7c349a",
+   "#ffffff",
+   "Crypto exchange",
+   1974
+  ]
+ ],
+ "australia-billionaires": [
+  [
+   "Gina Rinehart",
+   "GR",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1954
+  ],
+  [
+   "Harry Triguboff",
+   "HT",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1933
+  ],
+  [
+   "Andrew Forrest",
+   "AF",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1961
+  ],
+  [
+   "Mike Cannon-Brookes",
+   "MC",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1979
+  ],
+  [
+   "Scott Farquhar",
+   "SF",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1979
+  ],
+  [
+   "Anthony Pratt",
+   "AP",
+   "#7c349a",
+   "#ffffff",
+   "Manufacturing",
+   1960
+  ],
+  [
+   "Frank Lowy",
+   "FL",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1930
+  ],
+  [
+   "Vivek Chaand Sehgal",
+   "VS",
+   "#7c349a",
+   "#ffffff",
+   "Auto parts",
+   1956
+  ],
+  [
+   "Cliff Obrecht",
+   "CO",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1985
+  ],
+  [
+   "Melanie Perkins",
+   "MP",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1987
+  ],
+  [
+   "Kerry Stokes",
+   "KS",
+   "#7c349a",
+   "#ffffff",
+   "Construction equipment, media",
+   1940
+  ],
+  [
+   "Mario Verrocchi",
+   "MV",
+   "#7c349a",
+   "#ffffff",
+   "Pharmacies",
+   1957
+  ],
+  [
+   "John Gandel",
+   "JG",
+   "#7c349a",
+   "#ffffff",
+   "Shopping malls",
+   1934
+  ],
+  [
+   "Angela Bennett",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1944
+  ],
+  [
+   "Clive Palmer",
+   "CP",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1954
+  ],
+  [
+   "Richard White",
+   "RW",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1955
+  ],
+  [
+   "Dennis Bastas",
+   "DB",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1966
+  ],
+  [
+   "Cameron Adams",
+   "CA",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1979
+  ],
+  [
+   "James Packer",
+   "JP",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1967
+  ],
+  [
+   "Jack Gance",
+   "JG",
+   "#7c349a",
+   "#ffffff",
+   "Pharmacies",
+   1946
+  ],
+  [
+   "Anthony Hall",
+   "AH",
+   "#7c349a",
+   "#ffffff",
+   "Technology",
+   1955
+  ],
+  [
+   "Sam Hupert",
+   "SH",
+   "#7c349a",
+   "#ffffff",
+   "Technology",
+   1954
+  ],
+  [
+   "Gerry Harvey",
+   "GH",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1939
+  ],
+  [
+   "Sam Gance",
+   "SG",
+   "#7c349a",
+   "#ffffff",
+   "Pharmacies",
+   1949
+  ],
+  [
+   "Lindsay Fox",
+   "LF",
+   "#7c349a",
+   "#ffffff",
+   "Logistics, real estate",
+   1937
+  ],
+  [
+   "Michael Hintze",
+   "MH",
+   "#7c349a",
+   "#ffffff",
+   "Investment",
+   1953
+  ],
+  [
+   "Brett Blundy",
+   "BB",
+   "#7c349a",
+   "#ffffff",
+   "Retail, agribusiness",
+   1960
+  ],
+  [
+   "Jack Cowin",
+   "JC",
+   "#7c349a",
+   "#ffffff",
+   "Fast food",
+   1942
+  ],
+  [
+   "Sam Chong",
+   "SC",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1942
+  ],
+  [
+   "Bob Ell",
+   "BE",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1944
+  ]
+ ],
+ "china-billionaires": [
+  [
+   "Zhang Yiming",
+   "ZY",
+   "#7c349a",
+   "#ffffff",
+   "TikTok",
+   1984
+  ],
+  [
+   "Zhong Shanshan",
+   "ZS",
+   "#7c349a",
+   "#ffffff",
+   "Beverages, pharmaceuticals",
+   1954
+  ],
+  [
+   "Ma Huateng",
+   "MH",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1971
+  ],
+  [
+   "Liang Wenfeng",
+   "LW",
+   "#7c349a",
+   "#ffffff",
+   "AI, hedge fund",
+   1985
+  ],
+  [
+   "William Ding",
+   "WD",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1971
+  ],
+  [
+   "He Xiangjian",
+   "HX",
+   "#7c349a",
+   "#ffffff",
+   "Home appliances",
+   1942
+  ],
+  [
+   "Chen Tianshi",
+   "CT",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1985
+  ],
+  [
+   "Colin Huang",
+   "CH",
+   "#7c349a",
+   "#ffffff",
+   "E-commerce",
+   1980
+  ],
+  [
+   "Jack Ma",
+   "JM",
+   "#7c349a",
+   "#ffffff",
+   "E-commerce",
+   1964
+  ],
+  [
+   "Zheng Shuliang",
+   "ZS",
+   "#7c349a",
+   "#ffffff",
+   "Aluminum products",
+   1946
+  ],
+  [
+   "Huang Shilin",
+   "HS",
+   "#7c349a",
+   "#ffffff",
+   "Batteries",
+   1967
+  ],
+  [
+   "Chen Jianhua",
+   "CJ",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1971
+  ],
+  [
+   "Lei Jun",
+   "LJ",
+   "#7c349a",
+   "#ffffff",
+   "Smartphones, automobiles",
+   1969
+  ],
+  [
+   "Wang Chuanfu",
+   "WC",
+   "#7c349a",
+   "#ffffff",
+   "Batteries, automobiles",
+   1966
+  ],
+  [
+   "Yu Yong",
+   "YY",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1961
+  ],
+  [
+   "Dang Yanbao",
+   "DY",
+   "#7c349a",
+   "#ffffff",
+   "Coal",
+   1973
+  ],
+  [
+   "Wang Weixiu",
+   "WW",
+   "#7c349a",
+   "#ffffff",
+   "Machinery",
+   1950
+  ],
+  [
+   "Qin Yinglin",
+   "QY",
+   "#7c349a",
+   "#ffffff",
+   "Pig breeding",
+   1965
+  ],
+  [
+   "Zhong Huijuan",
+   "ZH",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1961
+  ],
+  [
+   "Liu Debing",
+   "LD",
+   "#7c349a",
+   "#ffffff",
+   "AI",
+   1976
+  ],
+  [
+   "Lu Xiangyang",
+   "LX",
+   "#7c349a",
+   "#ffffff",
+   "Automobiles, batteries",
+   1962
+  ],
+  [
+   "Li Shuirong",
+   "LS",
+   "#7c349a",
+   "#ffffff",
+   "Petrochemicals",
+   1956
+  ],
+  [
+   "Zhu Yiming",
+   "ZY",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1972
+  ],
+  [
+   "Wang Wei",
+   "WW",
+   "#7c349a",
+   "#ffffff",
+   "Package delivery",
+   1970
+  ],
+  [
+   "Eric Li",
+   "EL",
+   "#7c349a",
+   "#ffffff",
+   "Automobiles",
+   1963
+  ],
+  [
+   "Pei Zhenhua",
+   "PZ",
+   "#7c349a",
+   "#ffffff",
+   "Batteries",
+   1959
+  ],
+  [
+   "Yuan Fugen",
+   "YF",
+   "#7c349a",
+   "#ffffff",
+   "Metal processing",
+   1950
+  ],
+  [
+   "Zou Zhinong",
+   "ZZ",
+   "#7c349a",
+   "#ffffff",
+   "Telecom equipment",
+   1968
+  ],
+  [
+   "Wang Liping",
+   "WL",
+   "#7c349a",
+   "#ffffff",
+   "Hydraulic machinery",
+   1966
+  ],
+  [
+   "Zhang Zhidong",
+   "ZZ",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1972
+  ]
+ ],
+ "israel-billionaires": [
+  [
+   "Eyal Ofer",
+   "EO",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, shipping",
+   1950
+  ],
+  [
+   "Idan Ofer",
+   "IO",
+   "#7c349a",
+   "#ffffff",
+   "Shipping",
+   1955
+  ],
+  [
+   "Michael Federmann",
+   "MF",
+   "#7c349a",
+   "#ffffff",
+   "Defense, hotels",
+   1943
+  ],
+  [
+   "Yuri Milner",
+   "YM",
+   "#7c349a",
+   "#ffffff",
+   "Tech investments",
+   1961
+  ],
+  [
+   "Yitzhak Tshuva",
+   "YT",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1948
+  ],
+  [
+   "Teddy Sagi",
+   "TS",
+   "#7c349a",
+   "#ffffff",
+   "Gambling software",
+   1971
+  ],
+  [
+   "Arkady Volozh",
+   "AV",
+   "#7c349a",
+   "#ffffff",
+   "Search engine",
+   1964
+  ],
+  [
+   "Arnon Milchan",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Movie making",
+   1944
+  ],
+  [
+   "Shari Arison",
+   "SA",
+   "#7c349a",
+   "#ffffff",
+   "Carnival Cruises",
+   1957
+  ],
+  [
+   "Shaul Shani",
+   "SS",
+   "#7c349a",
+   "#ffffff",
+   "Telecom",
+   1955
+  ],
+  [
+   "Gil Shwed",
+   "GS",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1968
+  ],
+  [
+   "Shlomo Eliahu",
+   "SE",
+   "#7c349a",
+   "#ffffff",
+   "Insurance",
+   1936
+  ],
+  [
+   "David Wertheim",
+   "DW",
+   "#7c349a",
+   "#ffffff",
+   "Coca-Cola Israel",
+   1958
+  ],
+  [
+   "Niva Gurevitch",
+   "NG",
+   "#7c349a",
+   "#ffffff",
+   "FInancial Services",
+   1972
+  ],
+  [
+   "Tali Griffel",
+   "TG",
+   "#7c349a",
+   "#ffffff",
+   "Financial Services",
+   1986
+  ],
+  [
+   "Liora Ofer",
+   "LO",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1953
+  ],
+  [
+   "Sylvan Adams",
+   "SA",
+   "#7c349a",
+   "#ffffff",
+   "Real Estate",
+   1958
+  ],
+  [
+   "Adam Neumann",
+   "AN",
+   "#7c349a",
+   "#ffffff",
+   "WeWork",
+   1979
+  ],
+  [
+   "Zadik Bino",
+   "ZB",
+   "#7c349a",
+   "#ffffff",
+   "Banking, oil",
+   1944
+  ],
+  [
+   "Danna Azrieli",
+   "DA",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1967
+  ],
+  [
+   "Shlomo Kramer",
+   "SK",
+   "#7c349a",
+   "#ffffff",
+   "Software, investments",
+   1966
+  ],
+  [
+   "David Fattal",
+   "DF",
+   "#7c349a",
+   "#ffffff",
+   "Hotels",
+   1957
+  ],
+  [
+   "Ami Luttwak",
+   "AL",
+   "#7c349a",
+   "#ffffff",
+   "Security startup",
+   1983
+  ],
+  [
+   "Assaf Rappaport",
+   "AR",
+   "#7c349a",
+   "#ffffff",
+   "Security startup",
+   1983
+  ],
+  [
+   "Roy Reznik",
+   "RR",
+   "#7c349a",
+   "#ffffff",
+   "Security startup",
+   1988
+  ],
+  [
+   "Yinon Costica",
+   "YC",
+   "#7c349a",
+   "#ffffff",
+   "Security startup",
+   1982
+  ],
+  [
+   "Drorit Wertheim",
+   "DW",
+   "#7c349a",
+   "#ffffff",
+   "Coca Cola Israel",
+   1956
+  ],
+  [
+   "Gideon Hamburger",
+   "GH",
+   "#7c349a",
+   "#ffffff",
+   "Financial Services",
+   1945
+  ],
+  [
+   "Nurit Manor",
+   "NM",
+   "#7c349a",
+   "#ffffff",
+   "Financial Services",
+   1953
+  ],
+  [
+   "Yair Hamburger",
+   "YH",
+   "#7c349a",
+   "#ffffff",
+   "Financial Services",
+   1947
+  ]
+ ],
+ "india-billionaires": [
+  [
+   "Mukesh Ambani",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1957
+  ],
+  [
+   "Gautam Adani",
+   "GA",
+   "#7c349a",
+   "#ffffff",
+   "Infrastructure, commodities",
+   1962
+  ],
+  [
+   "Savitri Jindal",
+   "SJ",
+   "#7c349a",
+   "#ffffff",
+   "Steel",
+   1950
+  ],
+  [
+   "Lakshmi Mittal",
+   "LM",
+   "#7c349a",
+   "#ffffff",
+   "Steel",
+   1950
+  ],
+  [
+   "Shiv Nadar",
+   "SN",
+   "#7c349a",
+   "#ffffff",
+   "Software services",
+   1945
+  ],
+  [
+   "Cyrus Poonawalla",
+   "CP",
+   "#7c349a",
+   "#ffffff",
+   "Vaccines",
+   1941
+  ],
+  [
+   "Dilip Shanghvi",
+   "DS",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1955
+  ],
+  [
+   "Kumar Birla",
+   "KB",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1967
+  ],
+  [
+   "Radhakishan Damani",
+   "RD",
+   "#7c349a",
+   "#ffffff",
+   "Retail, investments",
+   1955
+  ],
+  [
+   "Uday Kotak",
+   "UK",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1959
+  ],
+  [
+   "Murali Divi",
+   "MD",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1951
+  ],
+  [
+   "Kushal Pal Singh",
+   "KS",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1931
+  ],
+  [
+   "Sunil Mittal",
+   "SM",
+   "#7c349a",
+   "#ffffff",
+   "Telecom",
+   1957
+  ],
+  [
+   "Vikram Lal",
+   "VL",
+   "#7c349a",
+   "#ffffff",
+   "Motorcycles",
+   1942
+  ],
+  [
+   "Ravi Jaipuria",
+   "RJ",
+   "#7c349a",
+   "#ffffff",
+   "Soft drinks, fast food",
+   1954
+  ],
+  [
+   "Pankaj Patel",
+   "PP",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1953
+  ],
+  [
+   "Rekha Jhunjhunwala",
+   "RJ",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1963
+  ],
+  [
+   "Satyanarayan Nuwal",
+   "SN",
+   "#7c349a",
+   "#ffffff",
+   "Industrial explosives",
+   1952
+  ],
+  [
+   "Rajan Mittal",
+   "RM",
+   "#7c349a",
+   "#ffffff",
+   "Telecom",
+   1960
+  ],
+  [
+   "Rakesh Mittal",
+   "RM",
+   "#7c349a",
+   "#ffffff",
+   "Telecom",
+   1955
+  ],
+  [
+   "Azim Premji",
+   "AP",
+   "#7c349a",
+   "#ffffff",
+   "Software services",
+   1945
+  ],
+  [
+   "Sudhir Mehta",
+   "SM",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals, power",
+   1954
+  ],
+  [
+   "Samir Mehta",
+   "SM",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals, power",
+   1963
+  ],
+  [
+   "Hasmukh Chudgar",
+   "HC",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1933
+  ],
+  [
+   "Venu Srinivasan",
+   "VS",
+   "#7c349a",
+   "#ffffff",
+   "Two-wheelers",
+   1952
+  ],
+  [
+   "Mangal Prabhat Lodha",
+   "ML",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1955
+  ],
+  [
+   "Rahul Bhatia",
+   "RB",
+   "#7c349a",
+   "#ffffff",
+   "Aviation",
+   1959
+  ],
+  [
+   "Kailashchandra Nuwal",
+   "KN",
+   "#7c349a",
+   "#ffffff",
+   "Industrial explosives",
+   1957
+  ],
+  [
+   "M.A. Yusuff Ali",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1955
+  ],
+  [
+   "Benu Gopal Bangur",
+   "BB",
+   "#7c349a",
+   "#ffffff",
+   "Cement",
+   1931
+  ]
+ ],
+ "germany-billionaires": [
+  [
+   "Dieter Schwarz",
+   "DS",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1939
+  ],
+  [
+   "Andreas von Bechtolsheim",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Google",
+   1955
+  ],
+  [
+   "Reinhold Wuerth",
+   "RW",
+   "#7c349a",
+   "#ffffff",
+   "Fasteners",
+   1935
+  ],
+  [
+   "Susanne Klatten",
+   "SK",
+   "#7c349a",
+   "#ffffff",
+   "BMW, pharmaceuticals",
+   1962
+  ],
+  [
+   "Stefan Quandt",
+   "SQ",
+   "#7c349a",
+   "#ffffff",
+   "BMW",
+   1966
+  ],
+  [
+   "Beate Heister",
+   "BH",
+   "#7c349a",
+   "#ffffff",
+   "Supermarkets",
+   1951
+  ],
+  [
+   "Karl Albrecht Jr.",
+   "KJ",
+   "#7c349a",
+   "#ffffff",
+   "Supermarkets",
+   1948
+  ],
+  [
+   "Georg Schaeffler",
+   "GS",
+   "#7c349a",
+   "#ffffff",
+   "Auto parts",
+   1964
+  ],
+  [
+   "Ludwig Merckle",
+   "LM",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1965
+  ],
+  [
+   "Theo Albrecht Jr",
+   "TJ",
+   "#7c349a",
+   "#ffffff",
+   "Aldi, Trader Joe's",
+   1951
+  ],
+  [
+   "Friedhelm Loh",
+   "FL",
+   "#7c349a",
+   "#ffffff",
+   "Manufacturing",
+   1946
+  ],
+  [
+   "Hasso Plattner",
+   "HP",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1944
+  ],
+  [
+   "Francine von Finck",
+   "FF",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1945
+  ],
+  [
+   "Andreas Struengmann",
+   "AS",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1950
+  ],
+  [
+   "Thomas Struengmann",
+   "TS",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1950
+  ],
+  [
+   "Nadia Thiele",
+   "NT",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1976
+  ],
+  [
+   "Theo Mueller",
+   "TM",
+   "#7c349a",
+   "#ffffff",
+   "Dairy",
+   1940
+  ],
+  [
+   "Dirk Rossmann",
+   "DR",
+   "#7c349a",
+   "#ffffff",
+   "Drugstores",
+   1946
+  ],
+  [
+   "Maximilian Viessmann",
+   "MV",
+   "#7c349a",
+   "#ffffff",
+   "Heating, cooling equipment",
+   1989
+  ],
+  [
+   "Wolfgang Marguerre",
+   "WM",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1941
+  ],
+  [
+   "Alexandra Schoerghuber",
+   "AS",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1958
+  ],
+  [
+   "Horst Julius Pudwill",
+   "HP",
+   "#7c349a",
+   "#ffffff",
+   "Manufacturing",
+   1944
+  ],
+  [
+   "Juergen Blickle",
+   "JB",
+   "#7c349a",
+   "#ffffff",
+   "Auto parts",
+   1947
+  ],
+  [
+   "Michael Otto",
+   "MO",
+   "#7c349a",
+   "#ffffff",
+   "Retail, real estate",
+   1943
+  ],
+  [
+   "Alexander Otto",
+   "AO",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1967
+  ],
+  [
+   "Dietmar Hopp",
+   "DH",
+   "#7c349a",
+   "#ffffff",
+   "Software",
+   1940
+  ],
+  [
+   "Albert Boehringer",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1941
+  ],
+  [
+   "Barbara Boehringer",
+   "BB",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1972
+  ],
+  [
+   "Christian Boehringer",
+   "CB",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1965
+  ],
+  [
+   "Christoph Boehringer",
+   "CB",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1970
+  ]
+ ],
+ "france-billionaires": [
+  [
+   "Bernard Arnault",
+   "BA",
+   "#7c349a",
+   "#ffffff",
+   "LVMH",
+   1949
+  ],
+  [
+   "Francoise Bettencourt Meyers",
+   "FM",
+   "#7c349a",
+   "#ffffff",
+   "L'Oréal",
+   1953
+  ],
+  [
+   "Alain Wertheimer",
+   "AW",
+   "#7c349a",
+   "#ffffff",
+   "Chanel",
+   1948
+  ],
+  [
+   "Gerard Wertheimer",
+   "GW",
+   "#7c349a",
+   "#ffffff",
+   "Chanel",
+   1951
+  ],
+  [
+   "François Pinault",
+   "FP",
+   "#7c349a",
+   "#ffffff",
+   "Luxury goods",
+   1936
+  ],
+  [
+   "Emmanuel Besnier",
+   "EB",
+   "#7c349a",
+   "#ffffff",
+   "Cheese",
+   1970
+  ],
+  [
+   "Xavier Niel",
+   "XN",
+   "#7c349a",
+   "#ffffff",
+   "Internet, telecom",
+   1967
+  ],
+  [
+   "Carrie Perrodo",
+   "CP",
+   "#7c349a",
+   "#ffffff",
+   "Oil",
+   1951
+  ],
+  [
+   "Vincent Bolloré",
+   "VB",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1952
+  ],
+  [
+   "Jean-Michel Besnier",
+   "JB",
+   "#7c349a",
+   "#ffffff",
+   "Cheese",
+   1967
+  ],
+  [
+   "Marie Besnier Beauvalot",
+   "MB",
+   "#7c349a",
+   "#ffffff",
+   "Cheese",
+   1980
+  ],
+  [
+   "Laurent Dassault",
+   "LD",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1953
+  ],
+  [
+   "Marie-Hélène Habert-Dassault",
+   "MH",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1965
+  ],
+  [
+   "Thierry Dassault",
+   "TD",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1957
+  ],
+  [
+   "Jacques Saadé Jr",
+   "JJ",
+   "#7c349a",
+   "#ffffff",
+   "Shipping",
+   1971
+  ],
+  [
+   "Rodolphe Saadé",
+   "RS",
+   "#7c349a",
+   "#ffffff",
+   "Shipping",
+   1970
+  ],
+  [
+   "Tanya Saadé Zeenny",
+   "TZ",
+   "#7c349a",
+   "#ffffff",
+   "Shipping",
+   1968
+  ],
+  [
+   "Patrick Drahi",
+   "PD",
+   "#7c349a",
+   "#ffffff",
+   "Telecom",
+   1963
+  ],
+  [
+   "Mohed Altrad",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Scaffolding, cement mixers",
+   1948
+  ],
+  [
+   "Alain Merieux",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1938
+  ],
+  [
+   "Michel Leclercq",
+   "ML",
+   "#7c349a",
+   "#ffffff",
+   "Sporting goods",
+   1939
+  ],
+  [
+   "Danielle Bellon",
+   "DB",
+   "#7c349a",
+   "#ffffff",
+   "Food services",
+   1940
+  ],
+  [
+   "Stéphane Bancel",
+   "SB",
+   "#7c349a",
+   "#ffffff",
+   "Biotech, vaccines",
+   1972
+  ],
+  [
+   "Marc Ladreit de Lacharriere",
+   "ML",
+   "#7c349a",
+   "#ffffff",
+   "Finance",
+   1940
+  ],
+  [
+   "Anne Beaufour",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1963
+  ],
+  [
+   "Bernard Fraisse",
+   "BF",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1956
+  ],
+  [
+   "Norbert Dentressangle",
+   "ND",
+   "#7c349a",
+   "#ffffff",
+   "Transport, logistics",
+   1954
+  ],
+  [
+   "Olivier Pomel",
+   "OP",
+   "#7c349a",
+   "#ffffff",
+   "Cloud computing",
+   1977
+  ],
+  [
+   "Gilles Martin",
+   "GM",
+   "#7c349a",
+   "#ffffff",
+   "Laboratory services",
+   1963
+  ],
+  [
+   "Louis Le Duff",
+   "LD",
+   "#7c349a",
+   "#ffffff",
+   "Bakeries",
+   1946
+  ]
+ ],
+ "canada-billionaires": [
+  [
+   "Changpeng Zhao",
+   "CZ",
+   "#7c349a",
+   "#ffffff",
+   "Cryptocurrency exchange",
+   1977
+  ],
+  [
+   "Stuart Hoegner",
+   "SH",
+   "#7c349a",
+   "#ffffff",
+   "Cryptocurrency",
+   null
+  ],
+  [
+   "Christopher Olah",
+   "CO",
+   "#7c349a",
+   "#ffffff",
+   "Artificial intelligence",
+   1992
+  ],
+  [
+   "Tobi Lutke",
+   "TL",
+   "#7c349a",
+   "#ffffff",
+   "E-commerce",
+   1980
+  ],
+  [
+   "Sherry Brydson",
+   "SB",
+   "#7c349a",
+   "#ffffff",
+   "Thomson Reuters",
+   1946
+  ],
+  [
+   "Joseph Tsai",
+   "JT",
+   "#7c349a",
+   "#ffffff",
+   "E-commerce",
+   1964
+  ],
+  [
+   "Jim Pattison",
+   "JP",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1928
+  ],
+  [
+   "David Cheriton",
+   "DC",
+   "#7c349a",
+   "#ffffff",
+   "Google",
+   1951
+  ],
+  [
+   "Leonid Boguslavsky",
+   "LB",
+   "#7c349a",
+   "#ffffff",
+   "Venture capital",
+   1951
+  ],
+  [
+   "Alain Bouchard",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Convinience stores",
+   1949
+  ],
+  [
+   "Daniel Nadler",
+   "DN",
+   "#7c349a",
+   "#ffffff",
+   "AI software",
+   1983
+  ],
+  [
+   "David Thomson",
+   "DT",
+   "#7c349a",
+   "#ffffff",
+   "Thomson Reuters",
+   1957
+  ],
+  [
+   "Peter Thomson",
+   "PT",
+   "#7c349a",
+   "#ffffff",
+   "Thomson Reuters",
+   1965
+  ],
+  [
+   "Taylor Thomson",
+   "TT",
+   "#7c349a",
+   "#ffffff",
+   "Thomson Reuters",
+   1960
+  ],
+  [
+   "Daryl Katz",
+   "DK",
+   "#7c349a",
+   "#ffffff",
+   "Pharmacies",
+   1961
+  ],
+  [
+   "Stephen Smith",
+   "SS",
+   "#7c349a",
+   "#ffffff",
+   "Finance and investments",
+   1951
+  ],
+  [
+   "Peter Gilgan",
+   "PG",
+   "#7c349a",
+   "#ffffff",
+   "Homebuilding",
+   1951
+  ],
+  [
+   "Mark Scheinberg",
+   "MS",
+   "#7c349a",
+   "#ffffff",
+   "Online gambling",
+   1973
+  ],
+  [
+   "Bruce Flatt",
+   "BF",
+   "#7c349a",
+   "#ffffff",
+   "Money management",
+   1965
+  ],
+  [
+   "Ling Tang",
+   "LT",
+   "#7c349a",
+   "#ffffff",
+   "Advertising technology",
+   null
+  ],
+  [
+   "Gaye Farncombe",
+   "GF",
+   "#7c349a",
+   "#ffffff",
+   "Thomson Reuters",
+   1952
+  ],
+  [
+   "Linda Campbell",
+   "LC",
+   "#7c349a",
+   "#ffffff",
+   "Thomson Reuters",
+   1950
+  ],
+  [
+   "Emanuele Saputo",
+   "ES",
+   "#7c349a",
+   "#ffffff",
+   "Cheese",
+   1937
+  ],
+  [
+   "Bob Gaglardi",
+   "BG",
+   "#7c349a",
+   "#ffffff",
+   "Hotels",
+   1941
+  ],
+  [
+   "N. Murray Edwards",
+   "NE",
+   "#7c349a",
+   "#ffffff",
+   "Oil & gas",
+   1959
+  ],
+  [
+   "Ryan Cohen",
+   "RC",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1985
+  ],
+  [
+   "Garrett Camp",
+   "GC",
+   "#7c349a",
+   "#ffffff",
+   "Uber",
+   1978
+  ],
+  [
+   "Chip Wilson",
+   "CW",
+   "#7c349a",
+   "#ffffff",
+   "Lululemon",
+   1957
+  ],
+  [
+   "Anthony von Mandl",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Alcoholic beverages",
+   1950
+  ],
+  [
+   "Carlo Fidani",
+   "CF",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1955
+  ]
+ ],
+ "italy-billionaires": [
+  [
+   "Giancarlo Devasini",
+   "GD",
+   "#7c349a",
+   "#ffffff",
+   "Cryptocurrency",
+   1964
+  ],
+  [
+   "Giovanni Ferrero",
+   "GF",
+   "#7c349a",
+   "#ffffff",
+   "Nutella, chocolates",
+   1964
+  ],
+  [
+   "Andrea Pignataro",
+   "AP",
+   "#7c349a",
+   "#ffffff",
+   "Financial software",
+   1970
+  ],
+  [
+   "Paolo Ardoino",
+   "PA",
+   "#7c349a",
+   "#ffffff",
+   "Cryptocurrency",
+   1984
+  ],
+  [
+   "Francesco Gaetano Caltagirone",
+   "FC",
+   "#7c349a",
+   "#ffffff",
+   "Cement, diversified",
+   1943
+  ],
+  [
+   "Piero Ferrari",
+   "PF",
+   "#7c349a",
+   "#ffffff",
+   "Automobiles",
+   1945
+  ],
+  [
+   "Massimiliana Landini Aleotti",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1943
+  ],
+  [
+   "Paolo Rocca",
+   "PR",
+   "#7c349a",
+   "#ffffff",
+   "Pipe Manufacturing",
+   1952
+  ],
+  [
+   "Gianfelice Rocca",
+   "GR",
+   "#7c349a",
+   "#ffffff",
+   "Pipe Manufacturing",
+   1948
+  ],
+  [
+   "Giuseppe De'Longhi",
+   "GD",
+   "#7c349a",
+   "#ffffff",
+   "Coffee makers",
+   1939
+  ],
+  [
+   "Leonardo Maria Del Vecchio",
+   "LV",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   1995
+  ],
+  [
+   "Claudio Del Vecchio",
+   "CV",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   1957
+  ],
+  [
+   "Clemente Del Vecchio",
+   "CV",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   2004
+  ],
+  [
+   "Luca Del Vecchio",
+   "LV",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   2001
+  ],
+  [
+   "Marisa Del Vecchio",
+   "MV",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   1958
+  ],
+  [
+   "Nicoletta Zampillo",
+   "NZ",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   1958
+  ],
+  [
+   "Paola Del Vecchio",
+   "PV",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   1961
+  ],
+  [
+   "Rocco Basilico",
+   "RB",
+   "#7c349a",
+   "#ffffff",
+   "Eyeglasses",
+   1989
+  ],
+  [
+   "Sergio Stevanato",
+   "SS",
+   "#7c349a",
+   "#ffffff",
+   "Medical packaging",
+   1943
+  ],
+  [
+   "Renzo Rosso",
+   "RR",
+   "#7c349a",
+   "#ffffff",
+   "Fashion",
+   1955
+  ],
+  [
+   "Patrizio Bertelli",
+   "PB",
+   "#7c349a",
+   "#ffffff",
+   "Luxury goods",
+   1946
+  ],
+  [
+   "Miuccia Prada",
+   "MP",
+   "#7c349a",
+   "#ffffff",
+   "Luxury goods",
+   1949
+  ],
+  [
+   "Giuliana Benetton",
+   "GB",
+   "#7c349a",
+   "#ffffff",
+   "Fashion retail, investments",
+   1937
+  ],
+  [
+   "Luciano Benetton",
+   "LB",
+   "#7c349a",
+   "#ffffff",
+   "Fashion retail, investments",
+   1935
+  ],
+  [
+   "Cristiano Crippa",
+   "CC",
+   "#7c349a",
+   "#ffffff",
+   "Microchip testing",
+   1970
+  ],
+  [
+   "Roberto Crippa",
+   "RC",
+   "#7c349a",
+   "#ffffff",
+   "Microchip testing",
+   1980
+  ],
+  [
+   "Giorgio Perfetti",
+   "GP",
+   "#7c349a",
+   "#ffffff",
+   "Candy",
+   1967
+  ],
+  [
+   "Brunello Cucinelli",
+   "BC",
+   "#7c349a",
+   "#ffffff",
+   "Fashion",
+   1953
+  ],
+  [
+   "Isabella Seràgnoli",
+   "IS",
+   "#7c349a",
+   "#ffffff",
+   "Packaging",
+   1945
+  ],
+  [
+   "Marina Berlusconi",
+   "MB",
+   "#7c349a",
+   "#ffffff",
+   "Media",
+   1966
+  ]
+ ],
+ "brazil-billionaires": [
+  [
+   "Eduardo Saverin",
+   "ES",
+   "#7c349a",
+   "#ffffff",
+   "Facebook",
+   1982
+  ],
+  [
+   "Jorge Paulo Lemann",
+   "JL",
+   "#7c349a",
+   "#ffffff",
+   "Beer",
+   1939
+  ],
+  [
+   "Andre Esteves",
+   "AE",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1968
+  ],
+  [
+   "Fernando Roberto Moreira Salles",
+   "FS",
+   "#7c349a",
+   "#ffffff",
+   "Banking, minerals",
+   1946
+  ],
+  [
+   "Pedro Moreira Salles",
+   "PS",
+   "#7c349a",
+   "#ffffff",
+   "Banking, minerals",
+   1959
+  ],
+  [
+   "Max Van Hoegaerden Herrmann Telles",
+   "MT",
+   "#7c349a",
+   "#ffffff",
+   "Beer",
+   1995
+  ],
+  [
+   "Jorge Moll Filho",
+   "JF",
+   "#7c349a",
+   "#ffffff",
+   "Hospitals",
+   1945
+  ],
+  [
+   "Miguel Krigsner",
+   "MK",
+   "#7c349a",
+   "#ffffff",
+   "Cosmetics",
+   1950
+  ],
+  [
+   "Ricardo Faria",
+   "RF",
+   "#7c349a",
+   "#ffffff",
+   "Eggs",
+   1975
+  ],
+  [
+   "Carlos Alberto Sicupira",
+   "CS",
+   "#7c349a",
+   "#ffffff",
+   "Beer",
+   1948
+  ],
+  [
+   "Alex Behring",
+   "AB",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1967
+  ],
+  [
+   "Joao Moreira Salles",
+   "JS",
+   "#7c349a",
+   "#ffffff",
+   "Banking, minerals",
+   1962
+  ],
+  [
+   "Walther Moreira Salles Junior",
+   "WJ",
+   "#7c349a",
+   "#ffffff",
+   "Banking, minerals",
+   1956
+  ],
+  [
+   "Jose Joao Abdalla Filho",
+   "JF",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1945
+  ],
+  [
+   "Joesley Batista",
+   "JB",
+   "#7c349a",
+   "#ffffff",
+   "Beef processing",
+   1972
+  ],
+  [
+   "Wesley Batista",
+   "WB",
+   "#7c349a",
+   "#ffffff",
+   "Beef packing",
+   1972
+  ],
+  [
+   "Maurizio Billi",
+   "MB",
+   "#7c349a",
+   "#ffffff",
+   "Generic drugs",
+   1957
+  ],
+  [
+   "Jose Roberto Marinho",
+   "JM",
+   "#7c349a",
+   "#ffffff",
+   "Media",
+   1955
+  ],
+  [
+   "Joao Roberto Marinho",
+   "JM",
+   "#7c349a",
+   "#ffffff",
+   "Media",
+   1953
+  ],
+  [
+   "Alceu Elias Feldmann",
+   "AF",
+   "#7c349a",
+   "#ffffff",
+   "Fertilizer",
+   1949
+  ],
+  [
+   "Roberto Irineu Marinho",
+   "RM",
+   "#7c349a",
+   "#ffffff",
+   "Media",
+   1947
+  ],
+  [
+   "Mário Araripe",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Energy",
+   1954
+  ],
+  [
+   "Marcel Herrmann Telles",
+   "MT",
+   "#7c349a",
+   "#ffffff",
+   "Beer",
+   1950
+  ],
+  [
+   "Lirio Parisotto",
+   "LP",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1953
+  ],
+  [
+   "Jayme Garfinkel",
+   "JG",
+   "#7c349a",
+   "#ffffff",
+   "Insurance",
+   1945
+  ],
+  [
+   "Roberto Sallouti",
+   "RS",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1972
+  ],
+  [
+   "Alfredo Egydio Arruda Villela Filho",
+   "AF",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1969
+  ],
+  [
+   "Luana Lopes Lara",
+   "LL",
+   "#7c349a",
+   "#ffffff",
+   "Prediction markets",
+   1996
+  ],
+  [
+   "Ana Lucia de Mattos Barretto Villela",
+   "AV",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1973
+  ],
+  [
+   "Julio Bozano",
+   "JB",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1936
+  ]
+ ],
+ "russia-billionaires": [
+  [
+   "Alexey Mordashov",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Steel, investments",
+   1965
+  ],
+  [
+   "Vladimir Potanin",
+   "VP",
+   "#7c349a",
+   "#ffffff",
+   "Metals",
+   1961
+  ],
+  [
+   "Vagit Alekperov",
+   "VA",
+   "#7c349a",
+   "#ffffff",
+   "Oil",
+   1950
+  ],
+  [
+   "Leonid Mikhelson",
+   "LM",
+   "#7c349a",
+   "#ffffff",
+   "Gas, chemicals",
+   1955
+  ],
+  [
+   "Suleiman Kerimov",
+   "SK",
+   "#7c349a",
+   "#ffffff",
+   "Gold",
+   1966
+  ],
+  [
+   "Vladimir Lisin",
+   "VL",
+   "#7c349a",
+   "#ffffff",
+   "Steel, transport",
+   1956
+  ],
+  [
+   "Gennady Timchenko",
+   "GT",
+   "#7c349a",
+   "#ffffff",
+   "Oil, gas",
+   1952
+  ],
+  [
+   "Andrey Melnichenko",
+   "AM",
+   "#7c349a",
+   "#ffffff",
+   "Fertilizers, coal",
+   1972
+  ],
+  [
+   "Mikhail Fridman",
+   "MF",
+   "#7c349a",
+   "#ffffff",
+   "Oil, banking, telecom",
+   1964
+  ],
+  [
+   "Alisher Usmanov",
+   "AU",
+   "#7c349a",
+   "#ffffff",
+   "Steel, telecom, investments",
+   1953
+  ],
+  [
+   "Viatcheslav Kantor",
+   "VK",
+   "#7c349a",
+   "#ffffff",
+   "Fertilizer, real estate",
+   1953
+  ],
+  [
+   "Mikhail Prokhorov",
+   "MP",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1965
+  ],
+  [
+   "Andrei Guryev",
+   "AG",
+   "#7c349a",
+   "#ffffff",
+   "Fertilizers",
+   1960
+  ],
+  [
+   "German Khan",
+   "GK",
+   "#7c349a",
+   "#ffffff",
+   "Oil, banking, telecom",
+   1961
+  ],
+  [
+   "Leonid Fedun",
+   "LF",
+   "#7c349a",
+   "#ffffff",
+   "Oil",
+   1956
+  ],
+  [
+   "Iskander Makhmudov",
+   "IM",
+   "#7c349a",
+   "#ffffff",
+   "Mining, metals, machinery",
+   1963
+  ],
+  [
+   "Roman Abramovich",
+   "RA",
+   "#7c349a",
+   "#ffffff",
+   "Steel, investments",
+   1966
+  ],
+  [
+   "Viktor Vekselberg",
+   "VV",
+   "#7c349a",
+   "#ffffff",
+   "Metals, investments",
+   1957
+  ],
+  [
+   "Viktor Rashnikov",
+   "VR",
+   "#7c349a",
+   "#ffffff",
+   "Steel",
+   1948
+  ],
+  [
+   "Alexei Kuzmichev",
+   "AK",
+   "#7c349a",
+   "#ffffff",
+   "Oil, banking, telecom",
+   1962
+  ],
+  [
+   "Tatyana Kim",
+   "TK",
+   "#7c349a",
+   "#ffffff",
+   "E-commerce",
+   1975
+  ],
+  [
+   "Viktor Kharitonin",
+   "VK",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1972
+  ],
+  [
+   "Mikhail Gutseriev",
+   "MG",
+   "#7c349a",
+   "#ffffff",
+   "Oil, coal, real estate",
+   1958
+  ],
+  [
+   "Oleg Deripaska",
+   "OD",
+   "#7c349a",
+   "#ffffff",
+   "Aluminum, utilities",
+   1968
+  ],
+  [
+   "Albert Avdolyan",
+   "AA",
+   "#7c349a",
+   "#ffffff",
+   "Oil, mining",
+   1970
+  ],
+  [
+   "Andrei Skoch",
+   "AS",
+   "#7c349a",
+   "#ffffff",
+   "Metals and mining",
+   1966
+  ],
+  [
+   "Dmitry Rybolovlev",
+   "DR",
+   "#7c349a",
+   "#ffffff",
+   "Fertilizer",
+   1966
+  ],
+  [
+   "Alexander Abramov",
+   "AA",
+   "#7c349a",
+   "#ffffff",
+   "Steel, mining",
+   1959
+  ],
+  [
+   "Ivan Tavrin",
+   "IT",
+   "#7c349a",
+   "#ffffff",
+   "Private equity",
+   1976
+  ],
+  [
+   "Arkady Rotenberg",
+   "AR",
+   "#7c349a",
+   "#ffffff",
+   "Construction, pipes, banking",
+   1951
+  ]
+ ],
+ "saudi-arabia-billionaires": [
+  [
+   "Prince Alwaleed Bin Talal Alsaud",
+   "PA",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1955
+  ],
+  [
+   "Sulaiman Al Habib",
+   "SH",
+   "#7c349a",
+   "#ffffff",
+   "Hospital group",
+   1952
+  ],
+  [
+   "Emad Al Muhaidib",
+   "EM",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1957
+  ],
+  [
+   "Abdullah bin Sulaiman Al Rajhi",
+   "AR",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1958
+  ],
+  [
+   "Essam Al Muhaidib",
+   "EM",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1959
+  ],
+  [
+   "Sulaiman Al Muhaidib",
+   "SM",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1955
+  ],
+  [
+   "Ibrahim Al Muhaidib",
+   "IM",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, investments",
+   1986
+  ],
+  [
+   "Abdullah Al Othaim",
+   "AO",
+   "#7c349a",
+   "#ffffff",
+   "Grocery stores, malls",
+   1957
+  ],
+  [
+   "Abdullah Amer Al Nahdi",
+   "AN",
+   "#7c349a",
+   "#ffffff",
+   "Pharmacies",
+   1961
+  ],
+  [
+   "Mohammad Abunayyan",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1962
+  ],
+  [
+   "Ajlan bin Abdulaziz Al-Ajlan",
+   "AA",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, investments",
+   1960
+  ]
+ ],
+ "singapore-billionaires": [
+  [
+   "Jason Chang",
+   "JC",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1944
+  ],
+  [
+   "Li Xiting",
+   "LX",
+   "#7c349a",
+   "#ffffff",
+   "Medical devices",
+   1951
+  ],
+  [
+   "Forrest Li",
+   "FL",
+   "#7c349a",
+   "#ffffff",
+   "Online gaming, e-commerce",
+   1978
+  ],
+  [
+   "Philip Ng",
+   "PN",
+   "#7c349a",
+   "#ffffff",
+   "Real Estate",
+   1959
+  ],
+  [
+   "Robert Ng",
+   "RN",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1952
+  ],
+  [
+   "Zhang Yong",
+   "ZY",
+   "#7c349a",
+   "#ffffff",
+   "Restaurants",
+   1970
+  ],
+  [
+   "Kuok Khoon Hong",
+   "KH",
+   "#7c349a",
+   "#ffffff",
+   "Palm oil",
+   1950
+  ],
+  [
+   "Gang Ye",
+   "GY",
+   "#7c349a",
+   "#ffffff",
+   "Online gaming, e-commerce",
+   1980
+  ],
+  [
+   "April Goh",
+   "AG",
+   "#7c349a",
+   "#ffffff",
+   "Paints",
+   1991
+  ],
+  [
+   "Kwek Leng Beng",
+   "KB",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1941
+  ],
+  [
+   "Jason Jiang",
+   "JJ",
+   "#7c349a",
+   "#ffffff",
+   "Advertising",
+   1973
+  ],
+  [
+   "Ji Qi",
+   "JQ",
+   "#7c349a",
+   "#ffffff",
+   "Hotels, motels",
+   1966
+  ],
+  [
+   "Choo Chong Ngen",
+   "CN",
+   "#7c349a",
+   "#ffffff",
+   "Hotels",
+   1953
+  ],
+  [
+   "Zhang Lei",
+   "ZL",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1972
+  ],
+  [
+   "Liang Xinjun",
+   "LX",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1968
+  ],
+  [
+   "Kwek Leng Kee",
+   "KK",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1955
+  ],
+  [
+   "Wee Ee Cheong",
+   "WC",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1953
+  ],
+  [
+   "Oei Hong Leong",
+   "OL",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1948
+  ],
+  [
+   "Wee Ee Lim",
+   "WL",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1962
+  ],
+  [
+   "Ron Sim",
+   "RS",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1958
+  ],
+  [
+   "Asok Kumar Hiranandani",
+   "AH",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1954
+  ],
+  [
+   "Sam Goi",
+   "SG",
+   "#7c349a",
+   "#ffffff",
+   "Frozen foods",
+   1946
+  ],
+  [
+   "Koh Wee Meng",
+   "KM",
+   "#7c349a",
+   "#ffffff",
+   "Real estate, hotels",
+   1963
+  ],
+  [
+   "Wee Ee Chao",
+   "WC",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1956
+  ],
+  [
+   "Archie Hwang",
+   "AH",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1952
+  ],
+  [
+   "Yao Hsiao Tung",
+   "YT",
+   "#7c349a",
+   "#ffffff",
+   "Manufacturing",
+   1940
+  ],
+  [
+   "Shu Ping",
+   "SP",
+   "#7c349a",
+   "#ffffff",
+   "Restaurants",
+   null
+  ],
+  [
+   "Zhao Tao",
+   "ZT",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1966
+  ],
+  [
+   "Peter Lim",
+   "PL",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1953
+  ],
+  [
+   "Kwee Liong Keng",
+   "KK",
+   "#7c349a",
+   "#ffffff",
+   "Real estate",
+   1946
+  ]
+ ],
+ "south-korea-billionaires": [
+  [
+   "Jay Y. Lee",
+   "JL",
+   "#7c349a",
+   "#ffffff",
+   "Samsung",
+   1968
+  ],
+  [
+   "Lee Boo-jin",
+   "LB",
+   "#7c349a",
+   "#ffffff",
+   "Samsung",
+   1970
+  ],
+  [
+   "Lee Seo-hyun",
+   "LS",
+   "#7c349a",
+   "#ffffff",
+   "Samsung",
+   1973
+  ],
+  [
+   "Hong Ra-hee",
+   "HR",
+   "#7c349a",
+   "#ffffff",
+   "Samsung",
+   1945
+  ],
+  [
+   "Cho Jung-ho",
+   "CJ",
+   "#7c349a",
+   "#ffffff",
+   "Finance",
+   1958
+  ],
+  [
+   "Seo Jung-jin",
+   "SJ",
+   "#7c349a",
+   "#ffffff",
+   "Biotech",
+   1957
+  ],
+  [
+   "Mong-Koo Chung",
+   "MC",
+   "#7c349a",
+   "#ffffff",
+   "Hyundai",
+   1938
+  ],
+  [
+   "Euisun Chung",
+   "EC",
+   "#7c349a",
+   "#ffffff",
+   "Hyundai",
+   1970
+  ],
+  [
+   "Chey Tae-won",
+   "CT",
+   "#7c349a",
+   "#ffffff",
+   "Oil, semiconductor",
+   1960
+  ],
+  [
+   "Kwak Dong Shin",
+   "KS",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1974
+  ],
+  [
+   "Park Hyeon-joo",
+   "PH",
+   "#7c349a",
+   "#ffffff",
+   "Mutual funds",
+   1958
+  ],
+  [
+   "Byunghoon Kim",
+   "BK",
+   "#7c349a",
+   "#ffffff",
+   "Beauty devices",
+   1988
+  ],
+  [
+   "Koo Bon-neung",
+   "KB",
+   "#7c349a",
+   "#ffffff",
+   "Electronics",
+   1949
+  ],
+  [
+   "Kwon Hyuk-bin",
+   "KH",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1974
+  ],
+  [
+   "Kim Jun-ki",
+   "KJ",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1944
+  ],
+  [
+   "Cho Hyun-joon",
+   "CH",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1968
+  ],
+  [
+   "Kim Beom-su",
+   "KB",
+   "#7c349a",
+   "#ffffff",
+   "Online services",
+   1966
+  ],
+  [
+   "Park Soon-jae",
+   "PS",
+   "#7c349a",
+   "#ffffff",
+   "Biopharmaceuticals",
+   1954
+  ],
+  [
+   "Chung Yong-jin",
+   "CY",
+   "#7c349a",
+   "#ffffff",
+   "Retail",
+   1968
+  ],
+  [
+   "Chung Mong-joon",
+   "CM",
+   "#7c349a",
+   "#ffffff",
+   "Shipbuilding, industrial machines",
+   1951
+  ],
+  [
+   "Yoo Jung-hyun",
+   "YJ",
+   "#7c349a",
+   "#ffffff",
+   "Online games",
+   1969
+  ],
+  [
+   "Koo Kwang-mo",
+   "KK",
+   "#7c349a",
+   "#ffffff",
+   "LG",
+   1978
+  ],
+  [
+   "Song Chi-hyung",
+   "SC",
+   "#7c349a",
+   "#ffffff",
+   "Fintech",
+   1979
+  ],
+  [
+   "Park Dong-suk",
+   "PD",
+   "#7c349a",
+   "#ffffff",
+   "Electrical equipment",
+   1961
+  ],
+  [
+   "Koo Bon-sik",
+   "KB",
+   "#7c349a",
+   "#ffffff",
+   "LG",
+   1958
+  ],
+  [
+   "Chey Ki-won",
+   "CK",
+   "#7c349a",
+   "#ffffff",
+   "Computer services, telecom",
+   1964
+  ],
+  [
+   "Kim Nam-goo",
+   "KN",
+   "#7c349a",
+   "#ffffff",
+   "Korea Investment Holdings",
+   1963
+  ],
+  [
+   "Kim Jung-youn",
+   "KJ",
+   "#7c349a",
+   "#ffffff",
+   "Online gaming",
+   2004
+  ],
+  [
+   "Kim Jung-min",
+   "KJ",
+   "#7c349a",
+   "#ffffff",
+   "Online gaming",
+   2002
+  ],
+  [
+   "Hwang Chul-joo",
+   "HC",
+   "#7c349a",
+   "#ffffff",
+   "Semiconductors",
+   1959
+  ]
+ ],
+ "spain-billionaires": [
+  [
+   "Amancio Ortega",
+   "AO",
+   "#7c349a",
+   "#ffffff",
+   "Zara",
+   1936
+  ],
+  [
+   "Sandra Ortega Mera",
+   "SM",
+   "#7c349a",
+   "#ffffff",
+   "Zara",
+   1968
+  ],
+  [
+   "Rafael Del Pino",
+   "RP",
+   "#7c349a",
+   "#ffffff",
+   "Construction",
+   1958
+  ],
+  [
+   "Juan Roig",
+   "JR",
+   "#7c349a",
+   "#ffffff",
+   "Supermarkets",
+   1949
+  ],
+  [
+   "Tomas Olivo Lopez",
+   "TL",
+   "#7c349a",
+   "#ffffff",
+   "Shopping centers",
+   1974
+  ],
+  [
+   "Florentino Perez",
+   "FP",
+   "#7c349a",
+   "#ffffff",
+   "Construction",
+   1947
+  ],
+  [
+   "Hortensia Herrero",
+   "HH",
+   "#7c349a",
+   "#ffffff",
+   "Supermarkets",
+   1950
+  ],
+  [
+   "Maria Del Pino",
+   "MP",
+   "#7c349a",
+   "#ffffff",
+   "Construction",
+   1956
+  ],
+  [
+   "Daniel Mate",
+   "DM",
+   "#7c349a",
+   "#ffffff",
+   "Mining, commodities",
+   1963
+  ],
+  [
+   "Miguel Fluxa Rossello",
+   "MR",
+   "#7c349a",
+   "#ffffff",
+   "Hotels",
+   1938
+  ],
+  [
+   "Sol Daurella",
+   "SD",
+   "#7c349a",
+   "#ffffff",
+   "Coca-Cola bottler",
+   1966
+  ],
+  [
+   "Juan Abello",
+   "JA",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1941
+  ],
+  [
+   "Alberto Palatchi",
+   "AP",
+   "#7c349a",
+   "#ffffff",
+   "Wedding dresses",
+   1949
+  ],
+  [
+   "Manuel Puig Rocha",
+   "MR",
+   "#7c349a",
+   "#ffffff",
+   "Beauty retail",
+   1961
+  ],
+  [
+   "Fernando Roig",
+   "FR",
+   "#7c349a",
+   "#ffffff",
+   "Supermarkets",
+   1947
+  ],
+  [
+   "Carlos March Delgado",
+   "CD",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1945
+  ],
+  [
+   "D. Leopoldo Del Pino",
+   "DP",
+   "#7c349a",
+   "#ffffff",
+   "Construction",
+   1962
+  ],
+  [
+   "Alicia Koplowitz",
+   "AK",
+   "#7c349a",
+   "#ffffff",
+   "Construction, investments",
+   1953
+  ],
+  [
+   "Carmen Daurella Aguilera",
+   "CA",
+   "#7c349a",
+   "#ffffff",
+   "Coca-Cola bottler",
+   1956
+  ],
+  [
+   "Juan March Delgado",
+   "JD",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1940
+  ],
+  [
+   "Jose Maria Aristrain",
+   "JA",
+   "#7c349a",
+   "#ffffff",
+   "Steel",
+   1962
+  ],
+  [
+   "Manuel Lao Hernández",
+   "MH",
+   "#7c349a",
+   "#ffffff",
+   "Casinos",
+   1944
+  ],
+  [
+   "Joaquin del Pino y Calvo-Sotelo",
+   "JC",
+   "#7c349a",
+   "#ffffff",
+   "Construction",
+   1961
+  ],
+  [
+   "Helena Revoredo",
+   "HR",
+   "#7c349a",
+   "#ffffff",
+   "Security services",
+   1947
+  ],
+  [
+   "Alberto Cortina",
+   "AC",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1946
+  ],
+  [
+   "Alberto Alcocer",
+   "AA",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1942
+  ],
+  [
+   "Carmen Riu Guell",
+   "CG",
+   "#7c349a",
+   "#ffffff",
+   "Hotels",
+   1955
+  ],
+  [
+   "Luis Riu",
+   "LR",
+   "#7c349a",
+   "#ffffff",
+   "Hotels",
+   1960
+  ],
+  [
+   "Jose Llorens Torra",
+   "JT",
+   "#7c349a",
+   "#ffffff",
+   "Investments",
+   1944
+  ],
+  [
+   "Francisco Jose Riberas Mera",
+   "FM",
+   "#7c349a",
+   "#ffffff",
+   "Steel, autoparts",
+   1964
+  ]
+ ],
+ "mexico-billionaires": [
+  [
+   "Carlos Slim Helu",
+   "CH",
+   "#7c349a",
+   "#ffffff",
+   "Telecom",
+   1940
+  ],
+  [
+   "Germán Larrea Mota Velasco",
+   "GV",
+   "#7c349a",
+   "#ffffff",
+   "Mining",
+   1953
+  ],
+  [
+   "Alejandro Baillères Gual",
+   "AG",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1961
+  ],
+  [
+   "Maria Asuncion Aramburuzabala",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Beer, investments",
+   1963
+  ],
+  [
+   "Carlos Hank Rhon",
+   "CR",
+   "#7c349a",
+   "#ffffff",
+   "Banking",
+   1947
+  ],
+  [
+   "Antonio Del Valle Ruiz",
+   "AR",
+   "#7c349a",
+   "#ffffff",
+   "Chemicals",
+   1938
+  ],
+  [
+   "Ricardo Salinas Pliego",
+   "RP",
+   "#7c349a",
+   "#ffffff",
+   "Retail, media",
+   1955
+  ],
+  [
+   "Rufino Vigil Gonzalez",
+   "RG",
+   "#7c349a",
+   "#ffffff",
+   "Steel",
+   1948
+  ],
+  [
+   "Fernando Chico Pardo",
+   "FP",
+   "#7c349a",
+   "#ffffff",
+   "Airport management",
+   1952
+  ],
+  [
+   "David Peñaloza Alanís",
+   "DA",
+   "#7c349a",
+   "#ffffff",
+   "Toll roads",
+   1974
+  ],
+  [
+   "Enrique Coppel Luken",
+   "EL",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1947
+  ],
+  [
+   "Roberto Hernandez Ramirez",
+   "RR",
+   "#7c349a",
+   "#ffffff",
+   "Banking, investments",
+   1942
+  ],
+  [
+   "Cynthia Helena Grossman Fleishman",
+   "CF",
+   "#7c349a",
+   "#ffffff",
+   "Arca Continental",
+   1954
+  ],
+  [
+   "Manuel Arango Arias",
+   "MA",
+   "#7c349a",
+   "#ffffff",
+   "Walmart Mexico",
+   1936
+  ],
+  [
+   "Rubén Coppel Luken",
+   "RL",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1950
+  ],
+  [
+   "Alberto Coppel Luken",
+   "AL",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1951
+  ],
+  [
+   "José Coppel Luken",
+   "JL",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1959
+  ],
+  [
+   "Juan Domingo Beckmann Legorreta",
+   "JL",
+   "#7c349a",
+   "#ffffff",
+   "Tequila",
+   1967
+  ],
+  [
+   "Agustín Coppel Luken",
+   "AL",
+   "#7c349a",
+   "#ffffff",
+   "Diversified",
+   1961
+  ],
+  [
+   "Fernando Espinosa Abdalá",
+   "FA",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceuticals",
+   1950
+  ],
+  [
+   "Leopoldo Espinosa Abdalá",
+   "LA",
+   "#7c349a",
+   "#ffffff",
+   "Pharmaceutical",
+   null
+  ]
+ ]
+}

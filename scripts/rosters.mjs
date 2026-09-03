@@ -413,6 +413,19 @@ for (const [slug, list] of Object.entries(JSON.parse(readFileSync(SPORT, 'utf8')
   out[slug] = list;
 }
 
+/* The billionaire lists, by country, come from Forbes's feed by way of
+   scripts/build-rich-rosters.mjs. Their rows carry a sixth field -- a birth
+   year the picture builder checks an article against -- that the list a
+   visitor downloads has no use for, so it stops here. */
+const RICH = join(root, 'scripts/rich-rosters.json');
+if (!existsSync(RICH)) {
+  console.error('rosters: scripts/rich-rosters.json is missing. Run: node scripts/build-rich-rosters.mjs');
+  process.exit(1);
+}
+for (const [slug, list] of Object.entries(JSON.parse(readFileSync(RICH, 'utf8')))) {
+  out[slug] = list.map(r => r.slice(0, 5));
+}
+
 const json = JSON.stringify(out);
 
 if (process.argv.includes('--check')) {

@@ -545,6 +545,158 @@
         re:    NAME_RE,
         profile: null
       } },
+    /* The rich, by country: twenty boards under one heading, each asking who
+       should be #1 among a country's billionaires. Fan boards like the
+       players and the politicians -- the person ranked is not the person
+       paying -- with the same open name field, and a list that comes from
+       Forbes's own feed by way of scripts/build-rich-rosters.mjs rather than
+       from anybody's memory of who is rich this year.
+
+       Citizenship draws the borders, because that is how the source draws
+       them; the Emirates board also takes the people who live there, and the
+       builder says why. The chip label is the country alone, since the
+       heading already says Billionaires and the flag says the rest. */
+    { slug: 'us-billionaires', name: 'U.S. Billionaires', chip: 'USA', color: '#1d4ed8',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Warren Buffett',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'uk-billionaires', name: 'UK Billionaires', chip: 'UK', color: '#012169',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'James Dyson',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'switzerland-billionaires', name: 'Swiss Billionaires', chip: 'Switzerland', color: '#da291c',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Ernesto Bertarelli',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'uae-billionaires', name: 'UAE Billionaires', chip: 'UAE', color: '#00732f',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Hussain Sajwani',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'japan-billionaires', name: 'Japanese Billionaires', chip: 'Japan', color: '#bc002d',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Masayoshi Son',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'australia-billionaires', name: 'Australian Billionaires', chip: 'Australia', color: '#00008b',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Gina Rinehart',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'china-billionaires', name: 'Chinese Billionaires', chip: 'China', color: '#de2910',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Jack Ma',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'israel-billionaires', name: 'Israeli Billionaires', chip: 'Israel', color: '#0038b8',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Eyal Ofer',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'india-billionaires', name: 'Indian Billionaires', chip: 'India', color: '#ff9933',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Mukesh Ambani',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'germany-billionaires', name: 'German Billionaires', chip: 'Germany', color: '#dd0000',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Dieter Schwarz',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'france-billionaires', name: 'French Billionaires', chip: 'France', color: '#0055a4',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Bernard Arnault',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'canada-billionaires', name: 'Canadian Billionaires', chip: 'Canada', color: '#d80621',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Tobi Lütke',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'italy-billionaires', name: 'Italian Billionaires', chip: 'Italy', color: '#009246',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Giovanni Ferrero',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'brazil-billionaires', name: 'Brazilian Billionaires', chip: 'Brazil', color: '#009c3b',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Jorge Paulo Lemann',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'russia-billionaires', name: 'Russian Billionaires', chip: 'Russia', color: '#0039a6',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Vladimir Potanin',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'saudi-arabia-billionaires', name: 'Saudi Billionaires', chip: 'Saudi Arabia', color: '#006c35',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Alwaleed bin Talal',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'singapore-billionaires', name: 'Singapore Billionaires', chip: 'Singapore', color: '#ef3340',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Forrest Li',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'south-korea-billionaires', name: 'South Korean Billionaires', chip: 'South Korea', color: '#0047a0',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Jay Y. Lee',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'spain-billionaires', name: 'Spanish Billionaires', chip: 'Spain', color: '#aa151b',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Amancio Ortega',
+        re:    NAME_RE,
+        profile: null
+      } },
+    { slug: 'mexico-billionaires', name: 'Mexican Billionaires', chip: 'Mexico', color: '#006847',
+      fan: true, noun: 'name', tag: {
+        label: 'Name',
+        hint:  'Carlos Slim',
+        re:    NAME_RE,
+        profile: null
+      } },
+
     { slug: 'podcasts', name: 'Podcasts', color: '#0d9488', tag: {
         label: 'Podcast',
         hint:  'The Weekly Show',
@@ -678,6 +830,35 @@
        distinction the next country's boards will need. */
     'us-parties': US_FLAG,
     'us-politicians': US_FLAG,
+    /* Twenty flags, for the twenty billionaire boards, on the same frame as
+       the one above and drawn the same way: what reads at 15px, and no more.
+       The Union Jack keeps its crosses and loses their offset; Australia's
+       canton is that jack at half size with the stars as stars; China's are
+       stars, Israel's is the shield and the stripes, India's the wheel as a
+       ring. Saudi Arabia's script is a stroke where the words would be,
+       because the words are the creed and a fake rendering of them is worse
+       than a gesture at where they sit. Nothing here belongs to anybody: a
+       national flag is nobody's mark. */
+    'us-billionaires': US_FLAG,
+    'uk-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#012169"/><polygon points="1.6,4.4 1.6,6.38 19.69,19.6 22.4,19.6 22.4,17.62 4.31,4.4" fill="#fff"/><polygon points="1.6,19.6 4.31,19.6 22.4,6.38 22.4,4.4 19.69,4.4 1.6,17.62" fill="#fff"/><polygon points="1.6,4.4 1.6,5.17 21.34,19.6 22.4,19.6 22.4,18.83 2.66,4.4" fill="#c8102e"/><polygon points="1.6,19.6 2.66,19.6 22.4,5.17 22.4,4.4 21.34,4.4 1.6,18.83" fill="#c8102e"/><rect x="9.4" y="4.4" width="5.2" height="15.2" fill="#fff"/><rect x="1.6" y="9.4" width="20.8" height="5.2" fill="#fff"/><rect x="10.45" y="4.4" width="3.1" height="15.2" fill="#c8102e"/><rect x="1.6" y="10.45" width="20.8" height="3.1" fill="#c8102e"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'switzerland-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#da291c"/><rect x="10.2" y="6.6" width="3.6" height="10.8" fill="#fff"/><rect x="6.6" y="10.2" width="10.8" height="3.6" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'uae-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="6.8" y="4.4" width="15.6" height="5.07" fill="#00732f"/><rect x="6.8" y="14.53" width="15.6" height="5.07" fill="#000"/><rect x="1.6" y="4.4" width="5.2" height="15.2" fill="#ff0000"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'japan-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><circle cx="12" cy="12" r="4.5" fill="#bc002d"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'australia-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#00008b"/><polygon points="1.6,4.4 1.6,5.23 10.86,12 12,12 12,11.17 2.74,4.4" fill="#fff"/><polygon points="1.6,12 2.74,12 12,5.23 12,4.4 10.86,4.4 1.6,11.17" fill="#fff"/><polygon points="1.6,4.4 1.6,4.73 11.56,12 12,12 12,11.67 2.04,4.4" fill="#c8102e"/><polygon points="1.6,12 2.04,12 12,4.73 12,4.4 11.56,4.4 1.6,11.67" fill="#c8102e"/><rect x="5.71" y="4.4" width="2.18" height="7.6" fill="#fff"/><rect x="1.6" y="7.11" width="10.4" height="2.18" fill="#fff"/><rect x="6.15" y="4.4" width="1.3" height="7.6" fill="#c8102e"/><rect x="1.6" y="7.55" width="10.4" height="1.3" fill="#c8102e"/><polygon points="6.8,13.85 7.21,15.04 8.4,14.62 7.73,15.69 8.8,16.36 7.54,16.49 7.69,17.75 6.8,16.85 5.91,17.75 6.06,16.49 4.8,16.36 5.87,15.69 5.2,14.62 6.39,15.04" fill="#fff"/><polygon points="17.2,5.65 17.38,6.22 17.94,6.01 17.61,6.51 18.13,6.81 17.53,6.86 17.61,7.46 17.2,7.02 16.79,7.46 16.87,6.86 16.27,6.81 16.79,6.51 16.46,6.01 17.02,6.22" fill="#fff"/><polygon points="14.6,10.95 14.78,11.52 15.34,11.31 15.01,11.81 15.53,12.11 14.93,12.16 15.01,12.76 14.6,12.32 14.19,12.76 14.27,12.16 13.67,12.11 14.19,11.81 13.86,11.31 14.42,11.52" fill="#fff"/><polygon points="19.6,9.55 19.78,10.12 20.34,9.91 20.01,10.41 20.53,10.71 19.93,10.76 20.01,11.36 19.6,10.92 19.19,11.36 19.27,10.76 18.67,10.71 19.19,10.41 18.86,9.91 19.42,10.12" fill="#fff"/><polygon points="17.2,16.45 17.38,17.02 17.94,16.81 17.61,17.31 18.13,17.61 17.53,17.66 17.61,18.26 17.2,17.82 16.79,18.26 16.87,17.66 16.27,17.61 16.79,17.31 16.46,16.81 17.02,17.02" fill="#fff"/><circle cx="18.5" cy="12.9" r="0.45" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'china-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#de2910"/><polygon points="5.9,6.3 6.61,8.33 8.75,8.37 7.04,9.67 7.66,11.73 5.9,10.5 4.14,11.73 4.76,9.67 3.05,8.37 5.19,8.33" fill="#ffde00"/><polygon points="10.4,5.25 10.62,5.89 11.3,5.91 10.76,6.32 10.96,6.97 10.4,6.58 9.84,6.97 10.04,6.32 9.5,5.91 10.18,5.89" fill="#ffde00"/><polygon points="12.2,7.05 12.42,7.69 13.1,7.71 12.56,8.12 12.76,8.77 12.2,8.38 11.64,8.77 11.84,8.12 11.3,7.71 11.98,7.69" fill="#ffde00"/><polygon points="12.2,9.65 12.42,10.29 13.1,10.31 12.56,10.72 12.76,11.37 12.2,10.98 11.64,11.37 11.84,10.72 11.3,10.31 11.98,10.29" fill="#ffde00"/><polygon points="10.4,11.45 10.62,12.09 11.3,12.11 10.76,12.52 10.96,13.17 10.4,12.78 9.84,13.17 10.04,12.52 9.5,12.11 10.18,12.09" fill="#ffde00"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'israel-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="6.1" width="20.8" height="2" fill="#0038b8"/><rect x="1.6" y="15.9" width="20.8" height="2" fill="#0038b8"/><path d="M12 9.1l2.6 4.5H9.4zM12 14.9l2.6-4.5H9.4z" fill="none" stroke="#0038b8" stroke-width=".85" stroke-linejoin="round"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'india-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="5.07" fill="#ff9933"/><rect x="1.6" y="14.53" width="20.8" height="5.07" fill="#138808"/><circle cx="12" cy="12" r="2" fill="none" stroke="#000080" stroke-width=".55"/><circle cx="12" cy="12" r="0.4" fill="#000080"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'germany-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#000"/><rect x="1.6" y="4.4" width="20.8" height="5.07" fill="#000"/><rect x="1.6" y="9.47" width="20.8" height="5.07" fill="#dd0000"/><rect x="1.6" y="14.53" width="20.8" height="5.07" fill="#ffce00"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'france-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="6.93" height="15.2" fill="#0055a4"/><rect x="8.53" y="4.4" width="6.93" height="15.2" fill="#fff"/><rect x="15.47" y="4.4" width="6.93" height="15.2" fill="#ef4135"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'canada-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="5.2" height="15.2" fill="#d80621"/><rect x="17.2" y="4.4" width="5.2" height="15.2" fill="#d80621"/><polygon points="12,7.8 12.9,9.5 14.3,9 13.8,10.8 16.2,9.9 15.6,11.6 16.8,12 14.2,14.2 14.6,15.2 12.4,14.8 12.4,16.6 11.6,16.6 11.6,14.8 9.4,15.2 9.8,14.2 7.2,12 8.4,11.6 7.8,9.9 10.2,10.8 9.7,9 11.1,9.5" fill="#d80621"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'italy-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="6.93" height="15.2" fill="#009246"/><rect x="8.53" y="4.4" width="6.93" height="15.2" fill="#fff"/><rect x="15.47" y="4.4" width="6.93" height="15.2" fill="#ce2b37"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'brazil-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#009c3b"/><polygon points="12,5.4 20.8,12 12,18.6 3.2,12" fill="#ffdf00"/><circle cx="12" cy="12" r="3.1" fill="#002776"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'russia-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="5.07" fill="#fff"/><rect x="1.6" y="9.47" width="20.8" height="5.07" fill="#0039a6"/><rect x="1.6" y="14.53" width="20.8" height="5.07" fill="#d52b1e"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'saudi-arabia-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#006c35"/><path d="M5.8 10.3c1.2-2 2.4 1.1 3.7-.3s2.2 1.5 3.6.1 2.3 1.3 3.7-.2 1.2 1 1.9.4" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round"/><path d="M5.8 14.9h12.4" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/><rect x="16.1" y="13.6" width="0.8" height="2.6" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'singapore-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="7.6" fill="#ef3340"/><circle cx="5.8" cy="8.2" r="2.3" fill="#fff"/><circle cx="6.75" cy="8" r="1.9" fill="#ef3340"/><circle cx="9.1" cy="6.95" r="0.4" fill="#fff"/><circle cx="10.29" cy="7.81" r="0.4" fill="#fff"/><circle cx="9.83" cy="9.21" r="0.4" fill="#fff"/><circle cx="8.37" cy="9.21" r="0.4" fill="#fff"/><circle cx="7.91" cy="7.81" r="0.4" fill="#fff"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'south-korea-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><path d="M8.7 12a3.3 3.3 0 0 1 6.6 0z" fill="#cd2e3a"/><path d="M8.7 12a3.3 3.3 0 0 0 6.6 0z" fill="#0047a0"/><g transform="translate(4.9 7.3) rotate(-34)"><path d="M-1.15-.8h2.3M-1.15 0h2.3M-1.15.8h2.3" fill="none" stroke="#000" stroke-width=".62"/></g><g transform="translate(19.1 7.3) rotate(34)"><path d="M-1.15-.8h2.3M-1.15 0h2.3M-1.15.8h2.3" fill="none" stroke="#000" stroke-width=".62"/></g><g transform="translate(4.9 16.7) rotate(34)"><path d="M-1.15-.8h2.3M-1.15 0h2.3M-1.15.8h2.3" fill="none" stroke="#000" stroke-width=".62"/></g><g transform="translate(19.1 16.7) rotate(-34)"><path d="M-1.15-.8h2.3M-1.15 0h2.3M-1.15.8h2.3" fill="none" stroke="#000" stroke-width=".62"/></g><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'spain-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#f1bf00"/><rect x="1.6" y="4.4" width="20.8" height="3.8" fill="#aa151b"/><rect x="1.6" y="15.8" width="20.8" height="3.8" fill="#aa151b"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
+    'mexico-billionaires': '<rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="#fff"/><rect x="1.6" y="4.4" width="6.93" height="15.2" fill="#006847"/><rect x="8.53" y="4.4" width="6.93" height="15.2" fill="#fff"/><rect x="15.47" y="4.4" width="6.93" height="15.2" fill="#ce1126"/><circle cx="12" cy="11.6" r="1.5" fill="#8c5a2b"/><ellipse cx="12" cy="13.5" rx="1.3" ry=".5" fill="#4d7c2a"/><rect x="1.6" y="4.4" width="20.8" height="15.2" rx="1.4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/>',
     'golf-players': '<circle cx="17.4" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M6.2 3.4v14.4M6.2 3.4l7.4 2.4-7.4 2.6"/><ellipse cx="10" cy="19.4" rx="6.4" ry="1.9" fill="none" stroke="currentColor" stroke-width="1.5"/>',
 
     /* The cage, a pair of gloves, and one glove. Drawn rather than borrowed,
@@ -1358,6 +1539,32 @@
   ];
 
   const POLITICS = new Set(COUNTRIES.flatMap(c => c.boards));
+  /* The rich, by country. One heading, twenty flags, and a board behind
+     each: a section that grows the same way the politics does, one country
+     at a time, and lives beside it because it is the same kind of argument
+     -- who matters most -- held over a different table. */
+  const RICH = new Set([
+    'us-billionaires',
+    'uk-billionaires',
+    'switzerland-billionaires',
+    'uae-billionaires',
+    'japan-billionaires',
+    'australia-billionaires',
+    'china-billionaires',
+    'israel-billionaires',
+    'india-billionaires',
+    'germany-billionaires',
+    'france-billionaires',
+    'canada-billionaires',
+    'italy-billionaires',
+    'brazil-billionaires',
+    'russia-billionaires',
+    'saudi-arabia-billionaires',
+    'singapore-billionaires',
+    'south-korea-billionaires',
+    'spain-billionaires',
+    'mexico-billionaires'
+  ]);
   const MACHINES = new Set(['cars', 'boats']);
   const TRADE = new Set(['startups', 'restaurants']);
   const LIFE = new Set(['cities', 'pets']);
@@ -1365,7 +1572,7 @@
                          'youtube-influencers', 'facebook-influencers']);
   const NOT_GAMING = new Set([
     'movements',...SPORT, ...CRYPTO, ...CULTURE, ...TRADE, ...LIFE,
-                              ...STARS, ...MACHINES, ...POLITICS]);
+                              ...STARS, ...MACHINES, ...POLITICS, ...RICH]);
   // 'games' is culture by any reading, but it sits where people look for it.
 
   const GROUPS = [
@@ -1381,6 +1588,7 @@
        movement is the same kind of argument as a party and belongs beside it,
        but under no flag. */
     { label: 'Movements',       rows: 1, has: p => p.slug === 'movements' },
+    { label: 'Billionaires',    rows: 1, has: p => RICH.has(p.slug) },
     { label: 'Social networks', rows: 2, has: p => !p.tag },
     { label: 'Influencers',     rows: 1, has: p => STARS.has(p.slug) },
     { label: 'Gaming',          rows: 1, has: p => p.tag && !NOT_GAMING.has(p.slug) },
@@ -1592,6 +1800,16 @@
     return '<span class="sr-only">' + esc(spus) + '</span>' + (rest ? esc(rest) : '');
   };
 
+  /* A country board's chip says the country. Twenty chips under one heading
+     that all end in the heading's word would print it twenty times; the
+     heading prints it once and the flag says the rest. The full name stays
+     in the markup for a screen reader, which hears the chip without the
+     heading over it. Only the chips: the headline and the strip say the
+     whole name, because there nothing else is saying it. */
+  const numeChip = p => p.chip
+    ? '<span class="sr-only">' + esc(p.name) + '</span><span aria-hidden="true">' + esc(p.chip) + '</span>'
+    : numeLangaMarca(p);
+
   /* Coin logos, fetched once and only when there is a coin on screen. 64 KB
      is nothing next to a page of avatars and everything next to nothing, so
      the home page does not pay for it unless a crypto listing is actually
@@ -1645,7 +1863,7 @@
                          'nba-players', 'nhl-players', 'football-clubs',
                          'ufc-fighters', 'mma-fighters', 'boxers',
                          'bellator', 'one-championship', 'pfl',
-                         'movements'];
+                         'movements', ...RICH];
 
   /* Every sitting member of Congress, kept current by the public-domain
      dataset the civic-tech world maintains rather than by a list I typed once
@@ -1685,7 +1903,7 @@
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
     try {
-      const r = await fetch('/people-art.json?v=bed73f531d', { cache: 'force-cache' });
+      const r = await fetch('/people-art.json?v=72fdbe6bfe', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       PEOPLE_ART = await r.json();
     } catch (e) {
@@ -1814,7 +2032,7 @@
   async function loadRosterFile() {
     if (ROSTER_FILE) return ROSTER_FILE;
     try {
-      const r = await fetch('/rosters.json?v=e3ee18b028', { cache: 'force-cache' });
+      const r = await fetch('/rosters.json?v=b8e3227d91', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ROSTER_FILE = await r.json();
       for (const [slug, list] of Object.entries(ROSTER_FILE)) {
@@ -1841,7 +2059,7 @@
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',
     'startups', 'ufc-fighters', 'mma-fighters', 'boxers',
     'bellator', 'one-championship', 'pfl', 'movements',
-    'us-parties', 'us-politicians',
+    'us-parties', 'us-politicians', ...RICH,
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'youtube-influencers', 'facebook-influencers'
   ]);
@@ -2098,33 +2316,26 @@
         deschis = row.group;
       }
       html += row.items.map(p => chip(`/${p.slug}/`, active === p.slug, p.color,
-        `${icon(p.slug, true)}<span>${numeLangaMarca(p)}</span>`, board(p.slug).length)).join('');
+        `${icon(p.slug, true)}<span>${numeChip(p)}</span>`, board(p.slug).length)).join('');
     }
     if (deschis !== null) html += '</div></div>';
 
-    /* Open on the front page, folded on a board — and the whole point of the
+    /* Open on the front page, folded on a board -- and the whole point of the
        fold is that it is one click, not a hiding place.
 
-       Wrapped, all thirty-four fill about 460 pixels. On the front page that
-       is the right trade: browsing is what you came for. On a board page it
-       pushed the ten below the fold on an ordinary laptop, which is the one
-       thing that page exists to show, and a leaderboard you have to scroll to
-       reach is not a leaderboard. So the board page opens on its ten with the
-       list one summary line away, saying how many are behind it. */
-    /* Open on the front page when there is room for it, folded when there is
-       not. Bigger type made the block taller, and on a 1024px laptop that put
-       the first row of the table below the fold — a leaderboard you have to
-       scroll to reach. The fold is one summary line away and says how many
-       boards are behind it, which is the trade: legible chips, and the table
-       still on screen. A board page is always folded; it opens on its ten. */
-    /* 1180 was measured against the block before the type grew, and at
-       exactly that width the table's first row still landed below the fold.
-       Height matters as much as width — a short window loses the row on a
-       wide screen too — so both are asked. */
-    const incape = typeof innerWidth === 'number'
-      ? (innerWidth >= 1260 && innerHeight >= 900)
-      : true;
-    return `<details class="chips" ${!active && incape ? 'open' : ''}>
+       The front page opens on the boards, at every size of screen. It used to
+       open on them only where the table's first row still fitted underneath
+       -- a wide, tall window -- and fold them everywhere else, so on a laptop
+       or a phone the page began with a list of names and no sign of where the
+       names came from. Somebody landing there saw a ranking of Elon Musk,
+       Binance and MAGA in one column and had to guess what the site was. The
+       boards are the explanation: seventy of them, in their groups, and then
+       the table under them. A row further down is the right price for that.
+
+       A board page is the other way round: it is here to show its ten, so it
+       opens on them, with the list one summary line away, saying how many
+       boards are behind it. */
+    return `<details class="chips" ${active ? '' : 'open'}>
       <summary class="chips__sum">
         <span>${active ? `${esc(acum)} — all ${PLATFORMS.length} boards` : 'Boards'}</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m6 9 6 6 6-6z"/></svg>
@@ -2721,6 +2932,19 @@
     let active = -1;
     let taking = false;
 
+    /* Drawn in pages of sixty, and the next page arrives when the list is
+       scrolled to the bottom of the one before -- so a list of five hundred
+       and thirty-five members of Congress, or a thousand coins, is all there,
+       and none of it is drawn before somebody looks at it. It used to stop at
+       sixty with a line saying how many more there were and to keep typing;
+       the note was honest and the list was still cut off at the Bs, which on a
+       board of the whole Congress read as a list of the whole Congress that
+       happened to end at B. Sixty at once is still the right page: sixty
+       pictures load without being asked twice, and a thousand <img> tags in
+       one go is what left every coin on a coloured disc the last time. */
+    const CAP = 60;
+    let maiMult = () => {};
+
     const draw = q => {
       const words = fold(q).split(' ').filter(Boolean);
       const shown = (cascadeList || []).filter(t => {
@@ -2733,19 +2957,7 @@
       });
 
       active = -1;
-      /* A thousand rows in a dropdown is not a list, it is a scroll, and it
-         was drawing a thousand <img> tags to go with it. Lazy loading then
-         did what it is for: fetched the handful on screen and left every
-         other coin sitting on a coloured disc with its ticker on it, which
-         is what "the logos are not showing, they are on a yellow circle"
-         was. Sixty is more than anyone reads before typing, and sixty
-         pictures load at once without being asked twice. */
-      const CAP = 60;
-      const prea = Math.max(0, shown.length - CAP);
-      const lista = shown.slice(0, CAP);
-
-      list.innerHTML = shown.length
-        ? lista.map(t => `
+      const optiune = t => `
             <button type="button" class="cascade__opt" role="option" aria-selected="false"
                     data-club="${esc(teamName(t))}">
               <span class="chip" data-board="${esc(slug)}" style="--chip-ink:${esc(teamInk(t))};--chip-trim:${esc(teamTrim(t))}">${esc(teamMark(t))}${
@@ -2760,10 +2972,29 @@
                 <span class="cascade__name">${esc(teamName(t))}</span>
                 ${teamClub(t) ? `<span class="cascade__club">${esc(teamClub(t))}${teamNo(t) ? ` &middot; #${esc(teamNo(t))}` : ''}</span>` : ''}
               </span>
-            </button>`).join('')
-          + (prea ? `<p class="cascade__more">${prea.toLocaleString()} more — keep typing to narrow it, or type any name in full and it will be taken as it is.</p>` : '')
+            </button>`;
+
+      let desenate = 0;
+      const pagina = () => { const p = shown.slice(desenate, desenate + CAP); desenate += p.length; return p.map(optiune).join(''); };
+      const nota = () => shown.length > desenate
+        ? `<p class="cascade__more" data-more>${(shown.length - desenate).toLocaleString()} more below — keep scrolling, or type to narrow it. Any name typed in full is taken as it is.</p>`
+        : '';
+
+      /* The next page, when the bottom of this one comes into view. The note
+         moves down with it and goes when there is nothing left to say. */
+      maiMult = () => {
+        if (desenate >= shown.length) return;
+        if (list.scrollTop + list.clientHeight < list.scrollHeight - 160) return;
+        const veche = list.querySelector('[data-more]');
+        if (veche) veche.remove();
+        list.insertAdjacentHTML('beforeend', pagina() + nota());
+      };
+
+      list.innerHTML = shown.length
+        ? pagina() + nota()
         : `<p class="cascade__none">Nothing by that name in the list. Type it out in full and it will be taken as it is.</p>`;
     };
+    list.addEventListener('scroll', () => maiMult(), { passive: true });
 
     /* Where the list goes, measured rather than assumed.
 

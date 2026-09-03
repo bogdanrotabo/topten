@@ -175,6 +175,86 @@
     "name": "U.S. Political Figures",
     "color": "#1e3a8a"
   },
+  "us-billionaires": {
+    "name": "U.S. Billionaires",
+    "color": "#1d4ed8"
+  },
+  "uk-billionaires": {
+    "name": "UK Billionaires",
+    "color": "#012169"
+  },
+  "switzerland-billionaires": {
+    "name": "Swiss Billionaires",
+    "color": "#da291c"
+  },
+  "uae-billionaires": {
+    "name": "UAE Billionaires",
+    "color": "#00732f"
+  },
+  "japan-billionaires": {
+    "name": "Japanese Billionaires",
+    "color": "#bc002d"
+  },
+  "australia-billionaires": {
+    "name": "Australian Billionaires",
+    "color": "#00008b"
+  },
+  "china-billionaires": {
+    "name": "Chinese Billionaires",
+    "color": "#de2910"
+  },
+  "israel-billionaires": {
+    "name": "Israeli Billionaires",
+    "color": "#0038b8"
+  },
+  "india-billionaires": {
+    "name": "Indian Billionaires",
+    "color": "#ff9933"
+  },
+  "germany-billionaires": {
+    "name": "German Billionaires",
+    "color": "#dd0000"
+  },
+  "france-billionaires": {
+    "name": "French Billionaires",
+    "color": "#0055a4"
+  },
+  "canada-billionaires": {
+    "name": "Canadian Billionaires",
+    "color": "#d80621"
+  },
+  "italy-billionaires": {
+    "name": "Italian Billionaires",
+    "color": "#009246"
+  },
+  "brazil-billionaires": {
+    "name": "Brazilian Billionaires",
+    "color": "#009c3b"
+  },
+  "russia-billionaires": {
+    "name": "Russian Billionaires",
+    "color": "#0039a6"
+  },
+  "saudi-arabia-billionaires": {
+    "name": "Saudi Billionaires",
+    "color": "#006c35"
+  },
+  "singapore-billionaires": {
+    "name": "Singapore Billionaires",
+    "color": "#ef3340"
+  },
+  "south-korea-billionaires": {
+    "name": "South Korean Billionaires",
+    "color": "#0047a0"
+  },
+  "spain-billionaires": {
+    "name": "Spanish Billionaires",
+    "color": "#aa151b"
+  },
+  "mexico-billionaires": {
+    "name": "Mexican Billionaires",
+    "color": "#006847"
+  },
   "podcasts": {
     "name": "Podcasts",
     "color": "#0d9488"
