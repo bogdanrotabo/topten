@@ -282,40 +282,17 @@ img { max-width: 100%; }
 
 /* --------------------------------------------------------------------- hero */
 
-/* The masthead already carries the wordmark, so on a phone the hero gives up
-   height rather than pushing the board's bottom row under the fold. */
-.hero {
-  padding: 16px 0 12px;
-  text-align: center;
-}
+/* The hero is not written here. It was, and then a second set of rules for it
+   grew near the end of the file, and the second set wins every declaration
+   the two share -- same weight, later in the document. What stood here was
+   seven declarations that could never take effect, including two media
+   queries that looked like they were doing something on a phone and on a
+   short screen and were not. That is not merely untidy: editing them changed
+   nothing on screen, which is how an afternoon goes missing, and one of them
+   silently pushed the first row of the board under the fold on a 675px-tall
+   laptop for as long as the headline has been centred.
 
-.hero h1 {
-  margin: 0;
-  font-size: clamp(30px, 9vw, 60px);
-  line-height: .98;
-  letter-spacing: -.035em;
-  font-weight: 800;
-}
-
-@media (min-width: 560px) {
-  .hero { padding: 34px 0 20px; }
-}
-
-.hero h1 em {
-  font-style: normal;
-  color: var(--accent);
-}
-
-.hero__sub {
-  margin: 6px auto 0;
-  max-width: 34ch;
-  color: var(--muted);
-  font-size: 13.5px;
-}
-
-@media (min-width: 560px) {
-  .hero__sub { margin-top: 8px; font-size: 15px; }
-}
+   Search for "the head" further down. */
 
 /* --------------------------------------------------------------- stats bar */
 
@@ -1180,11 +1157,15 @@ img { max-width: 100%; }
    down to band 1's bottom border" was. The .stat sizing went with it: the
    band has a fixed height now, and a rule that shrinks its contents on a
    short screen only moves them off centre. */
+/* The hero is not in here either, and its three lines were dead where they
+   stood -- the rules near the end of the file win them all. The padding is
+   handled down there, in a copy of this query placed after the rule that was
+   beating it. The other two are obsolete rather than lost: the headline size
+   here was a reduction from clamp(30px, 9vw, 60px) and the base is now
+   clamp(26px, 5vw, 36px), which is smaller than the "reduction"; and two
+   points off the line under it saves four pixels of a short screen, which is
+   not worth a rule that has to be kept in step with another one. */
 @media (max-height: 760px) {
-  .hero { padding: 8px 0 4px; }
-  .hero h1 { font-size: clamp(26px, 7vw, 40px); }
-  .hero__sub { font-size: 13px; margin-top: 4px; }
-
   .tobeat { padding: 7px 11px; margin-bottom: 8px; }
   .tobeat__k { font-size: 10px; }
   .tobeat__v { font-size: 21px; }
