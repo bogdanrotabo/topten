@@ -1417,7 +1417,8 @@
      walks; kept here so a board without a section in the file never triggers
      a fetch for one. */
   const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties',
-                         'football-players', 'f1-drivers', 'golf-players', 'artists'];
+                         'football-players', 'f1-drivers', 'golf-players', 'artists',
+                         'nba-players', 'nhl-players'];
 
   /* Every sitting member of Congress, kept current by the public-domain
      dataset the civic-tech world maintains rather than by a list I typed once
@@ -2293,6 +2294,25 @@
       <p class="finelist" id="amount-echo" style="margin:-6px 0 10px;text-align:center"></p>`;
   }
 
+  /* The picture for a name in the picker, by the same chain a row on the
+     board uses. It had a shorter chain of its own, and the difference was
+     visible: the five influencer boards drew thirty violet circles with two
+     letters in them, because the chain stopped at the boards that have
+     Wikipedia photographs and never went on to ask unavatar -- which is
+     where a creator's picture actually is, and which this site pays for.
+     One chain now, so a board cannot have a face in the table and initials
+     in the list that offers it. */
+  function rosterPic(slug, name) {
+    const on = faceOn(slug);
+    return (slug === 'exchanges' && exchangeLogo(name))
+      || (slug !== 'exchanges' && CRYPTO.has(slug) && coinLogo(name))
+      || (slug === 'games' && gameArt(name))
+      || (personArt(slug, name) || {}).img
+      || (slug === 'us-politicians' && congressPhoto(name))
+      || (on ? avatarUrl(on, name) : null)
+      || null;
+  }
+
   let cascadeList = null;
   let cascadeDocBound = false;
 
@@ -2313,12 +2333,23 @@
 
     cascadeList = ROSTERS[slug] || null;
 
-    /* Thirteen boards have a list that is not in the bundle. Ask for it, and
-       run this again once it lands -- but only if the form is still open on
-       the same board, because by then somebody may have picked another one
-       or closed it altogether. */
-    if (!cascadeList && LISTED_LATER.has(slug)) {
-      fetchRoster(slug).then(() => {
+    /* Two things can be missing when this opens, and only one of them was
+       ever fetched. Thirteen boards keep their list outside the bundle, and
+       asking for it also brings the pictures. The ten NBA players and the ten
+       NHL players keep their list inside the bundle -- so this branch never
+       ran for them, nothing ever asked for people-art.json, and two boards
+       that are nothing but people showed twenty sets of initials.
+
+       So: whichever is missing. The list if there is no list, the pictures if
+       there is a list and no pictures. And draw again when it lands, but only
+       if the form is still open on the same board -- by then somebody may
+       have picked another one or closed it altogether. */
+    const lipseste = !cascadeList
+      ? (LISTED_LATER.has(slug) ? fetchRoster(slug) : null)
+      : (PEOPLE_BOARDS.includes(slug) && !PEOPLE_ART ? loadPeopleArt() : null);
+
+    if (lipseste) {
+      lipseste.then(() => {
         if (!modal.hidden && state.draft && state.draft.slug === slug && ROSTERS[slug]) {
           setupCascade(slug, document.getElementById('url-input'));
         }
@@ -2401,12 +2432,7 @@
                    keep their abbreviation; a crest is not ours to fetch. */
                 (n => n ? `<img alt="" src="${esc(n)}"
                      onload="this.parentNode.classList.add('token--on')"
-                     onerror="this.remove()">` : '')(
-                       slug === 'exchanges' ? exchangeLogo(teamName(t))
-                     : slug === 'us-politicians' ? ((personArt(slug, teamName(t)) || {}).img
-                                                    || congressPhoto(teamName(t)))
-                     : PEOPLE_BOARDS.includes(slug) ? (personArt(slug, teamName(t)) || {}).img
-                                            : (coinLogo(teamName(t)) || gameArt(teamName(t))))
+                     onerror="this.remove()">` : '')(rosterPic(slug, teamName(t)))
               }</span>
               <span class="cascade__who">
                 <span class="cascade__name">${esc(teamName(t))}</span>

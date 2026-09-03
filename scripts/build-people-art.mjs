@@ -40,7 +40,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
    in one file but keyed by board, because a name can mean two different
    things on two different boards and each should get its own picture. */
 const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
-               'f1-drivers', 'golf-players', 'artists'];
+               'f1-drivers', 'golf-players', 'artists',
+               'nba-players', 'nhl-players'];
 
 /* Name boards on the command line to rebuild only those; without any, all of
    them. Rebuilding seven boards to check one costs ten minutes of somebody
@@ -49,16 +50,36 @@ const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
 const cerute = process.argv.slice(2).filter(a => !a.startsWith('--'));
 const BOARDS = cerute.length ? TOATE.filter(b => cerute.includes(b)) : TOATE;
 
+/* A name that is not a board here was silently dropped, so a typo ran the
+   script, printed a success line and changed nothing anybody asked for. */
+const necunoscute = cerute.filter(b => !TOATE.includes(b));
+if (necunoscute.length) {
+  console.error('build-people-art: not a board with pictures: ' + necunoscute.join(', '));
+  console.error('  the ones that are: ' + TOATE.join(', '));
+  process.exit(2);
+}
+
 /* Both quote styles. A name with an apostrophe in it — Baldur's Gate,
    Schindler's List — has to be written with double quotes in the roster, and
    the first version of this only ever looked for single ones, so those names
    were silently skipped and their art never fetched. */
+/* Two places hold rosters and both are read. The big ones live in
+   scripts/rosters.mjs and ship as rosters.json; a handful of short ones --
+   the ten NBA players, the ten NHL players -- are written straight into
+   app.js because they are small enough to travel in the bundle. Looking in
+   only the first place is why those two boards had no photographs at all:
+   not a decision, just a list the builder could not see. */
 function wanted(board) {
-  const src = readFileSync(join(root, 'scripts/rosters.mjs'), 'utf8');
-  const re = new RegExp(`'?${board}'?: \\[([\\s\\S]*?)\\n  \\],`);
-  const m = re.exec(src);
-  if (!m) { console.error(`build-people-art: no ${board} list in scripts/rosters.mjs`); process.exit(2); }
-  return [...m[1].matchAll(/\[\s*(?:'([^']*)'|"([^"]*)")/g)].map(x => x[1] ?? x[2]);
+  for (const [fisier, adancime] of [["scripts/rosters.mjs", "  "], ["app.js", "    "]]) {
+    const src = readFileSync(join(root, fisier), "utf8");
+    const re = new RegExp(`'?${board}'?: \\[([\\s\\S]*?)\\n${adancime}\\],?`);
+    const m = re.exec(src);
+    if (!m) continue;
+    const nume = [...m[1].matchAll(/\[\s*(?:'([^']*)'|"([^"]*)")/g)].map(x => x[1] ?? x[2]);
+    if (nume.length) return nume;
+  }
+  console.error(`build-people-art: no ${board} list in scripts/rosters.mjs or app.js`);
+  process.exit(2);
 }
 
 const get = async (u, attempt = 1) => {
@@ -229,10 +250,18 @@ const art = existsSync(OUT)
   : {};
 let gasit = 0, refuzat = 0;
 
+/* Every list found before a single request goes out. wanted() stops the
+   script when a board has no list anywhere, and it used to be called inside
+   the loop -- so naming two boards where the second had no list spent a
+   minute fetching the first, then exited before writing anything, and the
+   work was simply gone. Whatever is going to fail should fail before the
+   work, not after it. */
+const LISTE = new Map(BOARDS.map(b => [b, wanted(b)]));
+
 for (const board of BOARDS) {
   art[board] = {};
   let g = 0, r = 0;
-  for (const n of wanted(board)) {
+  for (const n of LISTE.get(board)) {
     try {
       const hit = board === 'us-parties' ? await lookParty(n) : await look(n);
       if (hit) { art[board][fold(n)] = hit; g++; }
