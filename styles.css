@@ -1397,10 +1397,10 @@ img { max-width: 100%; }
 
 /* ------------------------------------------------------------- the head */
 
-/* Centred, and with air under the headline. The rule and the invitation are
-   two short lines meant to be read as a statement, not as body copy hanging
-   off a left margin — and the blank line after the title is what separates
-   the name of the thing from what it does. */
+/* Centred, and with air around the headline. On the front page it is one
+   short line -- a question -- meant to be read as a statement, not as body
+   copy hanging off a left margin; on a board it is the name of the board, and
+   the blank line after it is what separates the name from what it does. */
 .hero { padding: 44px 0 14px; text-align: center; }
 
 /* On a board the headline comes after the chips and sits on its own ten, so
@@ -1478,18 +1478,6 @@ img { max-width: 100%; }
 }
 
 .hero__sub b { color: var(--text); font-weight: 700; }
-
-/* The line under the rule: the question and what answering it costs. Same
-   size as the rule above it, its own line, and the price in the accent so
-   the eye lands on the number. */
-.hero__ask {
-  margin: 6px auto 0;
-  max-width: 68ch;
-  font-size: 15px;
-  line-height: 1.55;
-  font-weight: 600;
-  color: var(--text);
-}
 
 /* --------------------------------------------------------- board filter */
 

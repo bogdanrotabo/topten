@@ -2355,13 +2355,13 @@
      rounded, dressed up or invented. A price you can check is worth more than
      a promise you cannot, but it does not have to be the first thing said. */
   function heroHome() {
-    /* Two lines and nothing else. The name of the thing, then the question it
-       exists to ask. The rule and the price used to stand here too; they are
-       both still on the page -- the price is a live figure in the strip below
-       and on the button -- and the head reads as a question now rather than
-       as an explanation somebody has to get through first. */
-    return `<h1>Rankings decided by <em>money</em></h1>
-      <p class="hero__ask">Who should be #1?</p>`;
+    /* One line, and it is the question. The tagline -- rankings decided by
+       money -- was the title above it until it was cut; it is still the
+       site's name in the tab, the share card and the badge, but the page
+       itself opens on what it asks rather than on what it is called. The
+       rule and the price used to stand here too and are both still on the
+       page: the price is a live figure in the strip below and on the button. */
+    return `<h1>Who should be <em>#1</em>?</h1>`;
   }
 
   function heroBoard(slug) {
