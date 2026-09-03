@@ -1265,8 +1265,16 @@
     const el = document.getElementById('ticker');
     if (!el) return;
 
+    /* Newest payment first, so the strip opens on whoever just paid.
+
+       It ran in board order before, which meant it opened on X every time and
+       said nothing about the last hour. The rank each row carries is still its
+       rank on its own board -- that is worked out before this is sorted, so a
+       row that is #4 on TikTok still says #4 wherever it appears in the
+       strip. Only the order of the strip changed. */
     const items = PLATFORMS.flatMap(p =>
-      board(p.slug).slice(0, 10).map((row, i) => ({ p, row, rank: i + 1 })));
+      board(p.slug).slice(0, 10).map((row, i) => ({ p, row, rank: i + 1 })))
+      .sort((a, b) => new Date(b.row.last_paid_at) - new Date(a.row.last_paid_at));
     el.hidden = !items.length;
     if (!items.length) return;
 
