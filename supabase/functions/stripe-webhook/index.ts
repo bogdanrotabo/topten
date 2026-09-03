@@ -110,9 +110,22 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return new Response("bad json", { status: 400 });
   }
 
-  // Anything other than a completed checkout is acknowledged and dropped, so
-  // Stripe does not retry events we deliberately ignore.
-  if (event.type !== "checkout.session.completed") {
+  // Two events carry a paid session. `checkout.session.completed` is the
+  // ordinary one, a card cleared while the payer waited. A method that
+  // settles later -- a bank debit, a redirect the payer finished after
+  // closing the tab -- completes the session unpaid and confirms it with
+  // `checkout.session.async_payment_succeeded`, which used to be dropped here
+  // as noise: money taken, rank never bought, nothing in the logs but
+  // "ignored". Both are read the same way; the payment_status check below is
+  // what decides, and it is on the session in both.
+  //
+  // Anything else is acknowledged and dropped, so Stripe does not retry
+  // events we deliberately ignore.
+  if (
+    event.type !== "checkout.session.completed" &&
+    event.type !== "checkout.session.async_payment_succeeded"
+  ) {
+    console.log(`ignored ${event.type}`);
     return new Response(JSON.stringify({ ignored: event.type }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -127,9 +140,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const paymentStatus = String(session.payment_status ?? "");
 
   // A completed session can still be unpaid when a delayed payment method is
-  // used. Money that has not settled must not buy a rank.
+  // used. Money that has not settled must not buy a rank; the
+  // async_payment_succeeded event for the same session arrives when it has.
   if (paymentStatus !== "paid") {
-    console.log(`session ${sessionId} completed but payment_status=${paymentStatus}`);
+    console.log(`session ${sessionId} ${event.type} but payment_status=${paymentStatus}`);
     return new Response(JSON.stringify({ skipped: "unpaid" }), { status: 200 });
   }
 
