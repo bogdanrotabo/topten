@@ -50,8 +50,9 @@ if [ $((CENTS % 100)) -eq 0 ]; then P=$((CENTS / 100)); else P=$(printf "%d.%02d
 sed -i -E "s~(#1 from \\$)[0-9]+(\\.[0-9]+)?~\\1$P~g" index.html
 echo "  #1 from \$$P, written into the head"
 
-# The policy goes in before the stamp, because it changes the pages and the
-# stamp is a hash of what they load.
+# Both of these go before the stamp, because both change files the stamp is a
+# hash of. The data stamps rewrite app.js; the policy rewrites the pages.
+node "$(dirname "$0")/stamp-data.mjs"
 node "$(dirname "$0")/build-csp.mjs"
 
 STAMP=$(cat app.js styles.css config.js | sha1sum | cut -c1-10)
@@ -179,6 +180,7 @@ node "$(dirname "$0")/rosters.mjs" --check
 node "$(dirname "$0")/build-game-art.mjs" --check
 node "$(dirname "$0")/build-people-art.mjs" --check
 node "$(dirname "$0")/build-congress.mjs" --check
+node "$(dirname "$0")/stamp-data.mjs" --check
 node "$(dirname "$0")/build-worker-boards.mjs" --check
 
 # 5. And check that the boards actually agree, everywhere they are written

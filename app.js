@@ -1476,7 +1476,7 @@
   async function loadCoinLogos() {
     if (COIN_LOGOS) return COIN_LOGOS;
     try {
-      const r = await fetch('/coin-logos.json', { cache: 'force-cache' });
+      const r = await fetch('/coin-logos.json?v=591106ca79', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       COIN_LOGOS = await r.json();
     } catch (e) {
@@ -1532,7 +1532,7 @@
   async function loadCongress() {
     if (CONGRESS) return CONGRESS;
     try {
-      const r = await fetch('/congress.json', { cache: 'force-cache' });
+      const r = await fetch('/congress.json?v=d569f24621', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const d = await r.json();
       /* Role, state and party on one line. The sixth field is a jersey number
@@ -1559,7 +1559,7 @@
   async function loadPeopleArt() {
     if (PEOPLE_ART) return PEOPLE_ART;
     try {
-      const r = await fetch('/people-art.json', { cache: 'force-cache' });
+      const r = await fetch('/people-art.json?v=7f66e0580b', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       PEOPLE_ART = await r.json();
     } catch (e) {
@@ -1586,7 +1586,7 @@
   async function loadGameArt() {
     if (GAME_ART) return GAME_ART;
     try {
-      const r = await fetch('/game-art.json', { cache: 'force-cache' });
+      const r = await fetch('/game-art.json?v=4e2739c5f1', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       GAME_ART = await r.json();
     } catch (e) {
@@ -1688,7 +1688,7 @@
   async function loadRosterFile() {
     if (ROSTER_FILE) return ROSTER_FILE;
     try {
-      const r = await fetch('/rosters.json', { cache: 'force-cache' });
+      const r = await fetch('/rosters.json?v=a40e52550b', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ROSTER_FILE = await r.json();
       for (const [slug, list] of Object.entries(ROSTER_FILE)) {
@@ -1746,7 +1746,7 @@
        is trying to recognise a coin by its logo. */
     const logos = loadCoinLogos();
     try {
-      const r = await fetch('/coin-list.json', { cache: 'force-cache' });
+      const r = await fetch('/coin-list.json?v=fe98927a89', { cache: 'force-cache' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const d = await r.json();
       /* Shaped like a club roster -- [name, mark, colour, colour] -- so the
