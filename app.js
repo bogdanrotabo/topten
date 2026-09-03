@@ -201,30 +201,6 @@
        players and "the best ten" is an argument, not a fact. So these are
        offered and nothing more -- type any name and it is taken. What settles
        the board is the money, the same as everywhere else on this site. */
-    'nba-players': [
-      ['Nikola Jokic',            'DEN', '#0e2240', '#fec524', 'Denver Nuggets',         '15'],
-      ['Shai Gilgeous-Alexander', 'OKC', '#007ac1', '#ef3b24', 'Oklahoma City Thunder',   '2'],
-      ['Giannis Antetokounmpo',   'MIL', '#00471b', '#eee1c6', 'Milwaukee Bucks',        '34'],
-      ['Luka Doncic',             'LAL', '#552583', '#fdb927', 'Los Angeles Lakers',     '77'],
-      ['Victor Wembanyama',       'SAS', '#c4ced4', '#000000', 'San Antonio Spurs',       '1'],
-      ['Jayson Tatum',            'BOS', '#007a33', '#ba9653', 'Boston Celtics',          '0'],
-      ['Anthony Edwards',         'MIN', '#0c2340', '#78be20', 'Minnesota Timberwolves',  '5'],
-      ['Stephen Curry',           'GSW', '#1d428a', '#ffc72c', 'Golden State Warriors',  '30'],
-      ['LeBron James',            'LAL', '#552583', '#fdb927', 'Los Angeles Lakers',     '23'],
-      ['Donovan Mitchell',        'CLE', '#860038', '#fdbb30', 'Cleveland Cavaliers',    '45']
-    ],
-    'nhl-players': [
-      ['Connor McDavid',          'EDM', '#041e42', '#ff4c00', 'Edmonton Oilers',        '97'],
-      ['Nathan MacKinnon',        'COL', '#6f263d', '#236192', 'Colorado Avalanche',     '29'],
-      ['Auston Matthews',         'TOR', '#00205b', '#ffffff', 'Toronto Maple Leafs',    '34'],
-      ['Leon Draisaitl',          'EDM', '#041e42', '#ff4c00', 'Edmonton Oilers',        '29'],
-      ['Cale Makar',              'COL', '#6f263d', '#236192', 'Colorado Avalanche',      '8'],
-      ['Nikita Kucherov',         'TBL', '#002868', '#ffffff', 'Tampa Bay Lightning',    '86'],
-      ['David Pastrnak',          'BOS', '#000000', '#ffb81c', 'Boston Bruins',          '88'],
-      ['Kirill Kaprizov',         'MIN', '#154734', '#a6192e', 'Minnesota Wild',         '97'],
-      ['Quinn Hughes',            'VAN', '#00205b', '#00843d', 'Vancouver Canucks',      '43'],
-      ['Connor Hellebuyck',       'WPG', '#041e42', '#55b5e5', 'Winnipeg Jets',          '37']
-    ]
   };
 
   /* Four accessors rather than four index numbers scattered about: the shape
@@ -1670,7 +1646,11 @@
      comes from. Two files because they are two different sizes and two very
      different rates of change: a thousand coins that move weekly, and three
      hundred names that barely move at all. */
+  /* nba-players and nhl-players joined this list when they stopped being ten
+     names typed into the file above and became fifty fetched from the leagues.
+     A list that size does not belong in the bundle every visitor downloads. */
   const LISTED_LATER = new Set([
+    'nba-players', 'nhl-players',
     'crypto', 'memecoins', 'exchanges',
     'football-clubs', 'football-players', 'f1-drivers', 'artists', 'games',
     'cities', 'podcasts', 'actors', 'movies', 'cars', 'boats', 'golf-players',

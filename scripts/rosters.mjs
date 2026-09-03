@@ -28,6 +28,13 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(root, 'rosters.json');
 
+/* The NBA and NHL player lists are not written here. They come from the
+   leagues' own numbers, fetched by scripts/build-sport-rosters.mjs -- fifty
+   names each, at the clubs they actually play for. Ten names typed by hand
+   is what they were, and a typed roster is wrong the season after a trade
+   without anybody noticing. */
+const SPORT = join(root, 'scripts/sport-rosters.json');
+
 /* [name, the mark shown in the little circle, its ink, its trim] — the same
    four fields the club rosters use, so the cascade needs nothing new. */
 const V = '#7c349a', G = '#fdd321', W = '#ffffff', D = '#1e1923';
@@ -162,6 +169,13 @@ const R = {
     ['Bryson DeChambeau','BD'], ['Patrick Cantlay','PC'], ['Hideki Matsuyama','HM'],
     ['Ludvig Åberg','LA'], ['Tommy Fleetwood','TF'], ['Shane Lowry','SL'],
     ['Annika Sörenstam','AS'], ['Nelly Korda','NK'], ['Lydia Ko','LK'],
+    ['Greg Norman','GN'], ['Vijay Singh','VS'], ['Ernie Els','EE'],
+    ['Nick Price','NP'], ['Lee Trevino','LT'], ['Byron Nelson','BN'],
+    ['Gene Sarazen','GS'], ['Walter Hagen','WH'], ['Payne Stewart','PS'],
+    ['Johnny Miller','JM'], ['Justin Rose','JR'], ['Adam Scott','AS'],
+    ['Sergio García','SG'], ['Cameron Smith','CS'], ['Matt Fitzpatrick','MF'],
+    ['Robert MacIntyre','RM'], ['Mickey Wright','MW'],
+    ['Se Ri Pak','SP'], ['Inbee Park','IP'], ['Lorena Ochoa','LO'],
   ],
   /* The parties on the ballot, not a shortlist somebody drew up. These are
      the national committees and the parties with recognised ballot access in
@@ -266,6 +280,14 @@ for (const [slug, list] of Object.entries(R)) {
 }
 for (const [slug, list] of Object.entries(H)) {
   out[slug] = list.map(h => [h, h.replace(/^@/, '').slice(0, 2).toUpperCase(), V, W]);
+}
+
+if (!existsSync(SPORT)) {
+  console.error('rosters: scripts/sport-rosters.json is missing. Run: node scripts/build-sport-rosters.mjs');
+  process.exit(1);
+}
+for (const [slug, list] of Object.entries(JSON.parse(readFileSync(SPORT, 'utf8')))) {
+  out[slug] = list;
 }
 
 const json = JSON.stringify(out);

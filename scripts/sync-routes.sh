@@ -164,6 +164,7 @@ node "$(dirname "$0")/build-coin-logos.mjs" --check
 #    against the generator rather than for age: they are written by hand, so
 #    a stale rosters.json means somebody edited the script and forgot to run
 #    it, which is a mistake and not a schedule.
+node "$(dirname "$0")/build-sport-rosters.mjs" --check
 node "$(dirname "$0")/rosters.mjs" --check
 
 #    And the game art, which only warns: Steam is not in this site's critical

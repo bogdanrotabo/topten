@@ -1,0 +1,706 @@
+{
+ "nba-players": [
+  [
+   "Luka Dončić",
+   "LAL",
+   "#552583",
+   "#fdb927",
+   "Los Angeles Lakers"
+  ],
+  [
+   "Shai Gilgeous-Alexander",
+   "OKC",
+   "#007ac1",
+   "#ef3b24",
+   "Oklahoma City Thunder"
+  ],
+  [
+   "Anthony Edwards",
+   "MIN",
+   "#0c2340",
+   "#78be20",
+   "Minnesota Timberwolves"
+  ],
+  [
+   "Jaylen Brown",
+   "BOS",
+   "#007a33",
+   "#ba9653",
+   "Boston Celtics"
+  ],
+  [
+   "Tyrese Maxey",
+   "PHI",
+   "#006bb6",
+   "#ed174c",
+   "Philadelphia 76ers"
+  ],
+  [
+   "Kawhi Leonard",
+   "LAC",
+   "#c8102e",
+   "#1d428a",
+   "LA Clippers"
+  ],
+  [
+   "Donovan Mitchell",
+   "CLE",
+   "#860038",
+   "#fdbb30",
+   "Cleveland Cavaliers"
+  ],
+  [
+   "Nikola Jokić",
+   "DEN",
+   "#0e2240",
+   "#fec524",
+   "Denver Nuggets"
+  ],
+  [
+   "Devin Booker",
+   "PHX",
+   "#1d1160",
+   "#e56020",
+   "Phoenix Suns"
+  ],
+  [
+   "Jalen Brunson",
+   "NYK",
+   "#006bb6",
+   "#f58426",
+   "New York Knicks"
+  ],
+  [
+   "Kevin Durant",
+   "HOU",
+   "#ce1141",
+   "#000000",
+   "Houston Rockets"
+  ],
+  [
+   "Jamal Murray",
+   "DEN",
+   "#0e2240",
+   "#fec524",
+   "Denver Nuggets"
+  ],
+  [
+   "Victor Wembanyama",
+   "SAS",
+   "#c4ced4",
+   "#000000",
+   "San Antonio Spurs"
+  ],
+  [
+   "Deni Avdija",
+   "POR",
+   "#e03a3e",
+   "#000000",
+   "Portland Trail Blazers"
+  ],
+  [
+   "Pascal Siakam",
+   "IND",
+   "#002d62",
+   "#fdbb30",
+   "Indiana Pacers"
+  ],
+  [
+   "Cade Cunningham",
+   "DET",
+   "#c8102e",
+   "#1d42ba",
+   "Detroit Pistons"
+  ],
+  [
+   "James Harden",
+   "CLE",
+   "#860038",
+   "#fdbb30",
+   "Cleveland Cavaliers"
+  ],
+  [
+   "Jalen Johnson",
+   "ATL",
+   "#e03a3e",
+   "#c1d32f",
+   "Atlanta Hawks"
+  ],
+  [
+   "Paolo Banchero",
+   "ORL",
+   "#0077c0",
+   "#c4ced4",
+   "Orlando Magic"
+  ],
+  [
+   "Norman Powell",
+   "MIA",
+   "#98002e",
+   "#f9a01b",
+   "Miami Heat"
+  ],
+  [
+   "Trey Murphy III",
+   "NOP",
+   "#0c2340",
+   "#c8102e",
+   "New Orleans Pelicans"
+  ],
+  [
+   "Brandon Ingram",
+   "TOR",
+   "#ce1141",
+   "#000000",
+   "Toronto Raptors"
+  ],
+  [
+   "Julius Randle",
+   "MIN",
+   "#0c2340",
+   "#78be20",
+   "Minnesota Timberwolves"
+  ],
+  [
+   "Cooper Flagg",
+   "DAL",
+   "#00538c",
+   "#b8c4ca",
+   "Dallas Mavericks"
+  ],
+  [
+   "Zion Williamson",
+   "NOP",
+   "#0c2340",
+   "#c8102e",
+   "New Orleans Pelicans"
+  ],
+  [
+   "LeBron James",
+   "LAL",
+   "#552583",
+   "#fdb927",
+   "Los Angeles Lakers"
+  ],
+  [
+   "Nickeil Alexander-Walker",
+   "ATL",
+   "#e03a3e",
+   "#c1d32f",
+   "Atlanta Hawks"
+  ],
+  [
+   "Alperen Sengun",
+   "HOU",
+   "#ce1141",
+   "#000000",
+   "Houston Rockets"
+  ],
+  [
+   "Brandon Miller",
+   "CHA",
+   "#1d1160",
+   "#00788c",
+   "Charlotte Hornets"
+  ],
+  [
+   "Bam Adebayo",
+   "MIA",
+   "#98002e",
+   "#f9a01b",
+   "Miami Heat"
+  ],
+  [
+   "Desmond Bane",
+   "ORL",
+   "#0077c0",
+   "#c4ced4",
+   "Orlando Magic"
+  ],
+  [
+   "LaMelo Ball",
+   "CHA",
+   "#1d1160",
+   "#00788c",
+   "Charlotte Hornets"
+  ],
+  [
+   "Karl-Anthony Towns",
+   "NYK",
+   "#006bb6",
+   "#f58426",
+   "New York Knicks"
+  ],
+  [
+   "Jalen Duren",
+   "DET",
+   "#c8102e",
+   "#1d42ba",
+   "Detroit Pistons"
+  ],
+  [
+   "CJ McCollum",
+   "ATL",
+   "#e03a3e",
+   "#c1d32f",
+   "Atlanta Hawks"
+  ],
+  [
+   "De'Aaron Fox",
+   "SAS",
+   "#c4ced4",
+   "#000000",
+   "San Antonio Spurs"
+  ],
+  [
+   "Kon Knueppel",
+   "CHA",
+   "#1d1160",
+   "#00788c",
+   "Charlotte Hornets"
+  ],
+  [
+   "DeMar DeRozan",
+   "SAC",
+   "#5a2d81",
+   "#c4ced4",
+   "Sacramento Kings"
+  ],
+  [
+   "Amen Thompson",
+   "HOU",
+   "#ce1141",
+   "#000000",
+   "Houston Rockets"
+  ],
+  [
+   "Evan Mobley",
+   "CLE",
+   "#860038",
+   "#fdbb30",
+   "Cleveland Cavaliers"
+  ],
+  [
+   "Scottie Barnes",
+   "TOR",
+   "#ce1141",
+   "#000000",
+   "Toronto Raptors"
+  ],
+  [
+   "Saddiq Bey",
+   "NOP",
+   "#0c2340",
+   "#c8102e",
+   "New Orleans Pelicans"
+  ],
+  [
+   "Ryan Rollins",
+   "MIL",
+   "#00471b",
+   "#eee1c6",
+   "Milwaukee Bucks"
+  ],
+  [
+   "Chet Holmgren",
+   "OKC",
+   "#007ac1",
+   "#ef3b24",
+   "Oklahoma City Thunder"
+  ],
+  [
+   "Miles Bridges",
+   "CHA",
+   "#1d1160",
+   "#00788c",
+   "Charlotte Hornets"
+  ],
+  [
+   "Payton Pritchard",
+   "BOS",
+   "#007a33",
+   "#ba9653",
+   "Boston Celtics"
+  ],
+  [
+   "OG Anunoby",
+   "NYK",
+   "#006bb6",
+   "#f58426",
+   "New York Knicks"
+  ],
+  [
+   "Stephon Castle",
+   "SAS",
+   "#c4ced4",
+   "#000000",
+   "San Antonio Spurs"
+  ],
+  [
+   "Derrick White",
+   "BOS",
+   "#007a33",
+   "#ba9653",
+   "Boston Celtics"
+  ],
+  [
+   "Immanuel Quickley",
+   "TOR",
+   "#ce1141",
+   "#000000",
+   "Toronto Raptors"
+  ]
+ ],
+ "nhl-players": [
+  [
+   "Connor McDavid",
+   "EDM",
+   "#041e42",
+   "#ff4c00",
+   "Edmonton Oilers"
+  ],
+  [
+   "Nikita Kucherov",
+   "TBL",
+   "#002868",
+   "#ffffff",
+   "Tampa Bay Lightning"
+  ],
+  [
+   "Nathan MacKinnon",
+   "COL",
+   "#6f263d",
+   "#236192",
+   "Colorado Avalanche"
+  ],
+  [
+   "Macklin Celebrini",
+   "SJS",
+   "#006d75",
+   "#ea7200",
+   "San Jose Sharks"
+  ],
+  [
+   "Mark Scheifele",
+   "WPG",
+   "#041e42",
+   "#55b5e5",
+   "Winnipeg Jets"
+  ],
+  [
+   "Nick Suzuki",
+   "MTL",
+   "#af1e2d",
+   "#192168",
+   "Montreal Canadiens"
+  ],
+  [
+   "David Pastrnak",
+   "BOS",
+   "#000000",
+   "#ffb81c",
+   "Boston Bruins"
+  ],
+  [
+   "Martin Necas",
+   "COL",
+   "#6f263d",
+   "#236192",
+   "Colorado Avalanche"
+  ],
+  [
+   "Leon Draisaitl",
+   "EDM",
+   "#041e42",
+   "#ff4c00",
+   "Edmonton Oilers"
+  ],
+  [
+   "Jason Robertson",
+   "DAL",
+   "#006847",
+   "#8f8f8c",
+   "Dallas Stars"
+  ],
+  [
+   "Evan Bouchard",
+   "EDM",
+   "#041e42",
+   "#ff4c00",
+   "Edmonton Oilers"
+  ],
+  [
+   "Kyle Connor",
+   "WPG",
+   "#041e42",
+   "#55b5e5",
+   "Winnipeg Jets"
+  ],
+  [
+   "Jack Eichel",
+   "VGK",
+   "#333f42",
+   "#b4975a",
+   "Vegas Golden Knights"
+  ],
+  [
+   "Kirill Kaprizov",
+   "MIN",
+   "#154734",
+   "#a6192e",
+   "Minnesota Wild"
+  ],
+  [
+   "Jake Guentzel",
+   "TBL",
+   "#002868",
+   "#ffffff",
+   "Tampa Bay Lightning"
+  ],
+  [
+   "Cole Caufield",
+   "MTL",
+   "#af1e2d",
+   "#192168",
+   "Montreal Canadiens"
+  ],
+  [
+   "Clayton Keller",
+   "UTA",
+   "#71afe5",
+   "#010101",
+   "Utah Mammoth"
+  ],
+  [
+   "Wyatt Johnston",
+   "DAL",
+   "#006847",
+   "#8f8f8c",
+   "Dallas Stars"
+  ],
+  [
+   "Matt Boldy",
+   "MIN",
+   "#154734",
+   "#a6192e",
+   "Minnesota Wild"
+  ],
+  [
+   "Alex DeBrincat",
+   "DET",
+   "#ce1126",
+   "#ffffff",
+   "Detroit Red Wings"
+  ],
+  [
+   "Artemi Panarin",
+   "LAK",
+   "#111111",
+   "#a2aaad",
+   "Los Angeles Kings"
+  ],
+  [
+   "Tim Stützle",
+   "OTT",
+   "#c52032",
+   "#c2912c",
+   "Ottawa Senators"
+  ],
+  [
+   "Zach Werenski",
+   "CBJ",
+   "#002654",
+   "#ce1126",
+   "Columbus Blue Jackets"
+  ],
+  [
+   "Tage Thompson",
+   "BUF",
+   "#002654",
+   "#fcb514",
+   "Buffalo Sabres"
+  ],
+  [
+   "Sebastian Aho",
+   "CAR",
+   "#cc0000",
+   "#000000",
+   "Carolina Hurricanes"
+  ],
+  [
+   "Mitch Marner",
+   "VGK",
+   "#333f42",
+   "#b4975a",
+   "Vegas Golden Knights"
+  ],
+  [
+   "Cale Makar",
+   "COL",
+   "#6f263d",
+   "#236192",
+   "Colorado Avalanche"
+  ],
+  [
+   "William Nylander",
+   "TOR",
+   "#00205b",
+   "#ffffff",
+   "Toronto Maple Leafs"
+  ],
+  [
+   "Mika Zibanejad",
+   "NYR",
+   "#0038a8",
+   "#ce1126",
+   "New York Rangers"
+  ],
+  [
+   "Lane Hutson",
+   "MTL",
+   "#af1e2d",
+   "#192168",
+   "Montreal Canadiens"
+  ],
+  [
+   "Jack Hughes",
+   "NJD",
+   "#ce1126",
+   "#000000",
+   "New Jersey Devils"
+  ],
+  [
+   "Mikko Rantanen",
+   "DAL",
+   "#006847",
+   "#8f8f8c",
+   "Dallas Stars"
+  ],
+  [
+   "Quinn Hughes",
+   "MIN",
+   "#154734",
+   "#a6192e",
+   "Minnesota Wild"
+  ],
+  [
+   "Lucas Raymond",
+   "DET",
+   "#ce1126",
+   "#ffffff",
+   "Detroit Red Wings"
+  ],
+  [
+   "Connor Bedard",
+   "CHI",
+   "#cf0a2c",
+   "#ff671f",
+   "Chicago Blackhawks"
+  ],
+  [
+   "Filip Forsberg",
+   "NSH",
+   "#041e42",
+   "#ffb81c",
+   "Nashville Predators"
+  ],
+  [
+   "Sidney Crosby",
+   "PIT",
+   "#000000",
+   "#fcb514",
+   "Pittsburgh Penguins"
+  ],
+  [
+   "Brandon Hagel",
+   "TBL",
+   "#002868",
+   "#ffffff",
+   "Tampa Bay Lightning"
+  ],
+  [
+   "Nick Schmaltz",
+   "UTA",
+   "#71afe5",
+   "#010101",
+   "Utah Mammoth"
+  ],
+  [
+   "Rasmus Dahlin",
+   "BUF",
+   "#002654",
+   "#fcb514",
+   "Buffalo Sabres"
+  ],
+  [
+   "Ryan O'Reilly",
+   "NSH",
+   "#041e42",
+   "#ffb81c",
+   "Nashville Predators"
+  ],
+  [
+   "Dylan Guenther",
+   "UTA",
+   "#71afe5",
+   "#010101",
+   "Utah Mammoth"
+  ],
+  [
+   "Mark Stone",
+   "VGK",
+   "#333f42",
+   "#b4975a",
+   "Vegas Golden Knights"
+  ],
+  [
+   "Juraj Slafkovský",
+   "MTL",
+   "#af1e2d",
+   "#192168",
+   "Montreal Canadiens"
+  ],
+  [
+   "Adrian Kempe",
+   "LAK",
+   "#111111",
+   "#a2aaad",
+   "Los Angeles Kings"
+  ],
+  [
+   "Mathew Barzal",
+   "NYI",
+   "#00539b",
+   "#f47d30",
+   "New York Islanders"
+  ],
+  [
+   "Nikolaj Ehlers",
+   "CAR",
+   "#cc0000",
+   "#000000",
+   "Carolina Hurricanes"
+  ],
+  [
+   "Drake Batherson",
+   "OTT",
+   "#c52032",
+   "#c2912c",
+   "Ottawa Senators"
+  ],
+  [
+   "Jesper Bratt",
+   "NJD",
+   "#ce1126",
+   "#000000",
+   "New Jersey Devils"
+  ],
+  [
+   "John Tavares",
+   "TOR",
+   "#00205b",
+   "#ffffff",
+   "Toronto Maple Leafs"
+  ]
+ ]
+}

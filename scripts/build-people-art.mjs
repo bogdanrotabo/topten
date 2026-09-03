@@ -63,13 +63,18 @@ if (necunoscute.length) {
    Schindler's List — has to be written with double quotes in the roster, and
    the first version of this only ever looked for single ones, so those names
    were silently skipped and their art never fetched. */
-/* Two places hold rosters and both are read. The big ones live in
-   scripts/rosters.mjs and ship as rosters.json; a handful of short ones --
-   the ten NBA players, the ten NHL players -- are written straight into
-   app.js because they are small enough to travel in the bundle. Looking in
-   only the first place is why those two boards had no photographs at all:
-   not a decision, just a list the builder could not see. */
+/* Three places hold rosters and all three are read. Most live in
+   scripts/rosters.mjs; the NBA and NHL players are fetched from the leagues
+   into scripts/sport-rosters.json; and a short list written straight into
+   app.js is still possible. Looking in only the first place is why the two
+   sport boards had no photographs at all -- not a decision, just a list the
+   builder could not see -- so it now looks everywhere a roster can be. */
 function wanted(board) {
+  const sport = join(root, "scripts/sport-rosters.json");
+  if (existsSync(sport)) {
+    const d = JSON.parse(readFileSync(sport, "utf8"));
+    if (Array.isArray(d[board]) && d[board].length) return d[board].map(r => r[0]);
+  }
   for (const [fisier, adancime] of [["scripts/rosters.mjs", "  "], ["app.js", "    "]]) {
     const src = readFileSync(join(root, fisier), "utf8");
     const re = new RegExp(`'?${board}'?: \\[([\\s\\S]*?)\\n${adancime}\\],?`);
