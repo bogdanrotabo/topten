@@ -1410,6 +1410,20 @@
 
   const chipVars = c => brandVars(c, '--chip');
 
+  /* "Top 10 on X X". The mark for that board is the letter, so the name
+     printed beside it says the same letter twice -- in the headline, in the
+     board filter, and on the chip beside a listing. X is the only board where
+     that happens: everywhere else the mark is a picture and the name is a
+     word, and both are needed.
+
+     The name is not deleted, only taken off the screen. A mark carries no
+     text, so a board whose name is gone from the markup is a board a screen
+     reader announces as nothing at all. The platform grid in the claim form
+     is left alone: there the mark sits above its name rather than beside it,
+     which reads as a labelled button and not as a stutter. */
+  const numeLangaMarca = p =>
+    p.slug === 'x' ? '<span class="sr-only">' + esc(p.name) + '</span>' : esc(p.name);
+
   /* Coin logos, fetched once and only when there is a coin on screen. 64 KB
      is nothing next to a page of avatars and everything next to nothing, so
      the home page does not pay for it unless a crypto listing is actually
@@ -1724,6 +1738,36 @@
      X Influencers board is @MrBeast on X and unavatar has never heard of
      "x-influencers". Everything else -- coins, clubs, cities, dogs -- has no
      face anywhere and gets the badge. */
+  /* Every picture on this site announces itself here rather than through an
+     onload= and an onerror= attribute of its own.
+
+     Two reasons, and the second is the one that matters. An attribute like
+     that is inline script, and a content security policy that allows four of
+     them allows all of it -- which is most of what such a policy is for. And
+     load and error do not bubble, so a listener on the document only sees
+     them in the capture phase; that is why this is written the way it is and
+     not as an ordinary delegated click.
+
+     What the two do is what the attributes did. On load, the badge under the
+     picture stands down, because most of these are transparent PNGs and the
+     initials showed through. On error, the picture tries the address it
+     carries as a reserve -- normally the icon of the site the listing links
+     to -- and if that fails as well it removes itself, revealing the badge
+     that was underneath the whole time. */
+  document.addEventListener('load', e => {
+    const img = e.target;
+    if (img.tagName !== 'IMG' || !img.hasAttribute('data-pic')) return;
+    if (img.parentNode && img.parentNode.classList) img.parentNode.classList.add('token--on');
+  }, true);
+
+  document.addEventListener('error', e => {
+    const img = e.target;
+    if (!img || img.tagName !== 'IMG' || !img.hasAttribute('data-pic')) return;
+    const rezerva = img.dataset.rezerva;
+    if (rezerva && !img.dataset.tried) { img.dataset.tried = '1'; img.src = rezerva; }
+    else img.remove();
+  }, true);
+
   const faceOn = slug => {
     const p = BY_SLUG[slug];
     if (!p) return null;
@@ -1775,11 +1819,8 @@
 
     return `<span class="${cls} token" style="--token:${colour};--token-ink:${inkFor(colour)}"
                   aria-hidden="true">${esc(initials)}${src
-      ? `<img loading="lazy" width="32" height="32" alt="" src="${esc(src)}"
-              onload="this.parentNode.classList.add('token--on')"
-              onerror="${rezerva && rezerva !== src
-                ? `if(this.dataset.tried){this.remove()}else{this.dataset.tried=1;this.src='${esc(rezerva)}'}`
-                : 'this.remove()'}">`
+      ? `<img data-pic loading="lazy" width="32" height="32" alt="" src="${esc(src)}"${
+          rezerva && rezerva !== src ? ` data-rezerva="${esc(rezerva)}"` : ''}>`
       : ''}</span>`;
   }
 
@@ -1838,7 +1879,7 @@
         deschis = row.group;
       }
       html += row.items.map(p => chip(`/${p.slug}/`, active === p.slug, p.color,
-        `${icon(p.slug, true)}<span>${esc(p.name)}</span>`, board(p.slug).length)).join('');
+        `${icon(p.slug, true)}<span>${numeLangaMarca(p)}</span>`, board(p.slug).length)).join('');
     }
     if (deschis !== null) html += '</div></div>';
 
@@ -1900,7 +1941,7 @@
       <td class="c-d7">${mover(row.d7_cents)}</td>
       ${solo ? '' : `<td class="c-board">
         <a class="bchip" href="/${esc(row.platform)}/" data-link
-           style="${chipVars(p && p.color)}">${icon(row.platform, true)}<span class="bchip__n">${esc(p ? p.name : row.platform)}</span></a>
+           style="${chipVars(p && p.color)}">${icon(row.platform, true)}<span class="bchip__n">${p ? numeLangaMarca(p) : esc(row.platform)}</span></a>
         <span class="c-board__r">#${row.rank}</span>
       </td>`}
       <td class="c-spark">${sparkline(row.spark)}</td>
@@ -2115,7 +2156,7 @@
        the one line on the page big enough to carry it properly. Its own
        colour, through chipVars, so a pale one still shows on white. */
     return `<h1>Top 10 on <span class="hero__mark" style="${chipVars(p.color)}"
-        aria-hidden="true">${icon(slug, true)}</span><em>${esc(p.name)}</em></h1>
+        aria-hidden="true">${icon(slug, true)}</span><em>${numeLangaMarca(p)}</em></h1>
       <p class="hero__sub">${n
         ? `${n} ${n === 1 ? 'listing is' : 'listings are'} on this board.
            <b>First place costs ${money(cost)}</b> — one dollar more than the
@@ -2476,9 +2517,7 @@
                    the ticker is drawn first and the picture sits on top of
                    it, so one that fails to load simply is not there. Clubs
                    keep their abbreviation; a crest is not ours to fetch. */
-                (n => n ? `<img alt="" src="${esc(n)}"
-                     onload="this.parentNode.classList.add('token--on')"
-                     onerror="this.remove()">` : '')(rosterPic(slug, teamName(t)))
+                (n => n ? `<img data-pic alt="" src="${esc(n)}">` : '')(rosterPic(slug, teamName(t)))
               }</span>
               <span class="cascade__who">
                 <span class="cascade__name">${esc(teamName(t))}</span>

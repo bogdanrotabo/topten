@@ -3,12 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-PMmpIYbmqBS8JoVLpsJpkiJVqZe64SS3awIgSe3vWu8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
 <title>Top 10 on Facebook Influencers — TopTen.one</title>
 <meta name="description" content="The ten most-paid Facebook Influencers creators right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <link rel="canonical" href="https://topten.one/facebook-influencers/">
 
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1421" media="(prefers-color-scheme: dark)">
+<!-- The browser's own bar, painted the colour of the band the page starts
+     with. It said #ffffff and #0d1421: white above a masthead that is pale
+     violet, and a navy that this site stopped using when the palette moved
+     to Rotabo's. On a phone that is a stripe of the wrong colour across the
+     top of every page. These two are --band-0 in each theme. -->
+<meta name="theme-color" content="#dcc4e9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2b1f39" media="(prefers-color-scheme: dark)">
 
 <!-- Before the first paint, not after. A stylesheet cannot read localStorage,
      so a saved dark theme applied from app.js would arrive one frame late and
@@ -42,7 +48,7 @@ try {
 <meta name="twitter:image" content="https://topten.one/og-image.png">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=ed6841668b">
+<link rel="stylesheet" href="/styles.css?v=15dbf8eaee">
 </head>
 <body>
 
@@ -173,8 +179,8 @@ try {
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=ed6841668b"></script>
+<script src="/config.js?v=15dbf8eaee"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=ed6841668b"></script>
+<script defer src="/app.js?v=15dbf8eaee"></script>
 </body>
 </html>

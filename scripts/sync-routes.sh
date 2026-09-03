@@ -50,10 +50,17 @@ if [ $((CENTS % 100)) -eq 0 ]; then P=$((CENTS / 100)); else P=$(printf "%d.%02d
 sed -i -E "s~(#1 from \\$)[0-9]+(\\.[0-9]+)?~\\1$P~g" index.html
 echo "  #1 from \$$P, written into the head"
 
+# The policy goes in before the stamp, because it changes the pages and the
+# stamp is a hash of what they load.
+node "$(dirname "$0")/build-csp.mjs"
+
 STAMP=$(cat app.js styles.css config.js | sha1sum | cut -c1-10)
 echo "  asset stamp: $STAMP"
 
-for f in index.html about.html terms.html privacy.html; do
+# admin.html was not in this list, so its config.js kept whatever version it
+# was stamped with the day somebody last edited it by hand -- a page that
+# reads the live database against a config that may be ten deploys old.
+for f in index.html about.html terms.html privacy.html admin.html; do
   # Replace any existing ?v=... and stamp the bare ones, in one pass.
   sed -i -E "s#(\"/(app|config)\.js|\"/styles\.css)(\?v=[a-f0-9]+)?\"#\1?v=$STAMP\"#g" "$f"
   echo "  stamped $f"
