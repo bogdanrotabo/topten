@@ -1474,7 +1474,7 @@
      a fetch for one. */
   const PEOPLE_BOARDS = ['actors', 'us-politicians', 'us-parties',
                          'football-players', 'f1-drivers', 'golf-players', 'artists',
-                         'nba-players', 'nhl-players'];
+                         'nba-players', 'nhl-players', 'football-clubs'];
 
   /* Every sitting member of Congress, kept current by the public-domain
      dataset the civic-tech world maintains rather than by a list I typed once

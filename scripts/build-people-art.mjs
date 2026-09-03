@@ -41,7 +41,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
    things on two different boards and each should get its own picture. */
 const TOATE = ['actors', 'us-politicians', 'us-parties', 'football-players',
                'f1-drivers', 'golf-players', 'artists',
-               'nba-players', 'nhl-players'];
+               'nba-players', 'nhl-players', 'football-clubs'];
 
 /* Name boards on the command line to rebuild only those; without any, all of
    them. Rebuilding seven boards to check one costs ten minutes of somebody
@@ -185,7 +185,14 @@ async function lookParty(name) {
   }
 
   const stiut = STIUTE[fold(name)];
-  if (!stiut) return null;
+  return stiut ? fisierStiut(stiut) : null;
+}
+
+/* One named file, fetched and checked. Even a file I looked at myself is
+   checked again here: a licence can be re-tagged, and a name hard-coded into
+   a script is exactly the kind of thing that stops being true without
+   anybody noticing. */
+async function fisierStiut(stiut) {
   await sleep(GAP);
   const m = await get('https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*'
     + '&prop=imageinfo&iiprop=extmetadata|url&iiurlwidth=200&titles=' + encodeURIComponent(stiut));
@@ -195,9 +202,6 @@ async function lookParty(name) {
   const ex = ii.extmetadata || {};
   const plain = v => String(v?.value || '').replace(/<[^>]*>/g, '').trim();
   const lic = plain(ex.LicenseShortName) || plain(ex.License);
-  /* Even a file I looked at myself is checked again here. A licence can be
-     re-tagged, and a hard-coded name is exactly the kind of thing that stops
-     being true without anybody noticing. */
   if (!lic || /non-?free|fair use|copyright/i.test(lic)) return null;
   return {
     img: String(ii.thumburl || ii.url || '').split('?')[0],
@@ -205,6 +209,51 @@ async function lookParty(name) {
     licenta: lic,
     pagina: ii.descriptionurl || ('https://commons.wikimedia.org/wiki/' + encodeURIComponent(stiut))
   };
+}
+
+/* The club crests, named one by one, and no search anywhere near them.
+
+   Searching Commons for a crest is not merely unreliable, it is confidently
+   wrong. Asked for Tottenham Hotspur it offers the Carolina Panthers logo,
+   photographed at their stadium. Sevilla gets a newspaper, Celtic a music
+   group, FC Porto a Brazilian club, Manchester City the city council, and
+   "Ajax logo.svg" -- public domain, titled exactly right -- is the household
+   cleaner. Every one of those looks like a hit and would put another
+   organisation's mark on a board somebody paid to be on.
+
+   So each of these was found, opened, and read: the categories and the
+   description on the file's own page say which club it belongs to, and the
+   licence is checked again below at build time in case it is ever re-tagged.
+
+   The clubs that are not here are not here because their current crest is
+   not freely licensed anywhere. For the English clubs there is nothing at
+   all -- Commons has a Newton Heath badge from 1878 and photographs of a
+   stand, and an 1878 badge presented as Manchester United is a worse answer
+   than the two letters they have now. Real Madrid, Barcelona, Sevilla and
+   Benfica are the same story with older crests. They keep their initials,
+   which is honest. */
+const CLUBURI = {
+  'juventus': 'File:Juventus FC - logo black (Italy, 2020).svg',
+  'ac milan': 'File:Logo of AC Milan.svg',
+  'inter milan': 'File:Inter Milano 2021 logo with 2 stars.svg',
+  'borussia dortmund': 'File:Borussia Dortmund logo.svg',
+  'bayern munich': 'File:FC Bayern München logo (2017).svg',
+  'paris saintgermain': 'File:Paris Saint-Germain F.C. logo (free version).svg',
+  'olympique de marseille': 'File:Olympique de Marseille 2026 logo.svg',
+  'galatasaray': 'File:Galatasaray S.K. Logo 2026.svg',
+  'fenerbahce': 'File:Fenerbahçe Spor Kulübü (logo, 1923).svg',
+  'boca juniors': 'File:Escudo del Club Atlético Boca Juniors 2012.svg',
+  'river plate': 'File:Escudo rojo River Plate.png',
+  'flamengo': 'File:Clube de Regatas do Flamengo logo.svg',
+  'al hilal': 'File:Al-Hilal-Logo.png',
+  'fcsb': 'File:Fcsb-logo.svg',
+  'dinamo bucuresti': 'File:FC Dinamo București - logo 2026.svg',
+};
+
+async function lookClub(name) {
+  const stiut = CLUBURI[fold(name)];
+  if (!stiut) return null;
+  return fisierStiut(stiut);
 }
 
 /** The file behind the summary thumbnail, and what Commons says about it. */
@@ -268,7 +317,9 @@ for (const board of BOARDS) {
   let g = 0, r = 0;
   for (const n of LISTE.get(board)) {
     try {
-      const hit = board === 'us-parties' ? await lookParty(n) : await look(n);
+      const hit = board === 'us-parties' ? await lookParty(n)
+                : board === 'football-clubs' ? await lookClub(n)
+                : await look(n);
       if (hit) { art[board][fold(n)] = hit; g++; }
       else r++;
     } catch (e) {
