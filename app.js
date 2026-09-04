@@ -1365,7 +1365,8 @@
         .limit(2000));
     }
 
-    if (error) { console.error('board load failed', error); connectionError = 'query'; return; }
+    if (error) { console.error('board load failed', error); connectionError = 'query'; aprindeLive(false); return; }
+    aprindeLive(true);
 
     const next = slugMap(PLATFORMS.map(p => [p.slug, []]));
     for (const row of data || []) {
@@ -1447,8 +1448,18 @@
     const cell = (k, v, cls) =>
       `<span class="stat${cls ? ' ' + cls : ''}"><span class="stat__k">${k}</span><span class="stat__v">${v}</span></span>`;
     const c = cheapestTop();
+    /* The one thing in the strip that is not a number: a light saying the
+       board is listening. It is lit by the realtime subscription actually
+       being up -- payments land on this page without a reload, and the dot
+       is that, rather than a decoration that would go on glowing with the
+       connection dead. Hidden until the channel says it is subscribed, so
+       an unlit strip is the honest state and never a stuck green light. */
     return `
     <div class="stats"><div class="shell stats__row">
+      <span class="stat stat--live" id="live" hidden>
+        <span class="stat__dot" aria-hidden="true"></span>
+        <span class="stat__k">Live</span>
+      </span>
       ${cell('Boards', PLATFORMS.length)}
       ${cell('Listings', s.count)}
       ${cell('Paid in', money(s.total))}
@@ -2713,6 +2724,7 @@
       ${renderShareBar()}`;
 
     fillTicker();
+    aprindeLive();
     stampCascade(true);
     revealChip();
     upgradeCoinLogos();
@@ -2765,6 +2777,11 @@
 
     const statsEl = document.querySelector('.stats');
     if (statsEl) statsEl.outerHTML = renderStats();
+    /* renderStats() writes the light out hidden, every time. Both places that
+       draw the strip have to switch it back on afterwards, and this is the
+       second one -- the first payment to land on an open page was blowing the
+       lamp out a second after it lit. */
+    aprindeLive();
 
     /* The chip counts move with the boards. Rebuilt rather than patched:
        there are twenty of them, three spans each, and the whole row is
@@ -4375,6 +4392,28 @@
     sb.channel('listings-live')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'listings' }, refresh)
       .subscribe();
+  }
+
+  /* Lit means one thing, and it is a thing that can be checked: these figures
+     were read from the live board, just now. loadBoards() turns it on when
+     the read succeeds and off when it fails, and it runs again on every
+     payment that lands, so a lit dot is never older than the last answer the
+     server gave.
+
+     It deliberately does not report the websocket. That was the first
+     version -- lit by the realtime channel saying SUBSCRIBED -- and it is
+     the wrong promise to make with a lamp: the socket drops on a train, in
+     an office behind a proxy, on a phone that slept, and the dot would go
+     out on a page whose numbers are perfectly current. What a visitor can
+     see is whether the numbers are real, not whether a socket is open.
+
+     Kept in a variable rather than read off the page, because the strip is
+     redrawn on every route change and would otherwise come back dark. */
+  let LIVE = false;
+  function aprindeLive(pornit) {
+    if (typeof pornit === 'boolean') LIVE = pornit;
+    const el = document.getElementById('live');
+    if (el) el.hidden = !LIVE;
   }
 
   function loadAnalytics() {

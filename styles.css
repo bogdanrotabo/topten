@@ -1419,6 +1419,37 @@ img { max-width: 100%; }
    again. */
 .stat--online .stat__v { color: var(--ok); }
 
+/* The live light. Centred rather than on the baseline the figures sit on --
+   a circle has no baseline and lining its bottom edge up with the letters
+   puts it visibly high. The green is its own token: --ok is written for
+   text on this pale band and is too dark to read as a lit lamp at 8px, and
+   in the dark theme too bright to sit next to the figures. */
+:root { --live: #16a34a; }
+:root[data-theme="dark"] { --live: #2ad796; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --live: #2ad796; }
+}
+
+.stat--live { align-items: center; gap: 6px; }
+
+.stat__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  flex: none;
+  animation: statDot 2s ease-in-out infinite;
+}
+
+@keyframes statDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .35; transform: scale(.8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat__dot { animation: none; }
+}
+
 /* The one figure in the strip that is an offer rather than a report. */
 .stat--deal .stat__v { color: var(--accent); }
 
