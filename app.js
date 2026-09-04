@@ -2768,7 +2768,7 @@
 
     sticky.hidden = false;
     $('#cta-claim').textContent = ctaFor(openSlug);
-    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — Who should be #1?';
+    document.title = p ? `Top 10 on ${p.name} — TopTen.one` : 'TopTen.one — I am';
     snapshotRanks();
   }
 
