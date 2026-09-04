@@ -1453,13 +1453,20 @@
        being up -- payments land on this page without a reload, and the dot
        is that, rather than a decoration that would go on glowing with the
        connection dead. Hidden until the channel says it is subscribed, so
-       an unlit strip is the honest state and never a stuck green light. */
+       an unlit strip is the honest state and never a stuck green light.
+
+       Next to it, how many people are on the site this minute. It stands
+       beside the light on purpose: one says the board is listening, the
+       other says who is listening to it, and apart they each say half of
+       it. A dash until site_pulse() answers -- a zero would read as
+       "nobody", when it only means "not asked yet". */
     return `
     <div class="stats"><div class="shell stats__row">
       <span class="stat stat--live" id="live" hidden>
         <span class="stat__dot" aria-hidden="true"></span>
         <span class="stat__k">Live</span>
       </span>
+      ${cell('Online', state.online == null ? '\u2013' : state.online.toLocaleString(), 'stat--online')}
       ${cell('Boards', PLATFORMS.length)}
       ${cell('Listings', s.count)}
       ${cell('Paid in', money(s.total))}
@@ -4371,14 +4378,16 @@
     } catch (e) {}
   }
 
-  /* Who is here this minute. The figure is no longer printed -- the strip
-     across the top says how big the market is, and a small number of people
-     online says the opposite of that on a quiet hour -- but the heartbeat
-     goes on being written, for two reasons: site_pulse() is what makes any
-     later count real rather than starting from zero the day it comes back,
-     and the number is still there to be asked for. The stat cell it used to
-     fill is out of renderStats; this patches it when it is there and does
-     nothing when it is not.
+  /* Who is here this minute, in the strip at the top beside the live light.
+     It was taken out for a while -- on a quiet hour a small number of people
+     online reads as the opposite of what the market size says -- and the
+     heartbeat went on being written anyway, which is why the count did not
+     start from zero when it came back. Printed again since 2026-09-04.
+
+     This patches the cell rather than re-rendering the strip: the count
+     lands after the first paint and nothing else in the row has changed. It
+     does nothing when the cell is absent, so removing it again is a one-line
+     edit in renderStats and nothing here breaks.
 
      It stays quiet while the tab is hidden: forty background tabs are not
      forty people, and the number has to mean what it says. Same id as the
