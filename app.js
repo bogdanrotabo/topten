@@ -2361,14 +2361,25 @@
      
      So the chips wrap, and they wrap under the labels the boards were
      grouped by anyway: eight headings, thirty-four chips, no scrolling. */
-  /* The five boards that get a ring around their chip. Seventy-two chips
-     under twelve headings are a wall, and these are the ones worth finding
-     first: the two boards this site was built around, and the three whose
-     argument -- who the biggest creator on a platform is -- people already
-     have for free every day. The ring is the accent colour on a border the
-     chip already had, drawn transparent, so nothing moves when it lights. */
-  const INELE = new Set(['x', 'memecoins', 'x-influencers',
-                         'instagram-influencers', 'tiktok-influencers']);
+  /* The boards that get a ring around their chip. Seventy-two chips under
+     twelve headings are a wall, and this is the way through it: the ones
+     somebody arriving should find first. Chosen rather than computed --
+     a count would only ever point at whatever was busiest last week, and
+     what belongs here is what the site wants argued.
+
+     The ring is the accent colour on a border the chip already had, drawn
+     transparent, so nothing moves on the row when it lights. Thirteen of
+     seventy-two: enough to be a path, few enough that a ring still means
+     something. Adding a fourteenth is one line; adding thirty is deleting
+     the idea. */
+  const INELE = new Set([
+    'x', 'memecoins',
+    'x-influencers', 'instagram-influencers', 'tiktok-influencers',
+    'us-politicians', 'movements',
+    'us-billionaires', 'uae-billionaires',
+    'nba-players', 'nhl-players',
+    'ufc-fighters', 'bellator',
+  ]);
 
   function renderChips(active) {
     const chip = (href, on, brand, inner, count, inel) =>
