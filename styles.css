@@ -1390,6 +1390,10 @@ img { max-width: 100%; }
   font-variant-numeric: tabular-nums;
 }
 
+/* Kept, though nothing wears it right now: the "Online" cell is out of
+   renderStats while the figure is not worth printing, and the heartbeat
+   behind it still runs. Deleting this rule would only mean writing it
+   again. */
 .stat--online .stat__v { color: var(--ok); }
 
 /* The one figure in the strip that is an offer rather than a report. */

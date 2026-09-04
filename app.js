@@ -1454,7 +1454,6 @@
       ${cell('Paid in', money(s.total))}
       ${cell('Holding #1', money(s.top))}
       ${cell('Cheapest #1', money(c.cost), 'stat--deal')}
-      ${cell('Online', state.online === null ? '—' : state.online.toLocaleString(), 'stat--online')}
     </div></div>`;
   }
 
@@ -4334,11 +4333,18 @@
     } catch (e) {}
   }
 
-  /* Who is here this minute, back beside the visitor total. site_pulse()
-     writes the heartbeat and returns the count in one call, so a browser that
-     asks is also counted. It stays quiet while the tab is hidden: forty
-     background tabs are not forty people, and the number has to mean what it
-     says. Same id as the visit row, so one browser is one of each. */
+  /* Who is here this minute. The figure is no longer printed -- the strip
+     across the top says how big the market is, and a small number of people
+     online says the opposite of that on a quiet hour -- but the heartbeat
+     goes on being written, for two reasons: site_pulse() is what makes any
+     later count real rather than starting from zero the day it comes back,
+     and the number is still there to be asked for. The stat cell it used to
+     fill is out of renderStats; this patches it when it is there and does
+     nothing when it is not.
+
+     It stays quiet while the tab is hidden: forty background tabs are not
+     forty people, and the number has to mean what it says. Same id as the
+     visit row, so one browser is one of each. */
   async function pulse() {
     if (!sb || document.hidden) return;
     try {
