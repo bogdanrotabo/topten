@@ -1476,20 +1476,31 @@ img { max-width: 100%; }
 
 :root[data-theme="dark"] .hero__mark svg { color: var(--chip-d, var(--chip)); }
 
-/* The line over the question on the front page: the promise, carrying
-   weight but set under the question's size, so the question stays the
-   loudest thing on the page. Not on a board -- there the headline is the
-   board's own name and this would be a second voice over it. */
+/* The two lines over the question on the front page. The first is the
+   promise and carries weight; the second is how it works, in three short
+   sentences, and is set quiet so the question underneath stays the loudest
+   thing on the page. Neither is on a board: there the headline is the
+   board's own name and these would be a second voice over it. */
 .hero__tag {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: clamp(17px, 2.4vw, 21px);
   font-weight: 700;
   letter-spacing: -.02em;
   color: var(--text);
 }
 
+.hero__how {
+  margin: 5px auto 16px;
+  max-width: 54ch;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* A short screen that is not a phone is a laptop, and there every line over
+   the table is a line the table loses. */
 @media (max-height: 760px) and (min-width: 560px) {
-  .hero__tag { margin-bottom: 6px; }
+  .hero__how { margin-bottom: 10px; }
 }
 
 /* The blank line after the title. There are two .hero__sub rules in this
