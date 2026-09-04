@@ -149,7 +149,6 @@ function acasa(toate) {
   return `\n<div class="shell prerender">
   <p class="pr__tag">Be the one.</p>
   <h1>I am</h1>
-  <p>Pay to be seen. Ten places on every board. No algorithm.</p>
 ${randuri.length ? `  <h2>The most paid for, across every board</h2>\n  <ol class="pr__list">\n${li}\n  </ol>` : ''}
 </div>\n`;
 }

@@ -2659,14 +2659,16 @@
      price you can check is worth more than a promise you cannot, but it does
      not have to be the first thing said. */
   function heroHome() {
-    /* Three lines: the promise, how it works, and -- in the size the answer
-       deserves -- the answer.
+    /* Two lines: the promise, and -- in the size the answer deserves -- the
+       answer.
 
-       The two above it are the site's old share card, which said them better
-       than anything written since: "Be the one." and the short sentences
-       under it. That card was replaced and they went with it; they belong on
-       the page more than they ever belonged on a picture. They also set the
-       last line up, which is why they stay: "I am" has to land on something.
+       "Be the one." is the site's old share card, which said it better than
+       anything written since. There was a second line under it explaining
+       the mechanism -- "Pay to be seen. Top 10 per platform. No algorithm."
+       -- and it came out on 2026-09-04: the strip of figures, the button and
+       the board below all say how it works, and saying it a fourth time in
+       small grey type above the headline only pushed the table further down
+       the first screen, which on a leaderboard is the product.
 
        "Rankings decided by money" is the line that does not come back. It
        was the title here until it was cut, and the tab, the share card, the
@@ -2681,7 +2683,6 @@
        No price is quoted here. It is a live figure in the strip below and on
        the button, where it is never rounded, dressed up or invented. */
     return `<p class="hero__tag">Be the one.</p>
-      <p class="hero__how">Pay to be seen. Top 10 per platform. No algorithm.</p>
       <h1>I am</h1>`;
   }
 
