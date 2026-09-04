@@ -1,0 +1,55 @@
+# Announce the pages after a deploy, instead of waiting to be found.
+#
+# IndexNow is a POST that tells Bing, Yandex, Seznam and Naver a site has
+# changed. Google does not take part and never has: it accepts URLs through
+# Search Console only, so nothing here reaches Google.
+#
+# The key it submits with is public on purpose -- it is served at
+# https://topten.one/<key>.txt, and being able to fetch it from the site root
+# is the whole proof that the submitter owns the site. It is not a secret and
+# does not belong in the repository's secrets.
+#
+# The wait is for GitHub Pages: the push finishes before the files are being
+# served, and announcing a page the crawler then fetches in its old form is
+# worse than announcing it a minute later.
+#
+# To stop it: disable the workflow in the Actions tab, or delete this file.
+# Nothing else depends on it, and the site is unaffected.
+
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Two commits, so the script can see what the push changed and stay
+          # quiet when the answer is "the README".
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Wait for Pages to serve the push
+        run: sleep 120
+
+      - name: Submit
+        env:
+          INDEXNOW_HOST: topten.one
+          INDEXNOW_KEY: bff5a9cbb23d49e9cbc0a74bd1aad6f5
+          INDEXNOW_BEFORE: ${{ github.event.before }}
+        run: node scripts/indexnow.mjs
