@@ -2619,13 +2619,21 @@
      rounded, dressed up or invented. A price you can check is worth more than
      a promise you cannot, but it does not have to be the first thing said. */
   function heroHome() {
-    /* One line, and it is the question. "Rankings decided by money" was the
-       title above it until it was cut, and the tab, the share card, the badge
-       and the manifest followed it out: the site opens on what it asks, not
-       on what it is called. The rule and the price used to stand here too and
-       are both still on the page: the price is a live figure in the strip
-       below and on the button. */
-    return `<h1>Who should be <em class="hero__rank">#1</em>?</h1>`;
+    /* Two lines: the promise, and the question in the size the answer
+       deserves.
+
+       "Be the one." is off the site's old share card, which said it better
+       than anything written since; the card was replaced and the line went
+       with it, and it belongs on the page more than it ever belonged on a
+       picture. The sentences that sat under it there -- pay to be seen, ten
+       per board, no algorithm -- are not repeated here: the strip, the chips
+       and the button below say all three in numbers somebody can check.
+
+       "Rankings decided by money" is the line that does not come back. It
+       was the title here until it was cut, and the tab, the share card, the
+       badge and the manifest followed it out. */
+    return `<p class="hero__tag">Be the one.</p>
+      <h1>Who should be <em class="hero__rank">#1</em>?</h1>`;
   }
 
   function heroBoard(slug) {

@@ -1476,6 +1476,22 @@ img { max-width: 100%; }
 
 :root[data-theme="dark"] .hero__mark svg { color: var(--chip-d, var(--chip)); }
 
+/* The line over the question on the front page: the promise, carrying
+   weight but set under the question's size, so the question stays the
+   loudest thing on the page. Not on a board -- there the headline is the
+   board's own name and this would be a second voice over it. */
+.hero__tag {
+  margin: 0 0 10px;
+  font-size: clamp(17px, 2.4vw, 21px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--text);
+}
+
+@media (max-height: 760px) and (min-width: 560px) {
+  .hero__tag { margin-bottom: 6px; }
+}
+
 /* The blank line after the title. There are two .hero__sub rules in this
    file and this is the one that wins — the earlier one is older and fully
    overridden, which is why editing it changed nothing on screen. */
