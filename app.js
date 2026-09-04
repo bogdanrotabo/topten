@@ -2361,9 +2361,18 @@
      
      So the chips wrap, and they wrap under the labels the boards were
      grouped by anyway: eight headings, thirty-four chips, no scrolling. */
+  /* The five boards that get a ring around their chip. Seventy-two chips
+     under twelve headings are a wall, and these are the ones worth finding
+     first: the two boards this site was built around, and the three whose
+     argument -- who the biggest creator on a platform is -- people already
+     have for free every day. The ring is the accent colour on a border the
+     chip already had, drawn transparent, so nothing moves when it lights. */
+  const INELE = new Set(['x', 'memecoins', 'x-influencers',
+                         'instagram-influencers', 'tiktok-influencers']);
+
   function renderChips(active) {
-    const chip = (href, on, brand, inner, count) =>
-      `<a class="bfilter${on ? ' bfilter--on' : ''}" href="${href}" data-link${brand ? ` style="${chipVars(brand)}"` : ''}
+    const chip = (href, on, brand, inner, count, inel) =>
+      `<a class="bfilter${on ? ' bfilter--on' : ''}${inel ? ' bfilter--ring' : ''}" href="${href}" data-link${brand ? ` style="${chipVars(brand)}"` : ''}
           ${on ? 'aria-current="page"' : ''}>${inner}${count ? `<b>${count}</b>` : ''}</a>`;
 
     const total = Object.values(state.boards).reduce((n, r) => n + r.length, 0);
@@ -2379,7 +2388,8 @@
         deschis = row.group;
       }
       html += row.items.map(p => chip(`/${p.slug}/`, active === p.slug, p.color,
-        `${icon(p.slug, true)}<span>${numeChip(p)}</span>`, board(p.slug).length)).join('');
+        `${icon(p.slug, true)}<span>${numeChip(p)}</span>`, board(p.slug).length,
+        INELE.has(p.slug))).join('');
     }
     if (deschis !== null) html += '</div></div>';
 

@@ -1704,6 +1704,21 @@ img { max-width: 100%; }
 
 .bfilter--on b { color: var(--accent); }
 
+/* The ring. Five chips are worth finding before the other sixty-seven, and
+   a border is the cheapest way to say so: .bfilter already carries a 1px
+   transparent one, so lighting it moves nothing on the row. Two pixels of
+   it, the second painted as a shadow rather than a thicker border, for the
+   same reason.
+
+   It is not the selected look and must not be mistaken for it: selected is
+   a filled chip in the accent, this is an outline on an unfilled one. When
+   a ringed chip is also the open board, the fill wins and the ring stays
+   around it, which reads as both, because it is. */
+.bfilter--ring {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
 /* -------------------------------------------------------------- the table
 
    It scrolls sideways rather than reflowing into cards: a market table is
