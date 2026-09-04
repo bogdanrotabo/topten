@@ -1373,6 +1373,29 @@ img { max-width: 100%; }
 
 .stats__row::-webkit-scrollbar { display: none; }
 
+/* On a phone the five figures are 544 pixels of content in a 390-pixel
+   window, so two of them -- what the leader is holding, and what the
+   cheapest #1 costs -- sat off the right edge. The row scrolls, which is
+   worse than it sounds: nothing on screen says there is anything to the
+   right of "Paid in", so the two numbers were not hidden, they were
+   invisible. And the cheapest #1 is the one figure up there that is an
+   offer rather than a report.
+
+   So on a phone the row wraps onto two lines and the band grows by one
+   line to hold them. Every figure legible beats a thin band with half of
+   them past the edge. The gaps come in because five short items with 20px
+   between them wrap into three lines rather than two. */
+@media (max-width: 559px) {
+  .stats__row {
+    flex-wrap: wrap;
+    justify-content: center;
+    height: auto;
+    padding: 7px 0;
+    gap: 4px 14px;
+    overflow-x: visible;
+  }
+}
+
 .stat {
   display: inline-flex;
   align-items: baseline;
