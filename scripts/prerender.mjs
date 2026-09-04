@@ -148,7 +148,7 @@ function acasa(toate) {
     + ` <span class="pr__t">${esc(r.nume)}</span> <span class="pr__a">${bani(r.total_cents)}</span></li>`).join('\n');
   return `\n<div class="shell prerender">
   <p class="pr__tag">Be the one.</p>
-  <h1>Who should be #1?</h1>
+  <h1>I am</h1>
   <p>Pay to be seen. Ten places on every board. No algorithm.</p>
 ${randuri.length ? `  <h2>The most paid for, across every board</h2>\n  <ol class="pr__list">\n${li}\n  </ol>` : ''}
 </div>\n`;

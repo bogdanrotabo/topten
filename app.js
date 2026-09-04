@@ -2652,29 +2652,37 @@
     </div>`;
   }
 
-  /* The headline asks; it no longer answers. The price it used to quote was
-     live -- the cheapest unheld #1 on the site at that moment -- and it still
-     is, in the strip of figures below and on the button, where it is never
-     rounded, dressed up or invented. A price you can check is worth more than
-     a promise you cannot, but it does not have to be the first thing said. */
+  /* The headline answers. It asked -- "Who should be #1?" -- until
+     2026-09-04, and now it says the thing somebody pays this site to say.
+     The price it once quoted is still live in the strip of figures below and
+     on the button, where it is never rounded, dressed up or invented. A
+     price you can check is worth more than a promise you cannot, but it does
+     not have to be the first thing said. */
   function heroHome() {
-    /* Three lines: the promise, how it works, and the question in the size
-       the answer deserves.
+    /* Three lines: the promise, how it works, and -- in the size the answer
+       deserves -- the answer.
 
-       The two above the question are the site's old share card, which said
-       them better than anything written since -- "Be the one." and the three
-       short sentences under it. That card was replaced and they went with
-       it; they belong on the page more than they ever belonged on a picture.
+       The two above it are the site's old share card, which said them better
+       than anything written since: "Be the one." and the short sentences
+       under it. That card was replaced and they went with it; they belong on
+       the page more than they ever belonged on a picture. They also set the
+       last line up, which is why they stay: "I am" has to land on something.
 
        "Rankings decided by money" is the line that does not come back. It
        was the title here until it was cut, and the tab, the share card, the
        badge and the manifest followed it out.
 
+       If "#1?" ever returns to this line it needs its old kerning back. Set
+       at 800 weight and -.03em the figure and the mark touched and read as
+       one lump, so the 1 carried a .07em right margin. A real space before
+       the question mark is the French rule and reads as a typo in English,
+       which is why it was never a space.
+
        No price is quoted here. It is a live figure in the strip below and on
        the button, where it is never rounded, dressed up or invented. */
     return `<p class="hero__tag">Be the one.</p>
       <p class="hero__how">Pay to be seen. Top 10 per platform. No algorithm.</p>
-      <h1>Who should be <em class="hero__rank">#1</em>?</h1>`;
+      <h1>I am</h1>`;
   }
 
   function heroBoard(slug) {
