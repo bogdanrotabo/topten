@@ -2368,12 +2368,12 @@
      what belongs here is what the site wants argued.
 
      The ring is the accent colour on a border the chip already had, drawn
-     transparent, so nothing moves on the row when it lights. Thirteen of
+     transparent, so nothing moves on the row when it lights. Sixteen of
      seventy-two: enough to be a path, few enough that a ring still means
-     something. Adding a fourteenth is one line; adding thirty is deleting
+     something. Adding a seventeenth is one line; adding thirty is deleting
      the idea. */
   const INELE = new Set([
-    'x', 'memecoins',
+    'x', 'crypto', 'memecoins', 'exchanges', 'gifts',
     'x-influencers', 'instagram-influencers', 'tiktok-influencers',
     'us-politicians', 'movements',
     'us-billionaires', 'uae-billionaires',
