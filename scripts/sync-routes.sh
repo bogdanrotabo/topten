@@ -142,6 +142,20 @@ done
 echo '</urlset>' >> "$SITEMAP"
 echo "  $SITEMAP"
 
+# 3b. Write the ten into every page, so there is something to read without
+#     JavaScript.
+#
+#     Every board page is index.html with a different head, and the ten are
+#     drawn by app.js after it reaches Supabase -- so what a crawler was given
+#     had zero characters of text inside <main>. Search Console called them
+#     "discovered, not indexed", which is what it says when it fetched a page
+#     and found nothing in it.
+#
+#     This runs after the copies above, because it writes into each of them,
+#     and it never fails a build: a database that is down leaves the pages
+#     with the ten they already had.
+node "$(dirname "$0")/prerender.mjs"
+
 # Check our own work before saying it is done.
 #
 # This script died halfway once because it was run as `sync-routes.sh | head -3`:
@@ -191,5 +205,6 @@ node "$(dirname "$0")/make-icons.mjs" --check
 #    money for a listing that cannot be inserted; this is where that gets
 #    caught, not in production.
 node "$(dirname "$0")/check-boards.mjs"
+node "$(dirname "$0")/prerender.mjs" --check
 
 echo "Routes synced from index.html — every page on $STAMP"

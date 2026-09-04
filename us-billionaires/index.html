@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-dlt+X6jEtNnmuRphM/hF1qdn3yRv277VCvSX46czPY8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
 <title>Top 10 on U.S. Billionaires — TopTen.one</title>
+<!-- board-ld -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Top 10 on U.S. Billionaires","url":"https://topten.one/us-billionaires/","numberOfItems":2,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Elon Musk"},{"@type":"ListItem","position":2,"name":"Jeff Bezos"}]}</script>
+<!-- /board-ld -->
 <meta name="description" content="The ten most-paid U.S. Billionaires names right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <link rel="canonical" href="https://topten.one/us-billionaires/">
 
@@ -67,7 +70,7 @@ try {
 <meta name="twitter:image" content="https://topten.one/og-image.png?v=3">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=37bba6b059">
+<link rel="stylesheet" href="/styles.css?v=d8b77f4ebc">
 </head>
 <body>
 
@@ -88,12 +91,20 @@ try {
 </header>
 
 <main id="view" aria-live="polite">
-  <div class="shell" style="padding-top:26px">
-    <div class="skeleton"></div>
-    <div class="skeleton"></div>
-    <div class="skeleton"></div>
-  </div>
-</main>
+<!-- ten -->
+<div class="shell prerender">
+  <h1>Top 10 on U.S. Billionaires</h1>
+  <ol class="pr__list">
+    <li><span class="pr__r">#1</span> <span class="pr__h">Elon Musk</span> <span class="pr__a">$14</span></li>
+    <li><span class="pr__r">#2</span> <span class="pr__h">Jeff Bezos</span> <span class="pr__a">$13</span></li>
+  </ol>
+  <p>Ranked by money paid, most first. Pay more than the name above you and you are above them.</p>
+</div>
+<!-- /ten -->
+  </main>
+<!-- board-copy -->
+<section class="shell boardnote"><p>Nine hundred Americans are billionaires and thirty of them are offered here, from Musk and Bezos down. Forbes ranks them by what they own. This board ranks them by what other people will pay to see them at the top, which is a different question and gets a different answer. The suggestion list is the country's billionaires as Forbes counts them, richest first, rebuilt from their live feed rather than typed from memory. Backing somebody here ranks them on this website and nothing else; they take no part in it and receive nothing.</p></section>
+<!-- /board-copy -->
 
 <footer class="foot">
   <div class="shell">
@@ -244,8 +255,8 @@ try {
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=37bba6b059"></script>
+<script src="/config.js?v=d8b77f4ebc"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=37bba6b059"></script>
+<script defer src="/app.js?v=d8b77f4ebc"></script>
 </body>
 </html>

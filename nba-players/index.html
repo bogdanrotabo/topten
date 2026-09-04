@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-dlt+X6jEtNnmuRphM/hF1qdn3yRv277VCvSX46czPY8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
 <title>Top 10 on NBA Players — TopTen.one</title>
+<!-- board-ld -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Top 10 on NBA Players","url":"https://topten.one/nba-players/","numberOfItems":8,"itemListOrder":"https://schema.org/ItemListOrderDescending","itemListElement":[{"@type":"ListItem","position":1,"name":"Shai Gilgeous-Alexander"},{"@type":"ListItem","position":2,"name":"LeBron James"},{"@type":"ListItem","position":3,"name":"James Harden"},{"@type":"ListItem","position":4,"name":"Devin Booker"},{"@type":"ListItem","position":5,"name":"Luka Dončić"},{"@type":"ListItem","position":6,"name":"Jaylen Brown"},{"@type":"ListItem","position":7,"name":"Tyrese Maxey"},{"@type":"ListItem","position":8,"name":"Nikola Jokić"}]}</script>
+<!-- /board-ld -->
 <meta name="description" content="The ten most-paid NBA Players players right now. Rank is decided by money paid, not by an algorithm. Add yours from $2.">
 <link rel="canonical" href="https://topten.one/nba-players/">
 
@@ -67,7 +70,7 @@ try {
 <meta name="twitter:image" content="https://topten.one/og-image.png?v=3">
 
 <link rel="preconnect" href="https://unavatar.io" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=37bba6b059">
+<link rel="stylesheet" href="/styles.css?v=d8b77f4ebc">
 </head>
 <body>
 
@@ -88,12 +91,26 @@ try {
 </header>
 
 <main id="view" aria-live="polite">
-  <div class="shell" style="padding-top:26px">
-    <div class="skeleton"></div>
-    <div class="skeleton"></div>
-    <div class="skeleton"></div>
-  </div>
-</main>
+<!-- ten -->
+<div class="shell prerender">
+  <h1>Top 10 on NBA Players</h1>
+  <ol class="pr__list">
+    <li><span class="pr__r">#1</span> <span class="pr__h">Shai Gilgeous-Alexander</span> <span class="pr__a">$5</span></li>
+    <li><span class="pr__r">#2</span> <span class="pr__h">LeBron James</span> <span class="pr__a">$4</span></li>
+    <li><span class="pr__r">#3</span> <span class="pr__h">James Harden</span> <span class="pr__a">$4</span></li>
+    <li><span class="pr__r">#4</span> <span class="pr__h">Devin Booker</span> <span class="pr__a">$3</span></li>
+    <li><span class="pr__r">#5</span> <span class="pr__h">Luka Dončić</span> <span class="pr__a">$2</span></li>
+    <li><span class="pr__r">#6</span> <span class="pr__h">Jaylen Brown</span> <span class="pr__a">$2</span></li>
+    <li><span class="pr__r">#7</span> <span class="pr__h">Tyrese Maxey</span> <span class="pr__a">$2</span></li>
+    <li><span class="pr__r">#8</span> <span class="pr__h">Nikola Jokić</span> <span class="pr__a">$2</span></li>
+  </ol>
+  <p>Ranked by money paid, most first. Pay more than the player above you and you are above them.</p>
+</div>
+<!-- /ten -->
+  </main>
+<!-- board-copy -->
+<section class="shell boardnote"><p>Fifty of the league's leading scorers are offered as a starting list, taken from the NBA's own numbers rather than from memory. You are not listing yourself: you are backing somebody. Whoever their supporters pay the most for stands first, and the order changes with every payment rather than with every game.</p></section>
+<!-- /board-copy -->
 
 <footer class="foot">
   <div class="shell">
@@ -244,8 +261,8 @@ try {
 
 <canvas id="confetti" hidden></canvas>
 
-<script src="/config.js?v=37bba6b059"></script>
+<script src="/config.js?v=d8b77f4ebc"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
-<script defer src="/app.js?v=37bba6b059"></script>
+<script defer src="/app.js?v=d8b77f4ebc"></script>
 </body>
 </html>

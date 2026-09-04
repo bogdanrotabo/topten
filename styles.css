@@ -1574,6 +1574,63 @@ img { max-width: 100%; }
 
 .hero__sub b { color: var(--text); font-weight: 700; }
 
+/* ------------------------------------------------- what is in the page
+
+   The ten, written into the markup at build time by scripts/prerender.mjs
+   so the page says something before JavaScript runs. app.js replaces the
+   whole of #view the moment it loads, so on a normal visit this is on the
+   screen for a fraction of a second -- but it is what a crawler is given,
+   and it is what somebody with JavaScript off keeps. It is styled rather
+   than left bare for both of those readers.                              */
+
+.prerender { padding: 26px 0 8px; }
+
+.prerender h1 {
+  margin: 0 0 4px;
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+
+.prerender h2 {
+  margin: 18px 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.prerender p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+.prerender .pr__tag { color: var(--text); font-weight: 700; font-size: 17px; margin-bottom: 2px; }
+
+.pr__list { margin: 10px 0 0; padding: 0; list-style: none; }
+
+.pr__list li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.pr__r { font-family: var(--num); font-weight: 700; color: var(--muted); }
+.pr__h { font-weight: 700; color: var(--text); }
+.pr__t { color: var(--muted); }
+.pr__a { margin-left: auto; font-family: var(--num); font-weight: 700; color: var(--text); }
+
+/* The board's own paragraph, and the one thing on this list that stays on
+   the screen: it sits outside <main>, which app.js never touches. Written
+   there on purpose -- text only a crawler can see is cloaking, and it costs
+   more than it pays. */
+.boardnote {
+  padding: 4px 0 26px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.boardnote p { margin: 0; max-width: 78ch; }
+
 /* --------------------------------------------------------- board filter */
 
 /* Not .chip: that name was already taken by the round club badge in the
