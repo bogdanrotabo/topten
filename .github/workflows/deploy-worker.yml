@@ -4,9 +4,11 @@
 # on /badge only. Without this, deploying it means a terminal and a browser
 # login; with it, a push that touches worker/ is the deploy.
 #
-# It needs one secret, CLOUDFLARE_API_TOKEN, and will not run without one --
-# the job checks first and stops with an explanation rather than failing in
-# wrangler's own words. To create it:
+# It needs one secret, CLOUDFLARE_API_TOKEN. Without one the job says so and
+# skips, finishing green: no token is the normal state of this workflow until
+# somebody sets one up, and a red X for a state nobody chose is a false alarm
+# that teaches people to ignore the real ones. Once the token exists, a
+# failure is a genuine failure and stays red. To create it:
 #
 #   1. https://dash.cloudflare.com/profile/api-tokens -> Create Token
 #   2. Use the "Edit Cloudflare Workers" template
@@ -48,26 +50,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Said plainly, before wrangler says it obscurely. A missing secret is
-      # the normal state of this workflow until somebody sets one up, and it
-      # should read as "not configured yet", not as a broken build.
-      - name: Check the token is there
+      # Said plainly, before wrangler says it obscurely -- and said on the run
+      # page itself, not only buried in a log nobody opens. A missing secret
+      # reads as "not configured yet", which is what it is.
+      - name: Is the token there?
+        id: token
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "No CLOUDFLARE_API_TOKEN secret on this repository."
-            echo "The Worker was not deployed. The site is unaffected: /badge"
-            echo "keeps being served by GitHub Pages as it is today."
-            echo "See the comment at the top of this file for how to add one."
-            exit 1
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "have=yes" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          echo "have=no" >> "$GITHUB_OUTPUT"
+          {
+            echo "### The Worker was not deployed"
+            echo
+            echo "There is no \`CLOUDFLARE_API_TOKEN\` secret on this repository."
+            echo "That is the normal state until somebody creates one, so this run"
+            echo "is green rather than red."
+            echo
+            echo "**Nothing is broken.** \`/badge\` keeps being served by GitHub"
+            echo "Pages exactly as it is today; the Worker has simply never been"
+            echo "deployed."
+            echo
+            echo "The comment at the top of \`.github/workflows/deploy-worker.yml\`"
+            echo "says how to add the token."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/setup-node@v4
+        if: steps.token.outputs.have == 'yes'
         with:
           node-version: '22'
 
       - name: Deploy
+        if: steps.token.outputs.have == 'yes'
         working-directory: worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
