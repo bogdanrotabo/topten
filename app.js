@@ -1455,18 +1455,19 @@
        connection dead. Hidden until the channel says it is subscribed, so
        an unlit strip is the honest state and never a stuck green light.
 
-       Next to it, how many people are on the site this minute. It stands
-       beside the light on purpose: one says the board is listening, the
-       other says who is listening to it, and apart they each say half of
-       it. A dash until site_pulse() answers -- a zero would read as
-       "nobody", when it only means "not asked yet". */
+       How many people are on the site this minute stood next to it for a
+       day and is not printed any more, at the owner's word on 2026-09-05:
+       a small number on a quiet hour says the opposite of what "paid in"
+       says, and the light already tells a reader the page is live without
+       putting a figure on it. pulse() still runs -- it is what writes the
+       heartbeat -- so the count is real and not starting from zero if the
+       cell is ever put back. */
     return `
     <div class="stats"><div class="shell stats__row">
       <span class="stat stat--live" id="live" hidden>
         <span class="stat__dot" aria-hidden="true"></span>
         <span class="stat__k">Live</span>
       </span>
-      ${cell('Online', state.online == null ? '\u2013' : state.online.toLocaleString(), 'stat--online')}
       ${cell('Boards', PLATFORMS.length)}
       ${cell('Listings', s.count)}
       ${cell('Paid in', money(s.total))}
