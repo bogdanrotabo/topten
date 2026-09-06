@@ -261,7 +261,7 @@
       el.className = 'king king--empty';
       el.innerHTML = CROWN
         + '<h1 class="king__name">Nobody</h1>'
-        + '<p class="king__is">is King of the Hill</p>'
+        + '<p class="king__is"><span>is</span>King of the Hill</p>'
         + '<p class="king__message">The first payment takes the page.</p>';
       return;
     }
@@ -279,7 +279,7 @@
 
     el.innerHTML = top
       + '<h1 class="king__name">' + esc(nameOf(k)) + '</h1>'
-      + '<p class="king__is">is King of the Hill</p>'
+      + '<p class="king__is"><span>is</span>King of the Hill</p>'
       + (k.message ? '<p class="king__message">' + esc(k.message) + '</p>' : '')
       + link
       + '<div class="king__figures">'

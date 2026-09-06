@@ -169,11 +169,27 @@ button {
    because it is read as the continuation of the name above it, not as a label
    over it. */
 .king__is {
-  margin: 4px 0 0;
-  font-size: clamp(16px, 4.4vw, 21px);
-  font-weight: 700;
-  letter-spacing: -.01em;
+  margin: 6px 0 0;
+  /* Twice what it was. The name is who; this is what they are, and on a page
+     whose whole subject is the title, the title is the thing to set large. */
+  font-size: clamp(30px, 8.6vw, 42px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -.03em;
   color: var(--royal);
+}
+
+/* The "is" rides above rather than in front. At this size it would be a word
+   of grammar competing with the title for the same line; small and on its own
+   it is the hinge between the name and the title, and reads as one sentence
+   down the card. */
+.king__is span {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--muted);
+  margin-bottom: 1px;
 }
 
 .king__name {

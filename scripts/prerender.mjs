@@ -134,7 +134,7 @@ function cardul(k) {
     return `\n    <section class="king king--empty" id="king-card">
       ${CROWN}
       <h1 class="king__name">Nobody</h1>
-      <p class="king__is">is King of the Hill</p>
+      <p class="king__is"><span>is</span>King of the Hill</p>
       <p class="king__message">The first payment takes the page.</p>
     </section>\n    `;
   }
@@ -146,7 +146,7 @@ function cardul(k) {
   return `\n    <section class="king" id="king-card">
       ${marca(k.logo) || CROWN}
       <h1 class="king__name">${esc(nume(k))}</h1>
-      <p class="king__is">is King of the Hill</p>${
+      <p class="king__is"><span>is</span>King of the Hill</p>${
         k.message ? `\n      <p class="king__message">${esc(k.message)}</p>` : ''}${link}
       <div class="king__figures">
         <span class="figure"><span class="figure__v figure__v--gold">${esc(bani(k.amount_cents, k.currency))}</span><span class="figure__k">Paid</span></span>
