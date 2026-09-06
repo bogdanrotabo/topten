@@ -14,6 +14,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pathToFileURL } from 'node:url';
+import { spawnSync } from 'node:child_process';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const bad = [];
@@ -31,12 +32,35 @@ for (const f of ['lib.js', 'render.js', 'app.js']) {
   }
 }
 
+/* 1a. The build scripts, parsed without being run.
+      Importing build.mjs would rebuild the site as a side effect of checking
+      it, which is a checker nobody would trust -- so it was left out of the
+      list above, and that left a hole: an unclosed template literal in
+      build.mjs made this file print "all present and parsing" while the build
+      could not start at all. CI catches it a minute later, which is a minute
+      after a contributor has been told everything is fine.
+
+      `node --check` is the right tool after all, and the reason it waved the
+      original bug through is now plain: it decides script or module from the
+      file, and app.js is a module wearing a .js extension in a package that
+      does not say otherwise, so it was parsed as a script. Given a .mjs it
+      parses as a module and catches everything. It also does not execute,
+      which is the whole requirement here.
+
+        node --check scripts/build.mjs   with an unclosed template -> exits 1
+        node --check app.js              with a module-only error  -> exits 0
+
+      So: --check for the .mjs scripts, and the real import above for the three
+      browser modules, each checked by the thing that can actually see it. */
+for (const f of ['scripts/build.mjs', 'scripts/og.mjs', 'scripts/card.mjs', 'scripts/check.mjs']) {
+  const r = spawnSync(process.execPath, ['--check', join(root, f)], { encoding: 'utf8' });
+  if (r.status !== 0) {
+    bad.push(`${f} does not parse: ${(r.stderr || '').trim().split('\n').filter((l) => /Error/.test(l))[0] || 'see node --check'}`);
+  }
+}
+
 /* The three classic scripts, which are not modules and are checked as what
-   they are. config.js is the one every page depends on.
-   scripts/build.mjs is deliberately absent from both lists: importing it would
-   RUN it, and a checker that rebuilds the site as a side effect of checking it
-   is a checker nobody will trust. CI runs the build for real instead, which is
-   a better check than parsing it. */
+   they are. config.js is the one every page depends on. */
 for (const f of ['config.js', 'dashboard.js', 'ga.js']) {
   try {
     new Function(readFileSync(join(root, f), 'utf8'));
@@ -85,7 +109,7 @@ const slugs = new Set(reg.boards.map((b) => b.slug));
 for (const b of reg.boards) {
   if (!existsSync(join(root, b.slug, 'index.html'))) bad.push(`${b.slug}/ has no page`);
 }
-const known = new Set(['icons', 'og', 'scripts', 'supabase', 'node_modules', '.git', '.github',
+const known = new Set(['icons', 'og', 'card-preview', 'scripts', 'supabase', 'node_modules', '.git', '.github',
   'back', 'thanks', 'claim', 'find', 'badge']);
 for (const d of readdirSync(root, { withFileTypes: true })) {
   if (!d.isDirectory() || known.has(d.name) || d.name.startsWith('.')) continue;

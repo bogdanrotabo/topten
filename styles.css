@@ -386,6 +386,49 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .field__i::placeholder { color: var(--dim); }
 .field__i:focus { outline: none; border-color: var(--cyan-line); background: var(--cyan-soft); }
 
+/* ------------------------------------------------------------- the band -- */
+
+/* Two boxes, equal width and equal height, because neither is more than the
+   other. Each carries its own ground rather than this page's: a mark redrawn
+   in somebody else's colours is a different mark. */
+.pb { display: flex; align-items: stretch; gap: 12px; margin-top: 16px; }
+
+.pb__b {
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  padding: 20px 16px; border-radius: 16px; text-align: center;
+}
+/* No gap on the wordmark. A flex gap falls between EVERY item, and "gift" and
+   ".ceo" are two of them -- the first version read "gift .ceo". Anything that
+   needs space before the word says so itself, below. */
+.pb__w { display: flex; align-items: center; gap: 0;
+  font-size: 21px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+.pb__t { font-size: 12px; font-weight: 700; line-height: 1.35; }
+.pb__mark { flex: none; display: block; margin-right: 9px; }
+
+/* gift.ceo's near-black with its gold, which is what it wears itself. */
+.pb__b--gift { background: #1c1b19; border: 1px solid #2b2926; }
+.pb__b--gift:hover { border-color: #d9a63c; }
+.pb__b--gift, .pb__b--gift:hover { color: #f2f0ec; }
+.pb__b--gift b { color: #d9a63c; }
+.pb__b--gift .pb__t { color: #a09b93; }
+
+/* rotabo.app's lavender with its violet. Loud on a page this dark, and meant
+   to be: it is rotabo's ground, not a hole in this one. */
+.pb__b--rotabo { background: #f6ecf9; border: 1px solid #e2c3ee; }
+.pb__b--rotabo:hover { border-color: #9b3fc0; }
+.pb__b--rotabo, .pb__b--rotabo:hover { color: #3a1650; }
+.pb__b--rotabo .pb__t { color: #6b5878; }
+
+/* Side by side is the point, but not at 360px: below that the two wordmarks
+   stop fitting and start breaking mid-word. */
+@media (max-width: 419px) {
+  .pb { flex-direction: column; }
+  /* Stacked, "equal width" is free and equal height is not -- the diamond
+     makes one box taller. A floor on both keeps the pair reading as a pair. */
+  .pb__b { min-height: 92px; }
+}
+
 /* -------------------------------------------------------------- sharing -- */
 
 /* rotabo.app's row, in this site's colours: pills that wrap, one per network
