@@ -115,6 +115,62 @@
 
   function tokenFor(reignId) { return tokens()[reignId] || ''; }
 
+  /* ------------------------------------------------------------ the receipt */
+
+  /* Minted here, spent at /claim.
+
+     A payer coming back from Stripe has to be able to say which payment was
+     theirs, and what they carry is decided by the Payment Link's success URL.
+     If it carries {CHECKOUT_SESSION_ID} they arrive with Stripe's own id and
+     none of this is needed. The URL configured on the live link instead
+     carries {CHECKOUT_SESSION_CLIENT_REFERENCE_ID}, which is filled in with
+     whatever client_reference_id the checkout was opened with -- so the page
+     mints one and passes it, and the link needs no change at all.
+
+     A uuid, which is 122 bits of randomness: unguessable, and worth nothing to
+     anybody but the browser that made it. */
+  function mintRef() {
+    try {
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    } catch (e) { /* not a secure context */ }
+    /* Same shape, from getRandomValues, for a browser without randomUUID. */
+    var b = new Uint8Array(16);
+    (window.crypto && crypto.getRandomValues)
+      ? crypto.getRandomValues(b)
+      : b.forEach(function (_, i) { b[i] = Math.floor(Math.random() * 256); });
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    var h = [].map.call(b, function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-'
+         + h.slice(16, 20) + '-' + h.slice(20);
+  }
+
+  /* Where the Dethrone button actually goes. A fresh receipt each time: two
+     tabs opened from this browser are two payments, and each has to be able to
+     say which one it was. */
+  function payLink() {
+    var link = CFG.STRIPE_PAYMENT_LINK;
+    if (!link) return '';
+    return link + (link.indexOf('?') >= 0 ? '&' : '?')
+      + 'client_reference_id=' + encodeURIComponent(mintRef());
+  }
+
+  /* The receipt on the way back, under whichever name the success URL used.
+     `listing` is the name the live link has carried since before the pivot.
+
+     Only ever out of the address bar. Keeping a copy in localStorage and
+     falling back to it was worse than having nothing: the ref is minted when
+     somebody clicks the button, not when they pay, so the copy proves a click
+     and no more -- and it would answer a bare visit to /claim by somebody who
+     abandoned checkout with "Payment received", spinning for forty-five
+     seconds over a payment that never happened. */
+  function receipt(params) {
+    return {
+      session_id: params.get('session_id') || '',
+      claim_ref: params.get('listing') || params.get('ref') || params.get('claim_ref') || ''
+    };
+  }
+
   /* --------------------------------------------------------------- reading */
 
   function view(name, query) {
@@ -236,9 +292,14 @@
     var btn = $('#dethrone');
     if (btn) {
       if (CFG.STRIPE_PAYMENT_LINK) {
+        /* The href is set at click rather than now, so the receipt is minted
+           when somebody actually goes. Prerendered, this button is the plain
+           Payment Link and works with no JavaScript at all -- that payment
+           counts, its payer simply has no receipt to claim their card with. */
         btn.href = CFG.STRIPE_PAYMENT_LINK;
         btn.removeAttribute('aria-disabled');
         btn.textContent = k ? 'Dethrone them' : 'Take the page';
+        btn.onclick = function () { btn.href = payLink() || btn.href; };
       } else {
         btn.removeAttribute('href');
         btn.setAttribute('aria-disabled', 'true');
@@ -323,10 +384,15 @@
     return '<p style="margin-top:18px"><a href="/">Back to the page</a></p>';
   }
 
-  function renderClaim(sessionId, editId) {
+  function renderClaim(rec, editId) {
     /* An "edit your card" click has no session id: this browser already holds
        the token and only wants the form back. */
-    if (!sessionId && editId) {
+    /* An "edit your card" click is not a payment coming back, so it is
+       answered first and on its own. Deciding it by "is there a receipt?"
+       let the fallback receipt in localStorage -- minted by any earlier
+       visit to a pay button -- shadow the id that was actually asked for,
+       and the form never opened. */
+    if (editId) {
       var t = tokenFor(editId);
       if (!t) {
         claimView('<h1>Nothing to edit here</h1><p>This browser does not hold the key to that card.</p>'
@@ -342,12 +408,13 @@
     var deadline = Date.now() + CLAIM_TIMEOUT_MS;
 
     function ask() {
-      callClaim({ action: 'status', session_id: sessionId }).then(function (r) {
+      callClaim({ action: 'status', session_id: rec.session_id, claim_ref: rec.claim_ref })
+        .then(function (r) {
         var b = r.body || {};
 
         if (r.status >= 400 && !b.outcome) {
           claimView('<h1>That link is not one of ours</h1>'
-            + '<p>The address should carry the session id Stripe put on it after checkout.</p>'
+            + '<p>The address should carry the receipt Stripe put on it after checkout.</p>'
             + backLink());
           return;
         }
@@ -378,7 +445,7 @@
             + '<p>Taking the seat now costs ' + esc(needed) + ' or more. No refunds — that is '
             + 'the rule everybody who has ever paid here played by.</p>'
             + '<p><a class="btn" id="dethrone-again" href="'
-            + esc(CFG.STRIPE_PAYMENT_LINK || '#') + '">Dethrone them</a></p>'
+            + esc(payLink() || '#') + '">Dethrone them</a></p>'
             + backLink());
         }
 
@@ -488,20 +555,35 @@
     }
 
     var params = new URLSearchParams(location.search);
-    var sessionId = params.get('session_id') || '';
     var editId = params.get('edit') || '';
+    var path = location.pathname.replace(/\/$/, '');
+    /* The two paths a Payment Link can land on: the one the success URL uses
+       today and the one it should use. Either works, under either receipt. */
+    var onClaimPath = path === '/claim' || path === '/thanks';
 
-    /* The success URL is Stripe's to set, and it may point anywhere on this
-       site. A session id in the query is what says "this browser has just
-       paid", whatever path it arrives on. */
-    if (sessionId || editId) {
-      /* The lists are loaded underneath so an edit form opened from the card
-         has the reign's current words to prefill from. */
-      load().then(function () { renderClaim(sessionId, editId); });
+    /* The lists load underneath every one of these, so a form has the reign's
+       current words to prefill from. */
+
+    /* 1. An explicit edit. Not a payment coming back; it needs no receipt and
+          must not be answered with one. */
+    if (editId) {
+      load().then(function () { renderClaim(null, editId); });
       return;
     }
 
-    if (location.pathname.replace(/\/$/, '') === '/claim') {
+    /* 2. A payment coming back. The success URL is Stripe's to set and may
+          name the receipt `session_id` or, on the link as configured today,
+          `listing` -- and may point at any path on this site, so the receipt
+          is honoured wherever it lands. */
+    var rec = receipt(params);
+
+    if (rec.session_id || rec.claim_ref) {
+      load().then(function () { renderClaim(rec, ''); });
+      return;
+    }
+
+    /* 3. A claim path with nothing on it at all. */
+    if (onClaimPath) {
       claimView('<h1>Nothing to claim</h1>'
         + '<p>This address is where Stripe sends you after a payment.</p>' + backLink());
       return;

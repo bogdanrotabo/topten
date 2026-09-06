@@ -6,10 +6,15 @@
 //
 // It used to carry a listing id in client_reference_id, because a payment had
 // to be told which of 137 rows to credit. There is one seat now, so a payment
-// needs to say nothing but its own amount: whoever paid more than the sitting
-// king takes the page, and whoever did not is recorded as an attempt. A
-// checkout started straight from the Payment Link — no query string, no
-// reference — is therefore the ordinary case rather than an error.
+// needs to say nothing about what it is buying: whoever paid more than the
+// sitting king takes the page, and whoever did not is recorded as an attempt.
+//
+// client_reference_id is still read, for something else entirely. The page
+// mints a random receipt before sending somebody to Stripe and passes it
+// there; Stripe hands it back on the success URL that is already configured,
+// and that is what lets the payer be told what their payment bought. A
+// checkout started straight from the Payment Link carries none, and is not an
+// error: that payment counts exactly the same, its payer just has no receipt.
 //
 // Deploy with verify_jwt = false: Stripe cannot send a Supabase JWT, so this
 // function authenticates the caller itself by verifying the Stripe signature
@@ -157,6 +162,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const details = (session.customer_details ?? {}) as Record<string, unknown>;
   const name = String(details.name ?? "").trim().slice(0, 40) || null;
 
+  // The receipt the page minted before sending this payer to Stripe, handed
+  // back untouched. It is what lets the success URL that was already on the
+  // Payment Link -- the one carrying {CHECKOUT_SESSION_CLIENT_REFERENCE_ID} --
+  // identify the payment on the way back, so the pivot needs nothing changed
+  // in Stripe. Empty when somebody opened the Payment Link directly rather
+  // than through the button, which is fine: they are still crowned, they
+  // simply have no receipt to claim their card with.
+  const claimRef = String(session.client_reference_id ?? "").trim().slice(0, 200) || null;
+
   // A completed session can still be unpaid when a delayed payment method is
   // used. Money that has not settled must not take the page; the
   // async_payment_succeeded event for the same session arrives when it has.
@@ -190,6 +204,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       p_amount_cents: Math.round(amount),
       p_currency: currency,
       p_name: name,
+      p_claim_ref: claimRef,
     }),
   });
 

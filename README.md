@@ -173,20 +173,35 @@ ones that were already there:
 | Price | `price_1U8F7b2eIfG2oegbO92AoF9x` (USD, `custom_unit_amount`, min $2) |
 | Payment link | `plink_1U8F7c2eIfG2oegb4npVFInN` |
 | Webhook | `we_1U8F7d2eIfG2oegbq6i4BACB` |
-| Success URL | **must be** `https://topten.one/claim?session_id={CHECKOUT_SESSION_ID}` |
+| Success URL | `https://topten.one/thanks?listing={CHECKOUT_SESSION_CLIENT_REFERENCE_ID}` — unchanged, and working |
 
-> **The success URL is the one thing that has to change by hand.** It was
-> `https://topten.one/thanks?listing={CHECKOUT_SESSION_CLIENT_REFERENCE_ID}`,
-> which named which listing to credit. There are no listings. A payer who comes
-> back without a `session_id` cannot be told what their payment bought and cannot
-> be given the key to their card — the payment still counts, and the page still
-> updates, but they land on a page that can only say "nothing to claim".
-> Edit it in the Stripe dashboard: Payment links → the link → Edit → After
-> payment → Redirect to a URL.
+**Nothing on Stripe has to change.** The success URL still carries
+`{CHECKOUT_SESSION_CLIENT_REFERENCE_ID}`, which used to name the listing to
+credit. There are no listings — but that placeholder is filled in with whatever
+`client_reference_id` the checkout was opened with, and the page can set that
+itself. So it does: `app.js` mints a random uuid on the Dethrone click, opens
+the link as `…?client_reference_id=<uuid>`, and Stripe hands it back as
+`/thanks?listing=<uuid>`. The webhook stores it, and that is the receipt the
+payer claims their card with.
 
-The link is now opened **plain**, with no query string. It used to carry
-`client_reference_id=<listing id>`; a payment says nothing but its own amount and
-the webhook decides what that buys.
+Two receipts are therefore accepted, and the site does not care which arrives:
+
+| Receipt | Where it comes from | Needs |
+|---|---|---|
+| `claim_ref` | the page minted it and passed it as `client_reference_id` | nothing |
+| `session_id` | Stripe's own, from `{CHECKOUT_SESSION_ID}` | the success URL changed |
+
+Changing the success URL to
+`https://topten.one/claim?session_id={CHECKOUT_SESSION_ID}` is still worth
+doing, and it buys exactly one thing: a payer who opens the Payment Link
+**directly** — from a bookmark, or a link somebody shared, rather than through
+the button — carries no `client_reference_id` and so comes back with no
+receipt. They are crowned all the same and the page updates; they just cannot
+be handed the key to their own card. Everyone who arrives through the site is
+covered either way.
+
+Both receipts are read on `/claim` and on `/thanks`, under `session_id`,
+`listing` or `ref`, so any of those success URLs lands somewhere that works.
 
 `scripts/stripe-setup.sh` rebuilds all of it from scratch on a *different*
 account. It creates fresh objects every run, so running it against the live
@@ -309,8 +324,14 @@ The same works on a row in the history. `attempts` carries only a name.
   anything older than thirty minutes. It used to hang off `payments`, which no
   longer exists. Same contract, same function name, so the alerts did not
   silently switch themselves off in the pivot.
+- **The receipt is never kept in the browser.** It lives in the address bar and
+  nowhere else. An earlier version stashed it in `localStorage` as a fallback,
+  which was worse than having none: the ref is minted when somebody clicks the
+  button, not when they pay, so the copy proved a click — and it answered a
+  bare visit to `/claim` by somebody who abandoned checkout with "Payment
+  received", spinning for forty-five seconds over a payment that never was.
 - **The edit key is handed over exactly once.** `claim_reign()` stamps
-  `token_claimed_at` the first time a session id is exchanged for it. A second
+  `token_claimed_at` the first time a receipt is exchanged for it. A second
   visit to the same success URL gets the card and no key. The key lives in that
   browser's `localStorage` and nowhere else; there is no way to reissue it,
   which is the price of having no accounts.

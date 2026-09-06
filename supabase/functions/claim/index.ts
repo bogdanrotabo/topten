@@ -2,12 +2,20 @@
 //
 // Two questions, one endpoint:
 //
-//   {action:"status", session_id}                  what did that payment buy?
+//   {action:"status", session_id | claim_ref}      what did that payment buy?
 //   {action:"save", edit_token, name, url, message} write the card
 //
-// The Stripe session id is the receipt. Only the browser Stripe redirected
-// after checkout carries it, and it is worth exactly one thing: the edit
-// token, handed over on the first ask and never again. Everything after that
+// Two receipts, either of which answers the first question, because which one
+// a payer comes back holding is decided by the Payment Link's success URL:
+//
+//   session_id  Stripe's own, when the URL carries {CHECKOUT_SESSION_ID}
+//   claim_ref   the one the page minted before checkout and passed as
+//               client_reference_id, which the URL that was already
+//               configured hands straight back
+//
+// Both are unguessable and held only by the browser that paid, and both are
+// worth exactly one thing: the edit token, handed over on the first ask and
+// never again. Everything after that
 // is the token's, which is why it goes into that browser's localStorage and
 // why losing it means writing to hello@topten.one rather than clicking a
 // "forgot" link that would have to trust somebody's word.
@@ -30,6 +38,10 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 // nothing is learned by asking, but nothing should have to be spent finding
 // that out either.
 const SESSION_RE = /^cs_(test|live)_[A-Za-z0-9]{8,120}$/;
+
+// What the page mints: a uuid, hyphens and all. Anything else is refused
+// before a connection to the database is opened.
+const REF_RE = /^[0-9a-fA-F-]{16,200}$/;
 
 // 64 hex characters, which is what the column's default produces. Checked
 // here so a malformed token is a 400 rather than a query.
@@ -88,11 +100,18 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // browser got back from Stripe before the webhook did — so the page polls
   // rather than telling somebody who has just paid that nothing happened.
   if (action === "status") {
-    const sessionId = String(body.session_id ?? "");
-    if (!SESSION_RE.test(sessionId)) return json({ error: "bad_session_id" }, 400);
+    const sessionId = String(body.session_id ?? "").trim();
+    const claimRef = String(body.claim_ref ?? "").trim();
+
+    const haveSession = sessionId !== "" && SESSION_RE.test(sessionId);
+    const haveRef = claimRef !== "" && REF_RE.test(claimRef);
+    if (!haveSession && !haveRef) return json({ error: "bad_receipt" }, 400);
 
     try {
-      return json(await rpc("claim_reign", { p_session_id: sessionId }));
+      return json(await rpc("claim_reign", {
+        p_session_id: haveSession ? sessionId : null,
+        p_claim_ref: haveRef ? claimRef : null,
+      }));
     } catch (e) {
       console.error(e);
       return json({ error: "unavailable" }, 503);

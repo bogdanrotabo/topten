@@ -80,6 +80,20 @@ create table if not exists public.reigns (
   -- once; after that the holder of the token is the only one who can edit it,
   -- and somebody who merely knows a session id gets the card without the key.
   token_claimed_at  timestamptz,
+  -- The second receipt, and the one that needs nothing changed on Stripe.
+  --
+  -- A payer comes back from checkout holding one of two things. Either the
+  -- Stripe session id, if the Payment Link's success URL carries
+  -- {CHECKOUT_SESSION_ID}; or this, which the page itself minted before
+  -- sending them to Stripe and passed as client_reference_id, and which the
+  -- existing success URL hands straight back. Both are unguessable, both are
+  -- spent once for the edit token, and neither is readable with the anon key.
+  --
+  -- Not unique on purpose. A unique violation here would fail the webhook and
+  -- Stripe would retry it forever over something that costs nothing: two
+  -- payments carrying the same ref is somebody reusing their own URL, and the
+  -- lookup below simply answers with the most recent.
+  claim_ref         text,
   check (dethroned_at is null or dethroned_at >= crowned_at)
 );
 
@@ -90,6 +104,12 @@ create table if not exists public.reigns (
 create unique index if not exists reigns_one_king_idx
   on public.reigns ((dethroned_at is null))
   where dethroned_at is null;
+
+-- Newest first, because a ref reused across two payments answers with the
+-- most recent one.
+create index if not exists reigns_claim_ref_idx
+  on public.reigns (claim_ref, crowned_at desc)
+  where claim_ref is not null;
 
 -- The history page reads in this order and no other.
 create index if not exists reigns_history_idx
@@ -118,11 +138,18 @@ create table if not exists public.attempts (
   -- almost always and the wrong one in the case that matters: two payments
   -- landing in the same instant, one of them crowning. A foreign key cannot
   -- be ambiguous about which reign an attempt failed against.
-  reign_id          uuid references public.reigns(id) on delete set null
+  reign_id          uuid references public.reigns(id) on delete set null,
+  -- Same receipt as on reigns. An attempt has a card to be told about too:
+  -- what was paid, and what it would have taken.
+  claim_ref         text
 );
 
 create index if not exists attempts_reign_idx
   on public.attempts (reign_id, created_at desc);
+
+create index if not exists attempts_claim_ref_idx
+  on public.attempts (claim_ref, created_at desc)
+  where claim_ref is not null;
 
 -- ================================================================== views --
 
@@ -168,6 +195,9 @@ revoke all on public.attempts from anon, authenticated;
 -- Column privileges, named one by one. Anything added to these tables later
 -- is private until somebody comes back here and says otherwise, which is the
 -- right way round for a table that holds a secret.
+-- claim_ref is absent from both lists for the same reason stripe_session_id
+-- is: it is a receipt, and a receipt somebody else can read is a key somebody
+-- else can spend.
 grant select (id, amount_cents, currency, name, url, message, crowned_at, dethroned_at)
   on public.reigns to anon, authenticated;
 grant select (id, amount_cents, currency, name, created_at, reign_id)
@@ -206,7 +236,8 @@ create or replace function public.crown_or_attempt(
   p_session_id   text,
   p_amount_cents integer,
   p_currency     text,
-  p_name         text default null
+  p_name         text default null,
+  p_claim_ref    text default null
 )
 returns jsonb
 language plpgsql
@@ -222,6 +253,7 @@ declare
   v_row     public.reigns%rowtype;
   v_att     public.attempts%rowtype;
   v_name    text := nullif(left(btrim(coalesce(p_name, '')), 40), '');
+  v_ref     text := nullif(left(btrim(coalesce(p_claim_ref, '')), 200), '');
 begin
   if p_session_id is null or p_session_id = '' then
     return jsonb_build_object('ok', false, 'reason', 'no_session');
@@ -242,6 +274,9 @@ begin
     return jsonb_build_object('ok', true, 'duplicate', true, 'outcome', 'crowned',
                               'reign_id', v_row.id, 'amount_cents', v_row.amount_cents);
   end if;
+  -- On the session id alone. The claim ref is not unique and two payments may
+  -- share one, so it can say which card to show but never whether Stripe has
+  -- delivered this event before.
   select * into v_att from public.attempts where stripe_session_id = p_session_id;
   if found then
     return jsonb_build_object('ok', true, 'duplicate', true, 'outcome', 'attempt',
@@ -255,15 +290,15 @@ begin
   -- Beat the king, or open the throne at a whole unit if nobody is on it.
   if v_king.id is null then
     if p_amount_cents < c_opening then
-      insert into public.attempts (stripe_session_id, amount_cents, currency, name, reign_id)
-      values (p_session_id, p_amount_cents, p_currency, v_name, null)
+      insert into public.attempts (stripe_session_id, amount_cents, currency, name, reign_id, claim_ref)
+      values (p_session_id, p_amount_cents, p_currency, v_name, null, v_ref)
       returning * into v_att;
       return jsonb_build_object('ok', true, 'duplicate', false, 'outcome', 'attempt',
                                 'attempt_id', v_att.id, 'needed_cents', c_opening);
     end if;
   elsif p_amount_cents <= v_king.amount_cents then
-    insert into public.attempts (stripe_session_id, amount_cents, currency, name, reign_id)
-    values (p_session_id, p_amount_cents, p_currency, v_name, v_king.id)
+    insert into public.attempts (stripe_session_id, amount_cents, currency, name, reign_id, claim_ref)
+    values (p_session_id, p_amount_cents, p_currency, v_name, v_king.id, v_ref)
     returning * into v_att;
     return jsonb_build_object('ok', true, 'duplicate', false, 'outcome', 'attempt',
                               'attempt_id', v_att.id, 'needed_cents', v_king.amount_cents + 1);
@@ -276,8 +311,8 @@ begin
     update public.reigns set dethroned_at = now() where id = v_king.id;
   end if;
 
-  insert into public.reigns (stripe_session_id, amount_cents, currency, name)
-  values (p_session_id, p_amount_cents, p_currency, v_name)
+  insert into public.reigns (stripe_session_id, amount_cents, currency, name, claim_ref)
+  values (p_session_id, p_amount_cents, p_currency, v_name, v_ref)
   returning * into v_row;
 
   return jsonb_build_object('ok', true, 'duplicate', false, 'outcome', 'crowned',
@@ -286,9 +321,9 @@ begin
 end;
 $fn$;
 
-revoke all on function public.crown_or_attempt(text, integer, text, text)
+revoke all on function public.crown_or_attempt(text, integer, text, text, text)
   from public, anon, authenticated;
-grant execute on function public.crown_or_attempt(text, integer, text, text) to service_role;
+grant execute on function public.crown_or_attempt(text, integer, text, text, text) to service_role;
 
 -- ================================================================= claims --
 
@@ -305,7 +340,19 @@ grant execute on function public.crown_or_attempt(text, integer, text, text) to 
 -- Both are service_role only. The browser reaches them through the `claim`
 -- Edge Function, which is the only thing holding that key.
 
-create or replace function public.claim_reign(p_session_id text)
+-- Either receipt opens it, and exactly one of them is passed.
+--
+--   p_session_id  the Stripe session id, if the Payment Link's success URL
+--                 carries {CHECKOUT_SESSION_ID}
+--   p_claim_ref   the ref the page minted before checkout and passed as
+--                 client_reference_id, which the older success URL hands back
+--
+-- Both are receipts of the same standing: unguessable, held only by the
+-- browser that paid, and spent once for the edit token.
+create or replace function public.claim_reign(
+  p_session_id text default null,
+  p_claim_ref  text default null
+)
 returns jsonb
 language plpgsql
 security definer
@@ -316,8 +363,20 @@ declare
   v_att   public.attempts%rowtype;
   v_king  public.reigns%rowtype;
   v_first boolean;
+  v_sid   text := nullif(btrim(coalesce(p_session_id, '')), '');
+  v_ref   text := nullif(btrim(coalesce(p_claim_ref, '')), '');
 begin
-  select * into v_row from public.reigns where stripe_session_id = p_session_id;
+  if v_sid is null and v_ref is null then
+    return jsonb_build_object('outcome', 'pending');
+  end if;
+
+  -- Most recent first: a ref reused across two payments is somebody replaying
+  -- their own URL, and the answer they want is the one they just made.
+  select * into v_row from public.reigns
+   where (v_sid is not null and stripe_session_id = v_sid)
+      or (v_ref is not null and claim_ref = v_ref)
+   order by crowned_at desc
+   limit 1;
   if found then
     v_first := v_row.token_claimed_at is null;
     if v_first then
@@ -335,7 +394,11 @@ begin
       'token_already_issued', not v_first);
   end if;
 
-  select * into v_att from public.attempts where stripe_session_id = p_session_id;
+  select * into v_att from public.attempts
+   where (v_sid is not null and stripe_session_id = v_sid)
+      or (v_ref is not null and claim_ref = v_ref)
+   order by created_at desc
+   limit 1;
   if found then
     select * into v_king from public.reigns where dethroned_at is null;
     return jsonb_build_object(
@@ -399,8 +462,8 @@ begin
 end;
 $fn$;
 
-revoke all on function public.claim_reign(text) from public, anon, authenticated;
-grant execute on function public.claim_reign(text) to service_role;
+revoke all on function public.claim_reign(text, text) from public, anon, authenticated;
+grant execute on function public.claim_reign(text, text) to service_role;
 
 revoke all on function public.edit_reign(text, text, text, text)
   from public, anon, authenticated;
