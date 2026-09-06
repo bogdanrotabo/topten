@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=1ae9ebee84';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=6cb821b2d3';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=1ae9ebee84';
+         figures, figureText } from './render.js?v=6cb821b2d3';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -149,6 +149,95 @@ function payHref(listingId) {
   return u.toString();
 }
 
+/* --------------------------------------------------------- what just paid -- */
+
+/* The last name that received money, on every page, kept current.
+ *
+ * The site already prints its four figures live at the top. This is the other
+ * half of the same question: not how much, but WHO, just now. It sits in the
+ * band beside the figures and lights up when it changes.
+ *
+ * Only a payment that actually landed moves it. The row is read straight from
+ * the board view -- the newest last_paid_at on the site -- so it can no more
+ * invent a payer than the ranking can.
+ *
+ * The first reading of a session never flashes. Somebody opening the site is
+ * not watching a payment arrive; they are being shown the state of things, and
+ * a page that flashes at you the moment it loads is an advertisement rather
+ * than a signal. It flashes on a CHANGE, which only happens to somebody who
+ * was already looking.
+ */
+let lastPaidSeen = null;
+
+function paintLastPaid(row, boardName) {
+  const el = $('#lastpaid');
+  if (!el || !row) return;
+  const key = row.handle + '|' + row.total_cents + '|' + row.last_paid_at;
+  const first = lastPaidSeen === null;
+  if (key === lastPaidSeen) return;
+  lastPaidSeen = key;
+
+  el.hidden = false;
+  el.innerHTML = '<span class="lp__k">just paid</span>'
+    + '<span class="lp__h">' + esc(row.handle) + '</span>'
+    + '<span class="lp__b">' + esc(boardName || row.platform) + '</span>'
+    + '<span class="lp__a num">' + esc(money(row.total_cents)) + '</span>';
+
+  /* Only a change somebody was present for is worth a light. */
+  if (first) return;
+  el.classList.remove('lp--new');
+  void el.offsetWidth;
+  el.classList.add('lp--new');
+  confetti();
+}
+
+async function readLastPaid(nameOf) {
+  const rows = await rest('board?select=platform,handle,total_cents,last_paid_at'
+    + '&order=last_paid_at.desc.nullslast&limit=1');
+  const row = rows && rows[0];
+  if (row && row.last_paid_at) paintLastPaid(row, nameOf(row.platform));
+}
+
+/* ------------------------------------------------------------- confetti -- */
+
+/* The prize, for the one person who has earned it: somebody who has just paid.
+ *
+ * Fired on the result page and nowhere else, and only on a confirmed payment
+ * -- not on "still settling", not on "cannot tell". Confetti over an answer
+ * the site is not sure of would be celebrating something that may not have
+ * happened, which is the same lie the page was just fixed for telling.
+ *
+ * Drawn in the page rather than fetched: a celebration is not worth a request
+ * to somebody else's server, and this site loads no code from anywhere but
+ * itself. Twelve dozen pieces, gone in five seconds, and the whole thing
+ * removes itself -- nothing left running behind the page.
+ */
+function confetti() {
+  if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const sky = document.createElement('div');
+  sky.className = 'sky';
+  sky.setAttribute('aria-hidden', 'true');   /* it says nothing; the page says it */
+
+  /* The site's own colours, and the ones a prize is allowed to add. */
+  const paint = ['#d9a63c', '#e8bc5c', '#f2f0ec', '#6cc296', '#a239c9', '#c264e0'];
+  for (let i = 0; i < 144; i += 1) {
+    const bit = document.createElement('i');
+    bit.className = 'bit';
+    bit.style.left = (Math.random() * 100).toFixed(2) + '%';
+    bit.style.background = paint[i % paint.length];
+    bit.style.animationDelay = (Math.random() * 900).toFixed(0) + 'ms';
+    bit.style.animationDuration = (2600 + Math.random() * 1800).toFixed(0) + 'ms';
+    bit.style.setProperty('--spin', (Math.random() * 720 - 360).toFixed(0) + 'deg');
+    bit.style.setProperty('--drift', (Math.random() * 160 - 80).toFixed(0) + 'px');
+    if (i % 3 === 0) { bit.style.width = '6px'; bit.style.height = '12px'; }
+    if (i % 5 === 0) { bit.style.borderRadius = '50%'; }
+    sky.appendChild(bit);
+  }
+  document.body.appendChild(sky);
+  setTimeout(() => sky.remove(), 6000);
+}
+
 /* ------------------------------------------------------------- numbers --- */
 
 /* The four figures on the front page, and the light that says they are moving.
@@ -214,12 +303,16 @@ function paintNumbers(n) {
 /* Keep asking, while somebody is actually looking. A tab left open behind
    twenty others should not be polling a database for a number nobody can see,
    so this stops when the page is hidden and reads once on the way back. */
-function watchNumbers() {
+function watchNumbers(nameOf) {
   if (!$('#numbers')) return;
+  nameOf = nameOf || ((p) => p);
   let timer = null;
 
   const read = async () => {
     if (document.visibilityState !== 'visible') return;
+    /* The same beat as the figures: whoever is looking sees both move at once,
+       which is one event rather than two things twitching separately. */
+    readLastPaid(nameOf).catch(() => {});
     try { paintNumbers(await rpc('site_numbers')); }
     catch (e) {
       /* No reading, so the light goes out. An unlit light is the honest state
@@ -228,6 +321,12 @@ function watchNumbers() {
       if (light) light.hidden = true;
     }
   };
+
+  /* Read once now, so the band is filled the moment the page settles rather
+     than twenty seconds later. That first reading is also what makes the rule
+     above work: it is the one that does not flash, and every change after it
+     belongs to somebody who was already looking. */
+  readLastPaid(nameOf).catch(() => {});
 
   const start = () => { if (!timer) timer = setInterval(read, NUMBERS_EVERY); };
   const stop = () => { clearInterval(timer); timer = null; };
@@ -342,6 +441,10 @@ async function drawBoard(slug) {
 
   const nameOf = (sl) => { const f = reg.boards.find((x) => x.slug === sl); return f ? f.name : null; };
   paintTicker(latest ? tickList(latest, nameOf) : null);
+
+  /* A ranking page has the band too, so it watches the same two things. */
+  paintNumbers(await rpc('site_numbers').catch(() => null) || {});
+  watchNumbers(nameOf);
 
   const top = $('#top');
   if (top) top.innerHTML = topTwo(s);
@@ -629,7 +732,7 @@ async function drawHome() {
      built with figures that were true when it was built; these are true now,
      and the ones twenty seconds from now will be true then. */
   paintNumbers(numbers);
-  watchNumbers();
+  watchNumbers((sl) => (bySlug.get(sl) || {}).name || sl);
 }
 
 /* ---------------------------------------------------- what the payment did -- */
@@ -727,6 +830,8 @@ async function drawResult() {
       + '<a class="cta" href="/find/" style="margin-top:28px">Find the ranking</a>';
     return;
   }
+
+  confetti();
 
   /* The three things a payment can do, each read off the ranking before and
      after it landed. Nothing here is asserted: a move is only claimed when the

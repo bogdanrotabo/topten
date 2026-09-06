@@ -222,6 +222,10 @@ export function tally(n) {
   return '<div class="tally" id="numbers">'
     + '<span class="live" id="live" hidden><span class="live__dot"></span>Live</span>'
     + figures(n)
+    /* Empty and hidden until a reading fills it. The build cannot write who
+       paid last: it would be true when the page was built and a lie by the
+       time anybody read it, which is the whole reason this band is live. */
+    + '<span class="lp" id="lastpaid" hidden></span>'
     + '</div>';
 }
 
