@@ -1,6 +1,13 @@
-# TopTen.one
+# TopTen.one — King of the Hill
 
 **One page. One king. Pay more than them and it's yours.**
+
+The domain is the mark; *King of the Hill* is the name of the game played on
+it. It is the site name in the masthead, in `<title>`, in `og:site_name` and on
+the share card. `og:title` is deliberately **not** it: that slot carries
+`Current king: {name} — {amount}`, the one sentence about this site that changes
+every time somebody pays, and spending the front of a preview card on a
+constant would waste it.
 
 There is a single position on a single page. Whoever has paid the most for it
 holds it — their name, their message and their link *are* the page — and the

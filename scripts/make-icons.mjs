@@ -65,20 +65,17 @@ function mark({ rx = 14, scale = 1 } = {}) {
 `;
 }
 
-/* The share card. The name, and the claim the front page makes -- with the
-   mark finishing it, so "#1" is written once, large, and is both the logo
-   and the end of the sentence. It asked "Who should be #1?" until
-   2026-09-04; the page answers now, and a card that still asked would be
-   the site arguing with itself on somebody else's timeline. Nothing in it
-   goes stale: no count of anything, no name of anybody. "I am #1" is still
-   the sentence when there is one seat rather than seventy-two boards of ten
-   -- more so, in fact. Only the two lines under it had to change. */
+/* The share card: the domain, the name of the game, and the mark under it.
+   It asked "Who should be #1?" until 2026-09-04 and answered "I am" after
+   that, which was the old site's slogan and outlived the old site by one
+   commit. The game has a name now and this is where it is said largest.
+   Nothing in it goes stale: no count of anything, no name of anybody. */
 function card() {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <rect width="1200" height="630" fill="${BLACK}"/>
   <rect width="1200" height="8" fill="${VIOLET}"/>
   <text x="80" y="122" font-family="${SANS}" font-size="54" font-weight="700" letter-spacing="-2"><tspan fill="${WHITE}">TopTen</tspan><tspan fill="${VIOLET}">.one</tspan></text>
-  <text x="76" y="306" font-family="${SANS}" font-size="104" font-weight="700" letter-spacing="-3.6" fill="${WHITE}">I am</text>
+  <text x="76" y="300" font-family="${SANS}" font-size="92" font-weight="700" letter-spacing="-3.2" fill="${WHITE}">King of the Hill</text>
   <text x="70" y="532" font-family="${MONO}" font-size="250" font-weight="800" letter-spacing="-16" fill="${VIOLET}">#1</text>
   <text x="520" y="476" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">One page. One king.</text>
   <text x="520" y="522" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">Pay more than them and it&#39;s yours.</text>

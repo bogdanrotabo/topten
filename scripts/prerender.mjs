@@ -174,15 +174,18 @@ ${li}
 /* The social card and the title. "Current king: {name} — {amount}" is what a
    search result and a shared link both say, which is the only sentence about
    this site that has to change every time somebody pays. */
+/* og:site_name carries the name of the game; og:title stays the sentence that
+   changes every time somebody pays. Putting the name in the title as well
+   would spend the front of a preview card on a constant. */
 function capul(k) {
   const titlu = k
     ? `Current king: ${nume(k)} — ${bani(k.amount_cents, k.currency)}`
-    : 'TopTen.one — one page, one king';
+    : 'King of the Hill — one page, one king';
   const descriere = (k && k.message)
     ? k.message
     : "One page. One king. Pay more than them and it's yours.";
   return `\n<meta property="og:type" content="website">
-<meta property="og:site_name" content="TopTen.one">
+<meta property="og:site_name" content="King of the Hill">
 <meta property="og:title" content="${esc(titlu)}">
 <meta property="og:description" content="${esc(descriere)}">
 <meta property="og:image" content="https://topten.one/og-image.png?v=3">
@@ -197,8 +200,8 @@ function capul(k) {
 
 function cap(html, k) {
   const titlu = k
-    ? `Current king: ${nume(k)} — ${bani(k.amount_cents, k.currency)} — TopTen.one`
-    : 'TopTen.one — one page, one king';
+    ? `Current king: ${nume(k)} — ${bani(k.amount_cents, k.currency)} — King of the Hill`
+    : 'King of the Hill — topten.one';
   const descriere = (k && k.message)
     ? `${nume(k)} holds topten.one for ${bani(k.amount_cents, k.currency)}. “${k.message}” `
       + 'Pay more than them and the page is yours.'

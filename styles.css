@@ -97,6 +97,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 9px;
   min-height: 46px;
 }
 
@@ -108,6 +109,21 @@ button {
   letter-spacing: -.02em;
 }
 .wordmark b { color: var(--accent); font-weight: 800; }
+
+/* The domain is the mark; this is the name of the game played on it. Beside
+   the wordmark rather than under it, so every page carries both in one row
+   whatever else is on the page. */
+.masthead__name {
+  color: var(--dim);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  white-space: nowrap;
+}
+.masthead__name::before { content: "·"; margin-right: 9px; letter-spacing: 0; }
+
+@media (max-width: 359px) { .masthead__name { display: none; } }
 
 .tagline {
   text-align: center;

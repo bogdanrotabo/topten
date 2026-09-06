@@ -294,8 +294,8 @@
     drawFormer();
     document.title = state.king
       ? 'Current king: ' + nameOf(state.king) + ' — ' + money(state.king.amount_cents, state.king.currency)
-        + ' — TopTen.one'
-      : 'The throne is empty — TopTen.one';
+        + ' — King of the Hill'
+      : 'The throne is empty — King of the Hill';
   }
 
   /* ------------------------------------------------------------- the claim */
