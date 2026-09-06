@@ -45,6 +45,39 @@ for (const f of ['config.js', 'dashboard.js', 'ga.js']) {
   }
 }
 
+/* 1b. Every name app.js uses from lib.js or render.js has to be imported.
+      This exists because of a real bug: figures() and figuresNote() were added
+      to render.js and called from app.js, and the import line was never
+      updated -- it already carried a ?v= stamp from the build, so the edit
+      that was meant to add them matched nothing and said so to nobody. The
+      file parsed perfectly. The front page's numbers then threw
+      "figuresNote is not defined" on every load, which is a class of mistake
+      the parse check above cannot see, because it is not a parse error.
+
+      Deliberately blunt: it asks whether a word that one of those modules
+      exports appears in app.js without being on an import line. A name in a
+      comment or a string would be a false alarm; a false alarm here costs one
+      look, and the thing it prevents costs a broken page. */
+{
+  const app = readFileSync(join(root, 'app.js'), 'utf8');
+  const imported = new Set(
+    [...app.matchAll(/import\s*\{([^}]*)\}\s*from\s*'\.\/(?:lib|render)\.js[^']*'/g)]
+      .flatMap((m) => m[1].split(',').map((x) => x.trim().split(/\s+as\s+/).pop().trim()))
+      .filter(Boolean));
+
+  const body = app.replace(/import\s*\{[^}]*\}\s*from\s*'[^']*';/g, '');
+  for (const f of ['lib.js', 'render.js']) {
+    const src = readFileSync(join(root, f), 'utf8');
+    const names = [...src.matchAll(/export\s+(?:function|const|let)\s+([A-Za-z_$][\w$]*)/g)].map((m) => m[1]);
+    for (const n of names) {
+      if (imported.has(n)) continue;
+      if (new RegExp('(?<![\\w$.])' + n + '\\s*\\(').test(body)) {
+        bad.push(`app.js calls ${n}() but never imports it from ${f}`);
+      }
+    }
+  }
+}
+
 /* 2. The registry and the pages have to agree: one directory per board, and
       no board directory the registry has forgotten. */
 const reg = JSON.parse(readFileSync(join(root, 'boards.json'), 'utf8'));
@@ -52,7 +85,7 @@ const slugs = new Set(reg.boards.map((b) => b.slug));
 for (const b of reg.boards) {
   if (!existsSync(join(root, b.slug, 'index.html'))) bad.push(`${b.slug}/ has no page`);
 }
-const known = new Set(['icons', 'scripts', 'supabase', 'node_modules', '.git', '.github',
+const known = new Set(['icons', 'og', 'scripts', 'supabase', 'node_modules', '.git', '.github',
   'back', 'thanks', 'claim', 'find', 'badge']);
 for (const d of readdirSync(root, { withFileTypes: true })) {
   if (!d.isDirectory() || known.has(d.name) || d.name.startsWith('.')) continue;

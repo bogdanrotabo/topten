@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
 import { esc, money, shortDate, situation, costToOpen, MIN_CENTS } from '../lib.js';
-import { topTwo, amounts, row, battle, trend, openOne, move, ticker, CROWN } from '../render.js';
+import { topTwo, amounts, row, battle, trend, openOne, move, ticker, tally, CROWN } from '../render.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const R = (p) => join(root, p);
@@ -342,6 +342,7 @@ function homeBody() {
 
   return `<div class="wash wash--violet"></div><div class="wash wash--magenta"></div>
 ${masthead()}
+${tally(numbers)}
 ${ticker(ticks)}
 
 <section class="hero above">
@@ -400,19 +401,6 @@ ${ticker(ticks)}
   ${shareBar(SITE + '/', 'Who should be #1? On TopTen.one the only thing that moves a ranking is money.')}
 </section>
 
-<section class="sect" id="numbers">
-  <div class="glass" style="padding:22px 18px;border-radius:16px">
-    <div class="figures">
-      <div class="figure"><div class="figure__v figure__v--cyan num">${n.visitors.toLocaleString('en-US')}</div><div class="figure__k">visitors</div></div>
-      <div class="figure"><div class="figure__v figure__v--cyan num">${n.countries}</div><div class="figure__k">countries</div></div>
-      <div class="figure"><div class="figure__v num">${n.listed}</div><div class="figure__k">listed</div></div>
-      <div class="figure figure--wide"><div class="figure__v num">${esc(money(n.backed_cents))}</div><div class="figure__k">backed</div></div>
-    </div>
-    <p class="fine" style="margin-top:14px">Visitors from ${n.countries} countries, counted since 25 August and
-      including 147 measured by Google Analytics in the three days before this site kept its own record.
-      ${n.payments} payments, nothing rounded.</p>
-  </div>
-</section>
 
 ${footer()}`;
 }
@@ -444,6 +432,7 @@ function boardBody(b) {
 
   return `<div class="wash wash--gold"></div>
 ${masthead({ back: true, share: true })}
+${tally(numbers)}
 ${ticker(ticks)}
 
 <section class="hero above" style="padding-top:40px">
@@ -562,6 +551,34 @@ function payTo(listingId) {
   return u.toString();
 }
 
+/* The manifest, written here rather than kept by hand.
+ *
+ * It still said "King of the Hill -- One page. One king. Pay more than them
+ * and it's yours." That game was removed weeks ago, so anybody installing the
+ * site to a home screen got the name of something that no longer exists. A
+ * file describing the site that is not written by the thing that writes the
+ * site will go stale, and this one did.
+ */
+function manifest() {
+  return JSON.stringify({
+    name: 'TopTen.one — who should be #1?',
+    short_name: 'TopTen.one',
+    description: `${registry.boards.length} rankings, and the only thing that moves you up is money. `
+      + 'Pick a side. Move the ranking.',
+    start_url: '/',
+    scope: '/',
+    display: 'standalone',
+    background_color: '#131211',
+    theme_color: '#131211',
+    orientation: 'portrait-primary',
+    icons: [
+      { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/icons/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+    ],
+  }, null, 2) + '\n';
+}
+
 /* --------------------------------------------------------------- writing -- */
 
 function write(path, html) {
@@ -592,6 +609,10 @@ console.log('  index.html');
 for (const b of boards) {
   const { t, d } = seo(b);
   write(`${b.slug}/index.html`, page({ title: t, description: d, path: `/${b.slug}/`,
+    /* The card a link to this ranking shows: its own question, drawn by
+       scripts/og.mjs and committed. Not the leader -- a name baked into a
+       committed picture starts going stale the moment somebody pays. */
+    image: `/og/${b.slug}.png`,
     body: boardBody(b),
     /* A ranking nobody has paid into has no ranking to put beside the form, so
        the wide layout gives the form the width instead of standing it in a
@@ -705,6 +726,7 @@ ${footer()}`,
 });
 
 write('about.html', legalPage('About', `
+
 <p>Everything online is ranked by something nobody will explain: an algorithm, a follower
 count, a paid partnership that does not admit to being one. TopTen.one does the opposite.
 ${registry.boards.length} rankings, and the only thing that moves you up is <b>money</b>.
@@ -839,6 +861,9 @@ down. Payment records are kept, because they are an accounting record of money t
 hands.</p>
 `));
 console.log('  about.html, terms.html, privacy.html');
+
+write('manifest.json', manifest());
+console.log('  manifest.json');
 
 write('404.html', page({
   title: 'Nothing here | TopTen.one',
