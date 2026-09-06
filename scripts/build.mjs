@@ -250,10 +250,21 @@ function head({ title, description, path, image }) {
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${SITE}${path}">
 <meta property="og:image" content="${SITE}${image || '/og-image.png'}">
+<!-- The size, said rather than left to be discovered. A crawler that knows the
+     dimensions before it has the file can lay the card out on the first pass;
+     one that does not sometimes falls back to the small square card, which is
+     the difference between a headline somebody reads and a thumbnail nobody
+     does. Every card this site writes is 1200x630. -->
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="${esc(title)}">
+<meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
-<meta name="twitter:image" content="${SITE}${image || '/og-image.png'}">`;
+<meta name="twitter:image" content="${SITE}${image || '/og-image.png'}">
+<meta name="twitter:image:alt" content="${esc(title)}">`;
 }
 
 const ICON = {
