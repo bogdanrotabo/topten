@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=bfcaddf328';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=2955655bef';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=bfcaddf328';
+         figures, figureText } from './render.js?v=2955655bef';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -443,7 +443,14 @@ async function drawBoard(slug) {
   paintTicker(latest ? tickList(latest, nameOf) : null);
 
   /* A ranking page has the band too, so it watches the same two things. */
-  paintNumbers(await rpc('site_numbers').catch(() => null) || {});
+  /* The same rule the band's own reading follows: a read that fails leaves
+     the figures the build wrote standing and puts the light out. Passing {}
+     instead handed paintNumbers a reading in which every figure was missing,
+     so all four counted down to zero -- 0 visitors, 0 listed, $0 backed --
+     and then the green light came on over them. A live light above four
+     zeros is the one thing this band must never say. */
+  try { paintNumbers(await rpc('site_numbers')); }
+  catch (e) { const light = $('#live'); if (light) light.hidden = true; }
   watchNumbers(nameOf);
 
   const top = $('#top');
