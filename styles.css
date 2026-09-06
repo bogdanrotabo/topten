@@ -140,12 +140,16 @@ img, svg { max-width: 100%; }
 }
 .page-title em { font-style: normal; color: var(--gold); }
 
-/* Where the site is made. Small, quiet, and under the promise it belongs to. */
+/* Where the site is made. A pill above the headline, the way gift.ceo sets the
+   same line: the first thing read on the page, and small enough to be a fact
+   rather than a claim. */
 .swiss {
-  display: flex; align-items: center; gap: 9px;
-  margin: 14px 0 0; font-size: 13px; font-weight: 600; color: var(--dim);
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 0 0 22px; padding: 6px 14px;
+  border: 1px solid var(--line); border-radius: 999px;
+  font-size: 13px; font-weight: 600; color: var(--dim);
 }
-.swiss__flag { flex: 0 0 auto; display: block; border-radius: 4px; }
+.swiss__flag { flex: 0 0 auto; display: block; border-radius: 3px; }
 
 .eyebrow {
   font-size: 12px; font-weight: 700; letter-spacing: .16em;
