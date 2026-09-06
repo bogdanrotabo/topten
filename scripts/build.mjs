@@ -406,6 +406,8 @@ ${ticker(ticks)}
   <a class="ghost" href="/find/" style="margin-top:12px">Browse all ${registry.boards.length} rankings</a>
 </section>
 
+${partners()}
+
 <section class="sect" id="spread">
   <h2 class="eyebrow">Bring someone in</h2>
   <p class="lede">Nothing here moves until the other side hears about it.</p>
@@ -508,6 +510,48 @@ ${rest.length ? `<section class="sect" id="rest">
 </section>
 
 ${footer()}`;
+}
+
+/* The band at the foot of the front page: the two other sites, side by side
+ * and the same size, because neither is the bigger one.
+ *
+ * Each keeps its own ground. gift.ceo is near-black with its gold and rotabo
+ * is lavender with its violet, which on a page this dark makes the second one
+ * loud -- and that is the point rather than an accident. Redrawn in TopTen's
+ * gold they would be two TopTen cards with other people's words on them, and a
+ * mark that has been repainted is not that mark. rotabo.app does exactly this
+ * in reverse: gift.ceo's near-black sits on its lavender page.
+ *
+ * There is no "Sponsors" over them. These are the owner's own two sites, and
+ * calling them sponsors would be the band claiming something it does not have.
+ * The line underneath says what the place is and that it is open, which is the
+ * true version of the same invitation.
+ */
+const DIAMOND =
+  '<svg class="pb__mark" viewBox="0 0 200 260" width="22" height="28" aria-hidden="true">'
+  + '<defs><radialGradient id="rotaboGrad" cx="50%" cy="50%" r="75%">'
+  +   '<stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/>'
+  +   '<stop offset="100%" stop-color="#7c2596"/></radialGradient></defs>'
+  + '<path fill="url(#rotaboGrad)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 '
+  +   'Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 '
+  +   'Q195,130 176.85,106.12 Z"/></svg>';
+
+function partners() {
+  return `<section class="sect" id="partners">
+  <h2 class="eyebrow">Elsewhere</h2>
+  <div class="pb">
+    <a class="pb__b pb__b--gift" href="https://gift.ceo" target="_blank" rel="noopener">
+      <span class="pb__w">gift<b>.ceo</b></span>
+      <span class="pb__t">Only CEOs give here.</span>
+    </a>
+    <a class="pb__b pb__b--rotabo" href="https://rotabo.app" target="_blank" rel="noopener">
+      <span class="pb__w">${DIAMOND}Rotabo</span>
+      <span class="pb__t">People need things. People have things.</span>
+    </a>
+  </div>
+  <p class="fine">Two other sites by the same people. This place is held for an organisation
+    that stands behind the idea &mdash; it costs nothing, and it never will.</p>
+</section>`;
 }
 
 /* The share row, built the way rotabo.app builds its own.
@@ -905,12 +949,36 @@ write('badge/index.html', `<!doctype html>
 </html>
 `);
 
-/* Sitemap: the front page, the finder, the legal pages and every ranking. */
-const urls = ['/', '/find/', '/about.html', '/terms.html', '/privacy.html']
-  .concat(boards.map((b) => `/${b.slug}/`));
+/* Sitemap: the front page, the finder, the legal pages and every ranking.
+ *
+ * With a date on the ones that have a true one. A crawler asked to look at
+ * seventy-seven addresses with nothing to tell them apart re-reads them on its
+ * own schedule; one that can see which three moved since its last visit spends
+ * its budget there. So lastmod is the day the page's content actually changed:
+ * for a ranking, the last payment on it, because that is the only thing that
+ * moves a ranking; for the front page and the finder, the last payment
+ * anywhere, since both are drawn from all of them.
+ *
+ * The legal pages get none. Their content changes when somebody edits them and
+ * the build does not know that day -- and a lastmod that is really "the day
+ * this was rebuilt" is a page crying wolf on every deploy, which is worse than
+ * saying nothing. An absent lastmod is a permitted and honest answer.
+ */
+const day = (d) => (d ? new Date(d).toISOString().slice(0, 10) : null);
+const newest = (rs) => rs.reduce((a, r) => (r.last_paid_at && r.last_paid_at > a ? r.last_paid_at : a), '');
+
+const siteNewest = day(newest(rows));
+const urls = [
+  { u: '/', at: siteNewest },
+  { u: '/find/', at: siteNewest },
+  { u: '/about.html' }, { u: '/terms.html' }, { u: '/privacy.html' },
+  ...boards.map((b) => ({ u: `/${b.slug}/`, at: day(newest(b.rows)) })),
+];
 writeFileSync(R('sitemap.xml'),
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-  + urls.map((u) => `  <url><loc>${SITE}${u}</loc></url>`).join('\n') + '\n</urlset>\n');
+  + urls.map(({ u, at }) => `  <url><loc>${SITE}${u}</loc>`
+      + (at ? `<lastmod>${at}</lastmod>` : '') + '</url>').join('\n')
+  + '\n</urlset>\n');
 
 writeFileSync(R('robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 console.log(`  sitemap.xml (${urls.length} addresses), robots.txt`);
