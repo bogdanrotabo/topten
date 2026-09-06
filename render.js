@@ -188,35 +188,41 @@ export function figureText(name, v) {
 }
 
 /**
- * The four figures on the front page.
+ * The four figures, as the band across the top of every page.
  *
- * Written once, because they were written twice -- once by the build and once
- * again by app.js -- and two copies of the same four cells is exactly the
- * drift this file exists to make impossible.
+ * They were a card at the bottom, under everything, which is a strange place
+ * for the only numbers on the site that move while you are looking at them.
+ * The first TopTen had a figures strip above the running one and it was right:
+ * the first thing worth knowing about a leaderboard is that there are people
+ * on it and money in it.
  *
  * Each cell carries its raw value in an attribute. The text is formatted and
- * cannot be read back reliably ("$1,450.54" is not a number), and the
- * animation needs to know where it is counting from.
+ * cannot be read back reliably ("$1,450.54" is not a number), and the count
+ * between two readings needs to know where it is counting from.
  */
 export function figures(n) {
-  const cell = (name, key, o) =>
-    '<div class="figure' + (o && o.wide ? ' figure--wide' : '') + '">'
-    + '<div class="figure__v num' + (o && o.gold ? ' figure__v--cyan' : '') + '"'
-    +   ' data-figure="' + name + '" data-value="' + (Number(n[name]) || 0) + '">'
-    +   esc(figureText(name, n[name])) + '</div>'
-    + '<div class="figure__k">' + esc(key) + '</div></div>';
-  return cell('visitors', 'visitors', { gold: true })
-    + cell('countries', 'countries', { gold: true })
-    + cell('listed', 'listed')
-    + cell('backed_cents', 'backed', { wide: true });
+  const cell = (name, key) =>
+    '<span class="tally__i">'
+    + '<b class="num" data-figure="' + name + '" data-value="' + (Number(n[name]) || 0) + '">'
+    +   esc(figureText(name, n[name])) + '</b>'
+    + '<span class="tally__k">' + esc(key) + '</span></span>';
+  return cell('visitors', 'visitors') + cell('countries', 'countries')
+    + cell('listed', 'listed') + cell('backed_cents', 'backed');
 }
 
-/* The sentence under them, which carries two of the same figures and would
-   otherwise go stale while the cells above it moved. */
-export function figuresNote(n) {
-  return 'Visitors from ' + esc(figureText('countries', n.countries)) + ' countries, counted since '
-    + '25 August and including 147 measured by Google Analytics in the three days before this site '
-    + 'kept its own record. ' + esc(figureText('payments', n.payments)) + ' payments, nothing rounded.';
+/**
+ * The band itself.
+ *
+ * The light is hidden here and lit by app.js only after a reading has actually
+ * come back. A green light painted into the page is a claim rather than a
+ * measurement -- it would go on saying "live" from a cached page with nothing
+ * behind it.
+ */
+export function tally(n) {
+  return '<div class="tally" id="numbers">'
+    + '<span class="live" id="live" hidden><span class="live__dot"></span>Live</span>'
+    + figures(n)
+    + '</div>';
 }
 
 /* ---------------------------------------------------------------- ticker -- */

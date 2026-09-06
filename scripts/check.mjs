@@ -85,7 +85,7 @@ const slugs = new Set(reg.boards.map((b) => b.slug));
 for (const b of reg.boards) {
   if (!existsSync(join(root, b.slug, 'index.html'))) bad.push(`${b.slug}/ has no page`);
 }
-const known = new Set(['icons', 'scripts', 'supabase', 'node_modules', '.git', '.github',
+const known = new Set(['icons', 'og', 'scripts', 'supabase', 'node_modules', '.git', '.github',
   'back', 'thanks', 'claim', 'find', 'badge']);
 for (const d of readdirSync(root, { withFileTypes: true })) {
   if (!d.isDirectory() || known.has(d.name) || d.name.startsWith('.')) continue;

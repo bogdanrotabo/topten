@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=11f5c02fb1';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=878c7f337f';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figuresNote, figureText } from './render.js?v=11f5c02fb1';
+         figures, figureText } from './render.js?v=878c7f337f';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -182,13 +182,13 @@ function countTo(el, from, to, name) {
 }
 
 function paintNumbers(n) {
-  const holder = $('#numbers .figures');
+  const holder = $('#numbers');
   if (!holder) return;
 
   /* First reading of the session: the cells the build wrote are already
      correct markup, so they are updated in place rather than replaced -- that
      way the animation has somewhere to count from. */
-  if (!$('[data-figure]', holder)) holder.innerHTML = figures(n);
+  if (!$('[data-figure]', holder)) holder.insertAdjacentHTML('beforeend', figures(n));
 
   $$('[data-figure]', holder).forEach((el) => {
     const name = el.dataset.figure;
@@ -207,9 +207,6 @@ function paintNumbers(n) {
     el.dataset.value = String(to);
   });
 
-  const note = $('#numbers-note');
-  if (note) note.innerHTML = figuresNote(n);
-
   const light = $('#live');
   if (light) light.hidden = false;
 }
@@ -218,7 +215,7 @@ function paintNumbers(n) {
    twenty others should not be polling a database for a number nobody can see,
    so this stops when the page is hidden and reads once on the way back. */
 function watchNumbers() {
-  if (!$('#numbers .figures')) return;
+  if (!$('#numbers')) return;
   let timer = null;
 
   const read = async () => {

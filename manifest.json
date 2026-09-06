@@ -1,12 +1,12 @@
 {
-  "name": "King of the Hill \u2014 topten.one",
-  "short_name": "King of the Hill",
-  "description": "One page. One king. Pay more than them and it's yours.",
+  "name": "TopTen.one — who should be #1?",
+  "short_name": "TopTen.one",
+  "description": "72 rankings, and the only thing that moves you up is money. Pick a side. Move the ranking.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#131211",
-  "theme_color": "#1b1a18",
+  "theme_color": "#131211",
   "orientation": "portrait-primary",
   "icons": [
     {
