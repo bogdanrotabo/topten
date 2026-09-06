@@ -122,9 +122,9 @@ function cardul(k) {
   if (!k) {
     return `\n    <section class="king king--empty" id="king-card">
       ${CROWN}
-      <span class="king__kicker">The throne is empty</span>
-      <p class="king__name">Nobody</p>
-      <p class="king__message">Nobody has taken this page yet. The first payment does it.</p>
+      <h1 class="king__name">Nobody</h1>
+      <p class="king__is">is King of the Hill</p>
+      <p class="king__message">The first payment takes the page.</p>
     </section>\n    `;
   }
   const link = k.url
@@ -134,8 +134,8 @@ function cardul(k) {
   const de = durata((Date.now() - new Date(k.crowned_at).getTime()) / 1000);
   return `\n    <section class="king" id="king-card">
       ${CROWN}
-      <span class="king__kicker">Current king</span>
-      <h1 class="king__name">${esc(nume(k))}</h1>${
+      <h1 class="king__name">${esc(nume(k))}</h1>
+      <p class="king__is">is King of the Hill</p>${
         k.message ? `\n      <p class="king__message">${esc(k.message)}</p>` : ''}${link}
       <div class="king__figures">
         <span class="figure"><span class="figure__v figure__v--gold">${esc(bani(k.amount_cents, k.currency))}</span><span class="figure__k">Paid</span></span>

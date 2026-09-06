@@ -178,12 +178,15 @@
     if (!el) return;
     var k = state.king;
 
+    /* The card reads as one sentence: a name, and what that name is. The
+       kicker that used to sit above the name said "Current king", which is
+       the same claim made twice once the line below says it in words. */
     if (!k) {
       el.className = 'king king--empty';
       el.innerHTML = CROWN
-        + '<span class="king__kicker">The throne is empty</span>'
-        + '<p class="king__name">Nobody</p>'
-        + '<p class="king__message">Nobody has taken this page yet. The first payment does it.</p>';
+        + '<h1 class="king__name">Nobody</h1>'
+        + '<p class="king__is">is King of the Hill</p>'
+        + '<p class="king__message">The first payment takes the page.</p>';
       return;
     }
 
@@ -195,8 +198,8 @@
     var mine = tokenFor(k.id);
 
     el.innerHTML = CROWN
-      + '<span class="king__kicker">Current king</span>'
       + '<h1 class="king__name">' + esc(nameOf(k)) + '</h1>'
+      + '<p class="king__is">is King of the Hill</p>'
       + (k.message ? '<p class="king__message">' + esc(k.message) + '</p>' : '')
       + link
       + '<div class="king__figures">'

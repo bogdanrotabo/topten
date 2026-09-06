@@ -153,17 +153,20 @@ button {
   color: var(--gold);
 }
 
-.king__kicker {
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: .16em;
-  font-size: 11px;
+/* The second half of the sentence the card is. Gold, because gold means the
+   throne here and this line is what says somebody is on it -- and sentence
+   case rather than the uppercase kicker it replaces, because it is read as
+   the continuation of the name above it, not as a label over it. */
+.king__is {
+  margin: 4px 0 0;
+  font-size: clamp(16px, 4.4vw, 21px);
   font-weight: 700;
+  letter-spacing: -.01em;
   color: var(--gold);
 }
 
 .king__name {
-  margin: 8px 0 0;
+  margin: 2px 0 0;
   font-size: clamp(30px, 8vw, 46px);
   line-height: 1.08;
   letter-spacing: -.03em;
@@ -171,7 +174,7 @@ button {
 }
 
 .king__message {
-  margin: 12px auto 0;
+  margin: 14px auto 0;
   max-width: 34ch;
   color: var(--muted);
   font-size: 17px;
