@@ -76,6 +76,7 @@ Three rules are the schema's job rather than the application's:
 | `scripts/prerender.mjs` | Bakes the king and the history into `index.html` at build time. |
 | `scripts/sync-routes.sh` | The build. Run it after editing anything. |
 | `scripts/build-csp.mjs` | Computes the content security policy, hashes included. |
+| `scripts/check-build.mjs` | Asks whether `sync-routes.sh` was run. The one mistake this repo invites. |
 | `scripts/stripe-setup.sh` / `.ts` | Creates the Stripe objects from scratch. **Not for the live account.** |
 | `scripts/make-icons.mjs` | Draws the icons and `og-image.png` from one mark. |
 | `scripts/serve.ps1` | Local static server that mimics GitHub Pages routing. |
@@ -97,6 +98,14 @@ whatever path it arrives on**, so the two are interchangeable.
 ```bash
 bash scripts/sync-routes.sh
 ```
+
+Forgetting to is the one mistake this repository invites, and neither symptom
+looks like a mistake: the asset stamp still points at the old bytes, so a
+visitor runs the old app against the new page for ten minutes, and the route
+copies still carry the previous version of the site — including the address
+Stripe sends a payer back to. Both are invisible on localhost, where nothing is
+cached and nobody opens `/claim`. `node scripts/check-build.mjs` is the question
+asked out loud, and it runs on every pull request.
 
 It prerenders, writes the policy, stamps the asset URLs (`/app.js?v=…`) with a hash of
 their own contents, and re-copies the three route files. GitHub Pages
@@ -195,6 +204,33 @@ API taught us the hard way, both handled in the script:
 
 `GA_MEASUREMENT_ID` in `config.js`. Empty disables analytics entirely — no
 script is loaded.
+
+### What runs on a pull request
+
+`.github/workflows/checks.yml`, and every step in it is a command you can run
+yourself:
+
+```bash
+for f in app.js config.js scripts/*.mjs; do node --check "$f"; done
+bash -n scripts/sync-routes.sh scripts/stripe-setup.sh
+node scripts/check-build.mjs      # was sync-routes.sh run?
+node scripts/prerender.mjs --check
+node scripts/build-csp.mjs --check
+node scripts/make-icons.mjs --check
+deno check supabase/functions/*/index.ts
+deno lint supabase/functions/
+```
+
+It does **not** run the prerender for real. That reads the live database, and
+the king changes whenever somebody pays, so a check comparing its output
+against the committed page would fail on a payment rather than on a mistake.
+
+It also does not touch a database or a Stripe key, and needs neither: the
+migration and the two Edge Functions are checked as text, not run. The
+migration is worth testing properly — a Postgres service container, the schema
+applied, then the crowning rules and the column privileges asserted against it,
+which is how the ones quoted below were checked — and that job is not written
+yet.
 
 ### 4. GitHub Pages
 

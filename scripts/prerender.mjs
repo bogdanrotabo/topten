@@ -223,8 +223,12 @@ if (verifica) {
     console.error(`prerender: index.html has no ${lipsa.join(', ')} marker`);
     process.exit(1);
   }
-  const rege = /<h1 class="king__name">/.test(html);
-  console.log(`prerender: markers in place; the page carries ${rege ? 'a king' : 'an empty throne'}.`);
+  /* The empty throne carries an <h1 class="king__name"> too -- it says
+     "Nobody", because the card is a sentence and "Nobody is King of the Hill"
+     is the sentence for an empty seat. So the class on the section is what
+     tells them apart, not the presence of a heading. */
+  const gol = /class="king king--empty"/.test(html);
+  console.log(`prerender: markers in place; the page carries ${gol ? 'an empty throne' : 'a king'}.`);
   process.exit(0);
 }
 
