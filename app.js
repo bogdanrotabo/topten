@@ -388,7 +388,52 @@
     }
   }
 
+  /* --------------------------------------------------------- the ticker */
+
+  /* The state of the page, on one line, moving. Built from what is loaded
+     rather than written down: who holds it, what it cost, what it would take,
+     then everybody who has tried and everybody who held it before.
+
+     The track is printed twice and the animation moves it by exactly half its
+     width, so the second copy is under the cursor at the moment the first
+     runs out. One copy and it jumps. */
+  function drawTicker() {
+    var el = $('#ticker');
+    if (!el) return;
+    var k = state.king;
+    var bits = [];
+
+    if (k) {
+      bits.push('<b>' + esc(nameOf(k)) + '</b> is King of the Hill');
+      bits.push('paid <i>' + esc(money(k.amount_cents, k.currency)) + '</i>');
+      bits.push('take it for more than <i>' + esc(money(k.amount_cents, k.currency)) + '</i>');
+      bits.push('reigning for <b>'
+        + esc(duration((Date.now() - new Date(k.crowned_at).getTime()) / 1000)) + '</b>');
+    } else {
+      bits.push('<b>The throne is empty</b>');
+      bits.push('the first payment takes the page');
+    }
+
+    state.attempts.slice(0, 8).forEach(function (a) {
+      bits.push('<b>' + esc(nameOf(a)) + '</b> tried with <i>'
+        + esc(money(a.amount_cents, a.currency)) + '</i>');
+    });
+    state.former.slice(0, 8).forEach(function (r) {
+      bits.push('<b>' + esc(nameOf(r)) + '</b> held it '
+        + esc(duration(r.reigned_seconds)) + ' for <i>'
+        + esc(money(r.amount_cents, r.currency)) + '</i>');
+    });
+
+    bits.push('no accounts');
+    bits.push('no expiry');
+    bits.push('no refunds');
+
+    var once = bits.map(function (b) { return '<span class="ticker__i">' + b + '</span>'; }).join('');
+    el.innerHTML = '<div class="ticker__track">' + once + once + '</div>';
+  }
+
   function draw() {
+    drawTicker();
     drawKing();
     drawCta();
     drawAttempts();

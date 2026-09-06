@@ -98,6 +98,56 @@ button {
   clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
+/* ------------------------------------------------------------- the ticker -- */
+
+/* A strip under the masthead carrying the state of the page: who holds it,
+   what it cost, what it takes to take it, and everybody who has tried.
+   Duplicated end to end and translated by exactly half its width, which is
+   what makes the loop seamless rather than a jump every time it wraps. */
+.ticker {
+  overflow: hidden;
+  background: var(--elev);
+  border-bottom: 1px solid var(--hairline);
+  font-size: 12.5px;
+  line-height: 30px;
+  height: 30px;
+  white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+}
+
+.ticker__track {
+  display: inline-block;
+  will-change: transform;
+  animation: ticker 46s linear infinite;
+}
+
+.ticker:hover .ticker__track { animation-play-state: paused; }
+
+.ticker__i { color: var(--muted); padding: 0 6px; }
+.ticker__i b { color: var(--text); font-weight: 700; }
+.ticker__i i { color: var(--accent); font-style: normal; font-weight: 700; }
+
+/* The separator is drawn rather than typed so it cannot be selected or read
+   aloud as a character. */
+.ticker__i::after {
+  content: "";
+  display: inline-block;
+  width: 3px; height: 3px;
+  margin: 0 0 3px 12px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+@keyframes ticker { to { transform: translateX(-50%); } }
+
+/* A strip that moves is a strip somebody cannot read. With motion turned down
+   it stops and scrolls by hand instead. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .ticker__track { animation: none; }
+}
+
 /* ------------------------------------------------------------- masthead -- */
 
 .masthead {
@@ -131,10 +181,13 @@ button {
    the accent gold, like everything else the eye is meant to land on. */
 .masthead__name {
   color: var(--accent);
-  font-size: 11.5px;
+  /* Set as a name, not shouted. It was uppercase with .14em of tracking,
+     which is a label; this is the title of the thing, and a title is written
+     the way somebody would say it. Tracking comes off with the caps -- letter
+     spacing that opens up uppercase pulls lowercase apart. */
+  font-size: 13px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .14em;
+  letter-spacing: -.01em;
   white-space: nowrap;
 }
 .masthead__name::before { content: "·"; margin-right: 9px; letter-spacing: 0; }
@@ -407,11 +460,19 @@ button {
   white-space: nowrap;
 }
 
+/* An empty list is still a box. Two bare sentences under two headings read as
+   a page that is missing something; a box that says nothing has happened yet
+   reads as a page waiting for it, and it is the same shape the first real card
+   will arrive in. */
 .empty {
+  margin: 0;
   color: var(--dim);
   font-size: 14px;
-  padding: 12px 2px 0;
-  margin: 0;
+  background: var(--elev);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 18px 15px;
+  text-align: center;
 }
 
 .more { text-align: center; margin-top: 16px; }
