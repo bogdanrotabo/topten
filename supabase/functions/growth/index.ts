@@ -6,7 +6,12 @@
 // one the old admin dashboard used, kept because it was the right lock and
 // rewriting a working lock is how you end up with a worse one.
 //
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// Pinned rather than floating. The version this was lifted from asked for
+// "@2", so it typechecked against whatever esm.sh served that hour: it
+// passed locally against a cached older build and failed in CI against
+// 2.115.0, whose types are stricter about User.email. A version that can
+// change under the same source is not a dependency, it is a coin toss.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.115.0";
 
 // One way in: a Supabase session made by signing in with Google, on an address
 // listed in admin_emails. This function reads with the service role, past every
@@ -78,8 +83,12 @@ async function isAuthorized(token: string): Promise<boolean> {
   if (!sessionId) return false;
 
   const { data: userData, error: userError } = await supabase.auth.getUser(token);
-  if (userError || !userData?.user?.email) return false;
-  const user = userData.user;
+  const user = userData?.user;
+  // Held in its own const so the narrowing survives being passed along: an
+  // account with no address cannot be in admin_emails, so this is the same
+  // refusal the original made, said in a way the type checker can follow.
+  const email = user?.email;
+  if (userError || !user || !email) return false;
 
   const { data: byProvider, error: rpcError } = await supabase
     .rpc("session_made_by_oauth", { p_session: sessionId });
@@ -91,7 +100,7 @@ async function isAuthorized(token: string): Promise<boolean> {
   const { data: adminRow } = await supabase
     .from("admin_emails")
     .select("email")
-    .ilike("email", user.email)
+    .ilike("email", email)
     .maybeSingle();
 
   return !!adminRow;
