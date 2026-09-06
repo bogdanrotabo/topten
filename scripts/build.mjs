@@ -298,21 +298,25 @@ function footer() {
   <div class="foot__line">No algorithm. No editors.<br>Only what people paid.</div>
   <nav class="foot__nav">
     <a href="/about.html">About</a><a href="/terms.html">Terms</a>
-    <a href="/privacy.html">Privacy</a><a href="mailto:${esc(cfg.mail)}">Contact</a>
+    <a href="/privacy.html">Privacy</a>
   </nav>
+  <!-- The address itself, not the word "Contact". An address somebody can read
+       is an address somebody can use from their phone, write down, or check
+       against the one an email claiming to be us came from. -->
+  <p class="foot__mail">Write to <a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a></p>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment ${esc(money(MIN_CENTS))}.</p>
 </footer>`;
 }
 
-function page({ title, description, path, image, body, cls = '' }) {
+function page({ title, description, path, image, body, cls = '', shell = '' }) {
   return `<!doctype html>
 <html lang="en">
 <head>
 ${head({ title, description, path, image })}
 </head>
 <body${cls ? ` class="${cls}"` : ''}>
-<main class="shell">
+<main class="shell${shell ? ' ' + shell : ''}">
 ${body}
 </main>
 <script src="/config.js?v=${V.cfg}"></script>
@@ -384,6 +388,12 @@ ${ticker(ticks)}
   <a class="ghost" href="/find/" style="margin-top:12px">Browse all ${registry.boards.length} rankings</a>
 </section>
 
+<section class="sect" id="spread">
+  <h2 class="eyebrow">Bring someone in</h2>
+  <p class="lede">Nothing here moves until the other side hears about it.</p>
+  ${shareBar(SITE + '/', 'Who should be #1? On TopTen.one the only thing that moves a ranking is money.')}
+</section>
+
 <section class="sect" id="numbers">
   <div class="glass" style="padding:22px 18px;border-radius:16px">
     <div class="figures">
@@ -402,6 +412,17 @@ ${footer()}`;
 }
 
 /* ------------------------------------------------------------- a ranking -- */
+
+/* What a ranking says when somebody puts it in front of their own people.
+   Where it stands, not a slogan -- a position with a figure on it is an
+   argument, and an argument is what gets forwarded. */
+function shareLine(b) {
+  const s = b.s;
+  if (s.empty) return `${b.q} Nobody has paid into this one yet -- the first ${money(MIN_CENTS)} takes #1.`;
+  if (!s.two) return `${b.q} ${s.one.handle} holds #1 with ${money(s.one.total_cents)}.`;
+  return `${b.q} ${s.one.handle} holds #1 with ${money(s.one.total_cents)}, `
+    + `${s.two.handle} is ${money(s.price)} behind.`;
+}
 
 function boardBody(b) {
   const s = b.s;
@@ -468,13 +489,10 @@ ${rest.length ? `<section class="sect" id="rest">
 <section class="sect" id="spread">
   <h2 class="eyebrow">Bring someone in</h2>
   <p class="lede">A ranking only moves when the other side hears about it.</p>
-  <div style="display:flex;gap:10px;margin-top:16px">
-    <button type="button" class="ghost" id="copy"><span style="color:var(--gold)">${ICON.link}</span>Copy link</button>
-    <button type="button" class="ghost" id="share2"><span style="color:var(--gold)">${ICON.share}</span>Share</button>
-  </div>
+  ${shareBar(SITE + '/' + b.slug + '/', shareLine(b))}
 </section>
 
-<section class="sect">
+<section class="sect" id="how">
   <h2 class="eyebrow">How this works</h2>
   <p class="lede">Position is decided by the total paid towards a listing, and nothing else. Payments add up
     and cannot be moved, split or withdrawn. If two listings hold the same total, the one that reached it
@@ -484,6 +502,42 @@ ${rest.length ? `<section class="sect" id="rest">
 </section>
 
 ${footer()}`;
+}
+
+/* The share row, built the way rotabo.app builds its own.
+ *
+ * Every link is static markup and works with no script at all -- a share
+ * button that needs JavaScript to have a destination is a share button that
+ * does nothing on the one connection where sharing mattered.
+ *
+ * There is no Instagram, TikTok, YouTube or Snapchat button and there never
+ * will be: none of them has a web address that opens a composer with a link
+ * already in it, so a button could only ever look like it worked. The phone's
+ * own share sheet reaches all four, and that is what "More" is -- hidden here
+ * and revealed by app.js only on a browser that actually has one.
+ *
+ * The sentence is written per page rather than once for the site. "Who should
+ * be #1 on Crypto? Hyperliquid holds it with $23" is a thing somebody might
+ * argue with; "check out TopTen.one" is not.
+ */
+function shareBar(url, text) {
+  const u = encodeURIComponent(url);
+  const t = encodeURIComponent(text);
+  const both = encodeURIComponent(text + ' ' + url);
+  const at = (href, label) =>
+    `<a class="sb" href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a>`;
+  return `<div class="sharebar" data-share-url="${esc(url)}" data-share-text="${esc(text)}">
+  <button type="button" class="sb" data-share-copy>Copy link</button>
+  ${at(`https://x.com/intent/post?text=${t}&url=${u}`, 'X')}
+  ${at(`https://wa.me/?text=${both}`, 'WhatsApp')}
+  ${at(`https://t.me/share/url?url=${u}&text=${t}`, 'Telegram')}
+  ${at(`https://www.facebook.com/sharer/sharer.php?u=${u}`, 'Facebook')}
+  ${at(`https://www.reddit.com/submit?url=${u}&title=${t}`, 'Reddit')}
+  ${at(`https://www.linkedin.com/sharing/share-offsite/?url=${u}`, 'LinkedIn')}
+  ${at(`https://www.threads.net/intent/post?text=${both}`, 'Threads')}
+  ${at(`mailto:?subject=${t}&body=${both}`, 'Email')}
+  <button type="button" class="sb" data-share-sheet hidden>More</button>
+</div>`;
 }
 
 /* The Back button as it is written into the page.
@@ -525,13 +579,18 @@ write('index.html', page({
   title: 'Who should be #1? | TopTen.one',
   description: `Public rankings decided by money, not by an algorithm. ${numbers.listed} listings, `
     + `${money(numbers.backed_cents)} backed. Pick a side and move one.`,
-  path: '/', body: homeBody(),
+  path: '/', body: homeBody(), shell: 'shell--home',
 }));
 console.log('  index.html');
 
 for (const b of boards) {
   const { t, d } = seo(b);
-  write(`${b.slug}/index.html`, page({ title: t, description: d, path: `/${b.slug}/`, body: boardBody(b) }));
+  write(`${b.slug}/index.html`, page({ title: t, description: d, path: `/${b.slug}/`,
+    body: boardBody(b),
+    /* A ranking nobody has paid into has no ranking to put beside the form, so
+       the wide layout gives the form the width instead of standing it in a
+       column next to nothing. */
+    shell: b.s.empty ? 'shell--board shell--board-empty' : 'shell--board' }));
 }
 console.log(`  ${boards.length} ranking pages`);
 
@@ -552,7 +611,7 @@ console.log('  back/, thanks/, claim/');
 write('find/index.html', page({
   title: `All ${registry.boards.length} rankings | TopTen.one`,
   description: `Every ranking on TopTen.one: ${live.length} with money in them, ${openBoards.length} still open.`,
-  path: '/find/', body: `<div class="wash wash--cyan"></div>
+  path: '/find/', shell: 'shell--find', body: `<div class="wash wash--cyan"></div>
 ${masthead({ back: true })}
 <section class="hero above" style="padding-top:40px">
   ${swissLine}
@@ -626,6 +685,9 @@ const legalPage = (title, body) => page({
   title: `${title} | TopTen.one`,
   description: `${title} — TopTen.one.`,
   path: `/${title.toLowerCase()}.html`,
+  /* Prose keeps a reading measure however wide the window is: a paragraph
+     stretched to 1120px is a paragraph nobody finishes a line of. */
+  shell: 'shell--read',
   body: `<div class="wash wash--violet"></div>
 ${masthead({ back: true })}
 <section class="hero above" style="padding-top:40px">
