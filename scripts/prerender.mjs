@@ -96,6 +96,13 @@ function durata(secunde) {
    overwriting something that looks like it was typed. */
 const nume = r => (r && r.name) ? r.name : 'Anonymous';
 
+/* A name with its dot in the accent, the way gift.ceo sets its own. Escaped
+   first and wrapped second: by the time the replace runs every < > & " ' is
+   already an entity, so the only full stops left are full stops. The same
+   function app.js carries, and for the same reason the money and the marks
+   are duplicated -- this file draws the card once and app.js draws it again. */
+const punctat = s => esc(s).replace(/\./g, '<span class="dot">.</span>');
+
 /* -------------------------------------------------------------- the reads */
 
 function config() {
@@ -145,7 +152,7 @@ function cardul(k) {
   const de = durata((Date.now() - new Date(k.crowned_at).getTime()) / 1000);
   return `\n    <section class="king" id="king-card">
       ${marca(k.logo) || CROWN}
-      <h1 class="king__name">${esc(nume(k))}</h1>
+      <h1 class="king__name">${punctat(nume(k))}</h1>
       <p class="king__is"><span>is</span>King of the Hill</p>${
         k.message ? `\n      <p class="king__message">${esc(k.message)}</p>` : ''}${link}
       <div class="king__figures">
@@ -177,7 +184,7 @@ function cutie(r, cand) {
       + `${esc(String(r.url).replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a>`
     : '';
   return `        <li class="card">`
-    + `<div class="card__top"><span class="card__n">${esc(nume(r))}</span>`
+    + `<div class="card__top"><span class="card__n">${punctat(nume(r))}</span>`
     + `<span class="card__a">${esc(bani(r.amount_cents, r.currency))}</span></div>`
     + (r.message ? `<p class="card__m">${esc(r.message)}</p>` : '')
     + `<div class="card__foot">${link}<span class="card__t">${esc(cand)}</span></div></li>`;
