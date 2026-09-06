@@ -1,645 +1,353 @@
-/* TopTen.one — one page, one king. Dark for everybody, mobile first.
-
-   There was a light theme and a switch to reach it. Both are gone: this is
-   one page about one seat, and a page with a single job does not need a
-   second set of colours to do it in.
-
-   gift.ceo's palette, not a version of it. Every value below was read out of
-   https://gift.ceo/assets/style.css -- its dark theme, since this site has no
-   other -- rather than sampled by eye or guessed from its mark:
-
-     --bg #131211   --paper #1b1a18   --ink #f2f0ec   --dim #a09b93
-     --faint #7d7871   --line #2b2926   --line-soft #232120
-     --accent #d9a63c   --accent-soft #2a2318
-
-   Warm charcoal rather than violet-black, and one restrained gold instead of
-   two weights of violet. It reads quieter and older, which is the point: this
-   page asks strangers for money and looks better doing it in a voice that is
-   not shouting.
-
-   The gold does both jobs the violet split between. Anything you can act on is
-   a filled pill of it with dark ink; the throne -- the crown, the sentence
-   under the name, the figure it cost -- is the same gold as text. They do not
-   compete, because one is a fill and the other is a letterform.
-
-   The only colours not from this list belong to somebody else -- a king's own
-   mark -- and recolouring those is not a theme. */
+/* TopTen.one — the whole look, in one file.
+ *
+ * Midnight navy, white type, dark glass on hairline borders. The colours are
+ * rationed on purpose, because a page about money stops being believable the
+ * moment everything on it is shouting:
+ *
+ *   gold    the crown, the #1 amount, "take #1". Nothing else is gold.
+ *   violet  the call to action, and only the call to action.
+ *   green   movement that actually happened. Never decoration.
+ *   cyan    links and information.
+ *
+ * One family, Archivo, 400 to 800. Weight and size do the work a second
+ * typeface would have done, which is what keeps it clean. Every figure is
+ * tabular, so a column of money lines up like a scoreboard.
+ *
+ * Every text colour here clears 4.5:1 against the surface it sits on, checked
+ * rather than eyeballed: #98A2B8 is 7.7:1 on the background, #78849E is 5.3:1,
+ * and white on the violet call to action is 5.7:1 at the light end.
+ */
 
 :root {
   color-scheme: dark;
 
-  --bg: #131211;
-  --elev: #1b1a18;
-  --elev-2: #242220;
-  --line: #2b2926;
-  --hairline: #232120;
-  --line-soft: #232120;
-  --text: #f2f0ec;
-  --muted: #a09b93;
-  --dim: #7d7871;
-  --accent: #d9a63c;
-  --accent-ink: #131211;
-  --accent-soft: #2a2318;
-  /* The throne: the crown, the sentence, the figure. */
-  --royal: #d9a63c;
-  --danger: #d98a7a;
-  --ok: #6cc296;
+  --bg: #070A14;
+  --bg-2: #0A0E1C;
+  --glass: rgba(255, 255, 255, .045);
+  --glass-2: rgba(255, 255, 255, .065);
+  --line: rgba(255, 255, 255, .08);
+  --line-soft: rgba(255, 255, 255, .06);
 
-  --band-0: #1b1a18;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -16px rgba(0, 0, 0, .6);
-  --glow: 0 0 0 1px rgba(217, 166, 60, .18), 0 10px 40px rgba(217, 166, 60, .06);
+  --text: #EEF2FA;
+  --muted: #98A2B8;
+  --dim: #78849E;
 
-  --radius: 10px;
-  --radius-lg: 16px;
-  --shell: 760px;
-  --pad: 18px;
+  --gold: #E9B949;
+  --gold-soft: rgba(233, 185, 73, .10);
+  --gold-line: rgba(233, 185, 73, .35);
 
-  --num: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, monospace;
-  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --cta-a: #7C3AED;
+  --cta-b: #BE2E8E;
+
+  --green: #34D399;
+  --cyan: #38BDF8;
+  --cyan-soft: rgba(56, 189, 248, .07);
+  --cyan-line: rgba(56, 189, 248, .22);
+
+  --radius: 14px;
+  --radius-lg: 18px;
+  --shell: 430px;
+  --pad: 20px;
 }
 
 * { box-sizing: border-box; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--sans);
+  font-family: Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-wrap: break-word;
+  overflow-x: hidden;
 }
 
-a { color: var(--accent); }
-a:hover { color: #e8bf62; }
+a { color: var(--cyan); text-decoration: none; }
+a:hover { color: #7DD3FC; }
 
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
 
-.shell {
-  max-width: var(--shell);
-  margin: 0 auto;
-  padding: 0 var(--pad);
-}
+img, svg { max-width: 100%; }
 
-/* Anything that only a screen reader should read. Used for the headings that
-   name each block: the blocks are obvious to look at and nameless to listen
-   to, which is not the same page twice. */
-.sr {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-}
+/* Money, ranks, dates: anything that should line up in a column. */
+.num { font-variant-numeric: tabular-nums; letter-spacing: -.025em; }
 
-/* ------------------------------------------------------------- the ticker -- */
+.shell { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 var(--pad) 48px; position: relative; }
 
-/* A strip under the masthead carrying the state of the page: who holds it,
-   what it cost, what it takes to take it, and everybody who has tried.
-   Duplicated end to end and translated by exactly half its width, which is
-   what makes the loop seamless rather than a jump every time it wraps. */
-.ticker {
-  overflow: hidden;
-  background: var(--elev);
-  border-bottom: 1px solid var(--hairline);
-  font-size: 12.5px;
-  line-height: 30px;
-  height: 30px;
-  white-space: nowrap;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
-}
+/* The two washes behind the top of every page. Purely atmosphere, and the
+   reason the background does not read as flat black. */
+.wash { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+.wash--violet { top: -180px; left: -140px; width: 460px; height: 460px;
+  background: radial-gradient(circle, rgba(124, 58, 237, .20), rgba(124, 58, 237, 0) 68%); }
+.wash--magenta { top: -60px; right: -160px; width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(190, 46, 142, .14), rgba(190, 46, 142, 0) 70%); }
+.wash--gold { top: -200px; right: -140px; width: 440px; height: 440px;
+  background: radial-gradient(circle, rgba(233, 185, 73, .13), rgba(233, 185, 73, 0) 68%); }
+.wash--green { top: -160px; left: -120px; width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(52, 211, 153, .14), rgba(52, 211, 153, 0) 66%); }
+.wash--cyan { top: -170px; left: -140px; width: 440px; height: 440px;
+  background: radial-gradient(circle, rgba(56, 189, 248, .13), rgba(56, 189, 248, 0) 68%); }
 
-.ticker__track {
-  display: inline-block;
-  will-change: transform;
-  animation: ticker 46s linear infinite;
-}
+.above { position: relative; z-index: 1; }
 
-.ticker:hover .ticker__track { animation-play-state: paused; }
-
-.ticker__i { color: var(--muted); padding: 0 6px; }
-.ticker__i b { color: var(--text); font-weight: 700; }
-.ticker__i i { color: var(--accent); font-style: normal; font-weight: 700; }
-
-/* The separator is drawn rather than typed so it cannot be selected or read
-   aloud as a character. */
-.ticker__i::after {
-  content: "";
-  display: inline-block;
-  width: 3px; height: 3px;
-  margin: 0 0 3px 12px;
-  border-radius: 50%;
-  background: var(--line);
-}
-
-@keyframes ticker { to { transform: translateX(-50%); } }
-
-/* A strip that moves is a strip somebody cannot read. With motion turned down
-   it stops and scrolls by hand instead. */
-@media (prefers-reduced-motion: reduce) {
-  .ticker { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
-  .ticker__track { animation: none; }
-}
-
-/* ------------------------------------------------------------- masthead -- */
+/* ------------------------------------------------------------- masthead --- */
 
 .masthead {
-  background: var(--band-0);
-  border-bottom: 1px solid var(--hairline);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 0 0;
 }
 
-.masthead__row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 46px;
-}
+.masthead__left { display: flex; align-items: center; gap: 14px; }
 
 .wordmark {
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: -.02em;
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text); font-size: 15px; font-weight: 700; letter-spacing: .02em;
 }
-.wordmark b { color: var(--accent); font-weight: 800; }
+.wordmark:hover { color: var(--text); }
 
-/* The dot in a name. gift.ceo sets its own that way -- white letters, gold
-   full stop, the same mark that is in its favicon -- and the rule reads the
-   same on rotabo.app or on anybody else's domain. */
-.dot { color: var(--accent); }
+.masthead__tools { display: flex; align-items: center; gap: 30px; }
 
-/* The domain is the mark; this is the name of the game played on it. Beside
-   the wordmark rather than under it, so every page carries both in one row
-   whatever else is on the page.
-
-   It wore the light stop of Rotabo's rhombus gradient while the page was
-   violet. The page is gift.ceo's colours now, so the name of the game is
-   the accent gold, like everything else the eye is meant to land on. */
-.masthead__name {
-  color: var(--accent);
-  /* Set as a name, not shouted. It was uppercase with .14em of tracking,
-     which is a label; this is the title of the thing, and a title is written
-     the way somebody would say it. Tracking comes off with the caps -- letter
-     spacing that opens up uppercase pulls lowercase apart. */
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: -.01em;
-  white-space: nowrap;
+/* A 44px target around an icon that only looks 20px. */
+.ico {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; margin: -13px;
+  color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer;
 }
-.masthead__name::before { content: "·"; margin-right: 9px; letter-spacing: 0; }
+.ico:hover { color: var(--text); }
 
-@media (max-width: 359px) { .masthead__name { display: none; } }
+/* ----------------------------------------------------------------- type --- */
 
-/* Swiss made, at the top rather than in the footer -- gift.ceo's own pill,
-   its rules copied from that site's .badge: the same border, radius, padding
-   and colour, so the two pages introduce themselves the same way. */
-.badge {
-  display: inline-block;
-  font-size: .78rem;
-  color: var(--dim);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 5px 13px;
-  margin-bottom: 4px;
+.hero { padding: 56px 0 0; }
+
+.hero__q {
+  font-size: 44px; font-weight: 800; line-height: 1.02; letter-spacing: -.035em;
+  margin: 0;
+}
+.hero__q em { font-style: normal; color: var(--gold); }
+
+.hero__sub { margin: 16px 0 0; font-size: 17px; font-weight: 500; line-height: 1.4; color: var(--muted); }
+
+.page-title {
+  font-size: 36px; font-weight: 800; line-height: 1.04; letter-spacing: -.035em;
+  margin: 12px 0 0;
+}
+.page-title em { font-style: normal; color: var(--gold); }
+
+.eyebrow {
+  font-size: 12px; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--dim);
 }
 
-/* Only the badge and the line under it. It wrapped the whole shell for one
-   render, and text-align:center walked straight down into the attempts and
-   the former kings -- every row in both lists centred, which is not a list. */
-.hero {
-  text-align: center;
-  padding-top: 26px;
-}
+.sect { margin: 40px 0 0; position: relative; z-index: 1; }
+.sect__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sect__note { font-size: 12px; font-weight: 600; color: var(--dim); }
+.sect__link { font-size: 13px; font-weight: 600; padding: 8px 0; }
 
-.tagline {
-  text-align: center;
-  color: var(--muted);
-  margin: 18px auto 0;
-  max-width: 34ch;
-  font-size: 15px;
-}
+.lede { font-size: 15px; line-height: 1.5; color: var(--muted); margin: 12px 0 0; }
+.fine { font-size: 13px; line-height: 1.55; color: var(--dim); margin: 14px 0 0; }
 
-/* ----------------------------------------------------------- king card -- */
+/* -------------------------------------------------------------- surfaces -- */
 
-.king {
-  margin: 22px auto 0;
-  padding: 30px 22px 26px;
-  background: linear-gradient(180deg, #221f1b 0%, var(--elev) 62%);
+.glass {
+  background: var(--glass);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glow);
-  text-align: center;
-  position: relative;
+  backdrop-filter: blur(24px);
 }
 
-.king__crown {
-  display: block;
-  margin: 0 auto 10px;
-  width: 38px; height: 28px;
-  color: var(--royal);
+.hr { height: 1px; background: var(--line-soft); border: 0; margin: 0; }
+
+/* --------------------------------------------------------------- actions -- */
+
+.cta {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; height: 56px; border: 0; border-radius: var(--radius);
+  color: #fff; font-family: inherit; font-size: 16px; font-weight: 700; letter-spacing: -.005em;
+  background: linear-gradient(96deg, var(--cta-a) 0%, var(--cta-b) 100%);
+  box-shadow: 0 10px 30px -12px rgba(124, 58, 237, .65);
+  cursor: pointer;
 }
+.cta:hover { color: #fff; filter: brightness(1.06); }
+.cta[aria-disabled="true"] { background: var(--glass-2); box-shadow: none; color: var(--muted); cursor: default; }
 
-/* The second half of the sentence the card is. The lighter violet, because
-   that is what means the throne here and this line is what says somebody is on
-   it -- and sentence case rather than the uppercase kicker it replaces,
-   because it is read as the continuation of the name above it, not as a label
-   over it. */
-.king__is {
-  margin: 6px 0 0;
-  /* Twice what it was. The name is who; this is what they are, and on a page
-     whose whole subject is the title, the title is the thing to set large. */
-  font-size: clamp(30px, 8.6vw, 42px);
-  line-height: 1.05;
-  font-weight: 800;
-  letter-spacing: -.03em;
-  color: var(--royal);
+.ghost {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: 100%; height: 52px; border-radius: var(--radius);
+  color: var(--text); font-family: inherit; font-size: 15px; font-weight: 600;
+  background: var(--glass); border: 1px solid var(--line); cursor: pointer;
 }
+.ghost:hover { color: var(--text); background: var(--glass-2); }
 
-/* The "is" rides above rather than in front. At this size it would be a word
-   of grammar competing with the title for the same line; small and on its own
-   it is the hinge between the name and the title, and reads as one sentence
-   down the card. */
-.king__is span {
-  display: block;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: .02em;
-  color: var(--muted);
-  margin-bottom: 1px;
+/* The amounts. Suggestions, not commands: Stripe takes the figure the payer
+   types, so a chip says what to type and the note under it says what it buys. */
+.amounts { display: flex; gap: 8px; margin-top: 10px; }
+
+.chip {
+  flex: 1 1 0; height: 48px; display: flex; align-items: center; justify-content: center;
+  border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 700;
+  color: var(--text); background: var(--glass); border: 1px solid var(--line);
+  cursor: pointer;
 }
+.chip:hover { background: var(--glass-2); }
+.chip--on { border-color: var(--gold-line); background: var(--gold-soft); color: var(--gold); }
+.chip--any { font-size: 14px; font-weight: 600; color: var(--muted); }
 
-.king__name {
-  margin: 2px 0 0;
-  font-size: clamp(30px, 8vw, 46px);
-  line-height: 1.08;
-  letter-spacing: -.03em;
-  font-weight: 800;
+.takes {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  height: 46px; margin-top: 8px; border-radius: 12px;
+  border: 1px solid var(--gold-line); background: var(--gold-soft);
+  font-size: 14px; font-weight: 700; color: var(--gold);
 }
-
-.king__message {
-  margin: 14px auto 0;
-  max-width: 34ch;
-  color: var(--muted);
-  font-size: 17px;
-}
-
-.king__link {
-  display: inline-block;
-  margin: 14px 0 0;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: bottom;
-}
-
-.king__figures {
-  display: flex;
-  justify-content: center;
-  gap: 26px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  padding-top: 18px;
-  border-top: 1px solid var(--hairline);
-}
-
-.figure { min-width: 96px; }
-
-.figure__v {
-  display: block;
-  font-family: var(--num);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -.02em;
-}
-.figure__v--royal { color: var(--royal); }
-
-.figure__k {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--dim);
-  margin-top: 2px;
-}
-
-.king--empty .king__name { color: var(--dim); }
-
-/* --------------------------------------------------------------- the cta -- */
-
-.cta { margin: 24px auto 0; text-align: center; }
-
-.cta__terms {
-  color: var(--muted);
-  font-size: 13.5px;
-  max-width: 44ch;
-  margin: 0 auto 14px;
-}
-.cta__terms b { color: var(--text); font-weight: 700; }
-
-.btn {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: -.01em;
-  padding: 14px 30px;
-  border-radius: 999px;
-  text-decoration: none;
-  box-shadow: var(--shadow);
-}
-.btn:hover { background: #e6b855; color: var(--accent-ink); }
-.btn[disabled] { opacity: .5; cursor: not-allowed; }
-
-.btn--ghost {
-  background: none;
-  color: var(--text);
-  border: 1px solid var(--line);
-  font-size: 14px;
-  font-weight: 700;
-  padding: 9px 18px;
-  box-shadow: none;
-}
-.btn--ghost:hover { background: var(--elev-2); color: var(--text); }
-
-.btn--small { font-size: 14px; padding: 10px 20px; }
-
-/* ------------------------------------------------------------- the lists -- */
-
-.block { margin: 40px auto 0; }
-
-.block__h {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--dim);
-  font-weight: 700;
-  margin: 0 0 10px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-/* Everybody who paid gets a box, not a line.
-   A row of name / figure / time is a statistic about somebody. A box the width
-   of the screen with their own words in it is a place they were. They paid the
-   same way the king did; they lost, which is the only difference, and the
-   difference belongs in the figure rather than in how much room they get. */
-.rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 10px;
-}
-
-.card {
-  background: var(--elev);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  padding: 13px 15px;
-}
-
-.card__top {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.card__n {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-weight: 700;
-  font-size: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.card__a {
-  font-family: var(--num);
-  font-weight: 700;
-  font-size: 15px;
-  white-space: nowrap;
-  color: var(--accent);
-}
-
-/* Their own hundred characters. */
-.card__m {
-  margin: 7px 0 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.card__foot {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.card__l {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.card__t {
-  flex: 0 0 auto;
-  margin-left: auto;
-  color: var(--dim);
-  font-size: 12.5px;
-  white-space: nowrap;
-}
-
-/* An empty list is still a box. Two bare sentences under two headings read as
-   a page that is missing something; a box that says nothing has happened yet
-   reads as a page waiting for it, and it is the same shape the first real card
-   will arrive in. */
-.empty {
-  margin: 0;
-  color: var(--dim);
-  font-size: 14px;
-  background: var(--elev);
-  border: 1px dashed var(--line);
-  border-radius: var(--radius);
-  padding: 18px 15px;
-  text-align: center;
-}
-
-.more { text-align: center; margin-top: 16px; }
-
-/* ---------------------------------------------------------- claim / form -- */
-
-.panel {
-  margin: 26px auto 0;
-  padding: 24px 20px;
-  background: var(--elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-
-.panel h1 {
-  margin: 0 0 6px;
-  font-size: 25px;
-  letter-spacing: -.02em;
-}
-
-.panel p { color: var(--muted); margin: 0 0 14px; }
-
-.field { margin-bottom: 14px; }
-
-.field label {
-  display: block;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--dim);
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.field input {
-  width: 100%;
-  font: inherit;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 11px 12px;
-}
-.field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-
-.field small { display: block; color: var(--dim); font-size: 12px; margin-top: 4px; }
 
 .note {
-  font-size: 13px;
-  color: var(--muted);
-  background: var(--accent-soft);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 11px 13px;
-  margin: 14px 0 0;
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-top: 12px; padding: 14px 16px; border-radius: var(--radius);
+  background: var(--cyan-soft); border: 1px solid var(--cyan-line);
+  font-size: 13px; line-height: 1.55; color: #C9D2E3;
 }
-.note--bad { background: #2e1e1a; border-color: #5a3a30; color: #f0cfc4; }
+.note svg { flex: 0 0 auto; margin-top: 2px; color: var(--cyan); }
+.note--bad { background: rgba(244, 114, 114, .07); border-color: rgba(244, 114, 114, .28); }
+.note--bad svg { color: #F47272; }
 
-.spinner {
-  width: 22px; height: 22px;
-  margin: 18px auto;
-  border: 2px solid var(--line);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
+/* ------------------------------------------------------------------ rows -- */
+
+/* A whole row can be a link. When it is, the words inside keep the colours
+   they have everywhere else -- cyan is for a link you read as a link, not for
+   every name that happens to sit inside a tappable card. */
+a.row, a.battle, a.tile, a.result { color: var(--text); }
+a.row:hover, a.battle:hover, a.tile:hover, a.result:hover { color: var(--text); }
+a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim); }
+
+.rk {
+  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--muted);
+  background: rgba(255, 255, 255, .05);
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+.rk--1 { background: rgba(233, 185, 73, .16); color: var(--gold); }
+.rk--big { width: 34px; height: 34px; border-radius: 10px; }
 
-/* ------------------------------------------------------------------ foot -- */
+.row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
+.row__main { flex: 1 1 auto; min-width: 0; }
+.row__name { font-size: 16px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row__sub { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row__amt { font-size: 18px; font-weight: 800; }
 
-.foot {
-  margin-top: 56px;
-  padding: 26px 0 40px;
-  border-top: 1px solid var(--hairline);
-  color: var(--dim);
-  font-size: 13px;
-  text-align: center;
-}
+/* The two at the top of a ranking, drawn larger than the rest. */
+.top { overflow: hidden; }
+.top__one { display: flex; align-items: center; gap: 14px; padding: 22px 18px 18px;
+  background: linear-gradient(180deg, rgba(233, 185, 73, .10), rgba(233, 185, 73, 0)); }
+.top__name { font-size: 20px; font-weight: 700; letter-spacing: -.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.top__sub { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 3px; }
+.top__amt { font-size: 34px; font-weight: 800; color: var(--gold); }
+.top__two { display: flex; align-items: center; gap: 14px; padding: 18px; }
+.top__two .top__name { font-size: 19px; }
+.top__two .top__amt { font-size: 30px; color: var(--text); }
 
-.foot__how {
-  list-style: none;
-  margin: 0 auto 18px;
-  padding: 0;
-  max-width: 46ch;
-  text-align: left;
-}
-.foot__how li { padding: 3px 0 3px 22px; position: relative; color: var(--muted); }
-.foot__how li::before {
-  content: "→";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-}
+/* How close the challenger is. Green because the distance is real. */
+.gap { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.gap__fill { height: 100%; background: var(--green); border-radius: 2px; }
+.gap__label { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 8px; }
 
-/* The Swiss flag, drawn rather than typed.
-   It was the 🇨🇭 emoji, which is a pair of regional indicator letters and
-   which Windows does not draw: Segoe UI Emoji ships no country flags at all,
-   so every visitor on a PC saw the letters "CH" or an empty box where the
-   flag should be. A flag that only renders on the machine it was written on
-   is not a flag. */
-.flag {
-  vertical-align: -2px;
-  margin-right: 3px;
-  border-radius: 2px;
-}
+.moves { padding: 20px 18px; }
+.move { display: flex; gap: 13px; align-items: flex-start; }
+.move__when { flex: 0 0 auto; width: 46px; font-size: 12px; font-weight: 600; color: var(--dim); padding-top: 3px; }
+.move__what { flex: 1 1 auto; font-size: 15px; line-height: 1.5; color: #C9D2E3; }
+.move__what b { color: #fff; font-weight: 700; }
+.move__up { color: var(--green); font-weight: 700; }
 
-.foot nav { margin-bottom: 12px; }
-.foot nav a { margin: 0 8px; }
-.foot p { margin: 6px auto; max-width: 52ch; }
+.battle { display: flex; align-items: center; gap: 13px; padding: 15px 0; border-bottom: 1px solid var(--line-soft); }
+.battle:last-of-type { border-bottom: 0; }
+.battle__pair { font-size: 15px; font-weight: 700; }
+.battle__pair span { color: var(--dim); font-weight: 500; }
+.battle__where { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 3px; }
+.battle__price { font-size: 16px; font-weight: 800; color: var(--gold); }
 
-/* -------------------------------------------------------- the prerender -- */
+.stack { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
 
-/* What the build writes into the page so a crawler and a reader with no
-   JavaScript both get the king rather than an empty <main>. app.js replaces
-   it with the same content and live figures within the first second. */
-.prerender .pr__list { list-style: none; margin: 0; padding: 0; }
-.prerender .pr__list li {
-  display: flex; gap: 10px; justify-content: space-between;
-  padding: 9px 2px; border-bottom: 1px solid var(--line-soft); font-size: 14.5px;
-}
-.prerender .pr__a { font-family: var(--num); font-weight: 700; }
+.tile { padding: 18px 16px; color: var(--text); border-radius: 16px; display: block; }
+.tile:hover { color: var(--text); background: var(--glass-2); }
+.tile__name { font-size: 16px; font-weight: 700; }
+.tile__sub { font-size: 13px; font-weight: 600; color: var(--dim); margin-top: 5px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
 
-@media (min-width: 620px) {
-  :root { --pad: 24px; }
-  .king { padding: 38px 34px 30px; }
-}
-
-/* ------------------------------------------------------- the flat pages -- */
-
-/* about, terms and privacy: one column of text, no app.js, nothing live. */
-.prose {
-  max-width: 62ch;
-  padding-top: 26px;
-  padding-bottom: 10px;
+.take {
+  display: flex; align-items: center; justify-content: center;
+  height: 36px; padding: 0 14px; border-radius: 10px;
+  border: 1px solid var(--gold-line); background: var(--gold-soft);
+  font-size: 13px; font-weight: 700; color: var(--gold);
 }
 
-.prose h1 {
-  font-size: 30px;
-  letter-spacing: -.02em;
-  margin: 0 0 4px;
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.pill {
+  padding: 12px 15px; border-radius: 999px; font-size: 14px; font-weight: 600;
+  color: var(--text); background: var(--glass); border: 1px solid var(--line);
 }
+.pill:hover { color: var(--text); background: var(--glass-2); }
+.pill--more { color: var(--muted); }
 
-.prose h2 {
-  font-size: 17px;
-  letter-spacing: -.01em;
-  margin: 30px 0 6px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line-soft);
+/* ---------------------------------------------------------------- search -- */
+
+.search {
+  display: flex; align-items: center; gap: 11px;
+  height: 50px; padding: 0 16px; border-radius: var(--radius);
+  background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .075);
+  color: var(--dim); font-size: 15px; width: 100%; font-family: inherit;
 }
+.search::placeholder { color: var(--dim); }
+.search:focus { border-color: var(--cyan-line); background: var(--cyan-soft); color: var(--text); outline: none; }
+.search-wrap { position: relative; margin-top: 12px; }
+.search-wrap svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--dim); pointer-events: none; }
+.search-wrap .search { padding-left: 44px; }
 
-.prose p { color: var(--muted); margin: 0 0 12px; }
+.results { margin-top: 12px; overflow: hidden; }
+.result { display: flex; align-items: center; gap: 12px; padding: 16px 18px; color: var(--text); }
+.result:hover { color: var(--text); background: var(--glass-2); }
+.result + .result { border-top: 1px solid var(--line-soft); }
+
+/* --------------------------------------------------------------- numbers -- */
+
+.figures { display: flex; gap: 10px; }
+.figure { flex: 1 1 0; }
+.figure--wide { flex: 1.3 1 0; }
+.figure__v { font-size: 26px; font-weight: 800; }
+.figure__v--cyan { color: var(--cyan); }
+.figure__v small { font-size: 17px; }
+.figure__k { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 5px; }
+
+/* ---------------------------------------------------------------- footer -- */
+
+.foot { margin: 40px 0 0; position: relative; z-index: 1; }
+.foot__line { font-size: 22px; font-weight: 700; line-height: 1.25; letter-spacing: -.02em; color: var(--muted); }
+.foot__nav { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 12px; font-size: 14px; font-weight: 600; }
+.foot__nav a { padding: 11px 0; }
+.foot__legal { margin-top: 8px; font-size: 12px; line-height: 1.6; color: var(--dim); }
+
+/* ----------------------------------------------------------------- prose -- */
+
+.prose { margin: 32px 0 0; position: relative; z-index: 1; }
+.prose h2 { font-size: 18px; font-weight: 700; letter-spacing: -.01em; margin: 32px 0 8px; }
+.prose p { color: var(--muted); margin: 0 0 12px; font-size: 15px; line-height: 1.65; }
 .prose p b, .prose p strong { color: var(--text); font-weight: 700; }
-.prose .stamp { color: var(--dim); font-size: 13px; margin-bottom: 22px; }
-.prose ul { color: var(--muted); padding-left: 20px; }
-.prose li { margin-bottom: 6px; }
+.prose ul { color: var(--muted); padding-left: 20px; font-size: 15px; line-height: 1.65; }
+.prose li { margin-bottom: 8px; }
+.prose .stamp { color: var(--dim); font-size: 13px; }
 
-/* A king's own mark, where the crown goes. Its own colours, never the
-   page's -- recolouring somebody's logo to match a theme is not a theme. */
-.king__mark {
-  display: block;
-  margin: 0 auto 12px;
-  max-width: 60px;
-  height: auto;
+.empty { color: var(--dim); font-size: 15px; padding: 24px 0; }
+
+.skeleton { color: var(--dim); font-size: 15px; padding: 28px 0; }
+
+@media (min-width: 520px) {
+  :root { --pad: 28px; --shell: 560px; }
+  .hero__q { font-size: 52px; }
+  .page-title { font-size: 42px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }
