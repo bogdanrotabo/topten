@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=6cb821b2d3';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=bfcaddf328';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=6cb821b2d3';
+         figures, figureText } from './render.js?v=bfcaddf328';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -837,29 +837,61 @@ async function drawResult() {
      after it landed. Nothing here is asserted: a move is only claimed when the
      two numbers differ. */
   const board = out.platform;
-  const took = out.is_leader && (out.rank_before === null || out.rank_before > 1);
-  const moved = out.rank_before !== null && out.rank_after < out.rank_before;
-  const first = out.rank_before === null;
+  const took   = out.is_leader && (out.rank_before === null || out.rank_before > 1);
+  const held   = out.is_leader && out.rank_before === 1;
+  const moved  = out.rank_before !== null && out.rank_after < out.rank_before;
+  const first  = out.rank_before === null;
+
+  const amount = `<span class="num">${esc(money(out.amount_cents, out.currency))}</span>`;
+  const total  = `<span class="num">${esc(money(out.total_cents))}</span>`;
+  /* What it would now cost a listing at nothing to get past this one: the
+     total plus a cent, or the site's minimum, whichever is larger. The same
+     arithmetic the rest of the site prices #1 with, said from the other side.
+     A tie loses, which is why it is a cent and not nothing. */
+  const wall = `<span class="num">${esc(money(Math.max(MIN_CENTS, out.total_cents + 1)))}</span>`;
+  const where = esc(name(board));
+  const who = esc(out.handle);
 
   let headline, story;
   if (took) {
-    headline = `${esc(out.handle).toUpperCase()} IS<br><em>#1</em> IN ${esc(name(board)).toUpperCase()}.`;
-    story = `Your <span class="num">${esc(money(out.amount_cents, out.currency))}</span> put it there. `
-      + 'The ranking changed the moment your payment cleared.';
+    /* The whole point of the site, and the only page that gets to say it.
+       Two ways to arrive at #1 and they are not the same sentence: coming from
+       a position, and coming from nothing on a ranking nobody had paid into.
+       The first version printed "It was #null before" for everybody who
+       opened a ranking, which is every first payment on forty of them. */
+    headline = `${who.toUpperCase()} IS<br><em>#1</em> IN ${where.toUpperCase()}.`;
+    story = out.rank_before === null
+      ? `${amount} did that, from nothing. ${who} is the first name on this ranking, and nobody `
+        + `passes it for less than ${wall}.`
+      : `${amount} did that. It was #${out.rank_before} before your payment cleared and it is `
+        + `first now, with ${total} behind it. Nobody passes it for less than ${wall}.`;
+  } else if (held) {
+    /* Not "no move". Somebody who was already first and paid more did not
+       fail to move -- they made the position more expensive to take, which is
+       the only thing holding #1 here has ever meant. */
+    headline = `${who.toUpperCase()} JUST GOT<br>HARDER TO <em>BEAT</em>.`;
+    story = `${amount} on top of what was already there. ${who} holds #1 in ${where} with ${total}, `
+      + `and taking it now costs ${wall}. Every payment raises that number and none of them reset.`;
   } else if (first) {
-    headline = `${esc(out.handle).toUpperCase()}<br>IS ON THE BOARD.`;
-    story = `Your <span class="num">${esc(money(out.amount_cents, out.currency))}</span> put `
-      + `${esc(out.handle)} at #${out.rank_after} in ${esc(name(board))}.`;
+    headline = `${who.toUpperCase()}<br>IS ON THE BOARD.`;
+    story = `${amount} put ${who} at #${out.rank_after} in ${where}, from nothing. It stays there `
+      + 'until somebody pays more &mdash; and if they do, the total stays and the position comes back '
+      + 'the moment it is passed again.';
   } else if (moved) {
-    headline = `${esc(out.handle).toUpperCase()} MOVED<br>TO <em>#${out.rank_after}</em>.`;
-    story = `Your <span class="num">${esc(money(out.amount_cents, out.currency))}</span> took `
-      + `${esc(out.handle)} from #${out.rank_before} to #${out.rank_after} in ${esc(name(board))}.`;
+    const past = out.rank_before - out.rank_after;
+    headline = `${who.toUpperCase()} MOVED<br>TO <em>#${out.rank_after}</em>.`;
+    story = `${amount} took ${who} past ${past === 1 ? 'one other' : past + ' others'} in ${where}, `
+      + `from #${out.rank_before} to #${out.rank_after}. It is at ${total} now.`;
   } else {
-    headline = `YOU BACKED<br>${esc(out.handle).toUpperCase()}.`;
-    story = `<span class="num">${esc(money(out.amount_cents, out.currency))}</span> added, no move yet `
-      + `&mdash; ${esc(out.handle)} is at <span class="num">${esc(money(out.total_cents))}</span> and still `
-      + `#${out.rank_after}.`;
+    /* Paid, and the ranking did not move. The money still did something: it
+       is on the total, and the total is the only thing that decides position.
+       That is the true and the reassuring thing to say, in that order. */
+    headline = `${who.toUpperCase()} IS UP<br>TO ${total.replace('<span class="num">', '<em class="num">').replace('</span>', '</em>')}.`;
+    story = `${amount} added. The position has not changed yet, but nothing here resets and nothing `
+      + `is spent twice: ${who} is at ${total} in ${where}, and every payment before yours is still `
+      + 'in that number.';
   }
+
   if (out.needed_cents) {
     story += ` <span class="num">${esc(money(out.needed_cents))}</span> more takes #1 from `
       + `${esc(out.leader)}.`;
