@@ -149,7 +149,7 @@ function cardul(k) {
       <p class="king__is"><span>is</span>King of the Hill</p>${
         k.message ? `\n      <p class="king__message">${esc(k.message)}</p>` : ''}${link}
       <div class="king__figures">
-        <span class="figure"><span class="figure__v figure__v--gold">${esc(bani(k.amount_cents, k.currency))}</span><span class="figure__k">Paid</span></span>
+        <span class="figure"><span class="figure__v figure__v--royal">${esc(bani(k.amount_cents, k.currency))}</span><span class="figure__k">Paid</span></span>
         <span class="figure"><span class="figure__v" id="reign-clock">${esc(de)}</span><span class="figure__k">Reigning for</span></span>
       </div>
     </section>\n    `;

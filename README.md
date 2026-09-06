@@ -84,6 +84,8 @@ Three rules are the schema's job rather than the application's:
 | `scripts/sync-routes.sh` | The build. Run it after editing anything. |
 | `scripts/build-csp.mjs` | Computes the content security policy, hashes included. |
 | `scripts/check-build.mjs` | Asks whether `sync-routes.sh` was run. The one mistake this repo invites. |
+| `scripts/check-marks.mjs` | The marks registry lives in two files; this fails if they drift. |
+| `scripts/check-classes.mjs` | Every class the page writes has to exist in the stylesheet. |
 | `scripts/stripe-setup.sh` / `.ts` | Creates the Stripe objects from scratch. **Not for the live account.** |
 | `scripts/make-icons.mjs` | Draws the icons and `og-image.png` from one mark. |
 | `scripts/serve.ps1` | Local static server that mimics GitHub Pages routing. |
@@ -236,6 +238,8 @@ yourself:
 for f in app.js config.js scripts/*.mjs; do node --check "$f"; done
 bash -n scripts/sync-routes.sh scripts/stripe-setup.sh
 node scripts/check-build.mjs      # was sync-routes.sh run?
+node scripts/check-marks.mjs      # do the two marks registries agree?
+node scripts/check-classes.mjs    # is every class the page writes styled?
 node scripts/prerender.mjs --check
 node scripts/build-csp.mjs --check
 node scripts/make-icons.mjs --check

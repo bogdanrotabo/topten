@@ -68,6 +68,9 @@ jobs:
       - name: The two marks registries agree
         run: node scripts/check-marks.mjs
 
+      - name: Every class the page writes is styled
+        run: node scripts/check-classes.mjs
+
       - name: The page still has its prerender markers
         run: node scripts/prerender.mjs --check
 
