@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
 import { esc, money, shortDate, situation, costToOpen, MIN_CENTS } from '../lib.js';
-import { topTwo, amounts, row, battle, trend, openOne, move, ticker, CROWN } from '../render.js';
+import { topTwo, amounts, row, battle, trend, openOne, move, ticker, figures, figuresNote, CROWN } from '../render.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const R = (p) => join(root, p);
@@ -401,16 +401,14 @@ ${ticker(ticks)}
 </section>
 
 <section class="sect" id="numbers">
-  <div class="glass" style="padding:22px 18px;border-radius:16px">
-    <div class="figures">
-      <div class="figure"><div class="figure__v figure__v--cyan num">${n.visitors.toLocaleString('en-US')}</div><div class="figure__k">visitors</div></div>
-      <div class="figure"><div class="figure__v figure__v--cyan num">${n.countries}</div><div class="figure__k">countries</div></div>
-      <div class="figure"><div class="figure__v num">${n.listed}</div><div class="figure__k">listed</div></div>
-      <div class="figure figure--wide"><div class="figure__v num">${esc(money(n.backed_cents))}</div><div class="figure__k">backed</div></div>
-    </div>
-    <p class="fine" style="margin-top:14px">Visitors from ${n.countries} countries, counted since 25 August and
-      including 147 measured by Google Analytics in the three days before this site kept its own record.
-      ${n.payments} payments, nothing rounded.</p>
+  <div class="glass numbers">
+    <!-- The light is hidden here and lit by app.js only after a reading has
+         actually come back. A green light that is painted into the page is a
+         claim, not a measurement, and it would go on saying "live" from a
+         cached page with no connection behind it. -->
+    <div class="live" id="live" hidden><span class="live__dot"></span>Live</div>
+    <div class="figures">${figures(n)}</div>
+    <p class="fine" id="numbers-note">${figuresNote(n)}</p>
   </div>
 </section>
 

@@ -11,8 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=595ca0bf44';
-import { topTwo, amounts, row, battle, trend, openOne, move, ticker } from './render.js?v=595ca0bf44';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=11f5c02fb1';
+import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
+         figures, figuresNote, figureText } from './render.js?v=11f5c02fb1';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -146,6 +147,98 @@ function payHref(listingId) {
   const u = new URL(base);
   u.searchParams.set('client_reference_id', `${listingId}_${sessionId()}`);
   return u.toString();
+}
+
+/* ------------------------------------------------------------- numbers --- */
+
+/* The four figures on the front page, and the light that says they are moving.
+ *
+ * They were read once when the page loaded and then stood still, which for a
+ * count of visitors is a strange thing to print: the number was already wrong
+ * by the time somebody had finished reading it. Now the page keeps asking.
+ *
+ * Every figure is a real reading from site_numbers(). Nothing here invents a
+ * number, and nothing counts upwards on its own -- the animation only travels
+ * between two figures the database actually returned. */
+
+const NUMBERS_EVERY = 20000;
+
+/* From one reading to the next, so a change is seen rather than blinked past.
+   Rounded on the way, which for money means whole cents. */
+function countTo(el, from, to, name) {
+  const still = matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (still || from === to) { el.textContent = figureText(name, to); return; }
+  const t0 = performance.now();
+  const ms = 900;
+  const step = (t) => {
+    const k = Math.min(1, (t - t0) / ms);
+    /* Fast at first and easing out, which is how a counter that is catching
+       up looks, rather than a slider being dragged. */
+    const eased = 1 - Math.pow(1 - k, 3);
+    el.textContent = figureText(name, from + (to - from) * eased);
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function paintNumbers(n) {
+  const holder = $('#numbers .figures');
+  if (!holder) return;
+
+  /* First reading of the session: the cells the build wrote are already
+     correct markup, so they are updated in place rather than replaced -- that
+     way the animation has somewhere to count from. */
+  if (!$('[data-figure]', holder)) holder.innerHTML = figures(n);
+
+  $$('[data-figure]', holder).forEach((el) => {
+    const name = el.dataset.figure;
+    const to = Number(n[name]) || 0;
+    const from = Number(el.dataset.value);
+    if (Number.isFinite(from) && from !== to) {
+      countTo(el, from, to, name);
+      /* A brief mark on the one that moved, so which figure changed is
+         visible even to somebody who looked up a second too late. */
+      el.classList.remove('figure__v--moved');
+      void el.offsetWidth;
+      el.classList.add('figure__v--moved');
+    } else if (!Number.isFinite(from)) {
+      el.textContent = figureText(name, to);
+    }
+    el.dataset.value = String(to);
+  });
+
+  const note = $('#numbers-note');
+  if (note) note.innerHTML = figuresNote(n);
+
+  const light = $('#live');
+  if (light) light.hidden = false;
+}
+
+/* Keep asking, while somebody is actually looking. A tab left open behind
+   twenty others should not be polling a database for a number nobody can see,
+   so this stops when the page is hidden and reads once on the way back. */
+function watchNumbers() {
+  if (!$('#numbers .figures')) return;
+  let timer = null;
+
+  const read = async () => {
+    if (document.visibilityState !== 'visible') return;
+    try { paintNumbers(await rpc('site_numbers')); }
+    catch (e) {
+      /* No reading, so the light goes out. An unlit light is the honest state
+         and is never a stuck green one. */
+      const light = $('#live');
+      if (light) light.hidden = true;
+    }
+  };
+
+  const start = () => { if (!timer) timer = setInterval(read, NUMBERS_EVERY); };
+  const stop = () => { clearInterval(timer); timer = null; };
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') { read(); start(); } else stop();
+  });
+  start();
 }
 
 /* -------------------------------------------------------------- ticker --- */
@@ -498,14 +591,11 @@ async function drawHome() {
   const hEl = $('#happening .moves');
   if (hEl) hEl.innerHTML = recent.map((m, i) => (i ? '<hr class="hr" style="margin:16px 0">' : '') + move(m)).join('');
 
-  const nEl = $('#numbers .figures');
-  if (nEl) {
-    nEl.innerHTML =
-      `<div class="figure"><div class="figure__v figure__v--cyan num">${numbers.visitors.toLocaleString('en-US')}</div><div class="figure__k">visitors</div></div>`
-      + `<div class="figure"><div class="figure__v figure__v--cyan num">${numbers.countries}</div><div class="figure__k">countries</div></div>`
-      + `<div class="figure"><div class="figure__v num">${numbers.listed}</div><div class="figure__k">listed</div></div>`
-      + `<div class="figure figure--wide"><div class="figure__v num">${esc(money(numbers.backed_cents))}</div><div class="figure__k">backed</div></div>`;
-  }
+  /* The first reading of the session, and then it keeps reading. The page was
+     built with figures that were true when it was built; these are true now,
+     and the ones twenty seconds from now will be true then. */
+  paintNumbers(numbers);
+  watchNumbers();
 }
 
 /* ---------------------------------------------------- what the payment did -- */

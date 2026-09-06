@@ -422,11 +422,41 @@ a.sb, a.sb:hover { color: var(--text); }
 
 /* --------------------------------------------------------------- numbers -- */
 
+.numbers { padding: 22px 18px; border-radius: 16px; position: relative; }
+
+/* The light. Hidden in the markup and lit only once a reading has come back,
+   so it can never be a green light painted onto a page with nothing behind
+   it. The ring is the pulse; the dot itself does not move, because a figure
+   changing under it is the thing worth watching. */
+.live {
+  position: absolute; top: 16px; right: 16px;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--green);
+}
+.live__dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+  box-shadow: 0 0 0 0 rgba(108, 194, 150, .55);
+  animation: pulse 2.4s ease-out infinite;
+}
+@keyframes pulse {
+  70%  { box-shadow: 0 0 0 8px rgba(108, 194, 150, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(108, 194, 150, 0); }
+}
+
 .figures { display: flex; gap: 10px; }
 .figure { flex: 1 1 0; }
 .figure--wide { flex: 1.3 1 0; }
 .figure__v { font-size: 26px; font-weight: 800; }
 .figure__v--cyan { color: var(--gold); }
+
+/* The one that just moved, marked for a moment. Long enough to catch, short
+   enough that a page left open does not end up flashing at nobody. */
+.figure__v--moved { animation: moved 1.6s ease-out 1; }
+@keyframes moved {
+  0%   { color: var(--green); }
+  100% { color: inherit; }
+}
 .figure__v small { font-size: 17px; }
 .figure__k { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 5px; }
 

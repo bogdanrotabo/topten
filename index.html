@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="/styles.css?v=94529a5bf3">
+<link rel="stylesheet" href="/styles.css?v=cb24893567">
 <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="manifest" href="/manifest.json">
@@ -117,16 +117,14 @@
 </section>
 
 <section class="sect" id="numbers">
-  <div class="glass" style="padding:22px 18px;border-radius:16px">
-    <div class="figures">
-      <div class="figure"><div class="figure__v figure__v--cyan num">2,205</div><div class="figure__k">visitors</div></div>
-      <div class="figure"><div class="figure__v figure__v--cyan num">25</div><div class="figure__k">countries</div></div>
-      <div class="figure"><div class="figure__v num">137</div><div class="figure__k">listed</div></div>
-      <div class="figure figure--wide"><div class="figure__v num">$1,450.54</div><div class="figure__k">backed</div></div>
-    </div>
-    <p class="fine" style="margin-top:14px">Visitors from 25 countries, counted since 25 August and
-      including 147 measured by Google Analytics in the three days before this site kept its own record.
-      147 payments, nothing rounded.</p>
+  <div class="glass numbers">
+    <!-- The light is hidden here and lit by app.js only after a reading has
+         actually come back. A green light that is painted into the page is a
+         claim, not a measurement, and it would go on saying "live" from a
+         cached page with no connection behind it. -->
+    <div class="live" id="live" hidden><span class="live__dot"></span>Live</div>
+    <div class="figures"><div class="figure"><div class="figure__v num figure__v--cyan" data-figure="visitors" data-value="2205">2,205</div><div class="figure__k">visitors</div></div><div class="figure"><div class="figure__v num figure__v--cyan" data-figure="countries" data-value="25">25</div><div class="figure__k">countries</div></div><div class="figure"><div class="figure__v num" data-figure="listed" data-value="137">137</div><div class="figure__k">listed</div></div><div class="figure figure--wide"><div class="figure__v num" data-figure="backed_cents" data-value="145054">$1,450.54</div><div class="figure__k">backed</div></div></div>
+    <p class="fine" id="numbers-note">Visitors from 25 countries, counted since 25 August and including 147 measured by Google Analytics in the three days before this site kept its own record. 147 payments, nothing rounded.</p>
   </div>
 </section>
 
@@ -151,7 +149,7 @@
 </footer>
 </main>
 <script src="/config.js?v=8d4746a647"></script>
-<script type="module" src="/app.js?v=595ca0bf44"></script>
+<script type="module" src="/app.js?v=11f5c02fb1"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NYF4ZEZPZ9"></script>
 <script src="/ga.js"></script>
 </body>

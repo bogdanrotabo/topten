@@ -177,6 +177,48 @@ export function move(m) {
     + '</div>';
 }
 
+/* --------------------------------------------------------------- numbers -- */
+
+/* How each figure is written. The animation between two readings has to be
+   able to write the values in between, so the formatting lives here rather
+   than inside the markup that happens to print the first one. */
+export function figureText(name, v) {
+  const n = Math.round(Number(v) || 0);
+  return name === 'backed_cents' ? money(n) : n.toLocaleString('en-US');
+}
+
+/**
+ * The four figures on the front page.
+ *
+ * Written once, because they were written twice -- once by the build and once
+ * again by app.js -- and two copies of the same four cells is exactly the
+ * drift this file exists to make impossible.
+ *
+ * Each cell carries its raw value in an attribute. The text is formatted and
+ * cannot be read back reliably ("$1,450.54" is not a number), and the
+ * animation needs to know where it is counting from.
+ */
+export function figures(n) {
+  const cell = (name, key, o) =>
+    '<div class="figure' + (o && o.wide ? ' figure--wide' : '') + '">'
+    + '<div class="figure__v num' + (o && o.gold ? ' figure__v--cyan' : '') + '"'
+    +   ' data-figure="' + name + '" data-value="' + (Number(n[name]) || 0) + '">'
+    +   esc(figureText(name, n[name])) + '</div>'
+    + '<div class="figure__k">' + esc(key) + '</div></div>';
+  return cell('visitors', 'visitors', { gold: true })
+    + cell('countries', 'countries', { gold: true })
+    + cell('listed', 'listed')
+    + cell('backed_cents', 'backed', { wide: true });
+}
+
+/* The sentence under them, which carries two of the same figures and would
+   otherwise go stale while the cells above it moved. */
+export function figuresNote(n) {
+  return 'Visitors from ' + esc(figureText('countries', n.countries)) + ' countries, counted since '
+    + '25 August and including 147 measured by Google Analytics in the three days before this site '
+    + 'kept its own record. ' + esc(figureText('payments', n.payments)) + ' payments, nothing rounded.';
+}
+
 /* ---------------------------------------------------------------- ticker -- */
 
 /** One name on the strip: where it stands, on what, for how much. */
