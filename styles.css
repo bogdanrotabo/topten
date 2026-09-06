@@ -52,7 +52,11 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+/* The washes behind each page are wider than the page on purpose, and they
+   were making the document scroll sideways: overflow-x on the body alone does
+   not stop it, because the root is what scrolls. `clip` rather than `hidden`
+   so neither element becomes a scroll container of its own. */
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
 
 body {
   margin: 0;
@@ -62,7 +66,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a { color: var(--cyan); text-decoration: none; }

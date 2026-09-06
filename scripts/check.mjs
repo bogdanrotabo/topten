@@ -31,6 +31,20 @@ for (const f of ['lib.js', 'render.js', 'app.js']) {
   }
 }
 
+/* The three classic scripts, which are not modules and are checked as what
+   they are. config.js is the one every page depends on.
+   scripts/build.mjs is deliberately absent from both lists: importing it would
+   RUN it, and a checker that rebuilds the site as a side effect of checking it
+   is a checker nobody will trust. CI runs the build for real instead, which is
+   a better check than parsing it. */
+for (const f of ['config.js', 'dashboard.js', 'ga.js']) {
+  try {
+    new Function(readFileSync(join(root, f), 'utf8'));
+  } catch (e) {
+    bad.push(`${f} does not parse: ${e.message}`);
+  }
+}
+
 /* 2. The registry and the pages have to agree: one directory per board, and
       no board directory the registry has forgotten. */
 const reg = JSON.parse(readFileSync(join(root, 'boards.json'), 'utf8'));
@@ -69,5 +83,5 @@ if (bad.length) {
   for (const b of bad) console.error(`check: ${b}`);
   process.exit(1);
 }
-console.log(`check: ${reg.boards.length} boards, 3 module files, `
+console.log(`check: ${reg.boards.length} boards, 6 script files, `
   + `${styled.size} styled classes — all present and parsing.`);

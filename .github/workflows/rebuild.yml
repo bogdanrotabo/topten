@@ -1,0 +1,62 @@
+# Rewrite the pages from the live rankings, every six hours.
+#
+# Every page carries its ranking baked in, so a crawler and a link preview see
+# real numbers rather than an empty shell. Those numbers go stale the moment
+# somebody pays, and a visitor's browser fixes that a second after load -- but
+# a crawler's does not. So the site is rebuilt on a schedule and committed only
+# when something actually moved.
+#
+# It does not touch anything but the generated pages: if a rebuild ever wants
+# to commit a change to app.js, something is wrong and the diff will say so.
+#
+# To stop it: disable the workflow in the Actions tab, or delete this file.
+# The site is unaffected -- it simply keeps whatever was last written.
+
+name: Rebuild the pages
+
+on:
+  schedule:
+    # 07:23 past every sixth hour. Not on the hour: everybody schedules on the
+    # hour, and GitHub runs a busy cron late.
+    - cron: '23 1,7,13,19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Write the pages from the live rankings
+        run: node scripts/build.mjs
+
+      - name: They still hold together
+        run: node scripts/check.mjs
+
+      - name: Commit only what the rankings changed
+        run: |
+          set -euo pipefail
+          git add '*.html' sitemap.xml robots.txt
+          if git diff --cached --quiet; then
+            echo "Same rankings, same figures. Nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          n=$(git diff --cached --name-only | wc -l)
+          git commit -m "The rankings moved on $n page(s)
+
+          Rebuilt from the live views by .github/workflows/rebuild.yml.
+          Only generated pages change here."
+          git push

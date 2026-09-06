@@ -232,6 +232,7 @@ function footer() {
   </nav>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment ${esc(money(MIN_CENTS))}.</p>
+  ${swissLine}
 </footer>`;
 }
 
