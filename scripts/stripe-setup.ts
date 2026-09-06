@@ -12,8 +12,11 @@
  */
 
 const API = "https://api.stripe.com/v1";
-const SUCCESS_TEMPLATE = "https://topten.one/thanks?listing={CHECKOUT_SESSION_CLIENT_REFERENCE_ID}";
-const SUCCESS_FALLBACK = "https://topten.one/thanks?session={CHECKOUT_SESSION_ID}";
+// The session id, and nothing else. It used to be the client reference id,
+// which named which of a hundred listings to credit; there is one seat now, so
+// the only thing the browser has to come back with is the receipt for its own
+// payment -- which is what /claim swaps, once, for the key to the card.
+const SUCCESS_URL = "https://topten.one/claim?session_id={CHECKOUT_SESSION_ID}";
 
 // Stripe caps custom_unit_amount.maximum at $10,000.00 per payment by default
 // and only raises it on request to support. The larger values stay in this
@@ -107,24 +110,12 @@ async function main() {
 
   // ------------------------------------------------------- payment link ---
   console.log(bold("3/5  Payment link"));
-  let successUsed = SUCCESS_TEMPLATE;
-  let link = await stripe(key, "payment_links", {
+  const link = await stripe(key, "payment_links", {
     "line_items[0][price]": price.id,
     "line_items[0][quantity]": 1,
     "after_completion[type]": "redirect",
-    "after_completion[redirect][url]": SUCCESS_TEMPLATE,
+    "after_completion[redirect][url]": SUCCESS_URL,
   });
-  if (link.error) {
-    console.log(`     {CHECKOUT_SESSION_CLIENT_REFERENCE_ID} rejected: ${link.error.message}`);
-    console.log("     retrying with {CHECKOUT_SESSION_ID}");
-    successUsed = SUCCESS_FALLBACK;
-    link = await stripe(key, "payment_links", {
-      "line_items[0][price]": price.id,
-      "line_items[0][quantity]": 1,
-      "after_completion[type]": "redirect",
-      "after_completion[redirect][url]": SUCCESS_FALLBACK,
-    });
-  }
   if (link.error) throw new Error(`payment link: ${link.error.message}`);
   console.log(`     ${link.id}\n     ${link.url}`);
 
@@ -180,11 +171,11 @@ async function main() {
   Min amount     ${MIN_CENTS} cents  ($${MIN_CENTS / 100})
   Webhook id     ${hook.id}
   Webhook url    ${webhookUrl}
-  Success url    ${successUsed}
+  Success url    ${SUCCESS_URL}
 ────────────────────────────────────────────────────────
 
 The site opens the link as:
-  ${link.url}?client_reference_id=<listing_id>
+  ${link.url}
 `);
 }
 

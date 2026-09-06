@@ -17,8 +17,11 @@ set -a; . ./.env; set +a
 : "${STRIPE_SECRET_KEY:?STRIPE_SECRET_KEY missing from .env}"
 
 API="https://api.stripe.com/v1"
-SUCCESS_URL_TEMPLATE='https://topten.one/thanks?listing={CHECKOUT_SESSION_CLIENT_REFERENCE_ID}'
-SUCCESS_URL_FALLBACK='https://topten.one/thanks?session={CHECKOUT_SESSION_ID}'
+# The session id, and nothing else. It used to be the client reference id,
+# which named which of a hundred listings to credit; there is one seat now, so
+# the only thing the browser has to come back with is the receipt for its own
+# payment -- which is what /claim swaps, once, for the key to the card.
+SUCCESS_URL='https://topten.one/claim?session_id={CHECKOUT_SESSION_ID}'
 
 say()  { printf '\n\033[1m%s\033[0m\n' "$*"; }
 field() { grep -o "\"$1\": *\"[^\"]*\"" | head -n1 | sed 's/.*: *"\(.*\)"/\1/'; }
@@ -85,19 +88,7 @@ LINK_JSON=$(post payment_links \
   -d "line_items[0][price]=$PRICE_ID" \
   -d "line_items[0][quantity]=1" \
   -d "after_completion[type]=redirect" \
-  -d "after_completion[redirect][url]=$SUCCESS_URL_TEMPLATE")
-
-SUCCESS_USED="$SUCCESS_URL_TEMPLATE"
-if failed "$LINK_JSON"; then
-  echo "     {CHECKOUT_SESSION_CLIENT_REFERENCE_ID} rejected: $(errmsg "$LINK_JSON")"
-  echo "     retrying with {CHECKOUT_SESSION_ID}"
-  LINK_JSON=$(post payment_links \
-    -d "line_items[0][price]=$PRICE_ID" \
-    -d "line_items[0][quantity]=1" \
-    -d "after_completion[type]=redirect" \
-    -d "after_completion[redirect][url]=$SUCCESS_URL_FALLBACK")
-  SUCCESS_USED="$SUCCESS_URL_FALLBACK"
-fi
+  -d "after_completion[redirect][url]=$SUCCESS_URL")
 
 if failed "$LINK_JSON"; then
   echo "Stripe refused the payment link: $(errmsg "$LINK_JSON")"; exit 1
@@ -165,10 +156,10 @@ cat <<REPORT
   Min amount     200 cents  (\$2)
   Webhook id     $HOOK_ID
   Webhook url    $WEBHOOK_URL
-  Success url    $SUCCESS_USED
+  Success url    $SUCCESS_URL
 ────────────────────────────────────────────────────────
 
-The site opens the link as:
-  $LINK_URL?client_reference_id=<listing_id>
+The site opens the link plain, with no query string: a payment says nothing
+but its own amount, and what that buys is decided by the webhook.
 
 REPORT

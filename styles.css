@@ -1,92 +1,19 @@
-/* TopTen.one — a market table in Rotabo's colours. Light by default, dark on
-   request. Mobile first.
+/* TopTen.one — one page, one king. Dark for everybody, mobile first.
 
-   The palette is the brand's own, sampled from the mark on @supportrotabo:
-   #f4e8f7 for the pale ground it sits on, #ead7f0 a shade under it, and the
-   violet family #af4dd2 / #a33bca / #9d35c4 / #9632ba that the rhombus is
-   painted in — plus the #fdd321 gold of the second rhombus, kept for the one
-   thing gold should mean on a leaderboard, which is first place.
+   There was a light theme and a switch to reach it. Both are gone: this is
+   one page about one seat, and a page with a single job does not need a
+   second set of colours to do it in.
 
-   The layout is a market's: white rows, one accent for anything you can act
-   on, green for money that arrived, and a grey scale that stays legible at
-   12px across a dense table. The only colours on the page that are not from
-   this list are the logos — a coin's, a platform's, a board's mark is its
-   own, and recolouring somebody's logo to match a theme is not a theme, it
-   is a different logo. */
+   The palette is Rotabo's, which is where this site's violet came from --
+   #cd6ff0 for anything you can act on, and #fdd321, the gold of the second
+   rhombus in the mark, for the one thing gold should mean here, which is the
+   person on the throne. The greys are violet-black rather than neutral: a
+   neutral dark under a violet accent reads as two brands.
+
+   The only colours not from this list belong to somebody else -- a king's own
+   link, if they ever get one -- and recolouring those is not a theme. */
 
 :root {
-  color-scheme: light;
-
-  --bg: #ffffff;
-  --elev: #ffffff;
-  --elev-2: #f7eefa;
-  /* Two weights, both drawn to be seen. A control's edge and a row separator
-     want different strengths, not different visibilities: the separator is
-     the lighter of the two, but it is still a line somebody can find on a
-     white page rather than a suggestion of one. The first version of this
-     palette used #ecdff1 for both, which read as nothing at all around the
-     thirty-four tiles of the board picker — a control has to be visible
-     before it can be used. */
-  --line: #cdb4dc;
-  --hairline: #e0cdea;
-  --line-soft: #e6d5ee;
-  --text: #17121c;
-  --muted: #5b4a66;
-  --dim: #776980;
-  --accent: #8a1fb2;
-  --accent-ink: #ffffff;
-  --accent-soft: #f2e2f8;
-  --danger: #cf2f3e;
-  --ok: #057344;
-  --gold: #dfae00;
-  --brand: #8a1fb2;
-
-  /* The four surfaces that sit over something: masthead, sticky bar, modal
-     scrim, tile veil. Held as variables so the dark theme can invert them
-     without a second copy of the rule. */
-  --veil: rgba(255, 255, 255, .92);
-  --veil-strong: rgba(255, 255, 255, .96);
-  --veil-soft: rgba(250, 245, 251, .9);
-  --scrim: rgba(30, 25, 35, .46);
-  --shadow: 0 1px 2px rgba(124, 52, 154, .09), 0 4px 14px rgba(124, 52, 154, .07);
-
-  /* The two bands across the top are one height, held in one place, so they
-     cannot drift apart again the next time either of them is touched — and
-     two tones, each a step down from the page, so the eye reads three
-     surfaces stacked rather than one that keeps changing its mind. The
-     ticker is the deeper of the two: it is the one that moves. */
-  --band: 38px;
-  /* Top band darkest, then the two under it. The wordmark sits on the first
-     one, so it is the one that should carry the most colour; the strips below
-     it step back toward the page rather than away from it. Still light enough
-     to hold dark text — this is a tint, not a dark header. */
-  /* The ink layer of a two-tone mark: TikTok's note, X's glyph, the Threads
-     loop. Those marks are drawn in the page's own colour — black on light,
-     white on dark — which is why they were hard-coded #fff and vanished the
-     day the site got a light theme. Not currentColor: inside a chip that
-     resolves to the board's brand colour, and a red note on a red fringe is
-     not the TikTok logo either. */
-  --mark-ink: #17121c;
-
-  --band-0: #dcc4e9;
-  --band-1: #f0e2f7;
-  --band-2: #e7d4f0;
-
-  --radius: 8px;
-  --radius-lg: 12px;
-  --shell: 1240px;
-  --pad: 16px;
-
-  --num: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, monospace;
-  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Dark is the same table with the greys turned over — violet-black rather
-   than neutral black, because a neutral dark under a violet accent reads as
-   two brands. The accent lifts to #c161df, the lighter end of the same
-   family, since #9632ba on a dark ground is a hole rather than a link. The
-   two money colours barely move: they have to mean the same thing in both. */
-:root[data-theme="dark"] {
   color-scheme: dark;
 
   --bg: #16101b;
@@ -101,25 +28,25 @@
   --accent: #cd6ff0;
   --accent-ink: #17091f;
   --accent-soft: #342043;
+  --gold: #fdd321;
+  --gold-soft: #35290a;
   --danger: #ff6b76;
   --ok: #2ad796;
-  --gold: #fdd321;
-
-  --mark-ink: #fbf6fd;
 
   --band-0: #2b1f39;
-  --band-1: #1e1628;
-  --band-2: #271c34;
-
-  --veil: rgba(22, 16, 27, .92);
-  --veil-strong: rgba(22, 16, 27, .96);
-  --veil-soft: rgba(30, 23, 38, .9);
-  --scrim: rgba(9, 5, 13, .7);
   --shadow: 0 1px 2px rgba(0, 0, 0, .34), 0 4px 14px rgba(0, 0, 0, .26);
+  --glow: 0 0 0 1px rgba(253, 211, 33, .22), 0 10px 40px rgba(253, 211, 33, .07);
+
+  --radius: 10px;
+  --radius-lg: 16px;
+  --shell: 760px;
+  --pad: 18px;
+
+  --num: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, monospace;
+  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
-
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -128,2023 +55,398 @@ body {
   color: var(--text);
   font-family: var(--sans);
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-wrap: break-word;
 }
 
-a { color: inherit; }
+a { color: var(--accent); }
+a:hover { color: #e2a2fa; }
 
 button {
   font: inherit;
   color: inherit;
-  cursor: pointer;
-  border: 0;
   background: none;
+  border: 0;
+  cursor: pointer;
 }
 
-input, textarea { font: inherit; }
-
-img { max-width: 100%; }
-
 .shell {
-  width: 100%;
   max-width: var(--shell);
   margin: 0 auto;
   padding: 0 var(--pad);
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
+/* Anything that only a screen reader should read. Used for the headings that
+   name each block: the blocks are obvious to look at and nameless to listen
+   to, which is not the same page twice. */
+.sr {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* ------------------------------------------------------------------ header */
+/* ------------------------------------------------------------- masthead -- */
 
 .masthead {
-  position: sticky;
-  top: 0;
-  z-index: 40;
   background: var(--band-0);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .masthead__row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  height: 56px;
+  justify-content: center;
+  min-height: 46px;
 }
 
 .wordmark {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 1px;
-  font-weight: 800;
-  font-size: 19px;
-  letter-spacing: -.02em;
+  color: var(--text);
   text-decoration: none;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -.02em;
 }
-
 .wordmark b { color: var(--accent); font-weight: 800; }
 
-/* One button, two marks, only ever one of them drawn: the sun when the page
-   is dark and pressing it would bring the light back, the moon when it is
-   light. Showing the state you are in rather than the state you would get
-   reads as a status light nobody can act on. */
-.themer {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+.tagline {
+  text-align: center;
   color: var(--muted);
-  flex: none;
+  margin: 20px auto 0;
+  max-width: 34ch;
+  font-size: 15px;
 }
 
-.themer:hover { background: var(--elev-2); color: var(--text); }
-.themer svg { width: 18px; height: 18px; display: block; }
-.themer__sun { display: none; }
-:root[data-theme="dark"] .themer__sun { display: block; }
-:root[data-theme="dark"] .themer__moon { display: none; }
-.wordmark span { color: var(--dim); font-weight: 600; }
+/* ----------------------------------------------------------- king card -- */
 
-
-/* ------------------------------------------------------------- ticker --- */
-
-/* A board with nobody on it is a claim; a name with money next to it is
-   evidence. This runs the evidence across the top of the page. */
-/* Same height as the figures strip above it, and centred in it. Two bands of
-   different heights stacked at the top of a page read as one band and a
-   mistake — and the icon was 48px inside a 67px strip, which is a logo parade
-   rather than a ticker. Both are now a fixed --band tall with their contents
-   centred, rather than a height that falls out of whatever padding and line
-   height happen to add up to. */
-.ticker {
-  overflow: hidden;
-  /* Taller than the two bands above it, and by a good deal: this one carries
-     the face of everybody who has paid, and a face at the size of the old
-     22px board mark is a thumbnail nobody can make out in passing. */
-  height: calc(var(--band) + 16px);
-  display: flex;
-  align-items: center;
-  background: var(--band-2);
-  border-bottom: 1px solid var(--line);
-}
-
-.ticker__track {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  /* The duration is set from the track's own width when it is filled, so
-     the strip travels at a fixed speed however many listings are on it. This
-     is the fallback for the moment before that happens. */
-  animation: tick var(--tick-dur, 90s) linear infinite;
-}
-
-/* Half the track, because the track is the list twice over. */
-@keyframes tick { to { transform: translateX(-50%); } }
-
-.ticker:hover .ticker__track { animation-play-state: paused; }
-
-.tick {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 15px;
-  font-size: 12px;
-  white-space: nowrap;
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.tick__i { line-height: 0; }
-.tick__i svg { width: 22px; height: 22px; display: block; color: var(--tick); }
-
-/* The listing's own picture on the strip, the same badge-with-a-photo-over-it
-   the table draws, at the size the board mark used to be. */
-.tick__pic {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  flex: none;
-  font-size: 11px;
-}
-/* The handle at 700 was the heaviest thing on a strip that is supposed to
-   drift past. It is a name, not a headline: enough weight to be a name, and
-   the figures beside it keep theirs, because those are the point. */
-.tick__h { font-weight: 500; color: var(--text); }
-.tick__r { font-family: var(--num); font-weight: 700; color: var(--tick); }
-.tick__a { font-family: var(--num); font-weight: 700; color: var(--text); }
-
-@media (min-width: 560px) {
-  .ticker { padding: 9px 0; }
-  .tick { font-size: 13.5px; padding: 0 18px; }
-  .tick__i svg { width: 22px; height: 22px; }
-  .tick__pic { width: 34px; height: 34px; }
-}
-
-/* Stopped, not hidden: the names and the money are the point, the motion is
-   only how they take turns. */
-@media (prefers-reduced-motion: reduce) {
-  .ticker__track { animation: none; }
-}
-
-/* --------------------------------------------------------------------- hero */
-
-/* The hero is not written here. It was, and then a second set of rules for it
-   grew near the end of the file, and the second set wins every declaration
-   the two share -- same weight, later in the document. What stood here was
-   seven declarations that could never take effect, including two media
-   queries that looked like they were doing something on a phone and on a
-   short screen and were not. That is not merely untidy: editing them changed
-   nothing on screen, which is how an afternoon goes missing, and one of them
-   silently pushed the first row of the board under the fold on a 675px-tall
-   laptop for as long as the headline has been centred.
-
-   Search for "the head" further down. */
-
-/* --------------------------------------------------------------- stats bar */
-
-/* ------------------------------------------------------------- board head */
-
-.tobeat {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 15px 16px;
-  margin-bottom: 14px;
+.king {
+  margin: 22px auto 0;
+  padding: 30px 22px 26px;
+  background: linear-gradient(180deg, #241a2e 0%, var(--elev) 62%);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--brand);
-  border-radius: var(--radius);
-  background: linear-gradient(180deg, var(--elev-2), var(--elev));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glow);
+  text-align: center;
+  position: relative;
 }
 
-.tobeat__k {
+.king__crown {
+  display: block;
+  margin: 0 auto 10px;
+  width: 38px; height: 28px;
+  color: var(--gold);
+}
+
+.king__kicker {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.king__name {
+  margin: 8px 0 0;
+  font-size: clamp(30px, 8vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  font-weight: 800;
+}
+
+.king__message {
+  margin: 12px auto 0;
+  max-width: 34ch;
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.king__link {
+  display: inline-block;
+  margin: 14px 0 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.king__figures {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+}
+
+.figure { min-width: 96px; }
+
+.figure__v {
+  display: block;
+  font-family: var(--num);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+.figure__v--gold { color: var(--gold); }
+
+.figure__k {
+  display: block;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: .1em;
   color: var(--dim);
-}
-
-.tobeat__v {
-  display: block;
   margin-top: 2px;
-  font-family: var(--num);
-  font-size: clamp(26px, 8vw, 38px);
-  font-weight: 800;
-  letter-spacing: -.03em;
-  line-height: 1.05;
-  color: var(--accent);
 }
 
-.tobeat__who {
-  display: block;
-  margin-top: 3px;
-  font-size: 13px;
+.king--empty .king__name { color: var(--dim); }
+
+/* --------------------------------------------------------------- the cta -- */
+
+.cta { margin: 24px auto 0; text-align: center; }
+
+.cta__terms {
   color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 22ch;
+  font-size: 13.5px;
+  max-width: 44ch;
+  margin: 0 auto 14px;
 }
+.cta__terms b { color: var(--text); font-weight: 700; }
 
-.tobeat__cta {
-  flex: 0 0 auto;
-  padding: 11px 16px;
-  border-radius: 999px;
+.btn {
+  display: inline-block;
   background: var(--accent);
   color: var(--accent-ink);
   font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -.01em;
+  padding: 14px 30px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+.btn:hover { background: #dc8bf6; color: var(--accent-ink); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+.btn--ghost {
+  background: none;
+  color: var(--text);
+  border: 1px solid var(--line);
   font-size: 14px;
-  white-space: nowrap;
+  font-weight: 700;
+  padding: 9px 18px;
+  box-shadow: none;
 }
+.btn--ghost:hover { background: var(--elev-2); color: var(--text); }
 
-/* ------------------------------------------------------------------ cards */
+.btn--small { font-size: 14px; padding: 10px 20px; }
 
-/* Ten places, two rows of five, no scrolling. A Top 10 you have to scroll is
-   not a Top 10 you can read at a glance, and the whole product is the glance. */
-.row--bumped { animation: bump .7s cubic-bezier(.2, .9, .25, 1); }
-.row--sunk { animation: sink .7s cubic-bezier(.2, .9, .25, 1); }
+/* ------------------------------------------------------------- the lists -- */
 
-@keyframes bump {
-  0% { transform: translateY(14px) scale(.98); box-shadow: 0 0 0 0 var(--accent); }
-  40% { transform: translateY(-4px) scale(1.015); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
-  100% { transform: none; box-shadow: 0 0 0 0 transparent; }
-}
+.block { margin: 40px auto 0; }
 
-@keyframes sink {
-  0% { transform: translateY(-12px); opacity: .55; }
-  100% { transform: none; opacity: 1; }
-}
-
-/* ---------------------------------------------------------- waiting list */
-
-.waiting { margin-top: 18px; }
-
-.waiting > summary {
-  cursor: pointer;
-  list-style: none;
-  padding: 12px 14px;
-  border: 1px dashed var(--line);
-  border-radius: var(--radius);
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 600;
+.block__h {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--dim);
+  font-weight: 700;
+  margin: 0 0 10px;
   display: flex;
   justify-content: space-between;
   gap: 10px;
 }
 
-.waiting > summary::-webkit-details-marker { display: none; }
-.waiting[open] > summary { border-style: solid; margin-bottom: 8px; }
-.waiting__gap { color: var(--accent); font-family: var(--num); }
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-soft);
+}
 
-.wrow {
-  display: grid;
-  grid-template-columns: 34px 1fr auto auto;
-  align-items: center;
+.row {
+  display: flex;
+  align-items: baseline;
   gap: 10px;
-  padding: 8px 12px;
+  padding: 10px 2px;
   border-bottom: 1px solid var(--line-soft);
-  font-size: 14px;
+  font-size: 14.5px;
 }
 
-.wrow:last-child { border-bottom: 0; }
-.wrow__rank { font-family: var(--num); color: var(--dim); text-align: right; }
-.wrow__h { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
-.wrow__a { font-family: var(--num); color: var(--muted); }
+.row__n {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-.wrow__add {
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  font-size: 12px;
+.row__a {
+  font-family: var(--num);
   font-weight: 700;
-  color: var(--muted);
+  white-space: nowrap;
 }
 
-/* ------------------------------------------------------------ empty state */
+.row__t {
+  color: var(--dim);
+  font-size: 12.5px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  min-width: 74px;
+  text-align: right;
+}
+
+.row--king .row__a { color: var(--gold); }
 
 .empty {
-  padding: 44px 20px;
-  text-align: center;
-  border: 1px dashed var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--elev);
+  color: var(--dim);
+  font-size: 14px;
+  padding: 12px 2px 0;
+  margin: 0;
 }
 
-.empty h3 { margin: 0 0 6px; font-size: 19px; letter-spacing: -.02em; }
-.empty p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+.more { text-align: center; margin-top: 16px; }
 
-/* ------------------------------------------------------------- sticky cta */
+/* ---------------------------------------------------------- claim / form -- */
 
-/* Always on screen — it is the whole point of the page. The board above is
-   sized so its bottom row clears this rather than hiding behind it. */
-.sticky {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 45;
-  padding: 7px var(--pad) calc(7px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, transparent, var(--veil-strong) 34%);
-  pointer-events: none;
-}
-
-/* Flush against the bottom edge is right on a phone, where the thumb lives
-   there. On anything wider there is room, and sitting in the last few pixels
-   of the window reads as cramped, so the button gets lifted off the floor. */
-@media (min-width: 560px) {
-  .sticky { padding: 14px var(--pad) calc(48px + env(safe-area-inset-bottom)); }
-}
-
-.sticky__inner {
-  max-width: var(--shell);
-  margin: 0 auto;
-  pointer-events: auto;
-}
-
-.btn {
-  display: block;
-  width: 100%;
-  padding: 13px 18px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 800;
-  font-size: 15.5px;
-  letter-spacing: -.01em;
-  text-align: center;
-  text-decoration: none;
-  box-shadow: 0 8px 30px -8px color-mix(in srgb, var(--accent) 60%, transparent);
-}
-
-@media (min-width: 560px) {
-  .btn { padding: 15px 18px; font-size: 16px; }
-}
-
-.btn:disabled { opacity: .45; box-shadow: none; cursor: not-allowed; }
-.btn--ghost { background: var(--elev-2); color: var(--text); border: 1px solid var(--line); box-shadow: none; }
-
-/* ----------------------------------------------------------------- modal */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  background: var(--scrim);
-  backdrop-filter: blur(6px);
-  padding: 0;
-}
-
-.modal[hidden] { display: none; }
-
-.modal__panel {
-  width: 100%;
-  max-width: 520px;
-  max-height: 92vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+.panel {
+  margin: 26px auto 0;
+  padding: 24px 20px;
   background: var(--elev);
   border: 1px solid var(--line);
-  border-bottom: 0;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: 18px var(--pad) calc(20px + env(safe-area-inset-bottom));
-  animation: rise .28s cubic-bezier(.2, .9, .25, 1);
+  border-radius: var(--radius-lg);
 }
 
-@keyframes rise { from { transform: translateY(26px); opacity: 0; } }
-
-/* The listing window takes the page. A form is as tall as its fields, but a
-   listing is what someone opened the site to look at, and 520px of it in the
-   middle of a dimmed page reads as a preview of something else. */
-/* 70% is the size a listing gets, not a lid on it. A short listing fills the
-   70% and stops; a long one grows to fit rather than hiding its own share row
-   below the fold, and 90% is where growing stops. */
-.modal__panel--full {
-  max-width: none;
-  height: auto;
-  min-height: 70vh;
-  max-height: 90vh;
+.panel h1 {
+  margin: 0 0 6px;
+  font-size: 25px;
+  letter-spacing: -.02em;
 }
+
+.panel p { color: var(--muted); margin: 0 0 14px; }
+
+.field { margin-bottom: 14px; }
+
+.field label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--dim);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.field input {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 11px 12px;
+}
+.field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.field small { display: block; color: var(--dim); font-size: 12px; margin-top: 4px; }
+
+.note {
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 11px 13px;
+  margin: 14px 0 0;
+}
+.note--warn { background: var(--gold-soft); border-color: #6b5510; }
+.note--bad { background: #3a1c22; border-color: #6d2b33; color: #ffd0d4; }
+
+.spinner {
+  width: 22px; height: 22px;
+  margin: 18px auto;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+
+/* ------------------------------------------------------------------ foot -- */
+
+.foot {
+  margin-top: 56px;
+  padding: 26px 0 40px;
+  border-top: 1px solid var(--hairline);
+  color: var(--dim);
+  font-size: 13px;
+  text-align: center;
+}
+
+.foot__how {
+  list-style: none;
+  margin: 0 auto 18px;
+  padding: 0;
+  max-width: 46ch;
+  text-align: left;
+}
+.foot__how li { padding: 3px 0 3px 22px; position: relative; color: var(--muted); }
+.foot__how li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.foot nav { margin-bottom: 12px; }
+.foot nav a { margin: 0 8px; }
+.foot p { margin: 6px auto; max-width: 52ch; }
+
+/* -------------------------------------------------------- the prerender -- */
+
+/* What the build writes into the page so a crawler and a reader with no
+   JavaScript both get the king rather than an empty <main>. app.js replaces
+   it with the same content and live figures within the first second. */
+.prerender .pr__list { list-style: none; margin: 0; padding: 0; }
+.prerender .pr__list li {
+  display: flex; gap: 10px; justify-content: space-between;
+  padding: 9px 2px; border-bottom: 1px solid var(--line-soft); font-size: 14.5px;
+}
+.prerender .pr__a { font-family: var(--num); font-weight: 700; }
 
 @media (min-width: 620px) {
-  .modal__panel--full { width: 70vw; }
+  :root { --pad: 24px; }
+  .king { padding: 38px 34px 30px; }
 }
 
-/* The room left under a short listing had nothing in it. Sharing is what the
-   room is for: the person looking at a place is the one most likely to pass it
-   on, and the buttons sit at the bottom of whatever height is left over. */
-.modal__panel--full {
-  display: flex;
-  flex-direction: column;
+/* ------------------------------------------------------- the flat pages -- */
+
+/* about, terms and privacy: one column of text, no app.js, nothing live. */
+.prose {
+  max-width: 62ch;
+  padding-top: 26px;
+  padding-bottom: 10px;
 }
 
-/* Follows the content instead of being pinned to the floor. margin-top:auto
-   put it at the bottom of a 90vh panel, which on a desktop screen left it half
-   a page away from the listing it belongs to. */
-.detail__share {
-  margin-top: 18px;
+.prose h1 {
+  font-size: 30px;
+  letter-spacing: -.02em;
+  margin: 0 0 4px;
+}
+
+.prose h2 {
+  font-size: 17px;
+  letter-spacing: -.01em;
+  margin: 30px 0 6px;
   padding-top: 18px;
   border-top: 1px solid var(--line-soft);
 }
 
-.detail__share-k {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--dim);
-}
-
-.detail__share-acts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-@media (min-width: 620px) {
-  .modal { align-items: center; padding: 20px; }
-  .modal__panel { border-bottom: 1px solid var(--line); border-radius: var(--radius-lg); }
-}
-
-.modal__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.modal__head h2 { margin: 0; font-size: 21px; letter-spacing: -.025em; }
-.modal__head p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
-.modal__x { font-size: 24px; line-height: 1; color: var(--dim); padding: 2px 6px; }
-
-.field { margin-bottom: 14px; }
-
-.field > label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--dim);
-}
-
-.input {
-  width: 100%;
-  padding: 12px 13px;
-  border-radius: 11px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--text);
-  outline: none;
-}
-
-.input:focus { border-color: var(--brand); }
-.input[aria-invalid="true"] { border-color: var(--danger); }
-
-.hint { margin-top: 6px; font-size: 12px; color: var(--dim); min-height: 16px; }
-.hint--bad { color: var(--danger); }
-.hint--good { color: var(--ok); }
-
-/* Thirty-four boards, not seventeen. At five to a row and one square each the
-   picker filled the whole modal and pushed the field somebody actually came
-   to type in below the fold -- and four of those squares were a second X,
-   TikTok, YouTube and Facebook that looked exactly like the first four. So:
-   smaller tiles, a name under each so the two kinds are told apart, and a
-   height it scrolls inside, because the picker is the second thing on this
-   form and what you are listing is the first. */
-.picker {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-  gap: 6px;
-  max-height: 218px;
-  overflow-y: auto;
-  padding: 2px;
-  scrollbar-width: thin;
-}
-
-.pick {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 9px 4px 7px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--muted);
-}
-
-.pick__name {
-  font-size: 9.5px;
-  font-weight: 600;
-  line-height: 1.15;
-  text-align: center;
-  color: var(--muted);
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.pick[aria-pressed="true"] .pick__name { color: inherit; }
-
-.pick svg { width: 26px; height: 26px; }
-.pick[aria-pressed="true"] { border-color: var(--pick-brand); color: var(--pick-brand); background: var(--elev-2); }
-:root[data-theme="dark"] .pick[aria-pressed="true"] {
-  border-color: var(--pick-brand-d, var(--pick-brand));
-  color: var(--pick-brand-d, var(--pick-brand));
-}
-
-/* Ten platforms, five over five — the same shape as the boards themselves. */
-
-/* ------------------------------------------------------ listing detail --- */
-
-.detail {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--bg);
-  margin-bottom: 10px;
-}
-
-/* Now a badge with a picture over it rather than a bare <img>, the same as
-   every row in the table — so a coin opens on its own logo instead of on the
-   silhouette of a person, which is what unavatar returns when asked for a
-   face for "Bitcoin". */
-.detail__av {
-  width: 64px; height: 64px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  object-fit: cover;
-  font-size: 19px;
-}
-
-.detail__body { min-width: 0; }
-
-/* The thing they paid to say. It gets to be the biggest text in the panel. */
-.detail__tagline {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.4;
-  color: var(--text);
-  overflow-wrap: anywhere;
-}
-
-.detail__tagline--none { color: var(--dim); font-size: 14px; font-style: italic; }
-
-/* The licence asks for the author's name, the licence and a way back to the
-   file. All three, under the photograph they belong to. */
-.detail__credit {
-  margin: 6px 0 0;
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--dim);
-}
-
-.detail__credit a { color: var(--muted); }
-
-.detail__brand { display: inline-block; vertical-align: -2px; line-height: 0; }
-.detail__brand svg { width: 39px; height: 39px; }
-
-.detail__links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.detail__link {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--elev-2);
-  text-decoration: none;
-}
-
-.detail__link:hover { border-color: var(--accent); }
-
-.detail__link-k {
-  flex: 0 0 auto;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .09em;
-  color: var(--dim);
-}
-
-.detail__link-v {
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.detail__link:hover .detail__link-v { color: var(--accent); }
-
-/* These were 11px fine print under a 15px button — small enough that the two
-   things a visitor might actually want to do next read as a footnote. */
-.detail__acts {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.detail__acts a {
-  flex: 1;
-  padding: 11px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--elev-2);
-  color: var(--muted);
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-  text-decoration: none;
-}
-
-.detail__acts a:hover { color: var(--text); border-color: var(--accent); }
-
-/* ------------------------------------------------------- amount picker */
-
-.amounts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-
-.amt {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 13px 15px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  text-align: left;
-}
-
-.amt[aria-pressed="true"] {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, var(--bg));
-}
-
-.amt__label { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
-.amt__note { display: block; margin-top: 1px; font-size: 12px; color: var(--dim); font-weight: 500; }
-
-.amt__price {
-  font-family: var(--num);
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  white-space: nowrap;
-}
-
-.amt[aria-pressed="true"] .amt__price { color: var(--accent); }
-
-.free {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 13px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-}
-
-.free[aria-pressed="true"] { border-color: var(--accent); }
-.free__cur { font-family: var(--num); font-size: 19px; color: var(--dim); }
-
-.free input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px 0;
-  border: 0;
-  background: none;
-  color: var(--text);
-  font-family: var(--num);
-  font-size: 19px;
-  font-weight: 700;
-  outline: none;
-}
-
-.free input::-webkit-outer-spin-button,
-.free input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.free input[type=number] { -moz-appearance: textfield; }
-
-.verdict {
-  margin: 12px 0 14px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--elev-2);
-  border: 1px solid var(--line);
-  font-size: 15px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.verdict b { color: var(--accent); font-family: var(--num); font-size: 19px; letter-spacing: -.02em; }
-.verdict--bad { color: var(--muted); }
-
-.finelist {
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 11px;
-  color: var(--dim);
-  line-height: 1.6;
-}
-
-/* ---------------------------------------------------------------- thanks */
-
-.center-wrap {
-  min-height: 76vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 30px 0 60px;
-}
-
-.bigrank {
-  font-family: var(--num);
-  font-size: clamp(70px, 26vw, 128px);
-  font-weight: 800;
-  letter-spacing: -.06em;
-  line-height: .9;
-  color: var(--accent);
-  margin: 6px 0;
-}
-
-.spinner {
-  width: 30px; height: 30px;
-  border: 3px solid var(--line);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 16px auto;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.share {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 22px;
-}
-
-.share a, .share button {
-  padding: 11px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--elev-2);
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.share a:hover, .share button:hover { border-color: var(--accent); }
-
-#confetti {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 70;
-}
-
-/* ----------------------------------------------------------------- badge */
-
-
-/* The badge is a page of its own now, reached from inside a window that has
-   just closed behind it. Without a way out it is a dead end. */
-.badgeclose {
-  position: fixed;
-  top: calc(10px + env(safe-area-inset-top));
-  right: 12px;
-  z-index: 40;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--elev-2);
-  color: var(--muted);
-  font-size: 24px;
-  line-height: 1;
-}
-
-.badgeclose:hover { color: var(--text); border-color: var(--accent); }
-.badgewrap { padding: 28px 0 60px; text-align: center; }
-.badgecard { max-width: 500px; margin: 0 auto; }
-.badgecard svg { width: 100%; height: auto; display: block; border-radius: var(--radius-lg); }
-
-/* ------------------------------------------------------------------ prose */
-
-.prose { padding: 26px 0 70px; max-width: 62ch; }
-.prose h1 { font-size: 30px; letter-spacing: -.03em; margin: 0 0 6px; }
-.prose h2 { font-size: 17px; letter-spacing: -.01em; margin: 26px 0 6px; }
-.prose p, .prose li { color: var(--muted); font-size: 15px; }
-.prose strong { color: var(--text); }
-.prose a { color: var(--accent); }
-.prose .updated { font-size: 13px; color: var(--dim); }
-
-/* ---------------------------------------------------------------- footer */
-
-.foot {
-  border-top: 1px solid var(--line-soft);
-  padding: 22px 0 120px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--dim);
-}
-
-/* ------------------------------------------------------------ share bar --- */
-
-/* The board is the product and the address is the pitch, so the address gets
-   to be readable and copyable rather than something to retype from memory. */
-.sharebar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  max-width: 460px;
-  margin: 16px auto 0;
-  padding: 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--elev);
-}
-
-.sharebar__k {
-  width: 100%;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--dim);
-}
-
-.sharebar__url {
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.sharebar__acts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  width: 100%;
-}
-
-.sharebar__btn {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--elev-2);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.sharebar__btn:hover { color: var(--text); border-color: var(--accent); }
-
-/* ------------------------------------------------------------- sponsor --- */
-
-.sponsor {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  max-width: 460px;
-  margin: 0 auto 18px;
-  padding: 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--elev);
-}
-
-.sponsor__k {
-  width: 100%;
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--dim);
-}
-
-.sponsor__logo {
-  width: 26px;
-  height: 26px;
-  display: block;
-  object-fit: contain;
-}
-
-/* The rotabo.app mark is two diamonds side by side, so it is wider than
-   it is tall: the square box every other sponsor logo gets would squash it. */
-.sponsor__logo--rotabo { width: 43px; }
-
-
-.sponsor__brand {
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  color: var(--text);
-  text-decoration: none;
-  margin-right: 2px;
-}
-
-.sponsor__brand b { color: #9b3faf; }
-.sponsor__brand:hover { color: #9b3faf; }
-
-/* The rotabo violet reads at 3.1:1 against the dark panel, and 4.5 is what
-   somebody with low vision needs to read it at all. Same hue, lifted until it
-   clears; the mark still reads as rotabo. */
-
-:root[data-theme="dark"] .sponsor__brand b,
-:root[data-theme="dark"] .sponsor__brand:hover { color: #c471db; }
-
-/* gift.ceo's own gold, not Rotabo's violet -- and after the rule above, not
-   before it. Both selectors weigh exactly the same, so the one written later
-   is the one that counts, and written first this lost silently: the dot came
-   out violet on the dark theme and gold on the light one. */
-/* #b8862b was 3.2:1 on this card and I put it there myself, an hour after
-   fixing every colour on the site for exactly that. This is gift.ceo's own
-   gold, the value that site uses after the same correction: 4.9:1. */
-.sponsor__brand--gift b { color: #8d6610; }
-.sponsor__brand--gift:hover { color: #8d6610; }
-:root[data-theme="dark"] .sponsor__brand--gift b,
-:root[data-theme="dark"] .sponsor__brand--gift:hover { color: #d9a63c; }
-
-.sponsor__tag { font-size: 12px; color: var(--muted); }
-
-/* Sits with the small line, at the size of the small line. Not a button, not
-   a badge — just the mark, the same weight as the words beside it. */
-.sponsor__x {
-  display: inline-flex;
-  align-items: center;
-  margin-left: -4px;
-  line-height: 0;
-  color: var(--dim);
-}
-
-.sponsor__x svg { width: 33px; height: 33px; display: block; }
-.sponsor__x:hover { color: var(--text); }
-
-
-/* The ten boards, spelled out as addresses. Small and quiet, but real links:
-   the grid above is buttons, and a crawler cannot press one. */
-.foot__boards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  justify-content: center;
-  margin: 0 0 10px;
-  font-size: 12px;
-}
-.foot nav { margin: 8px 0; display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-.foot a { color: var(--muted); text-decoration: none; }
-.foot a:hover { color: var(--text); }
-
-/* A link sitting inside a sentence cannot be told from the sentence by colour
-   alone -- somebody who does not see the difference between #5b4a66 and
-   #776980 has no way of knowing CoinGecko is a link. The ones in the nav are
-   on their own line and read as links already; these are the ones in running
-   text, and they get the underline. */
-.foot p a { text-decoration: underline; text-underline-offset: 2px; }
-
-/* --------------------------------------------------------------- a11y/motion */
-
-:where(a, button, input, textarea, summary):focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .001ms !important;
-  }
-}
-
-.skeleton {
-  height: 66px;
-  border-radius: var(--radius);
-  background: linear-gradient(90deg, var(--elev) 25%, var(--elev-2) 37%, var(--elev) 63%);
-  background-size: 400% 100%;
-  animation: shimmer 1.4s ease infinite;
-}
-
-@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
-
-/* --------------------------------------------------------- short screens ---
-
-   An SE is 148px shorter than a Pro, and the tenth tile has to clear the
-   sticky button on both. Everything above the board gives up a few pixels;
-   the big wordmark goes entirely, since the masthead already carries it.
-
-   Keyed on height rather than width — this is a vertical-space problem — and
-   deliberately last in the file, so it outranks the base rules it trims. */
-
-/* The wordmark used to be given up on a short screen so the board's bottom row
-   would clear the fold. There is no bottom row any more -- the boards open on
-   demand -- so the name of the place stays on every screen, and only the
-   spacing tightens. */
-/* What is left of the short-screen block after the tile grid it was written
-   for went away. Its .stats rule put a 10px margin above the figures strip
-   and 2px below it — two stripes of bare page between three bands that are
-   supposed to sit against each other, which is what "band 2 is not coloured
-   down to band 1's bottom border" was. The .stat sizing went with it: the
-   band has a fixed height now, and a rule that shrinks its contents on a
-   short screen only moves them off centre. */
-/* The hero is not in here either, and its three lines were dead where they
-   stood -- the rules near the end of the file win them all. The padding is
-   handled down there, in a copy of this query placed after the rule that was
-   beating it. The other two are obsolete rather than lost: the headline size
-   here was a reduction from clamp(30px, 9vw, 60px) and the base is now
-   clamp(26px, 5vw, 36px), which is smaller than the "reduction"; and two
-   points off the line under it saves four pixels of a short screen, which is
-   not worth a rule that has to be kept in step with another one. */
-@media (max-height: 760px) {
-  .tobeat { padding: 7px 11px; margin-bottom: 8px; }
-  .tobeat__k { font-size: 10px; }
-  .tobeat__v { font-size: 21px; }
-  .tobeat__who { font-size: 11px; }
-  .tobeat__cta { padding: 8px 12px; font-size: 12.5px; }
-}
-
-/* The club and player list. An arrow that opens all thirty-two and a box
-   that narrows them as you type -- the same shape as the country list on
-   Rotabo, because it is the same problem: a closed set too long to scroll
-   blind. Only the boards that have a list get the arrow; everywhere else
-   this is an ordinary field. */
-.cascade { position: relative; }
-.cascade--on .input { padding-right: 44px; }
-
-.cascade__toggle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 42px;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--dim);
-  cursor: pointer;
-}
-/* display:grid on a class beats the browser's own [hidden] rule, so setting
-   the attribute left the arrow drawn on every board that has no list —
-   a control that opens nothing, sitting in the field somebody is typing a
-   profile link into. */
-.cascade__toggle[hidden] { display: none; }
-
-.cascade__toggle svg { width: 20px; height: 20px; transition: transform .15s ease; }
-.cascade__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-.cascade__toggle:hover { color: var(--text); }
-
-/* The three lines under overflow-y are for one browser and cost nothing in
-   the others. On iPadOS a scrollable box inside a fixed overlay, with the
-   page behind it locked, will sometimes refuse the drag and rubber-band the
-   whole page instead -- which is exactly what "the list does not scroll"
-   looks like on a tablet. overscroll-behavior keeps the gesture in the box,
-   touch-action tells the browser a vertical drag here is a scroll and not
-   something it has to wait to find out about, and -webkit-overflow-scrolling
-   is what older iOS needs to give a nested box momentum at all. */
-.cascade__list {
-  position: absolute;
-  z-index: 40;
-  left: 0;
-  right: 0;
-  top: calc(100% + 6px);
-  max-height: 288px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-  padding: 6px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--elev-2);
-  box-shadow: 0 18px 44px var(--scrim);
-}
-
-.cascade__opt {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 7px 8px;
-  border: 0;
-  border-radius: 9px;
-  background: none;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.cascade__opt:hover,
-.cascade__opt.is-active { background: var(--line-soft); }
-
-/* The club under a player's name. Dim and small: it answers "which one"
-   without competing with the name it belongs to. */
-.cascade__club {
-  font-family: var(--num);
-  font-size: 11px;
-  letter-spacing: .06em;
-  color: var(--dim);
-}
-
-.cascade__none {
-  margin: 0;
-  padding: 10px 9px;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--dim);
-}
-
-/* Said only when the list was cut short. The number is the point: "1,000
-   more" tells you to type, where a silent truncation just looks like the
-   coin you wanted is missing. */
-.cascade__more {
-  margin: 0;
-  padding: 9px 12px;
-  border-top: 1px solid var(--line);
-  font-size: 11.5px;
-  color: var(--dim);
-}
-
-/* Not a crest -- the club's two colours with its abbreviation, or a player's
-   shirt number. Reads across a list of thirty-two at a glance and is nobody's
-   property. The ring is the second colour, which is what makes Boston's black
-   and gold read as Boston. */
-.chip {
-  flex: none;
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  overflow: hidden;
-  border-radius: 50%;
-  border: 2px solid var(--chip-trim, var(--line));
-  background: var(--chip-ink, var(--elev));
-  color: var(--chip-trim, var(--text));
-  font-family: var(--num);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .01em;
-}
-
-/* A player's row runs to two lines: who they are, and which club -- the
-   badge on the disc says it in colour, the line underneath says it in
-   words. A club's own row has nothing underneath and stays one line. */
-.cascade__who {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.cascade__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-
-/* =====================================================  the market table
-
-   Everything below draws one dense ranked table and the chip row that
-   filters it. It replaced a grid of board tiles: the tiles made you pick a
-   room before being shown anything, and the first job of a leaderboard is
-   to show the leader.                                                    */
-
-/* -------------------------------------------------------- the top strip */
-
-.stats {
-  border-bottom: 1px solid var(--line);
-  background: var(--band-1);
-  font-size: 12px;
-}
-
-.stats__row {
-  display: flex;
-  align-items: center;
-  /* Minus the border. box-sizing:border-box puts the ticker's rule inside its
-     --band, and this row's rule sits on the strip around it, so without the
-     subtraction the two bands land a pixel apart — which is exactly the kind
-     of difference that is invisible in a screenshot and obvious on a screen. */
-  height: calc(var(--band) - 1px);
-  gap: 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.stats__row::-webkit-scrollbar { display: none; }
-
-/* On a phone the five figures are 544 pixels of content in a 390-pixel
-   window, so two of them -- what the leader is holding, and what the
-   cheapest #1 costs -- sat off the right edge. The row scrolls, which is
-   worse than it sounds: nothing on screen says there is anything to the
-   right of "Paid in", so the two numbers were not hidden, they were
-   invisible. And the cheapest #1 is the one figure up there that is an
-   offer rather than a report.
-
-   So on a phone the row wraps onto two lines and the band grows by one
-   line to hold them. Every figure legible beats a thin band with half of
-   them past the edge. The gaps come in because five short items with 20px
-   between them wrap into three lines rather than two. */
-@media (max-width: 559px) {
-  .stats__row {
-    flex-wrap: wrap;
-    justify-content: center;
-    height: auto;
-    padding: 7px 0;
-    gap: 4px 14px;
-    overflow-x: visible;
-  }
-}
-
-.stat {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
-  white-space: nowrap;
-  color: var(--muted);
-}
-
-.stat__k { font-weight: 500; }
-
-.stat__v {
-  color: var(--text);
-  font-weight: 700;
-  font-family: var(--num);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Kept, though nothing wears it right now: the "Online" cell is out of
-   renderStats while the figure is not worth printing, and the heartbeat
-   behind it still runs. Deleting this rule would only mean writing it
-   again. */
-.stat--online .stat__v { color: var(--ok); }
-
-/* The live light. Centred rather than on the baseline the figures sit on --
-   a circle has no baseline and lining its bottom edge up with the letters
-   puts it visibly high. The green is its own token: --ok is written for
-   text on this pale band and is too dark to read as a lit lamp at 8px, and
-   in the dark theme too bright to sit next to the figures. */
-:root { --live: #16a34a; }
-:root[data-theme="dark"] { --live: #2ad796; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --live: #2ad796; }
-}
-
-.stat--live { align-items: center; gap: 6px; }
-
-.stat__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--live);
-  flex: none;
-  animation: statDot 2s ease-in-out infinite;
-}
-
-@keyframes statDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .35; transform: scale(.8); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stat__dot { animation: none; }
-}
-
-/* The one figure in the strip that is an offer rather than a report. */
-.stat--deal .stat__v { color: var(--accent); }
-
-/* ------------------------------------------------------------- the head */
-
-/* Centred, and with air around the headline. On the front page it is one
-   short line -- a question -- meant to be read as a statement, not as body
-   copy hanging off a left margin; on a board it is the name of the board, and
-   the blank line after it is what separates the name from what it does. */
-.hero { padding: 44px 0 14px; text-align: center; }
-
-/* On a board the headline comes after the chips and sits on its own ten, so
-   it needs the space above it that the chips took, and less below. */
-.chips + .hero { padding: 16px 0 10px; }
-
-/* These two put back what this rule broke. There is an older hero block near
-   the top of the file whose media queries gave a phone and a short screen a
-   shallower head; the rule above is later in the document and the same weight,
-   so it won every one of them and every screen got the desktop 58px. On a
-   675px-tall laptop that is the first row of the table pushed off the bottom.
-   They are repeated here, after the rule, which is the only place they can win
-   -- and .chips + .hero has to be named again because a compound selector
-   outranks a bare one whatever the media query. */
-@media (max-width: 559px) {
-  .hero { padding: 40px 0 10px; }
-}
-
-/* A short screen that is not a phone is a laptop, and there the head has to
-   give up its air or the first row of the board goes under the bottom of the
-   window. A phone is short too, but it scrolls the way a phone scrolls and the
-   head is the first thing seen, so it keeps its space -- which is why this one
-   asks for the width as well. */
-@media (max-height: 760px) and (min-width: 560px) {
-  .hero,
-  .chips + .hero { padding: 10px 0 6px; }
-}
-
-.hero h1 {
-  margin: 0;
-  font-size: clamp(26px, 5vw, 36px);
-  font-weight: 800;
-  letter-spacing: -.03em;
-  line-height: 1.1;
-}
-
-/* The accent belongs to the mark beside it, not to the word. "Top 10 on
-   [X logo] X" with the X in violet was the same thing said twice, in two
-   colours — the board's own mark carries the colour and the name carries the
-   name. The front page's own headline keeps the accent: there is no mark
-   beside it to hand the colour to. */
-.hero h1 em { font-style: normal; color: var(--accent); }
-/* Written with the h1 in front of it because .hero h1 em is two elements and
-   one class, and .hero__mark + em is one of each — the shorter selector lost
-   silently and the X stayed violet. */
-.hero h1 .hero__mark + em { color: inherit; }
-
-/* The board's mark, set on the headline's own baseline rather than floated
-   beside it, so it reads as part of the sentence and not as decoration. */
-.hero__mark {
-  display: inline-block;
-  vertical-align: -0.12em;
-  margin-right: .3em;
-  line-height: 0;
-}
-
-.hero__mark svg {
-  width: 1em;
-  height: 1em;
-  display: block;
-  color: var(--chip, currentColor);
-}
-
-:root[data-theme="dark"] .hero__mark svg { color: var(--chip-d, var(--chip)); }
-
-/* The one line over the headline on the front page: the promise, carrying
-   weight, with the answer under it in the size an answer deserves. A second
-   line explaining the mechanism used to sit between them and came out on
-   2026-09-04 -- the margin below is the gap it used to hold open. Not on a
-   board: there the headline is the board's own name and this would be a
-   second voice over it. */
-.hero__tag {
-  margin: 0 0 16px;
-  font-size: clamp(17px, 2.4vw, 21px);
-  font-weight: 700;
-  letter-spacing: -.02em;
-  color: var(--text);
-}
-
-/* A short screen that is not a phone is a laptop, and there every line over
-   the table is a line the table loses. */
-@media (max-height: 760px) and (min-width: 560px) {
-  .hero__tag { margin-bottom: 10px; }
-}
-
-/* The blank line after the title. There are two .hero__sub rules in this
-   file and this is the one that wins — the earlier one is older and fully
-   overridden, which is why editing it changed nothing on screen. */
-.hero__sub {
-  margin: 22px auto 0;
-  max-width: 68ch;
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.55;
-}
-
-.hero__sub b { color: var(--text); font-weight: 700; }
-
-/* ------------------------------------------------- what is in the page
-
-   The ten, written into the markup at build time by scripts/prerender.mjs
-   so the page says something before JavaScript runs. app.js replaces the
-   whole of #view the moment it loads, so on a normal visit this is on the
-   screen for a fraction of a second -- but it is what a crawler is given,
-   and it is what somebody with JavaScript off keeps. It is styled rather
-   than left bare for both of those readers.                              */
-
-.prerender { padding: 26px 0 8px; }
-
-.prerender h1 {
-  margin: 0 0 4px;
-  font-size: clamp(22px, 4vw, 30px);
-  font-weight: 800;
-  letter-spacing: -.03em;
-}
-
-.prerender h2 {
-  margin: 18px 0 6px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.prerender p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
-.prerender .pr__tag { color: var(--text); font-weight: 700; font-size: 17px; margin-bottom: 2px; }
-
-.pr__list { margin: 10px 0 0; padding: 0; list-style: none; }
-
-.pr__list li {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
-}
-
-.pr__r { font-family: var(--num); font-weight: 700; color: var(--muted); }
-.pr__h { font-weight: 700; color: var(--text); }
-.pr__t { color: var(--muted); }
-.pr__a { margin-left: auto; font-family: var(--num); font-weight: 700; color: var(--text); }
-
-/* The board's own paragraph, and the one thing on this list that stays on
-   the screen: it sits outside <main>, which app.js never touches. Written
-   there on purpose -- text only a crawler can see is cloaking, and it costs
-   more than it pays. */
-.boardnote {
-  padding: 4px 0 26px;
-  color: var(--muted);
-  font-size: 13.5px;
-  line-height: 1.6;
-}
-
-.boardnote p { margin: 0; max-width: 78ch; }
-
-/* --------------------------------------------------------- board filter */
-
-/* Not .chip: that name was already taken by the round club badge in the
-   roster list, whose 30px width was quietly clipping every board label to
-   two letters. Two things called chip in one stylesheet is one too many. */
-.chips {
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 4px;
-}
-
-/* Wrapped, not scrolled: all thirty-four boards on screen at once, under the
-   eight headings they are grouped by. */
-/* The political boards carry this and no other board does. Loud enough to be
-   read before the money moves, quiet enough not to be a warning label on a
-   product — it is a statement of what is being bought, which on those two
-   boards is the one thing somebody could reasonably get wrong. */
-.notice {
-  margin: 10px 0 14px;
-  padding: 11px 14px;
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--elev-2);
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--muted);
-}
-
-.chips { padding-bottom: 8px; }
-
-.chips__sum {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  /* Room above the "All boards" chip and again under it: it is the one row
-     that means every board rather than a group of them, and run together with
-     the heading and the first group it read as part of both. */
-  padding: 14px 0 0;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: .01em;
-  /* Not uppercased. text-transform only paints capitals — the text underneath
-     stays as written, so the line read "MEMECOINS — ALL 34 BOARDS" and pasted
-     as "Memecoins — all 34 boards". It also contains a proper noun, which is
-     the one kind of word that should keep the case it was given. */
-  color: var(--muted);
-  cursor: pointer;
-  list-style: none;
-}
-
-.chips__sum::-webkit-details-marker { display: none; }
-.chips__sum:hover { color: var(--text); }
-.chips__sum svg { width: 16px; height: 16px; transition: transform .15s; }
-.chips[open] .chips__sum svg { transform: rotate(180deg); }
-
-/* Label beside the chips, not above them. Eight headings each on their own
-   line made the block half a screen tall, and on a board page that pushed the
-   ten it is a filter for below the fold. Same information, half the height. */
-.chips__group {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 1px 0;
-}
-
-/* The gap under "All boards", before the first group's label. */
-.chips > .chips__row:first-of-type { padding: 0; margin-bottom: 14px; }
-
-.chips__label {
-  flex: 0 0 84px;
-  margin: 0;
-  padding-top: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-
-.chips__row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  min-width: 0;
-}
-
-.chips__group .chips__row { flex: 1; }
-
-@media (max-width: 620px) {
-  /* Too narrow for a column of labels beside a wrapping row: they stack, and
-     the label goes back on top of the chips it names. */
-  .chips__group { display: block; }
-  .chips__label { padding: 6px 0 2px; }
-}
-
-.bfilter {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--muted);
-  text-decoration: none;
-  white-space: nowrap;
-  border: 1px solid transparent;
-  flex: 0 0 auto;
-  transition: background .12s, color .12s;
-}
-
-.bfilter svg { width: 16px; height: 16px; display: block; color: var(--chip, currentColor); }
-
-.bfilter b {
-  font-family: var(--num);
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--dim);
-}
-
-.bfilter:hover { background: var(--elev-2); color: var(--text); }
-
-.bfilter--on {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.bfilter--on b { color: var(--accent); }
-
-/* The ring. Five chips are worth finding before the other sixty-seven, and
-   a border is the cheapest way to say so: .bfilter already carries a 1px
-   transparent one, so lighting it moves nothing on the row. Two pixels of
-   it, the second painted as a shadow rather than a thicker border, for the
-   same reason.
-
-   It is not the selected look and must not be mistaken for it: selected is
-   a filled chip in the accent, this is an outline on an unfilled one. When
-   a ringed chip is also the open board, the fill wins and the ring stays
-   around it, which reads as both, because it is. */
-.bfilter--ring {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-
-/* -------------------------------------------------------------- the table
-
-   It scrolls sideways rather than reflowing into cards: a market table is
-   read by running down one column, and cards destroy the column.          */
-
-.mwrap {
-  overflow-x: auto;
-  margin: 0 calc(var(--pad) * -1);
-  padding: 0 var(--pad) 130px;
-}
-
-.market {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.market thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: var(--bg);
-  padding: 10px 8px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--muted);
-  text-align: right;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--line);
-}
-
-.market th.c-n, .market th.c-name,
-.market td.c-n, .market td.c-name { text-align: left; }
-
-.market td {
-  padding: 11px 8px;
-  /* The hairline, not the control weight: a hundred row separators at the
-     strength a button's edge needs turns a table into a grid. */
-  border-bottom: 1px solid var(--hairline);
-  text-align: right;
-  vertical-align: middle;
-}
-
-.mrow { transition: background .1s; cursor: pointer; }
-.mrow:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.mrow--free { cursor: default; }
-.mrow:hover { background: var(--elev-2); }
-
-.c-n {
-  width: 48px;
-  text-align: left;
-  font-family: var(--num);
-  font-size: 13px;
-  color: var(--dim);
-}
-
-.mrow--1 .c-n { color: var(--gold); font-weight: 800; }
-
-/* --------------------------------------------------------- the name cell */
-
-.c-name { text-align: left; min-width: 180px; }
-
-.mname { display: flex; align-items: center; gap: 10px; min-width: 0; }
-
-.mname__pic {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  flex: none;
-  object-fit: cover;
-  background: var(--elev-2);
-}
-
-/* The badge that stands in for a logo this site does not own. */
-/* The badge is the floor and the picture is the layer over it: always drawn,
-   always underneath, revealed again the moment an image 404s and removes
-   itself. No broken-image glyph and no second request. */
-.token, .chip { position: relative; overflow: hidden; }
-
-/* A picture that is a wordmark rather than a face. Everything else here is
-   cropped to fill the circle, which is right for a photograph and wrong for a
-   logo three times wider than it is tall: the MAGA wordmark filled the badge
-   with "UI" and "RICA GRE", a slice of the middle of it. Movements are the
-   one board whose pictures are marks rather than people, so they are fitted
-   inside the circle instead of filling it. */
-[data-board="movements"] > img { object-fit: contain !important; padding: 2px; }
-
-.token > img,
-.chip > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-  /* No background. A picture that is still loading, or blocked, or slow used
-     to paint an opaque circle over the initials and leave a blank disc where
-     a badge belonged. Transparent means the badge shows until the image
-     actually has pixels to put there. */
-}
-
-.token {
-  display: grid;
-  place-items: center;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .01em;
-  background: var(--token);
-  color: var(--token-ink, #fff);
-}
-
-/* Set the moment an image reports real pixels. Nearly every coin logo is a
-   transparent PNG, so without this the initials underneath read straight
-   through it and one circle carried two marks. It has to come after .token,
-   not before: both are one class deep, so source order is the whole of the
-   argument between them. */
-/* The plate clears the moment a picture is on its way, not when it finishes
-   arriving. onload is the reliable signal that an image has pixels, but on a
-   slow connection it can be a second away, and for that second the badge
-   showed a coloured disc with a ticker on it — which is indistinguishable
-   from the bug this is here to fix. :has() reads the img element itself, and
-   an image that 404s removes itself, so the disc comes back for a coin that
-   genuinely has no logo and only for that one. */
-.token:has(img), .chip:has(img) { background: none; color: transparent; }
-
-.token--on {
-  color: transparent;
-  /* And the disc goes with the letters. --token paints the board's colour
-     behind every badge on it, so on the crypto board each coin's transparent
-     logo was sitting on the same orange circle — Ethereum's mark on Bitcoin's
-     background, which is the "logo over what was already there" that letters
-     alone did not explain. A real logo carries its own shape; it does not
-     need a coloured plate under it. */
-  background: none;
-}
-
-.mname__pic--empty { border: 1px dashed var(--line); background: none; }
-
-.mname__txt { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-
-.mname__h {
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 42vw;
-}
-
-a.mname__h:hover { color: var(--accent); }
-
-.mname__t {
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 42vw;
-}
-
-/* ------------------------------------------------------------ the money */
-
-.c-paid {
-  font-family: var(--num);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.mrow--1 .c-paid { color: var(--text); }
-.mrow--free .c-paid { color: var(--accent); font-weight: 600; }
-
-/* "Open" set in the numeral font reads as "0pen": the O and the zero are the
-   same width and very nearly the same shape. A word in a money column is
-   still a word. */
-.c-paid--word { font-family: var(--sans); font-weight: 500; color: var(--dim); }
-.mrow--free { color: var(--dim); }
-
-.mv {
-  font-family: var(--num);
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.mv--up { color: var(--ok); }
-.mv--flat { color: var(--dim); }
-
-/* ------------------------------------------------------- board and shape */
-
-.c-board { white-space: nowrap; }
-
-.bchip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
-}
-
-/* X is #e7e9ea and NHL Teams is #d9dde2: on a white page those marks are
-   invisible. --chip is the colour that survives the light theme, --chip-d
-   the brand's own, used where the page is dark enough to carry it. */
-.bchip svg { width: 15px; height: 15px; display: block; color: var(--chip); }
-:root[data-theme="dark"] .bchip svg,
-:root[data-theme="dark"] .bfilter svg,
-:root[data-theme="dark"] .detail__brand svg { color: var(--chip-d, var(--chip)); }
-.detail__brand svg { color: var(--chip); }
-
-/* The ticker and the platform picker carry the same pair for the same
-   reason: a mark light enough to vanish on white keeps its own colour only
-   where the page is dark enough to hold it. */
-:root[data-theme="dark"] .tick__i svg { color: var(--tick-d, var(--tick)); }
-
-/* The other two that carry a board colour and were never given the dark
-   variant. It did not show while the light value was the raw brand colour
-   -- that reads well enough on a dark ground by accident. The moment the
-   light value started being darkened so it could be read on a white page,
-   the ticker's rank became #af2554 on #271c34, which is 2.5:1, and the
-   board filter marks went the same way. A colour made for a light page has
-   no business on a dark one. */
-:root[data-theme="dark"] .tick__r { color: var(--tick-d, var(--tick)); }
-
-/* A mark that is a logo rather than a drawing keeps its own proportions. The
-   height is whatever the place it sits in asks for; the width follows from
-   the viewBox, which is the only way a wordmark stays readable. Every other
-   mark on this site is square and none of these rules touch it. */
-.bfilter svg.mark--wide,
-.bchip svg.mark--wide,
-.tick__i svg.mark--wide,
-.detail__brand svg.mark--wide,
-.hero__mark svg.mark--wide,
-.pick svg.mark--wide { width: auto; }
-:root[data-theme="dark"] .bfilter svg { color: var(--chip-d, var(--chip)); }
-.bchip:hover { color: var(--text); }
-
-.c-board__r {
-  font-family: var(--num);
-  font-size: 12px;
-  color: var(--dim);
-  margin-left: 8px;
-}
-
-.c-spark { width: 110px; }
-.spark { width: 96px; height: 28px; display: block; margin-left: auto; }
-.spark--none { color: var(--dim); }
-
-/* ----------------------------------------------------------- the buttons */
-
-.c-act { white-space: nowrap; width: 1%; }
-
-.mbtn {
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 6px 11px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  background: var(--bg);
-  transition: border-color .12s, color .12s;
-}
-
-.mbtn:hover { border-color: var(--accent); color: var(--accent); }
-
-.mbtn--go {
-  margin-left: 6px;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-ink);
-}
-
-.mbtn--go:hover { color: var(--accent-ink); filter: brightness(1.08); }
-
-/* Rows arrive one after another the first time a view is drawn: a whole
-   table landing at once reads as a page that reloaded, a cascade reads as a
-   board being dealt. A live update does not get it -- that would drown out
-   the bump and sink that say something actually moved. */
-#market-body[data-fresh] > tr {
-  animation: cascade .3s cubic-bezier(.2, .9, .25, 1) both;
-  animation-delay: calc(var(--i, 0) * 26ms);
-}
-
-@keyframes cascade {
-  from { opacity: 0; transform: translateY(10px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #market-body[data-fresh] > tr { animation: none; }
-}
-
-/* ------------------------------------------------------------- narrower
-
-   Columns drop from the right, in order of how much each is worth on a
-   phone: the shape goes first, then the board name, then the week. What
-   never drops is rank, name and what was paid.                          */
-
-/* The breakpoints were set by looking at a 1280px window and they were far
-   too eager: a laptop at 125% or 150% OS scaling reports well under 1080 CSS
-   pixels, so the shape column — the one thing that says which way a listing
-   is going — vanished on an ordinary screen while there was room for it.
-   
-   Every threshold is the width at which that column genuinely stops fitting,
-   measured against the widest row the table draws, not a round number. The
-   board column disappears on a board page anyway, which buys the shape
-   another 150px there. */
-/* The market view is the wide one: it carries a Board column the board pages
-   do not, and at 188px that column alone was pushing the Add button off the
-   right edge of a tablet — the table scrolled sideways inside its wrapper and
-   the thing somebody taps to pay was cut in half.
-   
-   So the two widest passengers go first, in the order of what they cost to
-   lose: the Details button, which repeats what tapping the row already does,
-   and then the board's name, which the icon beside it already says. */
-@media (max-width: 1200px) {
-  .c-act .mbtn:not(.mbtn--go) { display: none; }
-}
-
-@media (max-width: 1024px) {
-  .bchip__n { display: none; }
-  .c-board__r { margin-left: 5px; }
-}
-
-/* The shape goes early on the market view and late on a board page, because
-   they are not the same table: the market carries a Board column and the
-   board page does not, so the same shape column costs 112px the market
-   cannot spare and the board page can. Measured against the widest row each
-   actually draws, not against a round number. */
-@media (max-width: 1120px) {
-  .c-spark, th.c-spark { display: none; }
-  .market--solo .c-spark, .market--solo th.c-spark { display: table-cell; }
-}
-
-@media (max-width: 900px) {
-  .market--solo .c-spark, .market--solo th.c-spark { display: none; }
-}
-
-@media (max-width: 860px) {
-  .c-board, th.c-board { display: none; }
-}
-
-@media (max-width: 780px) {
-  .c-board, th.c-board { display: none; }
-}
-
-@media (max-width: 640px) {
-  .c-d7, th.c-d7 { display: none; }
-  .market td, .market thead th { padding-left: 7px; padding-right: 7px; }
-  .mbtn { padding: 6px 9px; }
-  .c-act .mbtn:not(.mbtn--go) { display: none; }
-}
-
-/* On a phone the table gets the whole width. The wrapper's negative margin
-   and matching padding buy the rows a bleed to the edge on a wide screen and
-   cost 32 of the 360 pixels a phone has, which was the last thing keeping
-   the Add button — the one anybody taps to pay — half off the screen. The
-   name gives up its floor at the same time: on a 360px screen a 180px
-   minimum is not a minimum, it is half the table. */
-@media (max-width: 560px) {
-  /* Keep the negative margin — that is what cancels .shell's padding — and
-     drop the wrapper's own. Removing both, as the first attempt did, left
-     .shell's 32px in place and made the table narrower, not wider. */
-  .mwrap { padding-left: 0; padding-right: 0; }
-  .c-name { min-width: 0; }
-  .mname__h, .mname__t { max-width: 46vw; }
-}
-
-/* 24h goes here rather than at 430: at 480 the row still measured 27px wider
-   than the screen with it in, and a column of dashes is not worth the button
-   somebody taps to pay. */
-@media (max-width: 500px) {
-  .c-d1, th.c-d1 { display: none; }
-}
-
-/* Under 360px the row still ran wider than the screen and clipped Add. The
-   name is the only cell that can give ground, so below here it gives it. */
-@media (max-width: 380px) {
-  .mname__h, .mname__t { max-width: 32vw; }
-  .market td, .market thead th { padding-left: 4px; padding-right: 4px; }
-  .mbtn { padding: 6px 8px; font-size: 11.5px; }
-}
-
-@media (max-width: 430px) {
-  .mname__pic { width: 28px; height: 28px; }
-  .mname { gap: 7px; }
-  .mname__h, .mname__t { max-width: 40vw; }
-  .market { font-size: 13px; }
-  .market td, .market thead th { padding-left: 5px; padding-right: 5px; }
-}
+.prose p { color: var(--muted); margin: 0 0 12px; }
+.prose p b, .prose p strong { color: var(--text); font-weight: 700; }
+.prose .stamp { color: var(--dim); font-size: 13px; margin-bottom: 22px; }
+.prose ul { color: var(--muted); padding-left: 20px; }
+.prose li { margin-bottom: 6px; }

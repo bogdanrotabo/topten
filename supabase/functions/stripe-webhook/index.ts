@@ -1,7 +1,15 @@
 // TopTen.one — Stripe webhook.
 //
-// The only path that can move money onto a listing. Everything the browser
-// sends is ignored here; the amount comes from Stripe and nowhere else.
+// The only path that can crown anybody. Nothing the browser sends reaches
+// here; the amount comes from Stripe and nowhere else, and what it buys is
+// decided by crown_or_attempt() inside one transaction.
+//
+// It used to carry a listing id in client_reference_id, because a payment had
+// to be told which of 137 rows to credit. There is one seat now, so a payment
+// needs to say nothing but its own amount: whoever paid more than the sitting
+// king takes the page, and whoever did not is recorded as an attempt. A
+// checkout started straight from the Payment Link — no query string, no
+// reference — is therefore the ordinary case rather than an error.
 //
 // Deploy with verify_jwt = false: Stripe cannot send a Supabase JWT, so this
 // function authenticates the caller itself by verifying the Stripe signature
@@ -12,7 +20,11 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 const TOLERANCE_SECONDS = 300;
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// A signed 32-bit integer, which is what amount_cents is. $10,000 is Stripe's
+// cap on one payment; this is the cap on what the column can hold, and a
+// figure above it is a bug somewhere rather than a customer.
+const MAX_CENTS = 2147483647;
 
 const encoder = new TextEncoder();
 
@@ -115,9 +127,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // settles later -- a bank debit, a redirect the payer finished after
   // closing the tab -- completes the session unpaid and confirms it with
   // `checkout.session.async_payment_succeeded`, which used to be dropped here
-  // as noise: money taken, rank never bought, nothing in the logs but
-  // "ignored". Both are read the same way; the payment_status check below is
-  // what decides, and it is on the session in both.
+  // as noise: money taken, the throne never contested, nothing in the logs
+  // but "ignored". Both are read the same way; the payment_status check below
+  // is what decides, and it is on the session in both.
   //
   // Anything else is acknowledged and dropped, so Stripe does not retry
   // events we deliberately ignore.
@@ -133,33 +145,40 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   const session = (event.data?.object ?? {}) as Record<string, unknown>;
-  const listingId = String(session.client_reference_id ?? "");
   const sessionId = String(session.id ?? "");
   const amount = Number(session.amount_total ?? 0);
-  const currency = String(session.currency ?? "usd");
+  const currency = String(session.currency ?? "usd").toLowerCase();
   const paymentStatus = String(session.payment_status ?? "");
 
+  // Whatever Stripe collected at the till. Left null when there is nothing,
+  // rather than written as the word "Anonymous": that is what the page prints
+  // for a nameless king, and a fallback belongs where the printing happens.
+  // A payer who fills their card in afterwards overwrites this anyway.
+  const details = (session.customer_details ?? {}) as Record<string, unknown>;
+  const name = String(details.name ?? "").trim().slice(0, 40) || null;
+
   // A completed session can still be unpaid when a delayed payment method is
-  // used. Money that has not settled must not buy a rank; the
+  // used. Money that has not settled must not take the page; the
   // async_payment_succeeded event for the same session arrives when it has.
   if (paymentStatus !== "paid") {
     console.log(`session ${sessionId} ${event.type} but payment_status=${paymentStatus}`);
     return new Response(JSON.stringify({ skipped: "unpaid" }), { status: 200 });
   }
 
-  if (!UUID_RE.test(listingId) || !sessionId || !Number.isFinite(amount) || amount <= 0) {
-    console.error(`unusable session ${sessionId}: ref=${listingId} amount=${amount}`);
-    return new Response(JSON.stringify({ skipped: "no_listing" }), { status: 200 });
+  if (!sessionId || !Number.isFinite(amount) || amount <= 0 || amount > MAX_CENTS) {
+    console.error(`unusable session ${sessionId}: amount=${amount}`);
+    return new Response(JSON.stringify({ skipped: "unusable" }), { status: 200 });
   }
 
   // The payment link is created in USD. If Stripe ever converts (adaptive
-  // pricing), credit the payer anyway and make the mismatch loud in the logs
-  // rather than silently keeping their money off the board.
+  // pricing), the figures are still compared as plain minor units, which is
+  // wrong across currencies and less wrong than dropping somebody's payment
+  // on the floor. Loud in the logs so it is not discovered from a complaint.
   if (currency !== "usd") {
-    console.error(`currency ${currency} on session ${sessionId} — credited as-is`);
+    console.error(`currency ${currency} on session ${sessionId} — compared as-is against the king`);
   }
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/credit_payment`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/crown_or_attempt`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -167,22 +186,23 @@ Deno.serve(async (req: Request): Promise<Response> => {
       Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
     },
     body: JSON.stringify({
-      p_listing_id: listingId,
       p_session_id: sessionId,
       p_amount_cents: Math.round(amount),
       p_currency: currency,
+      p_name: name,
     }),
   });
 
   if (!res.ok) {
-    // Return non-2xx so Stripe retries: the payment happened, the credit did not.
+    // Return non-2xx so Stripe retries: the payment happened, the seat did not
+    // change hands, and nothing was written down.
     const detail = await res.text();
-    console.error(`credit_payment failed (${res.status}): ${detail}`);
-    return new Response("credit failed", { status: 500 });
+    console.error(`crown_or_attempt failed (${res.status}): ${detail}`);
+    return new Response("crowning failed", { status: 500 });
   }
 
   const result = await res.json();
-  console.log(`credited ${amount} ${currency} to ${listingId}: ${JSON.stringify(result)}`);
+  console.log(`${amount} ${currency} from ${name ?? "Anonymous"}: ${JSON.stringify(result)}`);
 
   return new Response(JSON.stringify(result), {
     status: 200,

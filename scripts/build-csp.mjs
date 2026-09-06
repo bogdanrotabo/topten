@@ -40,7 +40,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const PAGINI = ['index.html', 'about.html', 'terms.html', 'privacy.html', 'admin.html'];
+const PAGINI = ['index.html', 'about.html', 'terms.html', 'privacy.html'];
 
 const MARCA = '<!-- csp -->';
 
@@ -48,12 +48,11 @@ const MARCA = '<!-- csp -->';
  *
  * script  jsdelivr carries the Supabase client; googletagmanager carries
  *         analytics, which app.js appends as a script element.
- * connect Supabase for every read and write, CoinGecko for the coin search in
- *         the claim form, Google's two analytics hosts for what it sends back.
- * img     https: at large, because a listing's picture is whatever host that
- *         profile lives on and there is no list of those. data: for the inline
- *         SVG marks. This is the one directive that cannot be narrow, and it
- *         is also the one that cannot execute anything.
+ * connect Supabase for every read and for the two Edge Functions, Google's
+ *         two analytics hosts for what it sends back. CoinGecko was here for
+ *         the coin search in the old claim form and there are no coins now.
+ * img     data: for the inline SVG marks, and this origin. Narrow now that
+ *         nothing on the page is a picture fetched from a stranger's host.
  * frame   nothing on this site frames anything.
  * form    the pay button is a link to Stripe, not a form post, so nothing but
  *         this origin should ever be a form target.
@@ -66,7 +65,7 @@ const REGULI = [
   ["form-action", "'self'"],
   ["script-src", "'self' https://cdn.jsdelivr.net https://www.googletagmanager.com"],
   ["style-src", "'self' 'unsafe-inline'"],
-  ["img-src", "'self' data: https:"],
+  ["img-src", "'self' data:"],
   ["font-src", "'self'"],
   /* Analytics is written with a wildcard on purpose. GA4 does not send to one
      host: it picks a regional one -- region1.google-analytics.com and its
@@ -80,17 +79,15 @@ const REGULI = [
      only symptom is that the numbers stop moving. Which is how a policy
      breaks a site quietly, and why this was tested before it shipped. */
   ["connect-src", "'self' https://iezclmijwrtjibgflfqj.supabase.co "
-    + "wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com "
+    + "wss://iezclmijwrtjibgflfqj.supabase.co "
     + "https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com"],
   ["manifest-src", "'self'"],
 ];
 
-/* style-src keeps 'unsafe-inline' and that is not an oversight. Every board
-   colour, every club badge and every avatar ring is a custom property set in a
-   style attribute on the element that uses it -- brandVars does this hundreds
-   of times on a page. Hashing them is not possible for an attribute and
-   nonces do not apply to them either. An inline style cannot run code; the
-   worst it buys an attacker is the ability to move something on the page. */
+/* style-src keeps 'unsafe-inline' for the handful of style attributes the
+   markup still carries. Hashing is not possible for an attribute and nonces do
+   not apply to them either. An inline style cannot run code; the worst it buys
+   an attacker is the ability to move something on the page. */
 
 const hashuri = html =>
   [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)]
@@ -120,11 +117,10 @@ for (const nume of PAGINI) {
      repeatable. */
   const fara = html.replace(new RegExp(MARCA + '<meta http-equiv="Content-Security-Policy"[^>]*>\\n?', 'g'), '');
 
-  /* The viewport tag, not the canonical: admin.html is noindex and has no
-     canonical, so anchoring on that one skipped it silently -- the page that
-     reads the live database was the one page with no policy on it, and
-     nothing said so. Checked before anything else, because a missing anchor
-     has to be an error and not a page quietly left out. */
+  /* The viewport tag, not the canonical: a page without a canonical would be
+     skipped silently by that anchor, and a page quietly left out is a page
+     with no policy on it. Checked before anything else, so a missing anchor is
+     an error rather than a gap. */
   const ANCORA = '<meta name="viewport"';
   if (!fara.includes(ANCORA)) {
     console.error(`build-csp: ${nume} has no ${ANCORA} to sit under`);

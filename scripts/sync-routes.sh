@@ -1,210 +1,66 @@
 #!/usr/bin/env bash
-# Two jobs, both of which must happen after any edit to index.html or the assets.
+# Everything that has to happen between editing this site and pushing it.
 #
-# 1. Stamp the asset URLs with a hash of their own contents.
+#   bash scripts/sync-routes.sh
 #
-#    GitHub Pages serves these with max-age=600 and Cloudflare caches them on
-#    top, so for ten minutes after a deploy a visitor can be running the old
-#    app against the new page — which looked exactly like "the change did not
-#    happen". A content hash in the query string means a changed file is a
-#    changed URL, so it is fetched immediately and an unchanged one still comes
-#    from cache. No purging, no waiting.
+# Four jobs, in this order, because each one depends on the last:
 #
-# 2. Give every SPA route a real file.
+# 1. Write the king into the page.
 #
-#    /thanks -> thanks/index.html   (200, and Stripe redirects here)
-#    /badge/ -> badge/index.html    (200, so link previews work)
-#    anything else -> 404.html      (renders, but with a 404 status)
+#    index.html is drawn by app.js after it has talked to Supabase, so what a
+#    crawler is handed says "the throne is empty" whoever is on it, and a link
+#    posted anywhere previews with no name and no figure. scripts/prerender.mjs
+#    bakes the current king, the former kings and the social card in from the
+#    same views the site reads. It needs the network; without one it leaves the
+#    page as it is and says so, and the build carries on.
 #
-#    All three are byte-identical copies of index.html; app.js reads the path
-#    and decides what to draw.
+# 2. Write the content security policy.
 #
-#     bash scripts/sync-routes.sh
+#    scripts/build-csp.mjs computes it, including the hash of the one inline
+#    script each page carries. A hash typed by hand is wrong the first time
+#    somebody edits the script it stands for, and the way it is wrong is that
+#    the page stops working.
+#
+# 3. Stamp the asset URLs with a hash of their own contents.
+#
+#    GitHub Pages serves these with max-age=600 and Cloudflare caches on top,
+#    so for ten minutes after a deploy a visitor can be running the old app
+#    against the new page -- which looks exactly like the deploy not having
+#    happened. A changed file gets a changed URL and is fetched at once; an
+#    unchanged one still comes from cache. No purging, no waiting.
+#
+# 4. Give every route a real file.
+#
+#    /claim  -> claim/index.html    (200, where Stripe sends a payer back)
+#    /thanks -> thanks/index.html   (200, the address the Payment Link used
+#                                    before /claim existed, kept so an old
+#                                    success URL still lands somewhere real)
+#    anything else -> 404.html      (renders, with a 404 status)
+#
+#    All three are byte-identical copies of index.html. app.js reads the query
+#    string and the path and decides what to draw, so a session id works on
+#    whichever of them Stripe is pointed at.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# slug|Board-Name|noun. Three fields, space separated, so every field is one
-# word: a board name written with hyphens is put back with spaces below, and
-# the noun is what that board actually lists. "The ten most-paid Crypto
-# profiles" describes nothing -- coins do not have profiles.
-PLATFORMS="x|X|profiles instagram|Instagram|profiles tiktok|TikTok|profiles youtube|YouTube|channels facebook|Facebook|pages telegram|Telegram|channels snapchat|Snapchat|profiles twitch|Twitch|streamers linkedin|LinkedIn|profiles threads|Threads|profiles playstation|PlayStation|gamertags xbox|Xbox|gamertags nintendo|Nintendo|friend-codes nba-teams|NBA-Teams|clubs nba-players|NBA-Players|players nhl-teams|NHL-Teams|clubs nhl-players|NHL-Players|players crypto|Crypto|coins memecoins|Memecoins|coins exchanges|Exchanges|exchanges gifts|Gifts-+-Airdrops|giveaways football-clubs|Football-Clubs|clubs football-players|Football-Players|players f1-drivers|F1-Drivers|drivers ufc-fighters|UFC-Fighters|fighters mma-fighters|MMA-Fighters|fighters boxers|Boxers|boxers bellator|Bellator-Fighters|fighters one-championship|ONE-Fighters|fighters pfl|PFL-Fighters|fighters artists|Artists|artists games|Games|games cities|Cities|cities pets|Pets|pets startups|Startups|startups us-parties|U.S.-Political-Parties|parties movements|Movements|movements us-politicians|U.S.-Political-Figures|names eu-parties|EU-Political-Parties|parties eu-politicians|EU-Political-Figures|names actors|Actors|actors movies|Movies|films cars|Cars|marques boats|Boats|builders golf-players|Golf-Players|players restaurants|Restaurants|restaurants podcasts|Podcasts|podcasts x-influencers|X-Influencers|creators instagram-influencers|Instagram-Influencers|creators tiktok-influencers|TikTok-Influencers|creators youtube-influencers|YouTube-Influencers|creators facebook-influencers|Facebook-Influencers|creators us-billionaires|U.S.-Billionaires|names uk-billionaires|UK-Billionaires|names switzerland-billionaires|Swiss-Billionaires|names uae-billionaires|UAE-Billionaires|names japan-billionaires|Japanese-Billionaires|names australia-billionaires|Australian-Billionaires|names china-billionaires|Chinese-Billionaires|names israel-billionaires|Israeli-Billionaires|names india-billionaires|Indian-Billionaires|names germany-billionaires|German-Billionaires|names france-billionaires|French-Billionaires|names canada-billionaires|Canadian-Billionaires|names italy-billionaires|Italian-Billionaires|names brazil-billionaires|Brazilian-Billionaires|names russia-billionaires|Russian-Billionaires|names saudi-arabia-billionaires|Saudi-Billionaires|names singapore-billionaires|Singapore-Billionaires|names south-korea-billionaires|South-Korean-Billionaires|names spain-billionaires|Spanish-Billionaires|names mexico-billionaires|Mexican-Billionaires|names"
-
-# The number of boards, written into the three descriptions in the head.
-#
-# It said "Forty-three" because somebody typed it, and a number typed into a
-# sentence is a number nobody updates -- this one goes out in every search
-# result and every link preview. It is counted here now, from the same list
-# the routes are built from, and the copies below inherit it.
-N=$(echo $PLATFORMS | wc -w)
-sed -i -E -e "s#(name=\"description\" content=\")[A-Za-z0-9-]+ boards#\\1$N boards#" \
-          -e "s#(og:description\" content=\")[A-Za-z0-9-]+ boards#\\1$N boards#" \
-          -e "s#(twitter:description\" content=\")[A-Za-z0-9-]+ boards#\\1$N boards#" index.html
-echo "  $N boards, written into the head"
-
-# And the same for the price, which is quoted in all three of them. It is one
-# number in one place in app.js; every other copy of it should be a copy.
-CENTS=$(grep -oE "MIN_CENTS = [0-9]+" app.js | grep -oE "[0-9]+$" | head -1)
-[ -n "$CENTS" ] || { echo "  cannot read MIN_CENTS from app.js"; exit 1; }
-if [ $((CENTS % 100)) -eq 0 ]; then P=$((CENTS / 100)); else P=$(printf "%d.%02d" $((CENTS / 100)) $((CENTS % 100))); fi
-sed -i -E "s~(#1 from \\$)[0-9]+(\\.[0-9]+)?~\\1$P~g" index.html
-echo "  #1 from \$$P, written into the head"
-
-# Both of these go before the stamp, because both change files the stamp is a
-# hash of. The data stamps rewrite app.js; the policy rewrites the pages.
-node "$(dirname "$0")/stamp-data.mjs"
-node "$(dirname "$0")/build-csp.mjs"
+node scripts/prerender.mjs
+node scripts/build-csp.mjs
 
 STAMP=$(cat app.js styles.css config.js | sha1sum | cut -c1-10)
 echo "  asset stamp: $STAMP"
 
-# admin.html was not in this list, so its config.js kept whatever version it
-# was stamped with the day somebody last edited it by hand -- a page that
-# reads the live database against a config that may be ten deploys old.
-for f in index.html about.html terms.html privacy.html admin.html; do
+for f in index.html about.html terms.html privacy.html; do
   # Replace any existing ?v=... and stamp the bare ones, in one pass.
   sed -i -E "s#(\"/(app|config)\.js|\"/styles\.css)(\?v=[a-f0-9]+)?\"#\1?v=$STAMP\"#g" "$f"
   echo "  stamped $f"
 done
 
-mkdir -p thanks badge
+mkdir -p thanks claim
 
-for target in 404.html thanks/index.html badge/index.html; do
+for target in 404.html thanks/index.html claim/index.html; do
   cp index.html "$target"
   echo "  $target"
 done
 
-# 3. Give every platform board a page of its own.
-#
-#    /?p=tiktok used to serve the same bytes as /?p=x and as the homepage, so a
-#    crawler saw eleven URLs and one document, and indexed one. The board is
-#    drawn by JavaScript after load, so the only thing that makes these separate
-#    documents is a head of their own: title, description and canonical. Those
-#    are rewritten here rather than kept in eleven hand-edited files.
-
-SITEMAP=sitemap.xml
-{
-  echo '<?xml version="1.0" encoding="UTF-8"?>'
-  echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-  echo "  <url><loc>https://topten.one/</loc><changefreq>hourly</changefreq><priority>1.0</priority></url>"
-} > "$SITEMAP"
-
-for entry in $PLATFORMS; do
-  slug="${entry%%|*}"
-  rest="${entry#*|}"
-  name="${rest%%|*}"
-  noun="${rest##*|}"
-  # The list is space separated, so a two-word board name is written with a
-  # hyphen and put back here. "Top 10 on NBA-Teams" is not a title.
-  name="${name//-/ }"
-  noun="${noun//-/ }"
-  # A board whose name carries an ampersand writes it "+" in the list above,
-  # because the list is space separated and & has a second meaning further
-  # down: inside a sed replacement a bare & is "the whole match", which would
-  # paste the entire <title> tag into itself. So the & is restored here in
-  # plain bash, written as the HTML entity it has to be in an attribute, and
-  # the sed-safe copy is what the substitutions below actually use.
-  #
-  # & is special twice over, which is why this is three lines and not none.
-  # Bash 5.2 reads a bare & in ${var//pat/repl} as the matched text -- and it
-  # does so after expanding the replacement, so routing it through a variable
-  # does not help either. sed reads a bare & in its own replacement the same
-  # way, which would paste the whole matched <title> tag into itself. So the
-  # entity is restored with sed (where \& is a literal &) and a sed-safe copy
-  # is made with sed (where \\& is a backslash followed by the match).
-  name=$(printf '%s' "$name" | sed 's/+/\&amp;/g')
-  title="Top 10 on $name — TopTen.one"
-  desc="The ten most-paid $name $noun right now. Rank is decided by money paid, not by an algorithm. Add yours from \$2."
-  title_sed=$(printf '%s' "$title" | sed 's/&/\\&/g')
-  desc_sed=$(printf '%s' "$desc" | sed 's/&/\\&/g')
-  # Trailing slash: GitHub Pages answers /x with a 301 to /x/, so declaring the
-  # bare form canonical would point every board at a redirect.
-  url="https://topten.one/$slug/"
-
-  mkdir -p "$slug"
-  sed -e "s|<title>.*</title>|<title>$title_sed</title>|" \
-      -e "s|<meta name=\"description\" content=\"[^\"]*\">|<meta name=\"description\" content=\"$desc_sed\">|" \
-      -e "s|<link rel=\"canonical\" href=\"[^\"]*\">|<link rel=\"canonical\" href=\"$url\">|" \
-      -e "s|<meta property=\"og:title\" content=\"[^\"]*\">|<meta property=\"og:title\" content=\"$title_sed\">|" \
-      -e "s|<meta property=\"og:description\" content=\"[^\"]*\">|<meta property=\"og:description\" content=\"$desc_sed\">|" \
-      -e "s|<meta property=\"og:url\" content=\"[^\"]*\">|<meta property=\"og:url\" content=\"$url\">|" \
-      -e "s|<meta name=\"twitter:title\" content=\"[^\"]*\">|<meta name=\"twitter:title\" content=\"$title_sed\">|" \
-      -e "s|<meta name=\"twitter:description\" content=\"[^\"]*\">|<meta name=\"twitter:description\" content=\"$desc_sed\">|" \
-      index.html > "$slug/index.html"
-
-  echo "  <url><loc>$url</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>" >> "$SITEMAP"
-  echo "  $slug/index.html"
-done
-
-for page in about terms privacy; do
-  echo "  <url><loc>https://topten.one/$page.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>" >> "$SITEMAP"
-done
-echo '</urlset>' >> "$SITEMAP"
-echo "  $SITEMAP"
-
-# 3b. Write the ten into every page, so there is something to read without
-#     JavaScript.
-#
-#     Every board page is index.html with a different head, and the ten are
-#     drawn by app.js after it reaches Supabase -- so what a crawler was given
-#     had zero characters of text inside <main>. Search Console called them
-#     "discovered, not indexed", which is what it says when it fetched a page
-#     and found nothing in it.
-#
-#     This runs after the copies above, because it writes into each of them,
-#     and it never fails a build: a database that is down leaves the pages
-#     with the ten they already had.
-node "$(dirname "$0")/prerender.mjs"
-
-# Check our own work before saying it is done.
-#
-# This script died halfway once because it was run as `sync-routes.sh | head -3`:
-# under `set -o pipefail` the SIGPIPE from head killed it after the third line,
-# so index.html got the new stamp while 404.html and every board page kept the
-# old one and went on loading the previous app.js. The site looked deployed and
-# the fix was not live. A partial run must fail loudly instead.
-
-FOUND=$(grep -ohE 'app\.js\?v=[a-f0-9]+' \
-          index.html 404.html thanks/index.html badge/index.html \
-          about.html terms.html privacy.html ./*/index.html | sort -u)
-
-if [ "$(printf '%s\n' "$FOUND" | wc -l)" -ne 1 ] || [ "$FOUND" != "app.js?v=$STAMP" ]; then
-  echo "FAILED: pages disagree about which app.js to load" >&2
-  printf '%s\n' "$FOUND" >&2
-  exit 1
-fi
-
-# 4. Check the coin data is present and not stale.
-#
-#    The crypto boards fetch coin-logos.json and coin-list.json, so a deploy
-#    without them ships two 404s. Fresh data passes without calling anybody;
-#    old data asks CoinGecko and, if they do not answer, says so and lets the
-#    deploy through — their outage is not a reason a CSS fix cannot ship.
-node "$(dirname "$0")/build-coin-logos.mjs" --check
-
-#    Same for the suggestion lists the fan boards offer. These are checked
-#    against the generator rather than for age: they are written by hand, so
-#    a stale rosters.json means somebody edited the script and forgot to run
-#    it, which is a mistake and not a schedule.
-node "$(dirname "$0")/build-sport-rosters.mjs" --check
-node "$(dirname "$0")/build-rich-rosters.mjs" --check
-node "$(dirname "$0")/build-eu-parliament.mjs" --check
-node "$(dirname "$0")/rosters.mjs" --check
-
-#    And the game art, which only warns: Steam is not in this site's critical
-#    path and a month-old capsule is not a reason to block a CSS fix.
-node "$(dirname "$0")/build-game-art.mjs" --check
-node "$(dirname "$0")/build-people-art.mjs" --check
-node "$(dirname "$0")/build-congress.mjs" --check
-node "$(dirname "$0")/stamp-data.mjs" --check
-node "$(dirname "$0")/build-worker-boards.mjs" --check
-node "$(dirname "$0")/make-icons.mjs" --check
-
-# 5. And check that the boards actually agree, everywhere they are written
-#    down. A board drawn in app.js that the database rejects takes somebody's
-#    money for a listing that cannot be inserted; this is where that gets
-#    caught, not in production.
-node "$(dirname "$0")/check-boards.mjs"
-node "$(dirname "$0")/prerender.mjs" --check
-
-echo "Routes synced from index.html — every page on $STAMP"
+echo "  done."

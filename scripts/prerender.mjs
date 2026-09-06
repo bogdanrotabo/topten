@@ -1,236 +1,259 @@
 #!/usr/bin/env node
 /**
- * The ten, written into the page before anybody asks for it.
+ * The king, written into the page before anybody asks for it.
  *
- * Every board page is the same index.html with a different head, and the ten
- * are drawn by app.js after it has talked to Supabase. A person never notices;
- * a crawler gets 15,700 bytes of markup with nothing in <main> at all. Asked
- * for /crypto/ without JavaScript, the answer had zero characters of text
- * inside #view -- and the same was true of all seventy-two, which is why
- * Search Console reported them "discovered, not indexed": it fetched a page,
- * found nothing to index, and stopped.
+ * index.html is drawn by app.js after it has talked to Supabase. A person
+ * never notices; a crawler is handed a document whose <main> says "the throne
+ * is empty" no matter who is on it, and a link posted to X previews as a
+ * generic card with no name and no figure on it. For a site that is one page
+ * about one person, that is the whole of its search and social presence
+ * missing.
  *
- * So the ten are written in here, at build time, from the same board the site
- * reads. What goes where matters:
+ * So the king is written in here, at build time, from the same views the site
+ * reads at run time. Four places, each between a pair of markers so a second
+ * run replaces its own work rather than stacking a copy under it:
  *
- *   inside  #view   the heading and the ten. app.js replaces this the moment
- *                   it loads, with the same rows and the live figures, so
- *                   nobody is shown one thing and told another -- it is the
- *                   same content, arriving twice.
- *   outside <main>  the board's own paragraph, which app.js never touches, so
- *                   it stays on the screen for a reader as well as a crawler.
- *                   Text that only a crawler can see is cloaking and costs
- *                   more than it pays.
+ *   <!-- king -->     the card: name, message, link, amount, how long.
+ *   <!-- cta -->      the figure somebody has to beat, and the button.
+ *   <!-- history -->  the former kings, fifty of them.
+ *   <!-- og -->       title, description and the social card.
  *
- * The figures go stale between deploys, by design: the site rebuilds whenever
- * anything changes, the browser corrects the page in the first second, and a
- * number that was true at build time is a fair thing to publish.
+ * app.js replaces the first three within a second of load, with the same rows
+ * and live figures, so nobody is shown one thing and told another — it is the
+ * same content arriving twice. The figures go stale between deploys by design:
+ * a number that was true when the site was built is a fair thing to publish,
+ * and the browser corrects it immediately.
  *
- *   node scripts/prerender.mjs            writes the ten into every board page
- *   node scripts/prerender.mjs --check    fails if a page has no ten in it
+ *   node scripts/prerender.mjs            writes the king into the page
+ *   node scripts/prerender.mjs --check    fails if the page has no king in it
  *   node scripts/prerender.mjs --dry-run  says what it would write
  */
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const COPY = join(root, 'scripts/board-copy.json');
+const PAGE = join(root, 'index.html');
 
 const verifica = process.argv.includes('--check');
 const uscat = process.argv.includes('--dry-run');
 
 /* --------------------------------------------------------------- markers */
-/* Everything this writes sits between a pair of these, so a second run
-   replaces its own work instead of stacking a copy under it. */
-const M = (nume) => [`<!-- ${nume} -->`, `<!-- /${nume} -->`];
-const [TEN_A, TEN_Z] = M('ten');
-const [COPY_A, COPY_Z] = M('board-copy');
-const [LD_A, LD_Z] = M('board-ld');
 
-function pune(html, [a, z], continut, dupa) {
+const M = (nume) => [`<!-- ${nume} -->`, `<!-- /${nume} -->`];
+const [KING_A, KING_Z] = M('king');
+const [CTA_A, CTA_Z] = M('cta');
+const [HIST_A, HIST_Z] = M('history');
+const [OG_A, OG_Z] = M('og');
+
+function pune(html, [a, z], continut) {
   const i = html.indexOf(a);
-  if (i >= 0) {
-    const j = html.indexOf(z, i);
-    if (j < 0) throw new Error(`opening ${a} with no ${z}`);
-    return html.slice(0, i) + a + continut + z + html.slice(j + z.length);
-  }
-  const k = html.indexOf(dupa);
-  if (k < 0) throw new Error(`nowhere to put ${a}: no ${dupa} in the page`);
-  const capat = k + dupa.length;
-  return html.slice(0, capat) + '\n' + a + continut + z + html.slice(capat);
+  if (i < 0) throw new Error(`the page has no ${a} marker`);
+  const j = html.indexOf(z, i);
+  if (j < 0) throw new Error(`opening ${a} with no ${z}`);
+  return html.slice(0, i) + a + continut + z + html.slice(j + z.length);
 }
 
 const esc = s => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;');
+  .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-const bani = c => '$' + (Number(c || 0) / 100).toLocaleString('en-US',
-  { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/\.00$/, '');
+/* -------------------------------------------------------------- the money */
 
-/* ------------------------------------------------------------- the boards */
-/* Names and nouns out of sync-routes.sh, which is the list that generated the
-   directories in the first place -- one list, not a second one to keep in
-   step with it. */
-function boarduri() {
-  const sh = readFileSync(join(root, 'scripts/sync-routes.sh'), 'utf8');
-  const m = /^PLATFORMS="(.*)"$/m.exec(sh);
-  if (!m) { console.error('prerender: no PLATFORMS in sync-routes.sh'); process.exit(2); }
-  return m[1].trim().split(/\s+/).map(e => {
-    const [slug, nume, subst] = e.split('|');
-    return { slug, nume: nume.replace(/-/g, ' ').replace(/\+/g, '&'), subst: subst.replace(/-/g, ' ') };
-  });
+/* The same list app.js carries, and for the same reason: a currency Stripe
+   reports without a minor unit must not be divided by a hundred. */
+const ZERO_DECIMAL = new Set(['bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw',
+  'mga', 'pyg', 'rwf', 'ugx', 'vnd', 'vuv', 'xaf', 'xof', 'xpf']);
+
+function bani(cents, currency) {
+  const cur = String(currency || 'usd').toLowerCase();
+  const v = ZERO_DECIMAL.has(cur) ? Number(cents) : Number(cents) / 100;
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency', currency: cur.toUpperCase(),
+      minimumFractionDigits: 0, maximumFractionDigits: 2,
+    }).format(v);
+  } catch {
+    return `${v} ${cur.toUpperCase()}`;
+  }
 }
 
-/* ---------------------------------------------------------------- the ten */
-async function board() {
+function durata(secunde) {
+  const s = Math.max(0, Math.floor(secunde));
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  /* A zero component is dropped rather than printed: "1d 0h" is a worse way
+     of saying a day. Same rule as app.js, which redraws this a second later. */
+  if (d) return h ? `${d}d ${h}h` : `${d}d`;
+  if (h) return m ? `${h}h ${m}m` : `${h}h`;
+  if (m) return `${m}m`;
+  return 'just now';
+}
+
+/* The word for a king who gave Stripe no name. Chosen here and in app.js and
+   nowhere in the database, so a payer who fills their card in later is not
+   overwriting something that looks like it was typed. */
+const nume = r => (r && r.name) ? r.name : 'Anonymous';
+
+/* -------------------------------------------------------------- the reads */
+
+function config() {
   const cfg = readFileSync(join(root, 'config.js'), 'utf8');
-  const url = (/SUPABASE_URL:\s*"([^"]+)"/.exec(cfg) || [])[1];
-  const key = (/SUPABASE_ANON_KEY:\s*"([^"]+)"/.exec(cfg) || [])[1];
+  const camp = k => (new RegExp(`${k}:\\s*"([^"]*)"`).exec(cfg) || [])[1] || '';
+  const url = camp('SUPABASE_URL'), key = camp('SUPABASE_ANON_KEY');
   if (!url || !key) throw new Error('config.js has no Supabase url or key');
+  return { url, key, link: camp('STRIPE_PAYMENT_LINK') };
+}
 
-  const r = await fetch(`${url}/rest/v1/board?select=platform,handle,tagline,link,total_cents,rank&order=platform,total_cents.desc&limit=2000`,
+async function citeste({ url, key }, view, query) {
+  const r = await fetch(`${url}/rest/v1/${view}?${query}`,
     { headers: { apikey: key, authorization: `Bearer ${key}` } });
-  if (!r.ok) throw new Error(`board view: HTTP ${r.status}`);
-
-  const pe = new Map();
-  for (const row of await r.json()) {
-    if (!pe.has(row.platform)) pe.set(row.platform, []);
-    pe.get(row.platform).push(row);
-  }
-  for (const [, rows] of pe) {
-    rows.sort((a, b) => b.total_cents - a.total_cents);
-    rows.splice(10);
-  }
-  return pe;
+  if (!r.ok) throw new Error(`${view}: HTTP ${r.status}`);
+  return r.json();
 }
 
 /* --------------------------------------------------------------- the html */
-function zece(b, randuri) {
-  if (!randuri || !randuri.length) {
-    return `\n<div class="shell prerender">
-  <h1>Top 10 on ${esc(b.nume)}</h1>
-  <p>Nobody has taken this board yet. $2 makes you #1 &mdash; and #1 is the row everybody sees first.</p>
-</div>\n`;
+
+const CROWN = '<svg class="king__crown" viewBox="0 0 38 28" aria-hidden="true">'
+  + '<path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg>';
+
+function cardul(k) {
+  if (!k) {
+    return `\n    <section class="king king--empty" id="king-card">
+      ${CROWN}
+      <span class="king__kicker">The throne is empty</span>
+      <p class="king__name">Nobody</p>
+      <p class="king__message">Nobody has taken this page yet. The first payment does it.</p>
+    </section>\n    `;
   }
-  const li = randuri.map((r, i) => `    <li><span class="pr__r">#${i + 1}</span> <span class="pr__h">${esc(r.handle)}</span>`
-    + `${r.tagline ? ` <span class="pr__t">${esc(r.tagline)}</span>` : ''}`
-    + ` <span class="pr__a">${bani(r.total_cents)}</span></li>`).join('\n');
-  return `\n<div class="shell prerender">
-  <h1>Top 10 on ${esc(b.nume)}</h1>
-  <ol class="pr__list">
+  const link = k.url
+    ? `\n      <a class="king__link" href="${esc(k.url)}" target="_blank" rel="noopener nofollow ugc">`
+      + `${esc(String(k.url).replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a>`
+    : '';
+  const de = durata((Date.now() - new Date(k.crowned_at).getTime()) / 1000);
+  return `\n    <section class="king" id="king-card">
+      ${CROWN}
+      <span class="king__kicker">Current king</span>
+      <h1 class="king__name">${esc(nume(k))}</h1>${
+        k.message ? `\n      <p class="king__message">${esc(k.message)}</p>` : ''}${link}
+      <div class="king__figures">
+        <span class="figure"><span class="figure__v figure__v--gold">${esc(bani(k.amount_cents, k.currency))}</span><span class="figure__k">Paid</span></span>
+        <span class="figure"><span class="figure__v" id="reign-clock">${esc(de)}</span><span class="figure__k">Reigning for</span></span>
+      </div>
+    </section>\n    `;
+}
+
+function chemarea(k, link) {
+  const text = k
+    ? `Pay more than <b>${esc(bani(k.amount_cents, k.currency))}</b> to take the page. `
+      + 'Pay less and you only get listed as an attempt. No refunds.'
+    : 'Any payment takes the page while nobody holds it. Pay less than the king and you only '
+      + 'get listed as an attempt. No refunds.';
+  const eticheta = k ? 'Dethrone them' : 'Take the page';
+  /* The href is written in rather than left to app.js, so the button works on
+     a page whose JavaScript never arrives. */
+  return `\n      <p class="cta__terms" id="cta-terms">${text}</p>
+      <a class="btn" id="dethrone" href="${esc(link || '#')}">${eticheta}</a>\n      `;
+}
+
+function istoria(randuri) {
+  if (!randuri.length) {
+    return '\n      <div id="history"><p class="empty">Nobody has been dethroned yet.</p></div>\n      ';
+  }
+  const li = randuri.map(r => `        <li class="row"><span class="row__n">${esc(nume(r))}</span>`
+    + `<span class="row__a">${esc(bani(r.amount_cents, r.currency))}</span>`
+    + `<span class="row__t">${esc(durata(r.reigned_seconds))}</span></li>`).join('\n');
+  return `\n      <div id="history">
+        <ul class="rows">
 ${li}
-  </ol>
-  <p>Ranked by money paid, most first. Pay more than the ${esc(b.subst.replace(/s$/, ''))} above you and you are above them.</p>
-</div>\n`;
+        </ul>
+      </div>\n      `;
 }
 
-function ld(b, randuri) {
-  if (!randuri || !randuri.length) return '';
-  const items = randuri.map((r, i) => ({
-    '@type': 'ListItem', position: i + 1, name: String(r.handle),
-  }));
-  return `\n<script type="application/ld+json">${JSON.stringify({
-    '@context': 'https://schema.org', '@type': 'ItemList',
-    name: `Top 10 on ${b.nume}`, url: `https://topten.one/${b.slug}/`,
-    numberOfItems: items.length, itemListOrder: 'https://schema.org/ItemListOrderDescending',
-    itemListElement: items,
-  }).replace(/</g, '\\u003c')}</script>\n`;
+/* The social card and the title. "Current king: {name} — {amount}" is what a
+   search result and a shared link both say, which is the only sentence about
+   this site that has to change every time somebody pays. */
+function capul(k) {
+  const titlu = k
+    ? `Current king: ${nume(k)} — ${bani(k.amount_cents, k.currency)}`
+    : 'TopTen.one — one page, one king';
+  const descriere = (k && k.message)
+    ? k.message
+    : "One page. One king. Pay more than them and it's yours.";
+  return `\n<meta property="og:type" content="website">
+<meta property="og:site_name" content="TopTen.one">
+<meta property="og:title" content="${esc(titlu)}">
+<meta property="og:description" content="${esc(descriere)}">
+<meta property="og:image" content="https://topten.one/og-image.png?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://topten.one/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(titlu)}">
+<meta name="twitter:description" content="${esc(descriere)}">
+<meta name="twitter:image" content="https://topten.one/og-image.png?v=3">\n`;
 }
 
-/* The front page has the same hole in it, and it is the page that matters
-   most: the hero and the whole-market table are both drawn by app.js, so
-   what a crawler was given was a heading-less document. Written here from
-   the same rows, sorted the way the market is -- most paid first. */
-function acasa(toate) {
-  const randuri = toate.slice(0, 10);
-  const li = randuri.map((r, i) => `    <li><span class="pr__r">#${i + 1}</span> <span class="pr__h">${esc(r.handle)}</span>`
-    + ` <span class="pr__t">${esc(r.nume)}</span> <span class="pr__a">${bani(r.total_cents)}</span></li>`).join('\n');
-  return `\n<div class="shell prerender">
-  <p class="pr__tag">Be the one.</p>
-  <h1>I am</h1>
-${randuri.length ? `  <h2>The most paid for, across every board</h2>\n  <ol class="pr__list">\n${li}\n  </ol>` : ''}
-</div>\n`;
+function cap(html, k) {
+  const titlu = k
+    ? `Current king: ${nume(k)} — ${bani(k.amount_cents, k.currency)} — TopTen.one`
+    : 'TopTen.one — one page, one king';
+  const descriere = (k && k.message)
+    ? `${nume(k)} holds topten.one for ${bani(k.amount_cents, k.currency)}. “${k.message}” `
+      + 'Pay more than them and the page is yours.'
+    : 'One page. One king. Whoever has paid the most holds it, and whoever pays more takes it. '
+      + 'No accounts, no algorithm, no refunds.';
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(titlu)}</title>`)
+    .replace(/<meta name="description" content="[^"]*">/,
+             `<meta name="description" content="${esc(descriere.slice(0, 300))}">`);
 }
-
-/* The skeleton is three grey bars that stand in for the table while app.js is
-   on its way. With the ten written above them they are three grey bars under
-   a finished list, so on a page that has content they go. */
-const FARA_SCHELET = /<div class="shell" style="padding-top:26px">[\s\S]*?<\/div>\s*(?=<\/main>)/;
 
 /* ------------------------------------------------------------------- main */
-const B = boarduri();
-const text = existsSync(COPY) ? JSON.parse(readFileSync(COPY, 'utf8')) : {};
 
 if (verifica) {
-  let rele = 0, fara = [];
-  for (const b of B) {
-    const cale = join(root, b.slug, 'index.html');
-    if (!existsSync(cale)) { console.error(`prerender: ${b.slug}/index.html is missing`); rele++; continue; }
-    const html = readFileSync(cale, 'utf8');
-    if (!html.includes(TEN_A) || !html.includes(`<h1>Top 10 on `)) {
-      console.error(`prerender: ${b.slug}/index.html has no ten written into it`); rele++;
-    }
-    if (!text[b.slug]) fara.push(b.slug);
+  const html = readFileSync(PAGE, 'utf8');
+  const lipsa = [[KING_A, 'king'], [CTA_A, 'cta'], [HIST_A, 'history'], [OG_A, 'og']]
+    .filter(([m]) => !html.includes(m)).map(([, n]) => n);
+  if (lipsa.length) {
+    console.error(`prerender: index.html has no ${lipsa.join(', ')} marker`);
+    process.exit(1);
   }
-  if (rele) { console.error('prerender: run node scripts/prerender.mjs'); process.exit(1); }
-  console.log(`prerender: ${B.length} board pages carry their ten`
-    + (fara.length ? `, ${fara.length} with no paragraph of their own: ${fara.slice(0, 6).join(', ')}${fara.length > 6 ? '…' : ''}` : ', all with a paragraph'));
+  const rege = /<h1 class="king__name">/.test(html);
+  console.log(`prerender: markers in place; the page carries ${rege ? 'a king' : 'an empty throne'}.`);
   process.exit(0);
 }
 
-let date;
+const cfg = config();
+
+let rege = null, fosti = [];
 try {
-  date = await board();
+  const [k, f] = await Promise.all([
+    citeste(cfg, 'king', 'select=id,amount_cents,currency,name,url,message,crowned_at&limit=1'),
+    citeste(cfg, 'former_kings',
+      'select=amount_cents,currency,name,reigned_seconds&order=dethroned_at.desc&limit=50'),
+  ]);
+  rege = k[0] || null;
+  fosti = f || [];
 } catch (e) {
-  /* A build must not depend on a database being up. The pages keep whatever
-     was written into them last time, which is a month-old ten at worst and
-     is still a page with content in it. */
-  console.error(`prerender: ${e.message} — pages keep the ten they already have`);
+  /* A build must not depend on a database being up. The page keeps whatever
+     was written into it last time, which is a king who may since have been
+     dethroned and is still a page with somebody on it. */
+  console.error(`prerender: ${e.message} — the page keeps the king it already has`);
   process.exit(0);
 }
 
-let scrise = 0, goale = 0;
-for (const b of B) {
-  const cale = join(root, b.slug, 'index.html');
-  if (!existsSync(cale)) { console.error(`prerender: ${b.slug}/index.html is missing`); process.exit(2); }
-  const randuri = date.get(b.slug) || [];
-  if (!randuri.length) goale++;
+const inainte = readFileSync(PAGE, 'utf8');
+let html = inainte;
+html = pune(html, [KING_A, KING_Z], cardul(rege));
+html = pune(html, [CTA_A, CTA_Z], chemarea(rege, cfg.link));
+html = pune(html, [HIST_A, HIST_Z], istoria(fosti));
+html = pune(html, [OG_A, OG_Z], capul(rege));
+html = cap(html, rege);
 
-  let html = readFileSync(cale, 'utf8');
-  html = html.replace(FARA_SCHELET, '');
-  html = pune(html, [TEN_A, TEN_Z], zece(b, randuri), '<main id="view" aria-live="polite">');
-  /* Closed off before </main>: what is written above replaces the skeleton,
-     and the skeleton is what the page shows while app.js is on its way. */
-  const p = text[b.slug];
-  html = pune(html, [COPY_A, COPY_Z],
-    p ? `\n<section class="shell boardnote"><p>${esc(p)}</p></section>\n` : '\n', '</main>');
-  /* After the title, not after `<link rel="canonical"` -- that anchor is the
-     opening of a tag, and inserting behind it put the block inside the link
-     element: the canonical was destroyed and its href printed itself at the
-     top of the page as text. Caught by rendering the page with JavaScript
-     off, which is the only way anybody would have seen it. */
-  html = pune(html, [LD_A, LD_Z], ld(b, randuri), '</title>');
+if (html !== inainte && !uscat) writeFileSync(PAGE, html);
 
-  const vechi = readFileSync(cale, 'utf8');
-  if (html !== vechi && !uscat) writeFileSync(cale, html);
-  if (html !== vechi) scrise++;
-}
-
-/* And the front page, from every row on every board at once. */
-const NUME = new Map(B.map(b => [b.slug, b.nume]));
-const toate = [...date.entries()]
-  .flatMap(([slug, rows]) => rows.map(r => ({ ...r, nume: NUME.get(slug) || slug })))
-  .sort((a, b) => b.total_cents - a.total_cents);
-
-const acasaCale = join(root, 'index.html');
-let h = readFileSync(acasaCale, 'utf8');
-const inainte = h;
-h = h.replace(FARA_SCHELET, '');
-h = pune(h, [TEN_A, TEN_Z], acasa(toate), '<main id="view" aria-live="polite">');
-h = pune(h, [COPY_A, COPY_Z], '\n', '</main>');
-if (h !== inainte && !uscat) writeFileSync(acasaCale, h);
-
-console.log(`prerender: ${scrise} of ${B.length} board pages ${uscat ? 'would be ' : ''}rewritten`
-  + `, ${B.length - goale} with listings on them, ${goale} still empty`
-  + `; the front page carries the ${Math.min(10, toate.length)} most paid for.`);
+console.log(`prerender: ${html === inainte ? 'no change' : (uscat ? 'would write' : 'wrote')}`
+  + ` — ${rege ? `${nume(rege)} at ${bani(rege.amount_cents, rege.currency)}` : 'an empty throne'}`
+  + `, ${fosti.length} former king${fosti.length === 1 ? '' : 's'}.`);
