@@ -11,8 +11,8 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=d6744e034b';
-import { topTwo, amounts, row, battle, trend, openOne, move, ticker } from './render.js?v=d6744e034b';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=595ca0bf44';
+import { topTwo, amounts, row, battle, trend, openOne, move, ticker } from './render.js?v=595ca0bf44';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -652,10 +652,47 @@ function wireShare() {
     try { await navigator.clipboard.writeText(url); flash('Link copied.'); } catch (e) { flash('Copy this: ' + url); }
   };
   $$('#share, #share2').forEach((b) => b.addEventListener('click', go));
-  const copy = $('#copy');
-  if (copy) copy.addEventListener('click', async () => {
-    event('share_clicked');
-    try { await navigator.clipboard.writeText(url); flash('Link copied.'); } catch (e) { flash('Copy this: ' + url); }
+
+  /* The share row. Every link in it is already a working link in the markup;
+     these are the two things that cannot be written as an href.
+
+     "More" is the phone's own sheet, which is the only way into Instagram,
+     TikTok, YouTube and Snapchat -- none of which can be linked into with a
+     message prepared. It ships hidden and is revealed here, because a button
+     that opens nothing on a desktop browser is worse than no button. */
+  $$('.sharebar').forEach((bar) => {
+    const shareUrl = bar.dataset.shareUrl || url;
+    const shareText = bar.dataset.shareText || title;
+
+    const sheet = $('[data-share-sheet]', bar);
+    if (sheet && navigator.share) sheet.hidden = false;
+
+    bar.addEventListener('click', async (e) => {
+      const target = e.target.closest && e.target.closest('a.sb, button.sb');
+      if (!target) return;
+      event('share_clicked', { where: target.dataset.shareCopy !== undefined ? 'copy'
+        : target.dataset.shareSheet !== undefined ? 'sheet' : target.textContent.trim().toLowerCase() });
+
+      if (target.dataset.shareSheet !== undefined) {
+        e.preventDefault();
+        /* Cancelling the sheet rejects, and somebody changing their mind is
+           not an error worth reporting. */
+        try { await navigator.share({ text: shareText, url: shareUrl }); } catch (err) { /* dismissed */ }
+        return;
+      }
+      if (target.dataset.shareCopy === undefined) return;   // a real link: let it go
+
+      e.preventDefault();
+      const was = target.textContent;
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        target.textContent = 'Copied';
+      } catch (err) {
+        target.textContent = 'Copy failed';
+        flash('Copy this: ' + shareUrl);
+      }
+      setTimeout(() => { target.textContent = was; }, 1800);
+    });
   });
 }
 

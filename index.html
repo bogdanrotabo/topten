@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="/styles.css?v=cb795e6a27">
+<link rel="stylesheet" href="/styles.css?v=94529a5bf3">
 <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="manifest" href="/manifest.json">
@@ -27,7 +27,7 @@
 <meta name="twitter:image" content="https://topten.one/og-image.png">
 </head>
 <body>
-<main class="shell">
+<main class="shell shell--home">
 <div class="wash wash--violet"></div><div class="wash wash--magenta"></div>
 <header class="masthead above">
   <div class="masthead__left"><a class="wordmark" href="/"><span style="color:var(--gold)"><svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true"><path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg></span>TOPTEN.ONE</a></div>
@@ -99,10 +99,27 @@
   <a class="ghost" href="/find/" style="margin-top:12px">Browse all 72 rankings</a>
 </section>
 
+<section class="sect" id="spread">
+  <h2 class="eyebrow">Bring someone in</h2>
+  <p class="lede">Nothing here moves until the other side hears about it.</p>
+  <div class="sharebar" data-share-url="https://topten.one/" data-share-text="Who should be #1? On TopTen.one the only thing that moves a ranking is money.">
+  <button type="button" class="sb" data-share-copy>Copy link</button>
+  <a class="sb" href="https://x.com/intent/post?text=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money.&amp;url=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">X</a>
+  <a class="sb" href="https://wa.me/?text=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money.%20https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">WhatsApp</a>
+  <a class="sb" href="https://t.me/share/url?url=https%3A%2F%2Ftopten.one%2F&amp;text=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money." target="_blank" rel="noopener">Telegram</a>
+  <a class="sb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Facebook</a>
+  <a class="sb" href="https://www.reddit.com/submit?url=https%3A%2F%2Ftopten.one%2F&amp;title=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money." target="_blank" rel="noopener">Reddit</a>
+  <a class="sb" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">LinkedIn</a>
+  <a class="sb" href="https://www.threads.net/intent/post?text=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money.%20https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Threads</a>
+  <a class="sb" href="mailto:?subject=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money.&amp;body=Who%20should%20be%20%231%3F%20On%20TopTen.one%20the%20only%20thing%20that%20moves%20a%20ranking%20is%20money.%20https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Email</a>
+  <button type="button" class="sb" data-share-sheet hidden>More</button>
+</div>
+</section>
+
 <section class="sect" id="numbers">
   <div class="glass" style="padding:22px 18px;border-radius:16px">
     <div class="figures">
-      <div class="figure"><div class="figure__v figure__v--cyan num">2,204</div><div class="figure__k">visitors</div></div>
+      <div class="figure"><div class="figure__v figure__v--cyan num">2,205</div><div class="figure__k">visitors</div></div>
       <div class="figure"><div class="figure__v figure__v--cyan num">25</div><div class="figure__k">countries</div></div>
       <div class="figure"><div class="figure__v num">137</div><div class="figure__k">listed</div></div>
       <div class="figure figure--wide"><div class="figure__v num">$1,450.54</div><div class="figure__k">backed</div></div>
@@ -117,14 +134,18 @@
   <div class="foot__line">No algorithm. No editors.<br>Only what people paid.</div>
   <nav class="foot__nav">
     <a href="/about.html">About</a><a href="/terms.html">Terms</a>
-    <a href="/privacy.html">Privacy</a><a href="mailto:hello@topten.one">Contact</a>
+    <a href="/privacy.html">Privacy</a>
   </nav>
+  <!-- The address itself, not the word "Contact". An address somebody can read
+       is an address somebody can use from their phone, write down, or check
+       against the one an email claiming to be us came from. -->
+  <p class="foot__mail">Write to <a href="mailto:hello@topten.one">hello@topten.one</a></p>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment $2.</p>
 </footer>
 </main>
 <script src="/config.js?v=8d4746a647"></script>
-<script type="module" src="/app.js?v=d6744e034b"></script>
+<script type="module" src="/app.js?v=595ca0bf44"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NYF4ZEZPZ9"></script>
 <script src="/ga.js"></script>
 </body>
