@@ -404,13 +404,17 @@
     var bits = [];
 
     if (k) {
-      bits.push('<b>' + esc(nameOf(k)) + '</b> is King of the Hill');
+      /* The title is gold here for the same reason it is gold on the card and
+         in the masthead: it is the same three words naming the same thing,
+         and a page that paints them differently in three places is three
+         pages. */
+      bits.push('<b>' + esc(nameOf(k)) + '</b> is <i>King of the Hill</i>');
       bits.push('paid <i>' + esc(money(k.amount_cents, k.currency)) + '</i>');
       bits.push('take it for more than <i>' + esc(money(k.amount_cents, k.currency)) + '</i>');
       bits.push('reigning for <b>'
         + esc(duration((Date.now() - new Date(k.crowned_at).getTime()) / 1000)) + '</b>');
     } else {
-      bits.push('<b>The throne is empty</b>');
+      bits.push('<i>King of the Hill</i> — the throne is empty');
       bits.push('the first payment takes the page');
     }
 
