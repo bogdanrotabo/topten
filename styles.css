@@ -413,19 +413,23 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__b--gift b { color: #d9a63c; }
 .pb__b--gift .pb__t { color: #a09b93; }
 
-/* rotabo.app's lavender with its violet. Loud on a page this dark, and meant
-   to be: it is rotabo's ground, not a hole in this one. */
-.pb__b--rotabo { background: #f6ecf9; border: 1px solid #e2c3ee; }
-.pb__b--rotabo:hover { border-color: #9b3fc0; }
-.pb__b--rotabo, .pb__b--rotabo:hover { color: #3a1650; }
-.pb__b--rotabo .pb__t { color: #6b5878; }
+/* The same near-black, so the two read as a pair. It was rotabo's lavender,
+   which on a page this dark was not rotabo's ground so much as a white hole
+   beside the other card. The ground is shared; the violet stays rotabo's, in
+   the mark and on the edge it lifts to -- #c264e0 rather than #9b3fc0, which
+   is the value rotabo.app itself uses once its own page goes dark. */
+.pb__b--rotabo { background: #1c1b19; border: 1px solid #2b2926; }
+.pb__b--rotabo:hover { border-color: #c264e0; }
+.pb__b--rotabo, .pb__b--rotabo:hover { color: #f2f0ec; }
+.pb__b--rotabo .pb__t { color: #a09b93; }
 
 /* Side by side is the point, but not at 360px: below that the two wordmarks
    stop fitting and start breaking mid-word. */
 @media (max-width: 419px) {
   .pb { flex-direction: column; }
-  /* Stacked, "equal width" is free and equal height is not -- the diamond
-     makes one box taller. A floor on both keeps the pair reading as a pair. */
+  /* Stacked, "equal width" is free and equal height is not. The mark is
+     shorter than the line it sits on now, so the two match on their own --
+     a floor on both keeps them matching if either side ever grows. */
   .pb__b { min-height: 92px; }
 }
 

@@ -515,26 +515,25 @@ ${footer()}`;
 /* The band at the foot of the front page: the two other sites, side by side
  * and the same size, because neither is the bigger one.
  *
- * Each keeps its own ground. gift.ceo is near-black with its gold and rotabo
- * is lavender with its violet, which on a page this dark makes the second one
- * loud -- and that is the point rather than an accident. Redrawn in TopTen's
- * gold they would be two TopTen cards with other people's words on them, and a
- * mark that has been repainted is not that mark. rotabo.app does exactly this
- * in reverse: gift.ceo's near-black sits on its lavender page.
+ * Both sit on gift.ceo's near-black. rotabo's own ground is lavender and it
+ * had it here, which on a page this dark read as a white hole punched beside
+ * the other card rather than as rotabo's colour -- two boxes that were not a
+ * pair. The ground is shared now and each mark stays its own: gift.ceo's gold
+ * on it, rotabo's violet and gold diamonds on it. Neither is redrawn in
+ * TopTen's gold, because a mark that has been repainted is not that mark.
  *
  * There is no "Sponsors" over them. These are the owner's own two sites, and
  * calling them sponsors would be the band claiming something it does not have.
  * The line underneath says what the place is and that it is open, which is the
  * true version of the same invitation.
  */
+/* The mark is the file rotabo.app ships as its own icon, cropped to the two
+ * diamonds and nothing else -- not one diamond redrawn here from its path.
+ * Redrawing it made it half a logo: rotabo's mark is a violet diamond AND a
+ * gold one, and only the violet was ever on this page. */
 const DIAMOND =
-  '<svg class="pb__mark" viewBox="0 0 200 260" width="22" height="28" aria-hidden="true">'
-  + '<defs><radialGradient id="rotaboGrad" cx="50%" cy="50%" r="75%">'
-  +   '<stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/>'
-  +   '<stop offset="100%" stop-color="#7c2596"/></radialGradient></defs>'
-  + '<path fill="url(#rotaboGrad)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 '
-  +   'Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 '
-  +   'Q195,130 176.85,106.12 Z"/></svg>';
+  '<img class="pb__mark" src="/icons/rotabo-mark.png" width="38" height="22"'
+  + ' alt="" aria-hidden="true">';
 
 function partners() {
   return `<section class="sect" id="partners">
