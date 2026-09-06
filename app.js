@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=878c7f337f';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=1ae9ebee84';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=878c7f337f';
+         figures, figureText } from './render.js?v=1ae9ebee84';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -281,6 +281,42 @@ function paintTicker(items) {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureTicker).catch(() => {});
 }
 
+/* What we told Stripe, kept, because Stripe does not tell us back.
+ *
+ * The Payment Link returns the payer to /thanks/ with nothing in the address:
+ * no session id, no reference, nothing. The page could only ever identify a
+ * payment from what arrived in the URL, so a real $2 payment -- which reached
+ * Stripe, fired the webhook, was recorded and took #1 -- came back to a page
+ * saying NO RECEIPT HERE. The money was right and only the telling was wrong,
+ * which is the worst way for it to be wrong: a payer with no receipt has no
+ * reason to believe the money went anywhere.
+ *
+ * The link that leaves already carries client_reference_id, and the webhook
+ * records the same string in payment_refs. So the browser writes down what it
+ * sent on its way out and reads it back on the way in, and payment_result()
+ * answers exactly as it would have with a session id in the URL. Nothing on
+ * Stripe changes, and nothing in the database changes.
+ *
+ * Two hours: longer than any card takes, shorter than showing somebody a
+ * receipt for a payment they made last week.
+ */
+const REF_KEY = 'topten_last_ref';
+const REF_GOOD_FOR = 2 * 60 * 60 * 1000;
+
+function rememberRef(href) {
+  try {
+    const ref = new URL(href, location.origin).searchParams.get('client_reference_id');
+    if (ref) localStorage.setItem(REF_KEY, JSON.stringify({ ref, at: Date.now() }));
+  } catch (e) { /* a browser that will not store it falls back to the URL */ }
+}
+
+function rememberedRef() {
+  try {
+    const v = JSON.parse(localStorage.getItem(REF_KEY) || 'null');
+    return v && v.ref && (Date.now() - v.at) < REF_GOOD_FOR ? v.ref : null;
+  } catch (e) { return null; }
+}
+
 /* -------------------------------------------------------------- a board --- */
 
 function slugFromPath() {
@@ -480,6 +516,7 @@ function wireAdd(slug, boardName) {
       if (!href) { say('Added. Payments are not configured, so it cannot be backed yet.', true); return; }
       say(`<b>${esc(name)}</b> is ready. Sending you to Stripe &mdash; type at least `
         + `<span class="num">${esc(money(costToOpen()))}</span> and it goes on the ranking.`);
+      rememberRef(href);
       setTimeout(() => { location.href = href; }, 900);
     } catch (err) {
       say('Something went wrong on our side. Nothing was charged.', true);
@@ -603,7 +640,11 @@ async function drawHome() {
 function receipt() {
   const q = new URLSearchParams(location.search);
   const sid = (q.get('session_id') || '').trim();
-  const ref = (q.get('client_reference_id') || q.get('ref') || q.get('listing') || '').trim();
+  /* The address first, since a session id from Stripe is better evidence than
+     anything this browser wrote down; what it remembered is the fallback for
+     the case that actually happens, which is an address with nothing in it. */
+  const ref = (q.get('client_reference_id') || q.get('ref') || q.get('listing') || '').trim()
+    || (rememberedRef() || '');
   return {
     session_id: /^cs_(test|live)_[A-Za-z0-9]{8,120}$/.test(sid) ? sid : null,
     client_ref: /^[0-9a-fA-F_-]{16,200}$/.test(ref) ? ref : null,
@@ -617,10 +658,12 @@ async function drawResult() {
 
   if (!r.session_id && !r.client_ref) {
     el.className = '';
-    el.innerHTML = '<h1 class="hero__q">NO RECEIPT<br>HERE.</h1>'
-      + '<p class="hero__sub">This address is where Stripe sends you back after a payment. '
-      + 'Nothing came with it.</p>'
-      + '<a class="cta" href="/" style="margin-top:28px">Go to the rankings</a>';
+    el.innerHTML = '<h1 class="hero__q">NOTHING TO<br>SHOW HERE.</h1>'
+      + '<p class="hero__sub">This address is where Stripe sends you back after a payment, and '
+      + 'this browser has no record of one. <b>If you did pay, the payment still counted</b> '
+      + '&mdash; it is recorded the moment Stripe confirms it, whatever this page can see. '
+      + 'The ranking is public; look for the name you backed.</p>'
+      + '<a class="cta" href="/find/" style="margin-top:28px">Find the ranking</a>';
     return;
   }
 
@@ -662,6 +705,26 @@ async function drawResult() {
       + `Write to <a href="mailto:${esc(CFG.CONTACT_EMAIL || '')}">${esc(CFG.CONTACT_EMAIL || 'us')}</a> `
       + 'and it will be put where you meant it.</p>'
       + '<a class="ghost" href="/" style="margin-top:24px">Back to the rankings</a>';
+    return;
+  }
+
+  /* Anything that is not a finished, credited payment stops here.
+   *
+     The three cases above are the ones this page knows how to say. Everything
+     else -- an outcome added to the function later, a shape a proxy mangled,
+     a null that got this far -- used to fall through into the success branch
+     below and render "PAYMENT CONFIRMED" over a row of zeros and undefineds.
+     Telling somebody their payment went through when the database did not say
+     so is the worst thing this page can do, and it is the one thing it must
+     never do by accident. The cautious answer is the default now. */
+  if (out.outcome !== 'done') {
+    el.innerHTML = '<h1 class="hero__q">CANNOT TELL<br>YET.</h1>'
+      + '<p class="hero__sub">We cannot read what this payment did. <b>If you paid, the payment '
+      + 'still counted</b> &mdash; it is recorded the moment Stripe confirms it, whatever this '
+      + 'page can see. The ranking is public; look for the name you backed, and write to '
+      + `<a href="mailto:${esc(CFG.CONTACT_EMAIL || '')}">${esc(CFG.CONTACT_EMAIL || 'us')}</a> `
+      + 'if it is not there.</p>'
+      + '<a class="cta" href="/find/" style="margin-top:28px">Find the ranking</a>';
     return;
   }
 
@@ -805,6 +868,14 @@ async function boot() {
   recordVisit();
   wireShare();
   wireSearch();
+
+  /* Every way out to Stripe, on every page: the button, the amount chips, the
+     one on the front page. Written down here rather than in each of them so a
+     link added later is covered without anybody remembering to. */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href*="client_reference_id="]');
+    if (a) rememberRef(a.getAttribute('href'));
+  }, true);
 
   const slug = slugFromPath();
   try {
