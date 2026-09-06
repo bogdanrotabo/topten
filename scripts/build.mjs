@@ -544,6 +544,23 @@ ${masthead()}
 </section>
 ${footer()}` }));
 
+/* /badge/ was an embeddable badge a listing could show off with. The feature
+   is gone, and the address is the only one from the old site that no longer
+   names anything, so it points at the finder rather than dying. A meta refresh
+   because GitHub Pages serves files and not redirects. */
+write('badge/index.html', `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url=/find/">
+<link rel="canonical" href="${SITE}/find/">
+<meta name="robots" content="noindex">
+<title>Moved | TopTen.one</title>
+</head>
+<body><p>The badge is gone. <a href="/find/">Every ranking is here.</a></p></body>
+</html>
+`);
+
 /* Sitemap: the front page, the finder, the legal pages and every ranking. */
 const urls = ['/', '/find/', '/about.html', '/terms.html', '/privacy.html']
   .concat(boards.map((b) => `/${b.slug}/`));
