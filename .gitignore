@@ -10,3 +10,6 @@ Thumbs.db
 .webhook-secret.txt
 .manage-links.txt
 ADS-REWRITE-*.md
+
+# What scripts/card.mjs draws. Pictures of the live site, not part of it.
+card-preview/
