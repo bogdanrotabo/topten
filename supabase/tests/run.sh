@@ -38,10 +38,11 @@ cp supabase/tests/*.sql "$work/"
 cp supabase/migrations/0022_boards_return.sql "$work/0022.sql"
 cp supabase/migrations/0023_throne_archived.sql "$work/0023.sql"
 cp supabase/migrations/0025_what_the_payment_did.sql "$work/0025.sql"
+cp supabase/migrations/0026_measuring.sql "$work/0026.sql"
 sed -i 's/^create extension if not exists pg_cron;/-- stubbed for the test box/' "$work/0022.sql"
 # Each migration goes in as one transaction, which is how the money check at
 # the end of 0022 gets to be a gate rather than a report.
-for m in 0022 0023 0025; do
+for m in 0022 0023 0025 0026; do
   { echo 'begin;'; cat "$work/$m.sql"; echo 'commit;'; } > "$work/$m.tx.sql"
 done
 chmod 644 "$work"/*.sql; chmod 755 "$work"
@@ -58,9 +59,10 @@ echo "— the restore —"
 run "-v ON_ERROR_STOP=1 -q -f $work/0022.tx.sql" 2>&1 | grep -i 'restored' | sed 's/.*NOTICE: */  /'
 run "-v ON_ERROR_STOP=1 -q -f $work/0023.tx.sql" >/dev/null
 run "-v ON_ERROR_STOP=1 -q -f $work/0025.tx.sql" >/dev/null
+run "-v ON_ERROR_STOP=1 -q -f $work/0026.tx.sql" >/dev/null
 
 fail=0
-for t in 10_money 20_orphans 30_old_hole 40_result; do
+for t in 10_money 20_orphans 30_old_hole 40_result 50_measuring; do
   out=$(run "-v ON_ERROR_STOP=1 -q -f $work/$t.sql" 2>&1) || fail=1
   echo "$out" | sed 's/psql:[^ ]* NOTICE: *//' | grep -v '^CREATE FUNCTION$\|^DO$\|^DROP\|^CREATE\|^GRANT\|^REVOKE\|^INSERT\|^ALTER\|drop cascades'
   echo "$out" | grep -q 'FAILED\|ERROR' && fail=1

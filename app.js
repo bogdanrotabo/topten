@@ -100,6 +100,36 @@ async function recordVisit() {
   } catch (e) { /* a visit that cannot be counted must never stop the page */ }
 }
 
+/* ---------------------------------------------------------- what happened -- */
+
+/* What a visitor did, so a campaign that fails can be diagnosed instead of
+   guessed at. Names only, never text anybody typed: the database refuses an
+   event it does not recognise, which keeps this a measurement rather than a
+   place to put things.
+ *
+ * Fire and forget. A count that cannot be recorded must never stop a page, and
+ * must certainly never stop a payment. */
+function event(name, extra) {
+  try {
+    const body = JSON.stringify({ session_id: sessionId(), name, ...(extra || {}) });
+    const url = `${CFG.SUPABASE_URL}/rest/v1/site_events`;
+    /* sendBeacon survives the page being replaced, which is exactly what
+       happens on the click that matters most -- the one that leaves for
+       Stripe. It cannot set headers, so the key rides in the query string,
+       which is what PostgREST accepts there. */
+    if (navigator.sendBeacon && (name === 'checkout_started' || name === 'back_clicked')) {
+      const blob = new Blob([body], { type: 'application/json' });
+      if (navigator.sendBeacon(`${url}?apikey=${encodeURIComponent(CFG.SUPABASE_ANON_KEY)}`, blob)) return;
+    }
+    fetch(url, {
+      method: 'POST', keepalive: true,
+      headers: { apikey: CFG.SUPABASE_ANON_KEY, Authorization: `Bearer ${CFG.SUPABASE_ANON_KEY}`,
+                 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body,
+    }).catch(() => {});
+  } catch (e) { /* nothing here is worth an error */ }
+}
+
 /* ---------------------------------------------------------- the payment --- */
 
 /**
@@ -169,7 +199,34 @@ async function drawBoard(slug) {
   const restEl = $('#rest .glass');
   if (restEl) restEl.innerHTML = rest_.map((r, i) => (i ? '<hr class="hr">' : '') + row(r, i + 3)).join('');
 
+  event('board_view', { board: slug });
   wireAdd(slug, board.name);
+
+  /* The click that leads to Stripe, and the moment the browser actually
+     leaves. They are usually the same second; when they are not -- a blocked
+     navigation, a change of mind on the tap -- the difference is the whole
+     point of recording both. */
+  let leaving = false;
+  document.addEventListener('click', (e) => {
+    const pay = e.target.closest && e.target.closest('#pay, .cta[href*="stripe"]');
+    if (!pay || pay.getAttribute('aria-disabled')) return;
+    leaving = true;
+    event('back_clicked', { board: slug, listing_id: target ? target.id : null });
+  });
+  addEventListener('pagehide', () => {
+    if (leaving) event('checkout_started', { board: slug, listing_id: target ? target.id : null });
+  });
+
+  /* Which amount was pressed. The chips do not set the figure -- Stripe takes
+     what the payer types -- so this is the intent, which is the interesting
+     half anyway. */
+  document.addEventListener('click', (e) => {
+    const chip = e.target.closest && e.target.closest('.chip[data-amount]');
+    if (chip) {
+      $$('.chip[data-amount]').forEach((c) => c.classList.toggle('chip--on', c === chip));
+      event('amount_selected', { board: slug, amount_cents: Number(chip.dataset.amount) || 0 });
+    }
+  });
 
   /* Any row can become the one being backed. */
   $$('#rest .row, #top .top__one, #top .top__two').forEach((el, i) => {
@@ -179,7 +236,11 @@ async function drawBoard(slug) {
     const pick = () => {
       const name = ($('.row__name', el) || $('.top__name', el) || {}).textContent;
       const found = s.list.find((r) => r.handle === name);
-      if (found) { target = found; drawBack(); $('#back').scrollIntoView({ block: 'nearest' }); }
+      if (found) {
+        target = found; drawBack();
+        event('listing_picked', { board: slug, listing_id: found.id });
+        $('#back').scrollIntoView({ block: 'nearest' });
+      }
     };
     el.addEventListener('click', pick);
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
@@ -214,8 +275,12 @@ function wireAdd(slug, boardName) {
       + `<div>${html}</div></div>`;
   };
 
+  const holder = form.closest('details');
+  if (holder) holder.addEventListener('toggle', () => { if (holder.open) event('add_opened', { board: slug }); });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    event('add_submitted', { board: slug });
     const name = $('#add-name').value.trim().slice(0, 40);
     let link = $('#add-link').value.trim();
     if (!name) { say('It needs a name.', true); return; }
@@ -275,6 +340,7 @@ async function wireSearch() {
     if (!rows) {
       rows = await rest('board?select=platform,handle,total_cents,rank&order=total_cents.desc&limit=2000');
     }
+    event('search_used');
     const listings = rows.filter((r) => r.handle.toLowerCase().includes(q)).slice(0, 6);
     const boards = reg.boards.filter((b) => b.name.toLowerCase().includes(q)).slice(0, 4);
 
@@ -410,6 +476,7 @@ async function drawResult() {
     await new Promise((go) => setTimeout(go, 1800));
   }
 
+  event('result_seen');
   el.className = '';
 
   /* Once there is a definitive answer the receipt leaves the address bar: a
@@ -504,12 +571,14 @@ function wireShare() {
   const title = document.title.replace(' | TopTen.one', '');
   const url = location.origin + location.pathname;
   const go = async () => {
+    event('share_clicked');
     if (navigator.share) { try { await navigator.share({ title, url }); return; } catch (e) { /* dismissed */ } }
     try { await navigator.clipboard.writeText(url); flash('Link copied.'); } catch (e) { flash('Copy this: ' + url); }
   };
   $$('#share, #share2').forEach((b) => b.addEventListener('click', go));
   const copy = $('#copy');
   if (copy) copy.addEventListener('click', async () => {
+    event('share_clicked');
     try { await navigator.clipboard.writeText(url); flash('Link copied.'); } catch (e) { flash('Copy this: ' + url); }
   });
 }

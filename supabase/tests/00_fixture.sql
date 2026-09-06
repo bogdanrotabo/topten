@@ -32,6 +32,21 @@ create table public.payments (
   currency text not null default 'usd',
   created_at timestamptz not null default now());
 
+-- what 0004/0005 built: the site's own record of who arrived
+create table public.site_visits (
+  id uuid primary key default gen_random_uuid(),
+  path text, referrer text, language text,
+  session_id text, country text,
+  created_at timestamptz not null default now());
+create table public.site_presence (
+  session_id text primary key, last_seen timestamptz not null default now());
+alter table public.site_visits enable row level security;
+grant insert on public.site_visits to anon;
+create policy "anon can insert a visit" on public.site_visits for insert to anon with check (true);
+create function public.site_visitors() returns bigint language sql stable security definer
+  set search_path = public as $$ select 147 + count(distinct session_id) from public.site_visits $$;
+grant execute on function public.site_visitors() to anon;
+
 create function public.anunta_plata() returns trigger language plpgsql as $fn$
 begin return new; end; $fn$;
 

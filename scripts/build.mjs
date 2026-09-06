@@ -506,6 +506,32 @@ console.log('  find/');
 
 /* ------------------------------------------------------------- the rest --- */
 
+/* The owner's page. Not in the sitemap, not linked from anywhere, and empty
+   until somebody signs in with the one Google account listed in admin_emails. */
+write('dashboard.html', `<!doctype html>
+<html lang="en">
+<head>
+${head({ title: 'Growth | TopTen.one', description: 'For whoever runs the site.', path: '/dashboard.html' })}
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<main class="shell">
+<div class="wash wash--cyan"></div>
+${masthead({ back: true })}
+<section class="hero above" style="padding-top:40px">
+  <h1 class="page-title">GROWTH</h1>
+  <div id="gate" style="margin-top:20px"></div>
+</section>
+<div id="out"></div>
+${footer()}
+</main>
+<script src="/config.js"></script>
+<script src="/dashboard.js"></script>
+</body>
+</html>
+`);
+console.log('  dashboard.html');
+
 write('404.html', page({
   title: 'Nothing here | TopTen.one',
   description: 'That address does not exist on TopTen.one.',
