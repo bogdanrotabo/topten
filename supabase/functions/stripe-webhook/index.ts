@@ -1,20 +1,25 @@
 // TopTen.one — Stripe webhook.
 //
-// The only path that can crown anybody. Nothing the browser sends reaches
-// here; the amount comes from Stripe and nowhere else, and what it buys is
-// decided by crown_or_attempt() inside one transaction.
+// The only path that can move money into a ranking. Nothing the browser sends
+// decides an amount: the figure comes from Stripe and nowhere else, and what
+// it credits is decided by credit_payment() inside one transaction.
 //
-// It used to carry a listing id in client_reference_id, because a payment had
-// to be told which of 137 rows to credit. There is one seat now, so a payment
-// needs to say nothing about what it is buying: whoever paid more than the
-// sitting king takes the page, and whoever did not is recorded as an attempt.
+// client_reference_id carries the listing the payer is backing. The page puts
+// it there when it opens the Payment Link, Stripe hands it back untouched, and
+// it is the only thing that says which of the listings this payment belongs
+// to. Stripe restricts the field to letters, digits, dashes and underscores,
+// so the format is:
 //
-// client_reference_id is still read, for something else entirely. The page
-// mints a random receipt before sending somebody to Stripe and passes it
-// there; Stripe hands it back on the success URL that is already configured,
-// and that is what lets the payer be told what their payment bought. A
-// checkout started straight from the Payment Link carries none, and is not an
-// error: that payment counts exactly the same, its payer just has no receipt.
+//   <listing uuid>                    a plain payment
+//   <listing uuid>_<visit uuid>       the same, with the visit that sent it
+//
+// The second half is for attribution and is ignored here; the first half is
+// the money.
+//
+// A payment that arrives with no reference, or with one naming no listing, is
+// NOT dropped. credit_payment() refuses to invent a row to credit -- correctly
+// -- and the fact then goes into unmatched_payments, because the money was
+// taken and somebody has to be able to find it. A log line is not a record.
 //
 // Deploy with verify_jwt = false: Stripe cannot send a Supabase JWT, so this
 // function authenticates the caller itself by verifying the Stripe signature
@@ -102,6 +107,22 @@ async function verifyStripeSignature(
     : { ok: false, reason: "signature does not match the configured secret" };
 }
 
+/** Stripe's own uuid shape. Anything else is not a listing id. */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Call one of the two money functions as the service role. */
+async function rpc(name: string, args: Record<string, unknown>): Promise<Response> {
+  return await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+    },
+    body: JSON.stringify(args),
+  });
+}
+
 Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method !== "POST") {
     return new Response("method not allowed", { status: 405 });
@@ -131,10 +152,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // ordinary one, a card cleared while the payer waited. A method that
   // settles later -- a bank debit, a redirect the payer finished after
   // closing the tab -- completes the session unpaid and confirms it with
-  // `checkout.session.async_payment_succeeded`, which used to be dropped here
-  // as noise: money taken, the throne never contested, nothing in the logs
-  // but "ignored". Both are read the same way; the payment_status check below
-  // is what decides, and it is on the session in both.
+  // `checkout.session.async_payment_succeeded`. Both are read the same way;
+  // the payment_status check below is what decides, and it is on the session
+  // in both.
   //
   // Anything else is acknowledged and dropped, so Stripe does not retry
   // events we deliberately ignore.
@@ -154,25 +174,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const amount = Number(session.amount_total ?? 0);
   const currency = String(session.currency ?? "usd").toLowerCase();
   const paymentStatus = String(session.payment_status ?? "");
-
-  // Whatever Stripe collected at the till. Left null when there is nothing,
-  // rather than written as the word "Anonymous": that is what the page prints
-  // for a nameless king, and a fallback belongs where the printing happens.
-  // A payer who fills their card in afterwards overwrites this anyway.
-  const details = (session.customer_details ?? {}) as Record<string, unknown>;
-  const name = String(details.name ?? "").trim().slice(0, 40) || null;
-
-  // The receipt the page minted before sending this payer to Stripe, handed
-  // back untouched. It is what lets the success URL that was already on the
-  // Payment Link -- the one carrying {CHECKOUT_SESSION_CLIENT_REFERENCE_ID} --
-  // identify the payment on the way back, so the pivot needs nothing changed
-  // in Stripe. Empty when somebody opened the Payment Link directly rather
-  // than through the button, which is fine: they are still crowned, they
-  // simply have no receipt to claim their card with.
-  const claimRef = String(session.client_reference_id ?? "").trim().slice(0, 200) || null;
+  const reference = String(session.client_reference_id ?? "").trim().slice(0, 200);
 
   // A completed session can still be unpaid when a delayed payment method is
-  // used. Money that has not settled must not take the page; the
+  // used. Money that has not settled must not move a ranking; the
   // async_payment_succeeded event for the same session arrives when it has.
   if (paymentStatus !== "paid") {
     console.log(`session ${sessionId} ${event.type} but payment_status=${paymentStatus}`);
@@ -185,39 +190,84 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   // The payment link is created in USD. If Stripe ever converts (adaptive
-  // pricing), the figures are still compared as plain minor units, which is
-  // wrong across currencies and less wrong than dropping somebody's payment
-  // on the floor. Loud in the logs so it is not discovered from a complaint.
+  // pricing), the figure is still added as plain minor units, which is wrong
+  // across currencies and less wrong than dropping somebody's payment on the
+  // floor. Loud in the logs so it is not discovered from a complaint.
   if (currency !== "usd") {
-    console.error(`currency ${currency} on session ${sessionId} — compared as-is against the king`);
+    console.error(`currency ${currency} on session ${sessionId} — credited as-is`);
   }
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/crown_or_attempt`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: SERVICE_ROLE_KEY,
-      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
-    },
-    body: JSON.stringify({
+  // `<listing uuid>` or `<listing uuid>_<visit uuid>`.
+  const [listingId = "", visit = ""] = reference.split("_");
+  const cents = Math.round(amount);
+
+  /** Write the payment down somewhere, when it cannot be credited. */
+  const orphan = async (reason: string): Promise<Response> => {
+    const res = await rpc("record_orphan_payment", {
       p_session_id: sessionId,
-      p_amount_cents: Math.round(amount),
+      p_amount_cents: cents,
       p_currency: currency,
-      p_name: name,
-      p_claim_ref: claimRef,
-    }),
+      p_client_reference: reference || null,
+      p_reason: reason,
+    });
+    if (!res.ok) {
+      // Nothing was written anywhere. Make Stripe try again rather than
+      // acknowledging a payment we have no record of.
+      console.error(`record_orphan_payment failed (${res.status}): ${await res.text()}`);
+      return new Response("could not record the payment", { status: 500 });
+    }
+    console.error(`unmatched ${cents} ${currency} on ${sessionId}: ${reason} (ref="${reference}")`);
+    return new Response(JSON.stringify({ unmatched: reason }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  };
+
+  if (!UUID_RE.test(listingId)) {
+    return await orphan(reference ? "bad_reference" : "no_reference");
+  }
+
+  const res = await rpc("credit_payment", {
+    p_listing_id: listingId,
+    p_session_id: sessionId,
+    p_amount_cents: cents,
+    p_currency: currency,
   });
 
   if (!res.ok) {
-    // Return non-2xx so Stripe retries: the payment happened, the seat did not
-    // change hands, and nothing was written down.
-    const detail = await res.text();
-    console.error(`crown_or_attempt failed (${res.status}): ${detail}`);
-    return new Response("crowning failed", { status: 500 });
+    // Return non-2xx so Stripe retries: the payment happened and nothing was
+    // written down.
+    console.error(`credit_payment failed (${res.status}): ${await res.text()}`);
+    return new Response("crediting failed", { status: 500 });
   }
 
-  const result = await res.json();
-  console.log(`${amount} ${currency} from ${name ?? "Anonymous"}: ${JSON.stringify(result)}`);
+  const result = await res.json() as Record<string, unknown>;
+
+  // The listing was deleted between checkout opening and the webhook landing,
+  // or the reference names a row that never existed. Either way the money is
+  // real, so it goes to unmatched_payments instead of into a log line.
+  if (result?.reason === "unknown_listing") {
+    return await orphan("unknown_listing");
+  }
+
+  // What the payment came in holding: which listing, and which visit sent it.
+  // Written beside credit_payment rather than inside it, so the money path
+  // stays exactly the audited thing it is and a receipt that fails to record
+  // can never fail a payment. The payer's result page reads this; so does
+  // revenue by campaign.
+  try {
+    const ref = await rpc("record_payment_ref", {
+      p_session_id: sessionId,
+      p_listing_id: listingId,
+      p_visit: visit || null,
+      p_reference: reference || null,
+    });
+    if (!ref.ok) console.error(`record_payment_ref failed (${ref.status}): ${await ref.text()}`);
+  } catch (e) {
+    console.error("record_payment_ref threw", e);
+  }
+
+  console.log(`${cents} ${currency} -> ${listingId}: ${JSON.stringify(result)}`);
 
   return new Response(JSON.stringify(result), {
     status: 200,

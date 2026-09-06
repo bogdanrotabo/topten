@@ -47,38 +47,52 @@ jobs:
         with:
           node-version: '22'
 
-      # Cheapest first, and the one that catches a typo in the file the whole
-      # page depends on.
-      - name: The JavaScript parses
-        run: |
-          set -euo pipefail
-          for f in app.js config.js scripts/*.mjs; do
-            node --check "$f"
-            echo "  $f"
-          done
+      # Everything the browser loads has to parse the way a browser parses it.
+      # `node --check` is not that check: it reads a file as a script, and the
+      # three files below are modules. A syntax error in app.js once passed
+      # --check and broke the whole result page silently, which is why
+      # check.mjs imports them instead.
+      # The build reads the live rankings, so running it here proves both that
+      # it works and that the database is answering. It is also the only way
+      # scripts/build.mjs gets parsed: importing it to check the syntax would
+      # run it, and a checker with side effects is one nobody trusts.
+      - name: The site builds from the live rankings
+        run: node scripts/build.mjs
+
+      - name: The site's own checks
+        run: node scripts/check.mjs
 
       - name: The shell scripts parse
-        run: bash -n scripts/sync-routes.sh scripts/stripe-setup.sh
+        run: bash -n scripts/stripe-setup.sh supabase/tests/run.sh
 
-      # The one mistake this repository invites: editing the page or the app
-      # and pushing without running the build.
-      - name: sync-routes.sh was run
-        run: node scripts/check-build.mjs
+  money:
+    name: The money, on a real Postgres
+    runs-on: ubuntu-latest
+    # The economic rules are the one thing here that must not be taken on
+    # trust: what a payment adds, what a duplicate webhook does not add, that a
+    # tie loses, that an expired listing keeps its total, and that nobody
+    # holding the publishable key can reach a secret or a cent. All of it runs
+    # against a real PostgreSQL rather than being read and believed.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+        ports: ['5432:5432']
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: The two marks registries agree
-        run: node scripts/check-marks.mjs
+      - name: Install psql
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
-      - name: Every class the page writes is styled
-        run: node scripts/check-classes.mjs
-
-      - name: The page still has its prerender markers
-        run: node scripts/prerender.mjs --check
-
-      - name: The content security policy is current
-        run: node scripts/build-csp.mjs --check
-
-      - name: The icons and the share card are current
-        run: node scripts/make-icons.mjs --check
+      - name: The economic path holds
+        env:
+          PGPASSWORD: postgres
+          PSQL: psql -h 127.0.0.1 -p 5432 -U postgres
+        run: bash supabase/tests/ci.sh
 
   functions:
     name: The Edge Functions
@@ -86,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Deno, not Node: these two files run on Deno and use Deno's own globals.
+      # Deno, not Node: these files run on Deno and use Deno's own globals.
       # Type-checking them with anything else would either fail on Deno.serve
       # or need a stub, and a stub is a second thing to keep true.
       - uses: denoland/setup-deno@v2
@@ -94,7 +108,9 @@ jobs:
           deno-version: v2.x
 
       - name: They typecheck
-        run: deno check supabase/functions/stripe-webhook/index.ts supabase/functions/claim/index.ts
+        run: |
+          deno check supabase/functions/stripe-webhook/index.ts
+          deno check supabase/functions/growth/index.ts
 
       - name: They lint
         run: deno lint supabase/functions/

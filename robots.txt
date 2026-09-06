@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /thanks
-Disallow: /claim
 
 Sitemap: https://topten.one/sitemap.xml

@@ -1,97 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src &#39;self&#39;; script-src &#39;self&#39; https://www.googletagmanager.com; style-src &#39;self&#39; https://fonts.googleapis.com; style-src-attr &#39;unsafe-inline&#39;; font-src https://fonts.gstatic.com; img-src &#39;self&#39; data:; connect-src &#39;self&#39; https://iezclmijwrtjibgflfqj.supabase.co https://*.google-analytics.com https://*.analytics.google.com; base-uri &#39;self&#39;; form-action &#39;self&#39;; object-src &#39;none&#39;; manifest-src &#39;self&#39;">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
-<title>Privacy — King of the Hill</title>
-<meta name="description" content="No accounts, no logins, and as little data as one paid position can run on.">
+<title>Privacy | TopTen.one</title>
+<meta name="description" content="Privacy — TopTen.one.">
 <link rel="canonical" href="https://topten.one/privacy.html">
-<meta name="theme-color" content="#1b1a18">
-<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Privacy — King of the Hill">
-<meta property="og:description" content="No accounts, no logins, and as little data as one paid position can run on.">
-<meta property="og:image" content="https://topten.one/og-image.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="/icons/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#070A14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TopTen.one">
+<meta property="og:title" content="Privacy | TopTen.one">
+<meta property="og:description" content="Privacy — TopTen.one.">
 <meta property="og:url" content="https://topten.one/privacy.html">
+<meta property="og:image" content="https://topten.one/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css?v=887e7e29d7">
+<meta name="twitter:title" content="Privacy | TopTen.one">
+<meta name="twitter:description" content="Privacy — TopTen.one.">
+<meta name="twitter:image" content="https://topten.one/og-image.png">
 </head>
 <body>
-
-<header class="masthead">
-  <div class="shell masthead__row">
-    <a class="wordmark" href="/">topten<b>.one</b></a>
-    <span class="masthead__name">King of the Hill</span>
+<main class="shell">
+<div class="wash wash--violet"></div>
+<header class="masthead above">
+  <div class="masthead__left"><a class="ico" href="/" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a><a class="wordmark" href="/"><span style="color:var(--gold)"><svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true"><path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg></span>TOPTEN.ONE</a></div>
+  <div class="masthead__tools"><a class="ico" href="/find/" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
+    <a class="ico" href="/find/" aria-label="All rankings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></a>
   </div>
 </header>
+<section class="hero above" style="padding-top:40px">
+  <h1 class="page-title">PRIVACY</h1>
+</section>
+<div class="prose">
+<p class="stamp">Last updated 6 September 2026.</p>
+<p>TopTen.one has no accounts and no logins. We collect as little as a public ranking can work
+with.</p>
 
-<main class="shell prose">
-  <h1>Privacy</h1>
-  <p class="stamp">Last updated 6 September 2026.</p>
+<h2>What we store</h2>
+<p>For each listing: the <b>name</b> you submit, an optional link, the running total paid
+towards it, and the time of the last payment. All of this is public by design &mdash; it is the
+ranking.</p>
+<p>For each payment: the Stripe session identifier, the amount and the currency, linked to the
+listing it paid for. <b>This is not shown publicly.</b></p>
+<p>For each visit: a random identifier kept in your browser, the address you landed on, the
+site that sent you, your browser's language and a two-letter country. And, if you press them,
+which buttons: a ranking opened, an amount chosen, a payment begun, a share pressed. No text
+you type is ever recorded, and none of it is shown publicly.</p>
 
-  <p>TopTen.one has no accounts and no logins. It collects as little as one paid position on
-  one page can be run with.</p>
+<h2>What we do not store</h2>
+<p>No card numbers, no billing addresses, no email addresses, no passwords, no accounts, no IP
+addresses. Payments are processed entirely by <a href="https://stripe.com/privacy"
+target="_blank" rel="noopener">Stripe</a>, which acts as its own controller for the payment
+data you give it. We receive back only the amount and a session identifier.</p>
+<p>We do not ask who you are when you submit a listing, and we cannot tell you who paid
+towards one.</p>
 
-  <h2>What we store</h2>
-  <p><b>For each reign and each attempt:</b> the amount, the currency, the name Stripe
-  collected at the till, and the time. For a reign, also the message and link its holder
-  wrote. All of that is public — it is the page.</p>
-  <p><b>Not shown publicly:</b> the Stripe session identifier for the payment, and the key
-  that lets its payer edit their card. Neither can be read with the public key this site
-  hands to your browser; they are withheld by the database itself, not by the page.</p>
+<h2>Where the country comes from</h2>
+<p>The site sits behind Cloudflare, which tells the page which country the request came from.
+That two-letter code is what we keep. Your address is not stored.</p>
 
-  <h2>What we do not store</h2>
-  <p>No card numbers, no billing addresses, no email addresses, no passwords, no accounts.
-  Payments are processed entirely by
-  <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe</a>, which acts
-  as its own controller for the payment data you give it. We receive back the amount, the
-  currency, a session identifier and whatever name you gave Stripe.</p>
-  <p>If you would rather not have a name on the page, do not give Stripe one — the card
-  simply reads "Anonymous", and you can write any name you like on it afterwards.</p>
+<h2>Analytics</h2>
+<p>We use Google Analytics 4 to count page views. It sets its own cookies and processes an
+abbreviated IP address. See <a href="https://policies.google.com/privacy" target="_blank"
+rel="noopener">Google's privacy policy</a>. Browser Do Not Track and content blockers are
+respected &mdash; the site works fine without it.</p>
 
-  <h2>Analytics</h2>
-  <p>We use Google Analytics 4 to count page views. It sets its own cookies and processes an
-  abbreviated IP address. See
-  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's
-  privacy policy</a>. Content blockers are respected — the site works fine without it.</p>
-
-  <h2>Local storage</h2>
-  <p>Your browser keeps one thing: the key to any card you have paid for, so you can edit it
-  again later. It is sent only to this site, and only to save your own card. Clearing your
-  browser data removes it and there is no way to get it back.</p>
-
-  <h2>Being written about by somebody else</h2>
-  <p>A king writes their own card and could write anything on it. If one names or describes
-  you and should not, email <a href="mailto:hello@topten.one">hello@topten.one</a> and it
-  comes down. We do not require proof of identity for a removal request, and no refund is
-  owed to whoever paid for it.</p>
-
-  <h2>Retention and your rights</h2>
-  <p>Reigns and attempts are kept indefinitely: the list of former kings is the history of
-  the page, and payment records are kept for accounting. Under Swiss data protection law and
-  the GDPR you may ask for access, correction or deletion of data concerning you — write to
-  <a href="mailto:hello@topten.one">hello@topten.one</a>.</p>
-
-  <h2>Where things run</h2>
-  <p>The site is served by GitHub Pages through Cloudflare. The database and the two
-  functions behind it run on Supabase in the EU (Frankfurt). Payments run on Stripe.
-  TopTen.one is operated from Switzerland.</p>
-</main>
-
+<h2>Removal</h2>
+<p>Write to <a href="mailto:hello@topten.one">hello@topten.one</a> and we will take a listing
+down. Payment records are kept, because they are an accounting record of money that changed
+hands.</p>
+</div>
 <footer class="foot">
-  <div class="shell">
-    <nav>
-      <a href="/">The throne</a>
-      <a href="/about.html">About</a>
-      <a href="/terms.html">Terms</a>
-      <a href="/privacy.html">Privacy</a>
-      <a href="mailto:hello@topten.one">Contact</a>
-    </nav>
-    <p><svg class="flag" viewBox="0 0 32 32" width="13" height="13" aria-hidden="true"><rect width="32" height="32" rx="3" fill="#D52B1E"/><path fill="#fff" d="M13 6h6v7h7v6h-7v7h-6v-7H6v-6h7z"/></svg> Swiss made · Available worldwide</p>
-  </div>
+  <div class="foot__line">No algorithm. No editors.<br>Only what people paid.</div>
+  <nav class="foot__nav">
+    <a href="/about.html">About</a><a href="/terms.html">Terms</a>
+    <a href="/privacy.html">Privacy</a><a href="mailto:hello@topten.one">Contact</a>
+  </nav>
+  <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
+  not a vote, not an endorsement. Minimum payment $2.</p>
+  <p class="swiss"><svg class="swiss__flag" viewBox="0 0 32 32" width="14" height="14" aria-hidden="true"><rect width="32" height="32" rx="4" fill="#DA291C"/><path fill="#fff" d="M13 6h6v7h7v6h-7v7h-6v-7H6v-6h7z"/></svg><span>Swiss made &middot; Available worldwide</span></p>
 </footer>
-
+</main>
+<script src="/config.js"></script>
+<script type="module" src="/app.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NYF4ZEZPZ9"></script>
+<script src="/ga.js"></script>
 </body>
 </html>
