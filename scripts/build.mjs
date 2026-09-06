@@ -232,7 +232,6 @@ function footer() {
   </nav>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment ${esc(money(MIN_CENTS))}.</p>
-  ${swissLine}
 </footer>`;
 }
 
@@ -265,9 +264,9 @@ function homeBody() {
 ${masthead()}
 
 <section class="hero above">
+  ${swissLine}
   <h1 class="hero__q">WHO SHOULD<br>BE <em>#1</em>?</h1>
   <p class="hero__sub">Pick a side. Move the ranking.</p>
-  ${swissLine}
   <a class="cta" href="${leadBoard ? '/' + esc(leadBoard.slug) + '/' : '/find/'}" style="margin-top:28px">Explore now</a>
   <div class="search-wrap">${ICON.search.replace('width="20" height="20"', 'width="17" height="17"')}
     <input class="search" id="q" type="search" placeholder="Find anyone or anything" aria-label="Find anyone or anything" autocomplete="off">
@@ -340,6 +339,7 @@ function boardBody(b) {
 ${masthead({ back: true, share: true })}
 
 <section class="hero above" style="padding-top:40px">
+  ${swissLine}
   <div class="eyebrow">${esc(b.groupName)}</div>
   <h1 class="page-title">${question(b.q)}</h1>
   <p class="fine num" style="margin-top:14px">${b.rows.length} listed &middot;
@@ -477,6 +477,7 @@ write('find/index.html', page({
   path: '/find/', body: `<div class="wash wash--cyan"></div>
 ${masthead({ back: true })}
 <section class="hero above" style="padding-top:40px">
+  ${swissLine}
   <h1 class="page-title">FIND ANYONE<br>OR ANYTHING.</h1>
   <div class="search-wrap">${ICON.search.replace('width="20" height="20"', 'width="18" height="18"')}
     <input class="search" id="q" type="search" placeholder="Messi, Bitcoin, a city, a brand" aria-label="Search" autocomplete="off">
@@ -550,6 +551,7 @@ const legalPage = (title, body) => page({
   body: `<div class="wash wash--violet"></div>
 ${masthead({ back: true })}
 <section class="hero above" style="padding-top:40px">
+  ${swissLine}
   <h1 class="page-title">${esc(title.toUpperCase())}</h1>
 </section>
 <div class="prose">${body}</div>
