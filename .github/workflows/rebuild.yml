@@ -47,7 +47,14 @@ jobs:
       - name: Commit only what the rankings changed
         run: |
           set -euo pipefail
-          git add '*.html' sitemap.xml robots.txt
+          # app.js is here because the build stamps its imports with the
+          # version of lib.js and render.js, so that a browser holding the
+          # stylesheet and the scripts for four hours cannot pair new markup
+          # with old rules. On a run where no code changed the stamp is the
+          # same and this adds nothing; on one where it did, leaving it out
+          # would deploy pages asking for a version of app.js that still
+          # imports the previous lib.js.
+          git add '*.html' sitemap.xml robots.txt app.js
           if git diff --cached --quiet; then
             echo "Same rankings, same figures. Nothing to commit."
             exit 0

@@ -131,6 +131,57 @@ const ticks = rows
 console.log(`  ${rows.length} listings across ${live.length} rankings, `
   + `${openBoards.length} still open, ${battles.length} races with a challenger`);
 
+/* ------------------------------------------------------ what changed --- */
+
+/* A stamp on every address the browser caches.
+ *
+ * This site is served with two different lifetimes: the HTML expires in ten
+ * minutes and the stylesheet and scripts in four hours. So for up to four
+ * hours after a deploy, anybody who has been here recently gets NEW markup
+ * with OLD rules -- and markup whose rules have not arrived is not a slightly
+ * stale page, it is a broken one. The strip that runs across the top landed
+ * as sixteen hundred pixels of names run together above the title, in the
+ * previous palette, because .ticker did not exist in the stylesheet the
+ * browser still had.
+ *
+ * The stamp is the content's own hash, so the address changes when and only
+ * when the file does. Four hours of caching is right for a file that has not
+ * changed and wrong for one that has; this is the difference.
+ *
+ * The three modules share one stamp on purpose. app.js imports lib.js and
+ * render.js by their own addresses, which a query on app.js cannot reach, so
+ * the import lines are rewritten below to carry the same stamp -- and it has
+ * to be a stamp over all three, or a change in lib.js alone would leave a
+ * cached app.js still asking for the previous one.
+ */
+const stamp = (text) => createHash('sha256').update(text).digest('hex').slice(0, 10);
+
+/* The version markers a previous build wrote, taken back off before hashing,
+   so the stamp is of the source and not of the last build's output. */
+const bare = (text) => text.replace(/(from\s+['"]\.\/[\w.-]+\.js)\?v=[a-f0-9]+(['"])/g, '$1$2');
+
+const V = (() => {
+  const js = ['app.js', 'lib.js', 'render.js'].map((f) => bare(readFileSync(R(f), 'utf8')));
+  return {
+    css: stamp(readFileSync(R('styles.css'), 'utf8')),
+    js: stamp(js.join('\n')),
+    cfg: stamp(readFileSync(R('config.js'), 'utf8')),
+    dash: stamp(readFileSync(R('dashboard.js'), 'utf8')),
+  };
+})();
+
+/* app.js reaches lib.js and render.js by address, so those addresses carry the
+   stamp too. Written back to the file it was read from: this is build output
+   living in a source file, which is worth one line of noise in a diff and is
+   the only place a module's own imports can be versioned without an import
+   map -- and an import map would need an inline script, which is the one
+   thing the policy below does not allow. */
+{
+  const src = bare(readFileSync(R('app.js'), 'utf8'));
+  const out = src.replace(/(from\s+['"]\.\/[\w.-]+\.js)(['"])/g, `$1?v=${V.js}$2`);
+  if (out !== readFileSync(R('app.js'), 'utf8')) writeFileSync(R('app.js'), out);
+}
+
 /* ------------------------------------------------------------ the shell --- */
 
 const SITE = 'https://topten.one';
@@ -188,11 +239,11 @@ function head({ title, description, path, image }) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v=${V.css}">
 <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#070A14">
+<meta name="theme-color" content="#131211">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TopTen.one">
 <meta property="og:title" content="${esc(title)}">
@@ -264,8 +315,8 @@ ${head({ title, description, path, image })}
 <main class="shell">
 ${body}
 </main>
-<script src="/config.js"></script>
-<script type="module" src="/app.js"></script>
+<script src="/config.js?v=${V.cfg}"></script>
+<script type="module" src="/app.js?v=${V.js}"></script>
 ${ga()}
 </body>
 </html>
@@ -554,8 +605,8 @@ ${masthead({ back: true })}
 <div id="out"></div>
 ${footer()}
 </main>
-<script src="/config.js"></script>
-<script src="/dashboard.js"></script>
+<script src="/config.js?v=${V.cfg}"></script>
+<script src="/dashboard.js?v=${V.dash}"></script>
 </body>
 </html>
 `);
