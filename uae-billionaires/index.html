@@ -45,7 +45,7 @@
     $18 backed</p>
 </section>
 
-<section class="sect" id="top" style="margin-top:26px"><div class="glass top"><div class="top__one"><div class="rk rk--1 rk--big"><svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true"><path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg></div><div class="row__main"><div class="top__name">Pavel Durov</div><div class="top__sub">#1 for 2 days</div></div><div class="top__amt num">$8</div></div><hr class="hr"><div class="top__two"><div class="rk">2</div><div class="row__main"><div class="top__name">Mohamed Alabbar</div><div class="top__sub num">$2.01 takes #1</div></div><div class="top__amt num">$6</div></div><div style="padding:0 18px 18px"><div class="gap"><div class="gap__fill" style="width:75.0%"></div></div><div class="gap__label num">Mohamed Alabbar is at 75.0% of the leader</div></div></div></section>
+<section class="sect" id="top" style="margin-top:26px"><div class="glass top"><div class="top__one"><div class="rk rk--1 rk--big"><svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true"><path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg></div><div class="row__main"><div class="top__name">Pavel Durov</div><div class="top__sub">#1 for 3 days</div></div><div class="top__amt num">$8</div></div><hr class="hr"><div class="top__two"><div class="rk">2</div><div class="row__main"><div class="top__name">Mohamed Alabbar</div><div class="top__sub num">$2.01 takes #1</div></div><div class="top__amt num">$6</div></div><div style="padding:0 18px 18px"><div class="gap"><div class="gap__fill" style="width:75.0%"></div></div><div class="gap__label num">Mohamed Alabbar is at 75.0% of the leader</div></div></div></section>
 
 <section class="sect" id="back" style="margin-top:18px">
   <a class="cta" id="pay" href="https://buy.stripe.com/28EdR2eZoaV76yy2C00co0d?client_reference_id=d3aeac16-70fa-40e7-9eb8-0a1d43d227ea">Back Mohamed Alabbar</a>
@@ -115,7 +115,13 @@
   <!-- The address itself, not the word "Contact". An address somebody can read
        is an address somebody can use from their phone, write down, or check
        against the one an email claiming to be us came from. -->
-  <p class="foot__mail">Write to <a href="mailto:hello@topten.one">hello@topten.one</a></p>
+  <!-- The comments are not decoration. Cloudflare's Email Address Obfuscation
+       rewrites every address it finds in the HTML into a "[email protected]"
+       placeholder that only its own script can turn back into an address, so
+       the live footer read "Write to [email protected]" -- the one thing this
+       line exists not to say. email_off is the documented way to exempt a
+       fragment, and it needs no change to anybody's Cloudflare settings. -->
+  <p class="foot__mail">Write to <!--email_off--><a href="mailto:hello@topten.one">hello@topten.one</a><!--email_on--></p>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment $2.</p>
 </footer>

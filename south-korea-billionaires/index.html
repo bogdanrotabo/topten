@@ -112,7 +112,13 @@
   <!-- The address itself, not the word "Contact". An address somebody can read
        is an address somebody can use from their phone, write down, or check
        against the one an email claiming to be us came from. -->
-  <p class="foot__mail">Write to <a href="mailto:hello@topten.one">hello@topten.one</a></p>
+  <!-- The comments are not decoration. Cloudflare's Email Address Obfuscation
+       rewrites every address it finds in the HTML into a "[email protected]"
+       placeholder that only its own script can turn back into an address, so
+       the live footer read "Write to [email protected]" -- the one thing this
+       line exists not to say. email_off is the documented way to exempt a
+       fragment, and it needs no change to anybody's Cloudflare settings. -->
+  <p class="foot__mail">Write to <!--email_off--><a href="mailto:hello@topten.one">hello@topten.one</a><!--email_on--></p>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment $2.</p>
 </footer>

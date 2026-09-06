@@ -303,7 +303,13 @@ function footer() {
   <!-- The address itself, not the word "Contact". An address somebody can read
        is an address somebody can use from their phone, write down, or check
        against the one an email claiming to be us came from. -->
-  <p class="foot__mail">Write to <a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a></p>
+  <!-- The comments are not decoration. Cloudflare's Email Address Obfuscation
+       rewrites every address it finds in the HTML into a "[email protected]"
+       placeholder that only its own script can turn back into an address, so
+       the live footer read "Write to [email protected]" -- the one thing this
+       line exists not to say. email_off is the documented way to exempt a
+       fragment, and it needs no change to anybody's Cloudflare settings. -->
+  <p class="foot__mail">Write to <!--email_off--><a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a><!--email_on--></p>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment ${esc(money(MIN_CENTS))}.</p>
 </footer>`;
@@ -732,7 +738,7 @@ forever.</b></p>
 mechanism, printed next to every name. Nothing on this site is ranked by anything other than
 what people paid, and no figure on it is invented &mdash; where the honest number is zero, the
 page says so.</p>
-<p>Questions: <a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a>.</p>
+<p>Questions: <!--email_off--><a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a><!--email_on-->.</p>
 `));
 
 write('terms.html', legalPage('Terms', `
@@ -773,7 +779,7 @@ authority requires it. Hiding a listing does not entitle anyone who paid towards
 repayment.</p>
 <p>Submitting something does not require the consent of the person behind it. If you are the
 subject of a listing and want it removed, email
-<a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a> and we will take it down. No refund is
+<!--email_off--><a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a><!--email_on--> and we will take it down. No refund is
 owed to whoever paid for it.</p>
 
 <h2>No accounts, no guarantees</h2>
@@ -828,7 +834,7 @@ rel="noopener">Google's privacy policy</a>. Browser Do Not Track and content blo
 respected &mdash; the site works fine without it.</p>
 
 <h2>Removal</h2>
-<p>Write to <a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a> and we will take a listing
+<p>Write to <!--email_off--><a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a><!--email_on--> and we will take a listing
 down. Payment records are kept, because they are an accounting record of money that changed
 hands.</p>
 `));
