@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="14" fill="#000000"/>
+  <rect width="64" height="64" rx="14" fill="#131211"/>
   <text x="31" y="45" text-anchor="middle"
         font-family="ui-monospace, SF Mono, Cascadia Mono, Roboto Mono, DejaVu Sans Mono, Menlo, monospace"
-        font-size="25" font-weight="800" letter-spacing="-1.8" fill="#cd6ff0">#1</text>
+        font-size="25" font-weight="800" letter-spacing="-1.8" fill="#d9a63c">#1</text>
 </svg>

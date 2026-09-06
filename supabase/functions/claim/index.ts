@@ -5,6 +5,9 @@
 //   {action:"status", session_id | claim_ref}      what did that payment buy?
 //   {action:"save", edit_token, name, url, message} write the card
 //
+// The card is a reign's or an attempt's -- whoever paid gets one, and the
+// token says which without the caller choosing.
+//
 // Two receipts, either of which answers the first question, because which one
 // a payer comes back holding is decided by the Payment Link's success URL:
 //
