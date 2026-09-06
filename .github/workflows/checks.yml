@@ -1,0 +1,94 @@
+# What a contributor would run before pushing, run for them.
+#
+# There was nothing on pull requests until this file: the only two workflows
+# fire on a push to main or on a cron, so a branch could be opened, reviewed
+# and merged without a single thing having been executed. "No checks" and "all
+# checks passed" look identical in the merge box, and that is the worse of the
+# two to be wrong about.
+#
+# Every step here is a command that already existed and that anybody can run
+# locally, which is the point: this workflow adds no rule of its own, it just
+# refuses to let one be broken quietly.
+#
+# What it deliberately does NOT do is run scripts/prerender.mjs for real. That
+# reads the live database, and the king changes whenever somebody pays, so a
+# check that compared its output against the committed page would fail on a
+# payment rather than on a mistake. Its --check mode, which only asks whether
+# the markers are still in the page, is what runs instead.
+#
+# There is no database and no Stripe key here, and nothing in this file needs
+# one: the migration and the two Edge Functions are checked as text, not run.
+#
+# To stop it: disable the workflow in the Actions tab, or delete this file.
+
+name: Checks
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # One run per branch. A second push while the first is still going cancels
+  # it -- the answer for the older commit is not one anybody will read.
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: The site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Cheapest first, and the one that catches a typo in the file the whole
+      # page depends on.
+      - name: The JavaScript parses
+        run: |
+          set -euo pipefail
+          for f in app.js config.js scripts/*.mjs; do
+            node --check "$f"
+            echo "  $f"
+          done
+
+      - name: The shell scripts parse
+        run: bash -n scripts/sync-routes.sh scripts/stripe-setup.sh
+
+      # The one mistake this repository invites: editing the page or the app
+      # and pushing without running the build.
+      - name: sync-routes.sh was run
+        run: node scripts/check-build.mjs
+
+      - name: The page still has its prerender markers
+        run: node scripts/prerender.mjs --check
+
+      - name: The content security policy is current
+        run: node scripts/build-csp.mjs --check
+
+      - name: The icons and the share card are current
+        run: node scripts/make-icons.mjs --check
+
+  functions:
+    name: The Edge Functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Deno, not Node: these two files run on Deno and use Deno's own globals.
+      # Type-checking them with anything else would either fail on Deno.serve
+      # or need a stub, and a stub is a second thing to keep true.
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: They typecheck
+        run: deno check supabase/functions/stripe-webhook/index.ts supabase/functions/claim/index.ts
+
+      - name: They lint
+        run: deno lint supabase/functions/

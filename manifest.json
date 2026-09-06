@@ -1,12 +1,12 @@
 {
-  "name": "TopTen.one",
-  "short_name": "TopTen",
-  "description": "I am #1. Ten places on every board. Pay more than the person above you: that is the whole algorithm.",
+  "name": "King of the Hill \u2014 topten.one",
+  "short_name": "King of the Hill",
+  "description": "One page. One king. Pay more than them and it's yours.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#dcc4e9",
+  "background_color": "#16101b",
+  "theme_color": "#2b1f39",
   "orientation": "portrait-primary",
   "icons": [
     {

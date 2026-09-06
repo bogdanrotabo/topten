@@ -3,140 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-PMmpIYbmqBS8JoVLpsJpkiJVqZe64SS3awIgSe3vWu8=' 'sha256-kqS0Nh2Z3dpKXjkHq/JR5xS57ZTE1W6KUcfyxTCOjQ4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
-<title>Privacy — TopTen.one</title>
-<meta name="description" content="What TopTen.one stores, what it does not, and how to get a listing removed.">
+<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
+<title>Privacy — King of the Hill</title>
+<meta name="description" content="No accounts, no logins, and as little data as one paid position can run on.">
 <link rel="canonical" href="https://topten.one/privacy.html">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1421" media="(prefers-color-scheme: dark)">
-
-<!-- Before the first paint, not after: a stylesheet cannot read localStorage,
-     so a saved dark theme applied later would flash the page white on every
-     load. Same four lines as the home page, and they have to stay the same. -->
-<script>
-try {
-  var t = localStorage.getItem('topten_theme');
-  if (t !== 'light' && t !== 'dark') {
-    t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  document.documentElement.dataset.theme = t;
-} catch (e) { document.documentElement.dataset.theme = 'light'; }
-</script>
+<meta name="theme-color" content="#2b1f39">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Privacy — TopTen.one">
-<meta property="og:description" content="No accounts, no logins. Here is exactly what is stored.">
-<meta property="og:image" content="https://topten.one/og-image.png">
+<meta property="og:title" content="Privacy — King of the Hill">
+<meta property="og:description" content="No accounts, no logins, and as little data as one paid position can run on.">
+<meta property="og:image" content="https://topten.one/og-image.png?v=3">
 <meta property="og:url" content="https://topten.one/privacy.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css?v=c76e983ee7">
+<link rel="stylesheet" href="/styles.css?v=e73cd55517">
 </head>
 <body>
 
 <header class="masthead">
   <div class="shell masthead__row">
-    <a class="wordmark" href="/">TopTen<b>.one</b></a>
+    <a class="wordmark" href="/">topten<b>.one</b></a>
+    <span class="masthead__name">King of the Hill</span>
   </div>
 </header>
 
 <main class="shell prose">
   <h1>Privacy</h1>
-  <p class="updated">Last updated 25 August 2026.</p>
+  <p class="stamp">Last updated 6 September 2026.</p>
 
-  <p>TopTen.one has no accounts and no logins. We collect as little as a public
-  leaderboard can work with.</p>
+  <p>TopTen.one has no accounts and no logins. It collects as little as one paid position on
+  one page can be run with.</p>
 
   <h2>What we store</h2>
-  <p>For each listing: the <strong>profile link</strong> you submit, the handle derived
-  from it, an optional 80-character tagline, the running total paid towards it, and the
-  time of the last payment. All of this is public by design — it is the board.</p>
-  <p>For each payment: the Stripe session identifier, the amount and the currency, linked
-  to the listing it paid for. This is not shown publicly.</p>
+  <p><b>For each reign and each attempt:</b> the amount, the currency, the name Stripe
+  collected at the till, and the time. For a reign, also the message and link its holder
+  wrote. All of that is public — it is the page.</p>
+  <p><b>Not shown publicly:</b> the Stripe session identifier for the payment, and the key
+  that lets its payer edit their card. Neither can be read with the public key this site
+  hands to your browser; they are withheld by the database itself, not by the page.</p>
 
   <h2>What we do not store</h2>
   <p>No card numbers, no billing addresses, no email addresses, no passwords, no accounts.
-  Payments are processed entirely by <a href="https://stripe.com/privacy" rel="noopener">Stripe</a>,
-  which acts as its own controller for the payment data you give it. We receive back only
-  the amount and a session identifier.</p>
-  <p>We do not ask who you are when you submit a listing, and we cannot tell you who paid
-  towards one.</p>
+  Payments are processed entirely by
+  <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe</a>, which acts
+  as its own controller for the payment data you give it. We receive back the amount, the
+  currency, a session identifier and whatever name you gave Stripe.</p>
+  <p>If you would rather not have a name on the page, do not give Stripe one — the card
+  simply reads "Anonymous", and you can write any name you like on it afterwards.</p>
 
   <h2>Analytics</h2>
-  <p>We use Google Analytics 4 to count page views and see which boards get traffic. It sets
-  its own cookies and processes an abbreviated IP address.
-  See <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a>.
-  Browser Do Not Track and content blockers are respected — the site works fine without it.</p>
-
-  <h2>Avatars</h2>
-  <p>Profile pictures on the boards are fetched by your browser from
-  <a href="https://unavatar.io" rel="noopener">unavatar.io</a> using the public handle.
-  That request comes from your browser, so unavatar.io sees your IP address. We do not
-  upload or host any images of people.</p>
+  <p>We use Google Analytics 4 to count page views. It sets its own cookies and processes an
+  abbreviated IP address. See
+  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's
+  privacy policy</a>. Content blockers are respected — the site works fine without it.</p>
 
   <h2>Local storage</h2>
-  <p>We keep one value in your browser's local storage: the id of the listing you last paid
-  for, so the thank-you page can find it after you come back from Stripe. Clearing your
-  browser data removes it. It is never sent anywhere except to look up a public board row.</p>
+  <p>Your browser keeps one thing: the key to any card you have paid for, so you can edit it
+  again later. It is sent only to this site, and only to save your own card. Clearing your
+  browser data removes it and there is no way to get it back.</p>
 
-  <h2>Being listed by someone else</h2>
-  <p>Anyone can submit any public profile link, including yours. If you want a listing about
-  you removed, email <a href="mailto:hello@topten.one">hello@topten.one</a> with the link and
-  we will take it down. We do not require proof of identity for a removal request, and no
-  refund is owed to whoever paid for it.</p>
+  <h2>Being written about by somebody else</h2>
+  <p>A king writes their own card and could write anything on it. If one names or describes
+  you and should not, email <a href="mailto:hello@topten.one">hello@topten.one</a> and it
+  comes down. We do not require proof of identity for a removal request, and no refund is
+  owed to whoever paid for it.</p>
 
   <h2>Retention and your rights</h2>
-  <p>Listings stop being displayed 30 days after their last payment. Listing and payment
-  records are kept for accounting purposes. Under Swiss data protection law and the GDPR you
-  may ask for access, correction or deletion of data concerning you — write to
+  <p>Reigns and attempts are kept indefinitely: the list of former kings is the history of
+  the page, and payment records are kept for accounting. Under Swiss data protection law and
+  the GDPR you may ask for access, correction or deletion of data concerning you — write to
   <a href="mailto:hello@topten.one">hello@topten.one</a>.</p>
 
   <h2>Where things run</h2>
-  <p>The site is served by GitHub Pages through Cloudflare. The database and the payment
-  webhook run on Supabase in the EU (Frankfurt). Payments run on Stripe. TopTen.one is
-  operated from Switzerland.</p>
+  <p>The site is served by GitHub Pages through Cloudflare. The database and the two
+  functions behind it run on Supabase in the EU (Frankfurt). Payments run on Stripe.
+  TopTen.one is operated from Switzerland.</p>
 </main>
 
 <footer class="foot">
   <div class="shell">
-    <div class="sharebar">
-      <span class="sharebar__k">Share</span>
-      <a class="sharebar__url" href="https://topten.one/">topten.one</a>
-      <span class="sharebar__acts">
-        <button class="sharebar__btn" data-share-copy>Copy link</button>
-        <a class="sharebar__btn" href="https://x.com/intent/post?text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform.%20No%20algorithm.&url=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Post on X</a>
-        <a class="sharebar__btn" href="https://wa.me/?text=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="sharebar__btn" href="https://t.me/share/url?url=https%3A%2F%2Ftopten.one%2F&text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform." target="_blank" rel="noopener">Telegram</a>
-      </span>
-    </div>
-    <div class="sponsor">
-      <span class="sponsor__k">Official sponsor</span>
-      <svg class="sponsor__logo sponsor__logo--rotabo" viewBox="0 0 430 260" width="43" height="26" aria-hidden="true"><defs><radialGradient id="rotaboViolet" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#rotaboViolet)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
-      <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
-    </div>
     <nav>
-      <a href="/">Boards</a>
+      <a href="/">The throne</a>
       <a href="/about.html">About</a>
       <a href="/terms.html">Terms</a>
       <a href="/privacy.html">Privacy</a>
+      <a href="mailto:hello@topten.one">Contact</a>
     </nav>
     <p>🇨🇭 Made in Switzerland · Available worldwide</p>
   </div>
 </footer>
-
-<script>
-// These pages do not load app.js, so the share bar gets its own three lines.
-document.addEventListener("click", async e => {
-  const b = e.target.closest("[data-share-copy]");
-  if (!b) return;
-  e.preventDefault();
-  try {
-    await navigator.clipboard.writeText("https://topten.one/");
-    b.textContent = "Copied";
-    setTimeout(() => { b.textContent = "Copy link"; }, 1800);
-  } catch { b.textContent = "Copy failed"; }
-});
-</script>
 
 </body>
 </html>

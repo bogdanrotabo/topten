@@ -3,98 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-PMmpIYbmqBS8JoVLpsJpkiJVqZe64SS3awIgSe3vWu8=' 'sha256-kqS0Nh2Z3dpKXjkHq/JR5xS57ZTE1W6KUcfyxTCOjQ4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
-<title>Terms — TopTen.one</title>
-<meta name="description" content="The rules of TopTen.one: money sets the rank, payments are final, listings expire after 30 days.">
+<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
+<title>Terms — King of the Hill</title>
+<meta name="description" content="One position on one page. Payments are final and there are no refunds.">
 <link rel="canonical" href="https://topten.one/terms.html">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1421" media="(prefers-color-scheme: dark)">
-
-<!-- Before the first paint, not after: a stylesheet cannot read localStorage,
-     so a saved dark theme applied later would flash the page white on every
-     load. Same four lines as the home page, and they have to stay the same. -->
-<script>
-try {
-  var t = localStorage.getItem('topten_theme');
-  if (t !== 'light' && t !== 'dark') {
-    t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  document.documentElement.dataset.theme = t;
-} catch (e) { document.documentElement.dataset.theme = 'light'; }
-</script>
+<meta name="theme-color" content="#2b1f39">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Terms — TopTen.one">
-<meta property="og:description" content="Money sets the rank. Payments are final. Listings expire after 30 days.">
-<meta property="og:image" content="https://topten.one/og-image.png">
+<meta property="og:title" content="Terms — King of the Hill">
+<meta property="og:description" content="One position on one page. Payments are final and there are no refunds.">
+<meta property="og:image" content="https://topten.one/og-image.png?v=3">
 <meta property="og:url" content="https://topten.one/terms.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css?v=c76e983ee7">
+<link rel="stylesheet" href="/styles.css?v=e73cd55517">
 </head>
 <body>
 
 <header class="masthead">
   <div class="shell masthead__row">
-    <a class="wordmark" href="/">TopTen<b>.one</b></a>
+    <a class="wordmark" href="/">topten<b>.one</b></a>
+    <span class="masthead__name">King of the Hill</span>
   </div>
 </header>
 
 <main class="shell prose">
   <h1>Terms</h1>
-  <p class="updated">Last updated 25 August 2026.</p>
+  <p class="stamp">Last updated 6 September 2026.</p>
 
-  <p>TopTen.one is a leaderboard. You pay to put a social media profile on it, and the
-  money you pay decides where it sits. By submitting a listing or paying towards one,
-  you accept these terms.</p>
+  <p>TopTen.one sells one position on one page. Whoever has paid the most for it holds it.
+  By paying, you accept these terms.</p>
 
-  <h2>Rank is money, and nothing else</h2>
-  <p>Every board ranks listings by the <strong>total amount paid towards that listing</strong>,
-  highest first. There is no algorithm, no editorial judgement, no quality score and no way
-  to earn a position without paying for it. If two listings hold the same total, the one
-  that reached it first ranks higher.</p>
-  <p>Anyone can add money to any listing at any time, including a listing they did not
-  create. Money added to a listing belongs to that listing. It cannot be moved, split,
-  reassigned or withdrawn.</p>
+  <h2>The position is money, and nothing else</h2>
+  <p>A payment larger than the amount the current king paid takes the page immediately. A
+  payment equal to or smaller than it does not, and is recorded publicly as an attempt. There
+  is no algorithm, no editorial judgement and no way to hold the page without paying more
+  than the person on it.</p>
+  <p>A reign is a single payment. Payments are <b>not</b> cumulative: a second payment is
+  judged on its own against whoever is king at the time it settles, and does not add to an
+  earlier one.</p>
+  <p>While nobody holds the page, any payment of one unit of the charged currency or more
+  takes it.</p>
+  <p>Payments are judged in the order they settle, not the order they were started. If two
+  payments arrive at once, the one recorded first is compared first, and the second is then
+  compared against the result.</p>
 
   <h2>Payments are final</h2>
-  <p><strong>There are no refunds, under any circumstances.</strong> That includes being
-  overtaken a minute later, changing your mind, paying towards the wrong listing, a listing
-  expiring, or a listing being hidden for breaking the rules below. Payment buys a position
-  on a public board at the moment of payment and nothing more. Payments are processed by
-  Stripe; we never see or store your card details.</p>
-  <p>The minimum payment is US$2. Amounts are charged in US dollars.</p>
+  <p><b>There are no refunds, under any circumstances.</b> That includes being dethroned a
+  minute later, changing your mind, paying too little to take the page, and having your card
+  removed for breaking the rules below. A payment buys the position it buys at the moment it
+  settles, and nothing more. Payments are processed by
+  <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>; we never see or
+  store your card details.</p>
+  <p>Amounts are charged in US dollars. Stripe applies its own minimum and maximum to a
+  single payment.</p>
 
-  <h2>Listings expire after 30 days</h2>
-  <p>A listing stays on its board for <strong>30 days from its most recent payment</strong>.
-  After that it becomes inactive and stops appearing publicly. Its historical total is kept,
-  and any new payment reactivates it with that full total intact. We do not send reminders
-  before a listing expires.</p>
+  <h2>A reign does not expire</h2>
+  <p>The page is yours until somebody pays more than you did. There is no time limit and no
+  renewal. Equally, there is no guarantee of any length of time at all: you can be dethroned
+  a second after you are crowned, and no part of your payment is returned when you are.</p>
 
-  <h2>What we will hide</h2>
-  <p>We may hide any listing, at any time, without notice and <strong>without a refund</strong>,
-  if in our judgement it is illegal, hateful, adult or sexual, spam, deceptive, or impersonates
-  a person or organisation. We may also hide a listing if a platform, a rights holder or a
-  competent authority requires it. Hiding a listing does not entitle anyone who paid towards
-  it to any repayment.</p>
-  <p>Submitting a profile does not require the consent of the person behind it. If you are
-  the subject of a listing and want it removed, email
-  <a href="mailto:hello@topten.one">hello@topten.one</a> and we will take it down. No refund
-  is owed to whoever paid for it.</p>
+  <h2>What you may write, and what we will remove</h2>
+  <p>A king writes a name, a message and an optional link. We may remove or blank any of
+  them, at any time, without notice and without a refund, if in our judgement they are
+  illegal, hateful, adult or sexual, spam, deceptive, or impersonate a person or
+  organisation. We may also act on a demand from a rights holder or a competent authority.</p>
+  <p>Removing what a king has written does not end their reign and does not entitle them to
+  any repayment. If a card names or describes you and should not, email
+  <a href="mailto:hello@topten.one">hello@topten.one</a> and it comes down. No refund is owed
+  to whoever paid for it.</p>
 
   <h2>No accounts, no guarantees</h2>
-  <p>There are no accounts and no logins. Whoever holds the link to a listing can add money
-  to it. We do not verify that a submitter controls the profile they submit.</p>
-  <p>The service is provided as is. We do not guarantee uptime, visibility, traffic, clicks,
-  followers, or any outcome whatsoever from appearing on a board. To the fullest extent
-  permitted by law, our total liability to you is limited to the amount you paid us in the
-  30 days before the claim.</p>
+  <p>There are no accounts and no logins. After paying you are given one key, once, to the
+  browser you paid from; it is what lets you write and rewrite your card. If you lose it, we
+  cannot prove it was yours and cannot issue another. Anybody holding that key can edit that
+  card.</p>
+  <p>The service is provided as is. We do not guarantee uptime, visibility, traffic, clicks
+  or any outcome whatsoever from holding the page. To the fullest extent permitted by law,
+  our total liability to you is limited to the amount you paid us in the 30 days before the
+  claim.</p>
 
-  <h2>Not affiliated</h2>
-  <p>TopTen.one is <strong>not affiliated with, endorsed by, or connected to</strong> X, Instagram,
-  TikTok, YouTube, Facebook, Telegram, Snapchat, Twitch, LinkedIn or Threads, or any of their parent
-  companies. All platform names and marks belong to their respective owners and are used
-  here only to say which board a listing is on.</p>
+  <h2>Not an endorsement</h2>
+  <p>What a king writes is theirs. It is not a statement by TopTen.one, not an endorsement of
+  anybody, and not a recommendation to buy, follow or trust anything a card links to.</p>
 
   <h2>Changes and contact</h2>
   <p>We may change these terms. The version published here is the one that applies.
@@ -104,44 +95,16 @@ try {
 
 <footer class="foot">
   <div class="shell">
-    <div class="sharebar">
-      <span class="sharebar__k">Share</span>
-      <a class="sharebar__url" href="https://topten.one/">topten.one</a>
-      <span class="sharebar__acts">
-        <button class="sharebar__btn" data-share-copy>Copy link</button>
-        <a class="sharebar__btn" href="https://x.com/intent/post?text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform.%20No%20algorithm.&url=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Post on X</a>
-        <a class="sharebar__btn" href="https://wa.me/?text=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="sharebar__btn" href="https://t.me/share/url?url=https%3A%2F%2Ftopten.one%2F&text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform." target="_blank" rel="noopener">Telegram</a>
-      </span>
-    </div>
-    <div class="sponsor">
-      <span class="sponsor__k">Official sponsor</span>
-      <svg class="sponsor__logo sponsor__logo--rotabo" viewBox="0 0 430 260" width="43" height="26" aria-hidden="true"><defs><radialGradient id="rotaboViolet" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#rotaboViolet)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
-      <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
-    </div>
     <nav>
-      <a href="/">Boards</a>
+      <a href="/">The throne</a>
       <a href="/about.html">About</a>
       <a href="/terms.html">Terms</a>
       <a href="/privacy.html">Privacy</a>
+      <a href="mailto:hello@topten.one">Contact</a>
     </nav>
     <p>🇨🇭 Made in Switzerland · Available worldwide</p>
   </div>
 </footer>
-
-<script>
-// These pages do not load app.js, so the share bar gets its own three lines.
-document.addEventListener("click", async e => {
-  const b = e.target.closest("[data-share-copy]");
-  if (!b) return;
-  e.preventDefault();
-  try {
-    await navigator.clipboard.writeText("https://topten.one/");
-    b.textContent = "Copied";
-    setTimeout(() => { b.textContent = "Copy link"; }, 1800);
-  } catch { b.textContent = "Copy failed"; }
-});
-</script>
 
 </body>
 </html>

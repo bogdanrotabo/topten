@@ -3,127 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com 'sha256-PMmpIYbmqBS8JoVLpsJpkiJVqZe64SS3awIgSe3vWu8=' 'sha256-kqS0Nh2Z3dpKXjkHq/JR5xS57ZTE1W6KUcfyxTCOjQ4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://api.coingecko.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
-<title>About — TopTen.one</title>
-<meta name="description" content="One board per platform, ten places on it, and money is the only thing that moves you.">
+<!-- csp --><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://iezclmijwrtjibgflfqj.supabase.co wss://iezclmijwrtjibgflfqj.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; manifest-src 'self'">
+<title>About — King of the Hill</title>
+<meta name="description" content="One page, one king. Whoever has paid the most holds it, and whoever pays more takes it.">
 <link rel="canonical" href="https://topten.one/about.html">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1421" media="(prefers-color-scheme: dark)">
-
-<!-- Before the first paint, not after: a stylesheet cannot read localStorage,
-     so a saved dark theme applied later would flash the page white on every
-     load. Same four lines as the home page, and they have to stay the same. -->
-<script>
-try {
-  var t = localStorage.getItem('topten_theme');
-  if (t !== 'light' && t !== 'dark') {
-    t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  document.documentElement.dataset.theme = t;
-} catch (e) { document.documentElement.dataset.theme = 'light'; }
-</script>
+<meta name="theme-color" content="#2b1f39">
 <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png">
 <meta property="og:type" content="article">
-<meta property="og:title" content="About — TopTen.one">
-<meta property="og:description" content="One board per platform, ten places on it, and money is the only thing that moves you.">
-<meta property="og:image" content="https://topten.one/og-image.png">
+<meta property="og:title" content="About — King of the Hill">
+<meta property="og:description" content="One page, one king. Whoever has paid the most holds it, and whoever pays more takes it.">
+<meta property="og:image" content="https://topten.one/og-image.png?v=3">
 <meta property="og:url" content="https://topten.one/about.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/styles.css?v=c76e983ee7">
+<link rel="stylesheet" href="/styles.css?v=e73cd55517">
 </head>
 <body>
 
 <header class="masthead">
   <div class="shell masthead__row">
-    <a class="wordmark" href="/">TopTen<b>.one</b></a>
+    <a class="wordmark" href="/">topten<b>.one</b></a>
+    <span class="masthead__name">King of the Hill</span>
   </div>
 </header>
 
 <main class="shell prose">
   <h1>About</h1>
+  <p class="stamp">One page. One king.</p>
 
   <p>Everything online is ranked by something nobody will explain: an algorithm, a follower
-  count, a paid partnership that does not admit to being one. TopTen.one does the opposite.
-  <strong>Thirty-four boards, ten places on each, and the only thing that moves you up is
-  money.</strong> Social profiles and the creators on them, crypto, memecoins, giveaways,
-  football, F1, games, artists, podcasts, cities, restaurants, startups, pets. The number to
-  beat is printed at the top of every board, and again on the row directly above you.</p>
+  count, a paid partnership that does not admit to being one. This site does the opposite,
+  and it does it with one position instead of a leaderboard.</p>
+
+  <p>There is a single seat. Whoever has paid the most for it is on it, their name and their
+  message are the page, and the figure it cost them is printed underneath. That is the entire
+  product.</p>
 
   <h2>How it works</h2>
-  <p>Pick a board, say what you are listing — a profile, a coin, a club, a city, a dog —
-  pick an amount, pay. Your listing appears on that board at whatever position the money
-  buys, immediately. There is no review, no waiting and no account
-  to create.</p>
-  <p>Payments are cumulative. A listing's rank is the <strong>total</strong> ever paid
-  towards it, so $20 today and $30 next week is a $50 listing. Anyone can add money to any
-  listing — including someone else's, if they want to push a friend up the board.</p>
-  <p>Positions 11 and below sit in the waiting list under each board, with the exact amount
-  it would take to break into the Top 10.</p>
+  <p>Pay whatever you like. If it is more than the king paid, the page is yours immediately —
+  you fill in a name, a message and a link, and the previous king moves into the list of
+  former kings. If it is the same or less, the king stays where they are and your payment is
+  recorded, publicly, as an attempt on them.</p>
+  <p><b>There is no top-up.</b> A reign is one payment. Paying twice does not add up to one
+  larger figure; the second payment is judged against the king on its own, which may well be
+  yourself.</p>
+  <p><b>There is no expiry.</b> A reign lasts until somebody outpays it. It can last an hour
+  or a year.</p>
 
-  <h2>Listings expire</h2>
-  <p>Thirty days after its last payment a listing drops off the board. Its total is kept, so
-  a single new payment brings it back exactly where the money says it belongs. Nobody owns a
-  position forever.</p>
+  <h2>Why the attempts are shown</h2>
+  <p>Because they are the price of the seat, honestly stated. A king who cost $40 and has
+  survived nine attempts is worth something different from a king who cost $40 and nobody has
+  challenged, and hiding the second number would make the first one a boast rather than a
+  fact.</p>
 
   <h2>Why it is honest</h2>
-  <p>Paid placement is everywhere; it is just usually disguised as a recommendation. Here
-  there is nothing to disguise. Rank is a receipt. If someone is at #1, you know precisely
-  why, and you know precisely what it would cost to take it from them.</p>
+  <p>Paid placement is everywhere; it is usually disguised as a recommendation. Here there is
+  nothing to disguise. The position is a receipt. If somebody is on the page you know exactly
+  why, and you know to the cent what it would cost to take it from them.</p>
 
   <h2>The rules</h2>
-  <p>Illegal, hateful, adult, spam and impersonation listings get hidden, without a refund.
-  If you are the subject of a listing you did not ask for, email
+  <p>Illegal, hateful, adult, spam and impersonating cards are removed, without a refund. If
+  a king has written something about you that should not be there, email
   <a href="mailto:hello@topten.one">hello@topten.one</a> and it comes down.</p>
   <p>Read the <a href="/terms.html">terms</a> before paying — particularly the part where
   payments are final.</p>
 
   <h2>Who runs it</h2>
-  <p>TopTen.one is a small independent project built and operated from Switzerland.
-  It is not affiliated with X, Instagram, TikTok, YouTube, Facebook, Telegram, Snapchat, Twitch,
-  LinkedIn or Threads. Say hello: <a href="mailto:hello@topten.one">hello@topten.one</a></p>
+  <p>A small independent project built and operated from Switzerland.
+  Say hello: <a href="mailto:hello@topten.one">hello@topten.one</a></p>
 </main>
 
 <footer class="foot">
   <div class="shell">
-    <div class="sharebar">
-      <span class="sharebar__k">Share</span>
-      <a class="sharebar__url" href="https://topten.one/">topten.one</a>
-      <span class="sharebar__acts">
-        <button class="sharebar__btn" data-share-copy>Copy link</button>
-        <a class="sharebar__btn" href="https://x.com/intent/post?text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform.%20No%20algorithm.&url=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">Post on X</a>
-        <a class="sharebar__btn" href="https://wa.me/?text=https%3A%2F%2Ftopten.one%2F" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="sharebar__btn" href="https://t.me/share/url?url=https%3A%2F%2Ftopten.one%2F&text=Pay%20to%20be%20seen.%20Top%2010%20per%20platform." target="_blank" rel="noopener">Telegram</a>
-      </span>
-    </div>
-    <div class="sponsor">
-      <span class="sponsor__k">Official sponsor</span>
-      <svg class="sponsor__logo sponsor__logo--rotabo" viewBox="0 0 430 260" width="43" height="26" aria-hidden="true"><defs><radialGradient id="rotaboViolet" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#rotaboViolet)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg><a class="sponsor__brand" href="https://rotabo.app" target="_blank" rel="noopener">Rotabo<b>.app</b></a>
-      <span class="sponsor__tag">Need me? Find me!</span><a class="sponsor__x" href="https://x.com/supportrotabo" target="_blank" rel="noopener" aria-label="Rotabo on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.9 2H22l-7 8.1L23.3 22h-6.5l-5-6.6-5.8 6.6H2.9l7.5-8.6L2 2h6.6l4.6 6.1zm-1.1 18h1.8L8.3 3.9H6.4z"/></svg></a>
-    </div>
     <nav>
-      <a href="/">Boards</a>
+      <a href="/">The throne</a>
       <a href="/about.html">About</a>
       <a href="/terms.html">Terms</a>
       <a href="/privacy.html">Privacy</a>
+      <a href="mailto:hello@topten.one">Contact</a>
     </nav>
     <p>🇨🇭 Made in Switzerland · Available worldwide</p>
   </div>
 </footer>
-
-<script>
-// These pages do not load app.js, so the share bar gets its own three lines.
-document.addEventListener("click", async e => {
-  const b = e.target.closest("[data-share-copy]");
-  if (!b) return;
-  e.preventDefault();
-  try {
-    await navigator.clipboard.writeText("https://topten.one/");
-    b.textContent = "Copied";
-    setTimeout(() => { b.textContent = "Copy link"; }, 1800);
-  } catch { b.textContent = "Copy failed"; }
-});
-</script>
 
 </body>
 </html>

@@ -1,0 +1,69 @@
+# Keep the king in the HTML current, without anybody remembering to.
+#
+# index.html carries the king, the former kings and the social card baked in at
+# build time, because a crawler is handed a page drawn by JavaScript and finds
+# nothing in it. That bake is only as fresh as the last deploy — and on a site
+# where the whole page is one person's name, a stale bake means a shared link
+# previews the wrong king and a search result names somebody who was dethroned
+# a week ago.
+#
+# So this runs the build every six hours and commits only when the bytes
+# actually changed. A commit here means the throne changed hands, which makes
+# the history a readable log of exactly that.
+#
+# It touches index.html and its three route copies and nothing else. It cannot
+# change app.js, the styles or the config, so the worst a bad run can do is
+# publish a king who is a few hours out of date — which is what would happen
+# anyway if it did not run.
+#
+# To stop it: disable the workflow in the Actions tab, or delete this file. The
+# site keeps working on whatever was baked in last, and corrects itself in the
+# browser within a second either way.
+
+name: Prerender the king
+
+on:
+  schedule:
+    # 07:23 past every sixth hour. Not on the hour: everybody schedules on the
+    # hour, and GitHub runs a busy cron late.
+    - cron: '23 1,7,13,19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prerender
+  cancel-in-progress: false
+
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bake the king into the page
+        run: bash scripts/sync-routes.sh
+
+      - name: Commit only if the page actually changed
+        run: |
+          set -euo pipefail
+          # The page and its copies, so a mistake anywhere else in the tree
+          # cannot ride along on this commit.
+          git add index.html 404.html thanks/index.html claim/index.html
+          if git diff --cached --quiet; then
+            echo "Same king, same figures. Nothing to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          king=$(grep -oP '(?<=<h1 class="king__name">).*?(?=</h1>)' index.html || echo 'the throne')
+          git commit -m "The page says $king
+
+          Rebaked from the live views by .github/workflows/prerender.yml.
+          Only index.html and its three route copies change here."
+          git push
