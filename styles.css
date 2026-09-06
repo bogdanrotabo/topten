@@ -172,6 +172,11 @@ button {
 }
 .wordmark b { color: var(--accent); font-weight: 800; }
 
+/* The dot in a name. gift.ceo sets its own that way -- white letters, gold
+   full stop, the same mark that is in its favicon -- and the rule reads the
+   same on rotabo.app or on anybody else's domain. */
+.dot { color: var(--accent); }
+
 /* The domain is the mark; this is the name of the game played on it. Beside
    the wordmark rather than under it, so every page carries both in one row
    whatever else is on the page.

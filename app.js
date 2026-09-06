@@ -90,6 +90,18 @@
     return duration(s) + ' ago';
   }
 
+  /* A name with its dot in the accent: gift<b>.</b>ceo, the way gift.ceo sets
+     its own, and rotabo<b>.</b>app the same way.
+
+     Escaped FIRST and wrapped second, which is the whole safety of it. By the
+     time the replace runs, every < > & " ' the payer typed is already an
+     entity, so the only full stops left in the string are full stops -- what
+     becomes markup here is a period this function put there, never anything
+     anybody typed. Reverse the two lines and this is an injection. */
+  function dotted(s) {
+    return esc(s).replace(/\./g, '<span class="dot">.</span>');
+  }
+
   function nameOf(row) {
     /* The webhook stores what Stripe collected, or nothing. The word for
        nothing is chosen here, once, rather than written into the database as
@@ -278,7 +290,7 @@
     var mine = tokenFor(k.id);
 
     el.innerHTML = top
-      + '<h1 class="king__name">' + esc(nameOf(k)) + '</h1>'
+      + '<h1 class="king__name">' + dotted(nameOf(k)) + '</h1>'
       + '<p class="king__is"><span>is</span>King of the Hill</p>'
       + (k.message ? '<p class="king__message">' + esc(k.message) + '</p>' : '')
       + link
@@ -341,7 +353,7 @@
         + esc(String(r.url).replace(/^https?:\/\//, '').replace(/\/$/, '')) + '</a>'
       : '';
     return '<li class="card">'
-      + '<div class="card__top"><span class="card__n">' + esc(nameOf(r)) + '</span>'
+      + '<div class="card__top"><span class="card__n">' + dotted(nameOf(r)) + '</span>'
       +   '<span class="card__a">' + esc(money(r.amount_cents, r.currency)) + '</span></div>'
       + (r.message ? '<p class="card__m">' + esc(r.message) + '</p>' : '')
       + '<div class="card__foot">' + link
@@ -408,7 +420,7 @@
          in the masthead: it is the same three words naming the same thing,
          and a page that paints them differently in three places is three
          pages. */
-      bits.push('<b>' + esc(nameOf(k)) + '</b> is <i>King of the Hill</i>');
+      bits.push('<b>' + dotted(nameOf(k)) + '</b> is <i>King of the Hill</i>');
       bits.push('paid <i>' + esc(money(k.amount_cents, k.currency)) + '</i>');
       bits.push('take it for more than <i>' + esc(money(k.amount_cents, k.currency)) + '</i>');
       bits.push('reigning for <b>'
@@ -419,11 +431,11 @@
     }
 
     state.attempts.slice(0, 8).forEach(function (a) {
-      bits.push('<b>' + esc(nameOf(a)) + '</b> tried with <i>'
+      bits.push('<b>' + dotted(nameOf(a)) + '</b> tried with <i>'
         + esc(money(a.amount_cents, a.currency)) + '</i>');
     });
     state.former.slice(0, 8).forEach(function (r) {
-      bits.push('<b>' + esc(nameOf(r)) + '</b> held it '
+      bits.push('<b>' + dotted(nameOf(r)) + '</b> held it '
         + esc(duration(r.reigned_seconds)) + ' for <i>'
         + esc(money(r.amount_cents, r.currency)) + '</i>');
     });
