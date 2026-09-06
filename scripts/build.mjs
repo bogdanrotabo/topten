@@ -533,6 +533,165 @@ ${footer()}
 `);
 console.log('  dashboard.html');
 
+/* The three pages that say what a payment actually is.
+ *
+ * They were written for this business model in August, checked then, and were
+ * left describing King of the Hill by the pivot -- so what comes back is the
+ * August wording, changed only where the thing it describes has changed: there
+ * are 72 rankings rather than 34, the whole ranking is shown rather than a top
+ * ten with a waiting list under it, nothing draws an avatar any more, and the
+ * price of #1 is now stated in the terms because the site states it everywhere
+ * else.
+ */
+const legalPage = (title, body) => page({
+  title: `${title} | TopTen.one`,
+  description: `${title} — TopTen.one.`,
+  path: `/${title.toLowerCase()}.html`,
+  body: `<div class="wash wash--violet"></div>
+${masthead({ back: true })}
+<section class="hero above" style="padding-top:40px">
+  <h1 class="page-title">${esc(title.toUpperCase())}</h1>
+</section>
+<div class="prose">${body}</div>
+${footer()}`,
+});
+
+write('about.html', legalPage('About', `
+<p>Everything online is ranked by something nobody will explain: an algorithm, a follower
+count, a paid partnership that does not admit to being one. TopTen.one does the opposite.
+${registry.boards.length} rankings, and the only thing that moves you up is <b>money</b>.
+Creators and the platforms they are on, crypto, football, fighters, artists, billionaires,
+politics, cars, cities, pets.</p>
+
+<h2>How it works</h2>
+<p>Pick a ranking, say what you are listing &mdash; a profile, a coin, a club, a city, a dog
+&mdash; and pay. Your listing appears at whatever position the money buys, immediately.
+There is <b>no review, no waiting and no account to create</b>.</p>
+<p>Payments are <b>cumulative</b>. A listing's position is the total ever paid towards it, so
+${money(2000)} today and ${money(3000)} next week is a ${money(5000)} listing. Anyone can add money to any
+listing &mdash; including someone else's, if they want to push a friend up.</p>
+<p>The whole ranking is shown, not a top ten with everybody else hidden underneath. Beside
+every listing is the figure that would take it past the one above.</p>
+
+<h2>What #1 costs</h2>
+<p>If two listings hold the same total, the one that <b>reached it first</b> stays above. So
+taking a position costs a cent more than matching it &mdash; never the same, and never less.
+The minimum payment is ${money(MIN_CENTS)}, so where that cent-perfect figure is smaller, the
+minimum is what it actually costs. On most rankings here, the smallest payment the site takes
+is also the one that wins.</p>
+
+<h2>Listings expire</h2>
+<p>Thirty days after its last payment a listing drops off. Its total is kept, so a single new
+payment brings it back exactly where the money says it belongs. <b>Nobody owns a position
+forever.</b></p>
+
+<h2>Why it is honest</h2>
+<p>Paid placement is everywhere; almost nowhere is it labelled. Here it is the whole
+mechanism, printed next to every name. Nothing on this site is ranked by anything other than
+what people paid, and no figure on it is invented &mdash; where the honest number is zero, the
+page says so.</p>
+<p>Questions: <a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a>.</p>
+`));
+
+write('terms.html', legalPage('Terms', `
+<p class="stamp">Last updated 6 September 2026.</p>
+<p>TopTen.one is a set of public rankings. You pay to put something on one, and the money you
+pay decides where it sits. By submitting a listing or paying towards one, you accept these
+terms.</p>
+
+<h2>Position is money, and nothing else</h2>
+<p>Every ranking orders listings by <b>the total amount paid towards that listing</b>, highest
+first. There is no algorithm, no editorial judgement, no quality score and no way to earn a
+position without paying for it. If two listings hold the same total, <b>the one that reached
+it first ranks higher</b> &mdash; so overtaking costs a cent more than matching, or
+${money(MIN_CENTS)}, whichever is larger.</p>
+<p>Anyone can add money to any listing at any time, including a listing they did not create.
+Money added to a listing <b>belongs to that listing</b>. It cannot be moved, split, reassigned
+or withdrawn.</p>
+
+<h2>Payments are final</h2>
+<p><b>There are no refunds, under any circumstances.</b> That includes being overtaken a
+minute later, changing your mind, paying towards the wrong listing, a listing expiring, or a
+listing being hidden for breaking the rules below. Payment buys a position on a public ranking
+at the moment of payment and nothing more.</p>
+<p>Payments are processed by <b>Stripe</b>; we never see or store your card details. The
+minimum payment is <b>${money(MIN_CENTS)}</b>. Amounts are charged in US dollars.</p>
+
+<h2>Listings expire after 30 days</h2>
+<p>A listing stays on its ranking for <b>30 days from its most recent payment</b>. After that
+it becomes inactive and stops appearing publicly. Its historical total is kept, and any new
+payment reactivates it with that full total intact. We do not send reminders before a listing
+expires.</p>
+
+<h2>What we will hide</h2>
+<p>We may hide any listing, <b>at any time, without notice and without a refund</b>, if in our
+judgement it is illegal, hateful, adult or sexual, spam, deceptive, or impersonates a person or
+organisation. We may also hide a listing if a platform, a rights holder or a competent
+authority requires it. Hiding a listing does not entitle anyone who paid towards it to any
+repayment.</p>
+<p>Submitting something does not require the consent of the person behind it. If you are the
+subject of a listing and want it removed, email
+<a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a> and we will take it down. No refund is
+owed to whoever paid for it.</p>
+
+<h2>No accounts, no guarantees</h2>
+<p>There are no accounts and no logins. A listing can be edited only from the browser that
+created it, using a key kept there; paying towards a listing does not grant the right to edit
+it, because anybody may pay towards anything.</p>
+<p>We do not guarantee visibility, traffic, followers, customers or any outcome whatsoever. A
+position on a ranking is a position on a ranking.</p>
+
+<h2>What a payment is not</h2>
+<p>A payment here is <b>not an investment</b>, not a security, not a donation, not a
+political contribution and not a vote. It buys nothing but a place in a ranking on this site,
+and it confers no ownership of anything. Payments towards political listings are not political
+contributions and are not made to any party, campaign or candidate. Payments towards crypto
+listings buy no coin, token or interest of any kind.</p>
+<p>Nothing here is an endorsement by us of anything listed, and a listing does not imply the
+subject's involvement or approval.</p>
+`));
+
+write('privacy.html', legalPage('Privacy', `
+<p class="stamp">Last updated 6 September 2026.</p>
+<p>TopTen.one has no accounts and no logins. We collect as little as a public ranking can work
+with.</p>
+
+<h2>What we store</h2>
+<p>For each listing: the <b>name</b> you submit, an optional link, the running total paid
+towards it, and the time of the last payment. All of this is public by design &mdash; it is the
+ranking.</p>
+<p>For each payment: the Stripe session identifier, the amount and the currency, linked to the
+listing it paid for. <b>This is not shown publicly.</b></p>
+<p>For each visit: a random identifier kept in your browser, the address you landed on, the
+site that sent you, your browser's language and a two-letter country. And, if you press them,
+which buttons: a ranking opened, an amount chosen, a payment begun, a share pressed. No text
+you type is ever recorded, and none of it is shown publicly.</p>
+
+<h2>What we do not store</h2>
+<p>No card numbers, no billing addresses, no email addresses, no passwords, no accounts, no IP
+addresses. Payments are processed entirely by <a href="https://stripe.com/privacy"
+target="_blank" rel="noopener">Stripe</a>, which acts as its own controller for the payment
+data you give it. We receive back only the amount and a session identifier.</p>
+<p>We do not ask who you are when you submit a listing, and we cannot tell you who paid
+towards one.</p>
+
+<h2>Where the country comes from</h2>
+<p>The site sits behind Cloudflare, which tells the page which country the request came from.
+That two-letter code is what we keep. Your address is not stored.</p>
+
+<h2>Analytics</h2>
+<p>We use Google Analytics 4 to count page views. It sets its own cookies and processes an
+abbreviated IP address. See <a href="https://policies.google.com/privacy" target="_blank"
+rel="noopener">Google's privacy policy</a>. Browser Do Not Track and content blockers are
+respected &mdash; the site works fine without it.</p>
+
+<h2>Removal</h2>
+<p>Write to <a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a> and we will take a listing
+down. Payment records are kept, because they are an accounting record of money that changed
+hands.</p>
+`));
+console.log('  about.html, terms.html, privacy.html');
+
 write('404.html', page({
   title: 'Nothing here | TopTen.one',
   description: 'That address does not exist on TopTen.one.',
