@@ -4,38 +4,43 @@
    one page about one seat, and a page with a single job does not need a
    second set of colours to do it in.
 
-   The palette is Rotabo's, which is where this site's violet came from --
-   #cd6ff0 for anything you can act on, and #fdd321, the gold of the second
-   rhombus in the mark, for the one thing gold should mean here, which is the
-   person on the throne. The greys are violet-black rather than neutral: a
-   neutral dark under a violet accent reads as two brands.
+   Violet, all the way down. The surfaces are not near-black with a violet
+   tint any more -- they are violet, a ramp from #150E24 up to #2C2049, and the
+   greys that sit on them lean the same way. A page about one throne should
+   read as one colour.
+
+   Two weights of the accent do the work gold used to. #C77DFF is anything you
+   can act on: a link, the button. #E4B8FF -- lighter, brighter, the same
+   family -- is the throne itself: the crown, the sentence under the name, the
+   figure it cost. Gold said the same thing louder and belonged to a different
+   brand.
 
    The only colours not from this list belong to somebody else -- a king's own
-   link, if they ever get one -- and recolouring those is not a theme. */
+   mark, if they have one -- and recolouring those is not a theme. */
 
 :root {
   color-scheme: dark;
 
-  --bg: #16101b;
-  --elev: #1e1726;
-  --elev-2: #291f33;
-  --line: #4c3c63;
-  --hairline: #372c47;
-  --line-soft: #33283f;
-  --text: #fbf6fd;
-  --muted: #c3b5cd;
-  --dim: #9a8ba5;
-  --accent: #cd6ff0;
-  --accent-ink: #17091f;
-  --accent-soft: #342043;
-  --gold: #fdd321;
-  --gold-soft: #35290a;
+  --bg: #150E24;
+  --elev: #1F1636;
+  --elev-2: #2C2049;
+  --line: #4C3A78;
+  --hairline: #33254F;
+  --line-soft: #2C2046;
+  --text: #F4ECFF;
+  --muted: #C6B4E6;
+  --dim: #9887BF;
+  --accent: #C77DFF;
+  --accent-ink: #1A0B2E;
+  --accent-soft: #33224F;
+  /* The throne: the crown, the sentence, the figure. */
+  --royal: #E4B8FF;
   --danger: #ff6b76;
   --ok: #2ad796;
 
-  --band-0: #2b1f39;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .34), 0 4px 14px rgba(0, 0, 0, .26);
-  --glow: 0 0 0 1px rgba(253, 211, 33, .22), 0 10px 40px rgba(253, 211, 33, .07);
+  --band-0: #2A1D45;
+  --shadow: 0 1px 2px rgba(12, 4, 24, .44), 0 4px 14px rgba(12, 4, 24, .32);
+  --glow: 0 0 0 1px rgba(199, 125, 255, .20), 0 10px 40px rgba(160, 80, 240, .10);
 
   --radius: 10px;
   --radius-lg: 16px;
@@ -61,7 +66,7 @@ body {
 }
 
 a { color: var(--accent); }
-a:hover { color: #e2a2fa; }
+a:hover { color: #DFAEFF; }
 
 button {
   font: inherit;
@@ -112,9 +117,14 @@ button {
 
 /* The domain is the mark; this is the name of the game played on it. Beside
    the wordmark rather than under it, so every page carries both in one row
-   whatever else is on the page. */
+   whatever else is on the page.
+
+   #c264e0 is not a new colour: it is the light stop of the radial gradient the
+   rhombus in Rotabo's mark is painted with (#c264e0 / #a239c9 / #7c2596). The
+   middle and dark stops are the ones that read on a pale ground; on this
+   masthead they would be a hole, so the light one is the one that carries. */
 .masthead__name {
-  color: var(--dim);
+  color: #c264e0;
   font-size: 11.5px;
   font-weight: 700;
   text-transform: uppercase;
@@ -150,19 +160,20 @@ button {
   display: block;
   margin: 0 auto 10px;
   width: 38px; height: 28px;
-  color: var(--gold);
+  color: var(--royal);
 }
 
-/* The second half of the sentence the card is. Gold, because gold means the
-   throne here and this line is what says somebody is on it -- and sentence
-   case rather than the uppercase kicker it replaces, because it is read as
-   the continuation of the name above it, not as a label over it. */
+/* The second half of the sentence the card is. The lighter violet, because
+   that is what means the throne here and this line is what says somebody is on
+   it -- and sentence case rather than the uppercase kicker it replaces,
+   because it is read as the continuation of the name above it, not as a label
+   over it. */
 .king__is {
   margin: 4px 0 0;
   font-size: clamp(16px, 4.4vw, 21px);
   font-weight: 700;
   letter-spacing: -.01em;
-  color: var(--gold);
+  color: var(--royal);
 }
 
 .king__name {
@@ -209,7 +220,7 @@ button {
   font-weight: 700;
   letter-spacing: -.02em;
 }
-.figure__v--gold { color: var(--gold); }
+.figure__v--royal { color: var(--royal); }
 
 .figure__k {
   display: block;
@@ -246,7 +257,7 @@ button {
   text-decoration: none;
   box-shadow: var(--shadow);
 }
-.btn:hover { background: #dc8bf6; color: var(--accent-ink); }
+.btn:hover { background: #D79AFF; color: var(--accent-ink); }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
 
 .btn--ghost {
@@ -317,8 +328,6 @@ button {
   text-align: right;
 }
 
-.row--king .row__a { color: var(--gold); }
-
 .empty {
   color: var(--dim);
   font-size: 14px;
@@ -380,8 +389,7 @@ button {
   padding: 11px 13px;
   margin: 14px 0 0;
 }
-.note--warn { background: var(--gold-soft); border-color: #6b5510; }
-.note--bad { background: #3a1c22; border-color: #6d2b33; color: #ffd0d4; }
+.note--bad { background: #3A1730; border-color: #6D2B52; color: #FFD0EC; }
 
 .spinner {
   width: 22px; height: 22px;
@@ -418,6 +426,18 @@ button {
   position: absolute;
   left: 0;
   color: var(--accent);
+}
+
+/* The Swiss flag, drawn rather than typed.
+   It was the 🇨🇭 emoji, which is a pair of regional indicator letters and
+   which Windows does not draw: Segoe UI Emoji ships no country flags at all,
+   so every visitor on a PC saw the letters "CH" or an empty box where the
+   flag should be. A flag that only renders on the machine it was written on
+   is not a flag. */
+.flag {
+  vertical-align: -2px;
+  margin-right: 3px;
+  border-radius: 2px;
 }
 
 .foot nav { margin-bottom: 12px; }
@@ -469,3 +489,12 @@ button {
 .prose .stamp { color: var(--dim); font-size: 13px; margin-bottom: 22px; }
 .prose ul { color: var(--muted); padding-left: 20px; }
 .prose li { margin-bottom: 6px; }
+
+/* A king's own mark, where the crown goes. Its own colours, never the
+   page's -- recolouring somebody's logo to match a theme is not a theme. */
+.king__mark {
+  display: block;
+  margin: 0 auto 12px;
+  max-width: 60px;
+  height: auto;
+}
