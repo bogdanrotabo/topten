@@ -24,6 +24,13 @@ Cloudflare DNS
 > per-platform pages, the profile-URL parsing, the rank window function, the
 > admin console — is gone. `supabase/migrations/0019_king_of_the_hill.sql` is
 > the whole of that removal and the whole of what replaced it.
+>
+> The old rows are **not** deleted. `listings` and `payments` move into an
+> `archive` schema that PostgREST does not expose, with no grants, no RLS
+> policies, no triggers and no publication — gone from the site, still in the
+> database and in every backup. Putting them back is two statements:
+> `alter table archive.listings set schema public;` and the same for
+> `payments`.
 
 ---
 

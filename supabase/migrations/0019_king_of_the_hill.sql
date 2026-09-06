@@ -18,25 +18,77 @@
 --      three independent locks, because one of them being wrong should not
 --      be the same as the door being open.
 --
--- Running this drops listings and payments. That is the pivot: the old rows
--- describe a product that no longer exists, and 137 listings ranked on 72
--- boards cannot be read as reigns on one seat. Take a backup first if the
--- history is wanted.
+-- This does not delete the old rows. 137 listings and 147 payments describe a
+-- product that no longer exists and cannot be read as reigns on one seat, so
+-- they leave public -- but they leave it into an `archive` schema rather than
+-- into nothing. PostgREST exposes `public` and not that, so they are gone from
+-- the site the moment this runs; they are still in the database, still in
+-- every backup, and one command puts them back:
+--
+--   alter table archive.listings set schema public;
+--   alter table archive.payments set schema public;
+--
+-- Dropping them would have been the same pivot and an irreversible one, and
+-- the reversible version costs nothing.
 
 -- ============================================================ the old site --
 
--- Order matters. The cron job first, because it deletes from a table about to
--- go. Then the tables, whose cascade takes the board view, every policy and
--- both triggers with them. Only then the functions: listings_force_defaults()
--- is a trigger function, and dropping it while its trigger still stands is an
--- error rather than a no-op.
+-- Order matters. The cron job first, because it writes to a table about to
+-- move. Then the view -- which is dropped rather than moved: a view follows
+-- its table by identity, so leaving it would put a live, readable `board` in
+-- `public` pointing at archived rows. Then the tables. Only then the
+-- functions: listings_force_defaults() is a trigger function, and dropping it
+-- while its trigger still stands is an error rather than a no-op. The trigger
+-- travels with the table and is dropped with the function here.
 
 select cron.unschedule('topten-purge-unpaid')
 where exists (select 1 from cron.job where jobname = 'topten-purge-unpaid');
 
 drop view if exists public.board;
-drop table if exists public.payments cascade;
-drop table if exists public.listings cascade;
+
+create schema if not exists archive;
+revoke all on schema archive from anon, authenticated;
+
+do $do$
+begin
+  if to_regclass('public.listings') is not null then
+    alter table public.listings set schema archive;
+  end if;
+  if to_regclass('public.payments') is not null then
+    alter table public.payments set schema archive;
+  end if;
+end;
+$do$;
+
+-- The grants travel with the tables, so they are taken away on the far side.
+-- RLS is still on them and there is no policy anon could use, but a table
+-- nothing is meant to read should not be readable by anything.
+do $do$
+begin
+  if to_regclass('archive.listings') is not null then
+    execute 'revoke all on archive.listings from anon, authenticated';
+    execute 'alter table archive.listings disable row level security';
+  end if;
+  if to_regclass('archive.payments') is not null then
+    execute 'revoke all on archive.payments from anon, authenticated';
+    execute 'alter table archive.payments disable row level security';
+  end if;
+end;
+$do$;
+
+-- Out of the replication stream too: the site no longer listens for them, and
+-- a publication carrying a table nobody reads is a slot doing nothing.
+do $do$
+begin
+  if exists (select 1 from pg_publication_tables
+             where pubname = 'supabase_realtime' and tablename = 'listings') then
+    alter publication supabase_realtime drop table archive.listings;
+  end if;
+end;
+$do$;
+
+drop trigger if exists listings_force_defaults_trg on archive.listings;
+drop trigger if exists anunta_plata on archive.payments;
 
 drop function if exists public.credit_payment(uuid, text, bigint, text);
 drop function if exists public.update_listing(uuid, uuid, text, text);
@@ -47,6 +99,11 @@ drop function if exists public.payment_stats();
 drop function if exists public.market();
 drop function if exists public.ad_traffic_stats(integer);
 
+-- The two tables are now archive.listings and archive.payments, with no
+-- grants, no RLS, no triggers and no publication. PostgREST cannot see the
+-- schema, so nothing on the site can reach them; a psql session with the
+-- service role still can.
+--
 -- site_visits, site_presence, admin_emails and their functions are left
 -- standing. They counted visitors, not ranks, and dropping them would throw
 -- away the only record of how much traffic this domain has ever had. Nothing
