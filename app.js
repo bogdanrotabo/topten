@@ -206,7 +206,7 @@
 
   function load() {
     return Promise.all([
-      view('king', 'select=id,amount_cents,currency,name,url,message,crowned_at&limit=1'),
+      view('king', 'select=id,amount_cents,currency,name,url,message,logo,crowned_at&limit=1'),
       view('attempts_on_king', 'select=id,amount_cents,currency,name,created_at&order=created_at.desc&limit=50'),
       view('former_kings',
         'select=id,amount_cents,currency,name,url,message,crowned_at,dethroned_at,reigned_seconds'
@@ -229,6 +229,26 @@
   var CROWN = '<svg class="king__crown" viewBox="0 0 38 28" aria-hidden="true">'
     + '<path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg>';
 
+  /* The marks the site will draw, and the whole of them.
+   *
+   * reigns.logo holds a slug, not a url. A payer-supplied image address would
+   * mean widening img-src past 'self' to the whole web and moderating pictures
+   * instead of a hundred characters of text; a slug that matches nothing here
+   * simply draws nothing. Set from the dashboard, for a brand whose mark we
+   * have agreed to carry -- never from the claim form.
+   *
+   * Each mark is its owner's own colours. Recolouring somebody's logo to match
+   * a theme is not a theme, it is a different logo. */
+  var MARKS = {
+    'gift.ceo': '<svg class="king__mark" viewBox="0 0 64 64" width="46" height="46" aria-hidden="true"><rect x=".75" y=".75" width="62.5" height="62.5" rx="14" fill="#1c1b19" stroke="#4a4740" stroke-width="1.5"/><text x="30" y="45" font-family="Helvetica,Arial,sans-serif" font-size="38" font-weight="700" fill="#faf9f7" text-anchor="middle">g</text><circle cx="47" cy="42" r="5" fill="#d9a63c"/></svg>',
+    'rotabo.app': '<svg class="king__mark" viewBox="0 0 430 260" width="60" height="36" aria-hidden="true"><defs><radialGradient id="ktRotabo" cx="50%" cy="50%" r="75%"><stop offset="0%" stop-color="#c264e0"/><stop offset="45%" stop-color="#a239c9"/><stop offset="100%" stop-color="#7c2596"/></radialGradient></defs><path fill="url(#ktRotabo)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/><path fill="#ffd41a" transform="translate(230,0)" d="M118.15,28.88 Q100,5 81.85,28.88 L23.15,106.12 Q5,130 23.15,153.88 L81.85,231.12 Q100,255 118.15,231.12 L176.85,153.88 Q195,130 176.85,106.12 Z"/></svg>'
+  };
+
+  function markFor(slug) {
+    return (slug && Object.prototype.hasOwnProperty.call(MARKS, slug)) ? MARKS[slug] : '';
+  }
+
+
   function drawKing() {
     var el = $('#king-card');
     if (!el) return;
@@ -241,25 +261,29 @@
       el.className = 'king king--empty';
       el.innerHTML = CROWN
         + '<h1 class="king__name">Nobody</h1>'
-        + '<p class="king__is">is King of the Hill</p>'
+        + '<p class="king__is"><span>is</span>King of the Hill</p>'
         + '<p class="king__message">The first payment takes the page.</p>';
       return;
     }
 
     el.className = 'king';
+    /* A king with a mark shows it where the crown goes. Both at once is two
+       badges stacked saying the same thing; the sentence under the name is
+       what says "throne" in words anyway. */
+    var top = markFor(k.logo) || CROWN;
     var link = k.url
       ? '<a class="king__link" href="' + esc(k.url) + '" target="_blank" rel="noopener nofollow ugc">'
         + esc(String(k.url).replace(/^https?:\/\//, '').replace(/\/$/, '')) + '</a>'
       : '';
     var mine = tokenFor(k.id);
 
-    el.innerHTML = CROWN
+    el.innerHTML = top
       + '<h1 class="king__name">' + esc(nameOf(k)) + '</h1>'
-      + '<p class="king__is">is King of the Hill</p>'
+      + '<p class="king__is"><span>is</span>King of the Hill</p>'
       + (k.message ? '<p class="king__message">' + esc(k.message) + '</p>' : '')
       + link
       + '<div class="king__figures">'
-      +   '<span class="figure"><span class="figure__v figure__v--gold">'
+      +   '<span class="figure"><span class="figure__v figure__v--royal">'
       +     esc(money(k.amount_cents, k.currency)) + '</span>'
       +     '<span class="figure__k">Paid</span></span>'
       +   '<span class="figure"><span class="figure__v" id="reign-clock">'

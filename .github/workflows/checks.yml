@@ -65,6 +65,9 @@ jobs:
       - name: sync-routes.sh was run
         run: node scripts/check-build.mjs
 
+      - name: The two marks registries agree
+        run: node scripts/check-marks.mjs
+
       - name: The page still has its prerender markers
         run: node scripts/prerender.mjs --check
 
