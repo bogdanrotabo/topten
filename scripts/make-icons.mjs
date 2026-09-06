@@ -2,8 +2,9 @@
 /**
  * The mark, the icons cut from it, and the share card.
  *
- * One drawing: "#1" in the site's violet on black, set in the site's own
- * figures. The SVG favicon is that drawing; every PNG is that drawing
+ * One drawing: "#1" in the site's gold on its warm near-black, set in the
+ * site's own figures. It was violet on #000 until the page took gift.ceo's
+ * palette; the mark follows the page, or the tab and the site are two brands. The SVG favicon is that drawing; every PNG is that drawing
  * rasterised at a size, and the share card is the same mark beside the name
  * and the question the front page asks. They agree because they come from
  * here, and only from here -- the icons were last drawn by hand, one at a
@@ -41,10 +42,10 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const icons = join(root, 'icons');
 
-const BLACK = '#000000';
-const VIOLET = '#cd6ff0';        /* the accent of the dark theme, in styles.css */
-const WHITE = '#fbf6fd';
-const MUTED = '#b3a3c0';
+const BLACK = '#131211';
+const GOLD = '#d9a63c';        /* the accent of the dark theme, in styles.css */
+const WHITE = '#f2f0ec';
+const MUTED = '#a09b93';
 
 /* The mono stack the site sets its figures in. The SVG favicon is drawn by
    the browser, so it says the stack; the PNGs are drawn here, by whatever the
@@ -60,7 +61,7 @@ function mark({ rx = 14, scale = 1 } = {}) {
   <rect width="64" height="64" rx="${rx}" fill="${BLACK}"/>
   <text x="31" y="45" text-anchor="middle"${t}
         font-family="${MONO}"
-        font-size="25" font-weight="800" letter-spacing="-1.8" fill="${VIOLET}">#1</text>
+        font-size="25" font-weight="800" letter-spacing="-1.8" fill="${GOLD}">#1</text>
 </svg>
 `;
 }
@@ -73,10 +74,10 @@ function mark({ rx = 14, scale = 1 } = {}) {
 function card() {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <rect width="1200" height="630" fill="${BLACK}"/>
-  <rect width="1200" height="8" fill="${VIOLET}"/>
-  <text x="80" y="122" font-family="${SANS}" font-size="54" font-weight="700" letter-spacing="-2"><tspan fill="${WHITE}">TopTen</tspan><tspan fill="${VIOLET}">.one</tspan></text>
+  <rect width="1200" height="8" fill="${GOLD}"/>
+  <text x="80" y="122" font-family="${SANS}" font-size="54" font-weight="700" letter-spacing="-2"><tspan fill="${WHITE}">TopTen</tspan><tspan fill="${GOLD}">.one</tspan></text>
   <text x="76" y="300" font-family="${SANS}" font-size="92" font-weight="700" letter-spacing="-3.2" fill="${WHITE}">King of the Hill</text>
-  <text x="70" y="532" font-family="${MONO}" font-size="250" font-weight="800" letter-spacing="-16" fill="${VIOLET}">#1</text>
+  <text x="70" y="532" font-family="${MONO}" font-size="250" font-weight="800" letter-spacing="-16" fill="${GOLD}">#1</text>
   <text x="520" y="476" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">One page. One king.</text>
   <text x="520" y="522" font-family="${SANS}" font-size="31" font-weight="400" fill="${MUTED}">Pay more than them and it&#39;s yours.</text>
 </svg>

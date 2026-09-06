@@ -168,13 +168,26 @@ function chemarea(k, link) {
       <a class="btn" id="dethrone" href="${esc(link || '#')}">${eticheta}</a>\n      `;
 }
 
+/* One box per person who paid, drawn the same way app.js draws it a second
+   later. A row of name / figure / time is a statistic about somebody; a box
+   with their own words in it is a place they were. */
+function cutie(r, cand) {
+  const link = r.url
+    ? `<a class="card__l" href="${esc(r.url)}" target="_blank" rel="noopener nofollow ugc">`
+      + `${esc(String(r.url).replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a>`
+    : '';
+  return `        <li class="card">`
+    + `<div class="card__top"><span class="card__n">${esc(nume(r))}</span>`
+    + `<span class="card__a">${esc(bani(r.amount_cents, r.currency))}</span></div>`
+    + (r.message ? `<p class="card__m">${esc(r.message)}</p>` : '')
+    + `<div class="card__foot">${link}<span class="card__t">${esc(cand)}</span></div></li>`;
+}
+
 function istoria(randuri) {
   if (!randuri.length) {
     return '\n      <div id="history"><p class="empty">Nobody has been dethroned yet.</p></div>\n      ';
   }
-  const li = randuri.map(r => `        <li class="row"><span class="row__n">${esc(nume(r))}</span>`
-    + `<span class="row__a">${esc(bani(r.amount_cents, r.currency))}</span>`
-    + `<span class="row__t">${esc(durata(r.reigned_seconds))}</span></li>`).join('\n');
+  const li = randuri.map(r => cutie(r, `reigned ${durata(r.reigned_seconds)}`)).join('\n');
   return `\n      <div id="history">
         <ul class="rows">
 ${li}
@@ -250,7 +263,7 @@ try {
   const [k, f] = await Promise.all([
     citeste(cfg, 'king', 'select=id,amount_cents,currency,name,url,message,logo,crowned_at&limit=1'),
     citeste(cfg, 'former_kings',
-      'select=amount_cents,currency,name,reigned_seconds&order=dethroned_at.desc&limit=50'),
+      'select=amount_cents,currency,name,message,url,reigned_seconds&order=dethroned_at.desc&limit=50'),
   ]);
   rege = k[0] || null;
   fosti = f || [];

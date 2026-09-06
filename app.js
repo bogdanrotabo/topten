@@ -207,7 +207,7 @@
   function load() {
     return Promise.all([
       view('king', 'select=id,amount_cents,currency,name,url,message,logo,crowned_at&limit=1'),
-      view('attempts_on_king', 'select=id,amount_cents,currency,name,created_at&order=created_at.desc&limit=50'),
+      view('attempts_on_king', 'select=id,amount_cents,currency,name,message,url,created_at&order=created_at.desc&limit=50'),
       view('former_kings',
         'select=id,amount_cents,currency,name,url,message,crowned_at,dethroned_at,reigned_seconds'
         + '&order=dethroned_at.desc&limit=' + state.formerShown)
@@ -332,6 +332,23 @@
     }
   }
 
+  /* One box per person who paid. The foot only exists when there is something
+     to put in it, so a card with no link and no words is three lines rather
+     than three lines and two empty ones. */
+  function card(r, when) {
+    var link = r.url
+      ? '<a class="card__l" href="' + esc(r.url) + '" target="_blank" rel="noopener nofollow ugc">'
+        + esc(String(r.url).replace(/^https?:\/\//, '').replace(/\/$/, '')) + '</a>'
+      : '';
+    return '<li class="card">'
+      + '<div class="card__top"><span class="card__n">' + esc(nameOf(r)) + '</span>'
+      +   '<span class="card__a">' + esc(money(r.amount_cents, r.currency)) + '</span></div>'
+      + (r.message ? '<p class="card__m">' + esc(r.message) + '</p>' : '')
+      + '<div class="card__foot">' + link
+      +   '<span class="card__t">' + esc(when) + '</span></div>'
+      + '</li>';
+  }
+
   function drawAttempts() {
     var el = $('#attempts');
     if (!el) return;
@@ -340,9 +357,7 @@
       return;
     }
     el.innerHTML = '<ul class="rows">' + state.attempts.map(function (a) {
-      return '<li class="row"><span class="row__n">' + esc(nameOf(a)) + '</span>'
-        + '<span class="row__a">' + esc(money(a.amount_cents, a.currency)) + '</span>'
-        + '<span class="row__t">' + esc(ago(a.created_at)) + '</span></li>';
+      return card(a, ago(a.created_at));
     }).join('') + '</ul>';
   }
 
@@ -354,9 +369,7 @@
       return;
     }
     var rows = state.former.map(function (r) {
-      return '<li class="row"><span class="row__n">' + esc(nameOf(r)) + '</span>'
-        + '<span class="row__a">' + esc(money(r.amount_cents, r.currency)) + '</span>'
-        + '<span class="row__t">' + esc(duration(r.reigned_seconds)) + '</span></li>';
+      return card(r, 'reigned ' + duration(r.reigned_seconds));
     }).join('');
     /* One more page is offered whenever the last request came back full: a
        count would be a second round trip to tell somebody something the next
@@ -423,7 +436,7 @@
           + backLink());
         return;
       }
-      editForm(t, reignById(editId));
+      editForm(t, reignById(editId), null);
       return;
     }
 
@@ -450,7 +463,7 @@
              a screenshot of this page, or a shared link, is no longer the key
              to somebody else's card. */
           try { history.replaceState(null, '', '/claim'); } catch (e) { /* ignore */ }
-          if (token) return editForm(token, b.reign);
+          if (token) return editForm(token, b.reign, null);
           return claimView('<h1>You are the king</h1>'
             + '<p>The card was already claimed by another browser, and the key was handed over '
             + 'once. If that was not you, write to '
@@ -459,18 +472,14 @@
         }
 
         if (b.outcome === 'attempt') {
-          var paid = money(b.amount_cents, b.currency);
-          var needed = money(b.needed_cents, b.currency);
-          return claimView('<h1>The king survived</h1>'
-            + '<p>You paid <b>' + esc(paid) + '</b>; you needed more than '
-            + '<b>' + esc(money(b.king_amount_cents != null ? b.king_amount_cents : b.needed_cents - 1, b.currency))
-            + '</b>. Your attempt is on the page under '
-            + esc(b.king_name || 'the king') + '.</p>'
-            + '<p>Taking the seat now costs ' + esc(needed) + ' or more. No refunds — that is '
-            + 'the rule everybody who has ever paid here played by.</p>'
-            + '<p><a class="btn" id="dethrone-again" href="'
-            + esc(payLink() || '#') + '">Dethrone them</a></p>'
-            + backLink());
+          if (b.edit_token) rememberToken(b.attempt && b.attempt.id, b.edit_token);
+          var token = b.edit_token || tokenFor(b.attempt && b.attempt.id);
+          try { history.replaceState(null, '', '/claim'); } catch (e) { /* ignore */ }
+          /* Losing does not mean losing the card. They paid the same way the
+             king did, their box is on the page under him, and they get the
+             same hundred characters to put in it. */
+          if (token) return editForm(token, b.attempt, b);
+          return attemptView(b, '');
         }
 
         if (Date.now() < deadline) return setTimeout(ask, CLAIM_POLL_MS);
@@ -489,10 +498,33 @@
     ask();
   }
 
-  function editForm(token, reign) {
+  /* What an attempt is told, with or without a form under it. */
+  function attemptView(b, form) {
+    var paid = money(b.amount_cents, b.currency);
+    var needed = money(b.needed_cents, b.currency);
+    var beat = money(b.king_amount_cents != null ? b.king_amount_cents : b.needed_cents - 1, b.currency);
+    return '<h1>The king survived</h1>'
+      + '<p>You paid <b>' + esc(paid) + '</b>; you needed more than <b>' + esc(beat)
+      + '</b>. Your card is on the page under ' + esc(b.king_name || 'the king') + '.</p>'
+      + form
+      + '<p>Taking the seat costs ' + esc(needed) + ' or more. No refunds — that is the rule '
+      + 'everybody who has ever paid here played by.</p>'
+      + '<p><a class="btn" href="' + esc(payLink() || '#') + '">Dethrone them</a></p>'
+      + backLink();
+  }
+
+  function editForm(token, reign, attempt) {
     var r = reign || {};
-    claimView('<h1>The page is yours</h1>'
-      + '<p>Write what everybody sees. You can come back and change it from this browser.</p>'
+    var head = attempt
+      ? '<h1>The king survived</h1>'
+        + '<p>You paid <b>' + esc(money(attempt.amount_cents, attempt.currency)) + '</b>; you needed more '
+        + 'than <b>' + esc(money(attempt.king_amount_cents != null
+            ? attempt.king_amount_cents : attempt.needed_cents - 1, attempt.currency))
+        + '</b>. Your card is on the page under ' + esc(attempt.king_name || 'the king')
+        + ' — write what it says.</p>'
+      : '<h1>The page is yours</h1>'
+        + '<p>Write what everybody sees. You can come back and change it from this browser.</p>';
+    claimView(head
       + '<div class="field"><label for="f-name">Name</label>'
       +   '<input id="f-name" maxlength="40" value="' + esc(r.name || '') + '" placeholder="Anonymous">'
       +   '<small>Up to 40 characters.</small></div>'
@@ -505,7 +537,11 @@
       + '<p><button class="btn" id="f-save">Save</button></p>'
       + '<div id="f-out"></div>'
       + '<p class="note">The key to this card lives in this browser only. Clear the site data '
-      + 'and you lose the ability to edit it — the reign itself is untouched.</p>'
+      + 'and you lose the ability to edit it — what you paid for is untouched.</p>'
+      + (attempt
+          ? '<p style="margin-top:18px"><a class="btn" href="' + esc(payLink() || '#')
+            + '">Dethrone them</a></p>'
+          : '')
       + backLink());
 
     var btn = $('#f-save');

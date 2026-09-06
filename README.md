@@ -2,6 +2,10 @@
 
 **One page. One king. Pay more than them and it's yours.**
 
+Everybody who pays gets a card — the king a large one at the top, everybody
+else a box below it, the width of the page, with their own hundred characters
+in it. Losing is a smaller figure, not a smaller voice.
+
 The domain is the mark; *King of the Hill* is the name of the game played on
 it. It is the site name in the masthead, in `<title>`, in `og:site_name` and on
 the share card. `og:title` is deliberately **not** it: that slot carries
@@ -78,6 +82,8 @@ Three rules are the schema's job rather than the application's:
 | `about.html`, `terms.html`, `privacy.html` | Flat pages. No JavaScript. |
 | `404.html`, `thanks/`, `claim/` | Copies of `index.html` — see *Routing*. |
 | `supabase/migrations/0019_king_of_the_hill.sql` | The pivot: tables, views, RLS, functions, realtime. |
+| `supabase/migrations/0020_king_mark.sql` | `reigns.logo` — a slug, never a url. |
+| `supabase/migrations/0021_attempts_speak.sql` | An attempt gets a message, a link and a key of its own. |
 | `supabase/functions/stripe-webhook/index.ts` | The only path that can crown anybody. |
 | `supabase/functions/claim/index.ts` | Swaps a session id for the edit key, once; writes the card. |
 | `scripts/prerender.mjs` | Bakes the king and the history into `index.html` at build time. |
