@@ -12,7 +12,7 @@
  */
 
 import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js';
-import { topTwo, amounts, row, battle, trend, openOne, move } from './render.js';
+import { topTwo, amounts, row, battle, trend, openOne, move, ticker } from './render.js';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -148,6 +148,49 @@ function payHref(listingId) {
   return u.toString();
 }
 
+/* -------------------------------------------------------------- ticker --- */
+
+/* The strip across the top, from the newest payment down. Same shape the build
+   writes, so the two cannot disagree; this only keeps it current. */
+function tickList(rows, nameOf) {
+  return rows
+    .filter((r) => r.last_paid_at && nameOf(r.platform))
+    .sort((a, b) => new Date(b.last_paid_at) - new Date(a.last_paid_at))
+    .slice(0, 40)
+    .map((r) => ({ handle: r.handle, boardName: nameOf(r.platform), rank: r.rank, cents: r.total_cents }));
+}
+
+/* How long one loop takes, from how far it actually has to go.
+ *
+ * The build writes an estimate estimated from how many names are on the strip;
+ * this is the width they really took, once the font has arrived and the browser
+ * has laid them out. Seventy pixels a second: a name crosses in about three and
+ * a half seconds, quick enough to look alive and slow enough to read. The
+ * clamps keep an almost-empty site from flickering and a very full one moving.
+ */
+function measureTicker() {
+  const track = $('#ticker .ticker__track');
+  if (!track) return;
+  const half = track.scrollWidth / 2;
+  if (!half) return;
+  track.style.setProperty('--tick-dur', Math.min(600, Math.max(30, Math.round(half / 70))) + 's');
+}
+
+function paintTicker(items) {
+  const el = $('#ticker');
+  if (!el) return;
+  if (items && items.length) {
+    const holder = document.createElement('div');
+    holder.innerHTML = ticker(items);
+    const fresh = holder.firstElementChild;
+    if (fresh) el.replaceWith(fresh);
+  }
+  measureTicker();
+  /* Measured again once the webfont lands: Archivo is wider than the fallback,
+     so a strip timed before it arrives runs slightly fast. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureTicker).catch(() => {});
+}
+
 /* -------------------------------------------------------------- a board --- */
 
 function slugFromPath() {
@@ -160,9 +203,19 @@ async function drawBoard(slug) {
   const board = reg.boards.find((b) => b.slug === slug);
   if (!board) return;
 
-  const rows = await rest('board?select=id,platform,handle,tagline,link,total_cents,last_paid_at,rank'
-    + `&platform=eq.${encodeURIComponent(slug)}&order=rank.asc&limit=200`);
+  /* The ranking, and the newest payments anywhere on the site for the strip at
+     the top. Two small reads rather than one large one: this page only needs
+     its own two hundred rows, and the strip only needs the last forty. */
+  const [rows, latest] = await Promise.all([
+    rest('board?select=id,platform,handle,tagline,link,total_cents,last_paid_at,rank'
+      + `&platform=eq.${encodeURIComponent(slug)}&order=rank.asc&limit=200`),
+    rest('board?select=platform,handle,total_cents,last_paid_at,rank'
+      + '&order=last_paid_at.desc.nullslast&limit=40').catch(() => null),
+  ]);
   const s = situation(rows);
+
+  const nameOf = (sl) => { const f = reg.boards.find((x) => x.slug === sl); return f ? f.name : null; };
+  paintTicker(latest ? tickList(latest, nameOf) : null);
 
   const top = $('#top');
   if (top) top.innerHTML = topTwo(s);
@@ -174,14 +227,20 @@ async function drawBoard(slug) {
   const back = $('#back');
   function drawBack() {
     if (!back) return;
-    const alone = !s.two;
-    const price = s.empty ? costToOpen() : (alone ? MIN_CENTS : s.price);
     const href = target ? payHref(target.id) : null;
+    /* Nothing on the ranking yet: the only move available is adding a name, so
+       that is what the button does. It used to read "Nothing listed yet" and
+       be switched off, with the form that could have fixed it folded shut
+       further down the page -- which is a page that tells a reader what is
+       missing and gives them no way to supply it. */
     back.innerHTML =
-      `<a class="cta" id="pay"${href ? ` href="${esc(href)}"` : ' aria-disabled="true"'}>`
-      + (target ? 'Back ' + esc(target.handle) : 'Nothing listed yet') + '</a>'
+      (target
+        ? `<a class="cta" id="pay"${href ? ` href="${esc(href)}"` : ' aria-disabled="true"'}>`
+          + 'Back ' + esc(target.handle) + '</a>'
+        : '<a class="cta" id="pay" href="#add-name">Add the first name</a>')
       + amounts(target && s.one && target.id !== s.one.id
-          ? s : { ...s, two: target && s.one && target.id === s.one.id ? null : s.two }, board.name);
+          ? s : { ...s, two: target && s.one && target.id === s.one.id ? null : s.two },
+        board.name, href);
     if (target && s.one && target.id !== s.one.id && target.id !== (s.two && s.two.id)) {
       /* Backing somebody further down: say what that costs from where they are. */
       const need = Math.max(MIN_CENTS, s.one.total_cents - target.total_cents + 1);
@@ -191,7 +250,6 @@ async function drawBoard(slug) {
         + `<span class="num">${esc(money(target.total_cents + need))}</span>, past `
         + `${esc(s.one.handle)}.`;
     }
-    void price;
   }
   drawBack();
 
@@ -202,11 +260,14 @@ async function drawBoard(slug) {
   event('board_view', { board: slug });
   wireAdd(slug, board.name);
 
+  /* Whether the browser is on its way to Stripe. Declared before both handlers
+     below because a chip is a way out of the page too. */
+  let leaving = false;
+
   /* The click that leads to Stripe, and the moment the browser actually
      leaves. They are usually the same second; when they are not -- a blocked
      navigation, a change of mind on the tap -- the difference is the whole
      point of recording both. */
-  let leaving = false;
   document.addEventListener('click', (e) => {
     const pay = e.target.closest && e.target.closest('#pay, .cta[href*="stripe"]');
     if (!pay || pay.getAttribute('aria-disabled')) return;
@@ -217,15 +278,16 @@ async function drawBoard(slug) {
     if (leaving) event('checkout_started', { board: slug, listing_id: target ? target.id : null });
   });
 
-  /* Which amount was pressed. The chips do not set the figure -- Stripe takes
-     what the payer types -- so this is the intent, which is the interesting
-     half anyway. */
+  /* Which amount was pressed. Every chip is a link to the same payment page
+     the button leads to, so this records the figure the payer meant to type on
+     their way out -- the intent, which is the interesting half anyway, and the
+     only half this side of the site can ever know. The navigation is the
+     browser's; nothing here interferes with it. */
   document.addEventListener('click', (e) => {
     const chip = e.target.closest && e.target.closest('.chip[data-amount]');
-    if (chip) {
-      $$('.chip[data-amount]').forEach((c) => c.classList.toggle('chip--on', c === chip));
-      event('amount_selected', { board: slug, amount_cents: Number(chip.dataset.amount) || 0 });
-    }
+    if (!chip) return;
+    leaving = true;
+    event('amount_selected', { board: slug, amount_cents: Number(chip.dataset.amount) || 0 });
   });
 
   /* Any row can become the one being backed. */
@@ -277,6 +339,18 @@ function wireAdd(slug, boardName) {
 
   const holder = form.closest('details');
   if (holder) holder.addEventListener('toggle', () => { if (holder.open) event('add_opened', { board: slug }); });
+
+  /* The button at the top of an empty ranking points at the name field. The
+     jump alone is enough without a script -- the form is rendered open when
+     there is nothing listed -- and with one, the form also opens wherever it
+     is pressed from and the cursor is already in the field. */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href="#add-name"]');
+    if (!a) return;
+    if (holder && !holder.open) holder.open = true;
+    const input = $('#add-name');
+    if (input) setTimeout(() => input.focus({ preventScroll: true }), 60);
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -383,6 +457,8 @@ async function drawHome() {
     return { ...b, rows: mine, s: situation(mine) };
   });
 
+  paintTicker(tickList(rows, (sl) => (bySlug.get(sl) || {}).name || null));
+
   const battles = boards.filter((b) => b.s.two)
     .map((b) => ({ slug: b.slug, boardName: b.name, one: b.s.one, two: b.s.two, price: b.s.price }))
     .sort((a, b) => a.price - b.price || b.one.total_cents - a.one.total_cents);
@@ -394,7 +470,7 @@ async function drawHome() {
     const holder = el && el.children[1];
     if (holder) holder.innerHTML = topTwo(leadBoard.s)
       + `<div style="margin-top:14px"><a class="cta" href="/${esc(lead.slug)}/">Back ${esc(lead.two.handle)}</a>`
-      + amounts(leadBoard.s, leadBoard.name) + '</div>';
+      + amounts(leadBoard.s, leadBoard.name, payHref(lead.two.id)) + '</div>';
     const list = el && el.children[2];
     if (list) list.innerHTML = battles.slice(1, 4).map(battle).join('');
   }
