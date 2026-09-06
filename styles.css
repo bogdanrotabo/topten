@@ -511,6 +511,35 @@ a.sb, a.sb:hover { color: var(--text); }
   100% { box-shadow: 0 0 0 0 rgba(108, 194, 150, 0); }
 }
 
+/* Who received money last, at the end of the band. Pushed right so it reads as
+   a separate fact from the four counts, and cut off rather than allowed to
+   push them off a phone: the figures are the promise, this is the news. */
+.lp {
+  display: inline-flex; align-items: baseline; gap: 7px;
+  margin-left: auto; padding-left: 14px; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  border-left: 1px solid var(--line-soft);
+}
+.lp__k { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dim); }
+.lp__h { font-size: 14px; font-weight: 800; color: var(--text); }
+.lp__b { font-size: 11px; font-weight: 600; color: var(--dim); }
+.lp__a { font-size: 14px; font-weight: 800; color: var(--gold); }
+
+/* The light, on a change and only on a change. Two and a half seconds: long
+   enough to look up at, short enough that it is over before it is annoying. */
+.lp--new { animation: lit 2.4s ease-out 1; }
+@keyframes lit {
+  0%   { background: var(--gold); color: var(--gold-ink); border-radius: 8px; }
+  15%  { background: var(--gold-soft); }
+  100% { background: transparent; }
+}
+.lp--new .lp__h, .lp--new .lp__a, .lp--new .lp__k, .lp--new .lp__b { animation: litink 2.4s ease-out 1; }
+@keyframes litink { 0% { color: var(--gold-ink); } 100% { color: inherit; } }
+
+/* A phone has no room for the news beside the four figures. */
+@media (max-width: 700px) { .lp { display: none; } }
+
 /* The one that just moved, marked for a moment. Long enough to catch, short
    enough that a page left open does not end up flashing at nobody. */
 .tally__i b.figure__v--moved { animation: moved 1.6s ease-out 1; }
@@ -530,6 +559,28 @@ a.sb, a.sb:hover { color: var(--text); }
   .tally__i { gap: 4px; }
   .tally__i b { font-size: 13.5px; }
   .tally__k { font-size: 9.5px; letter-spacing: 0; }
+}
+
+/* ------------------------------------------------------------- confetti -- */
+
+/* Over everything and in the way of nothing: fixed, full screen, and
+   pointer-events: none so the page underneath stays as clickable as it was.
+   It is removed from the document when it is done, so nothing is left
+   animating behind a page somebody is still reading. */
+.sky {
+  position: fixed; inset: 0; z-index: 99;
+  overflow: hidden; pointer-events: none;
+}
+.bit {
+  position: absolute; top: -24px;
+  width: 9px; height: 9px; border-radius: 2px;
+  animation-name: fall; animation-timing-function: cubic-bezier(.25, .6, .4, 1);
+  animation-fill-mode: forwards;
+}
+@keyframes fall {
+  0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  100% { transform: translate3d(var(--drift, 0), 105vh, 0) rotate(var(--spin, 180deg)); opacity: 0; }
 }
 
 /* ---------------------------------------------------------------- footer -- */
