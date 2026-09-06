@@ -348,8 +348,12 @@ ${masthead({ back: true, share: true })}
 <section class="sect" id="top" style="margin-top:26px">${topTwo(s)}</section>
 
 <section class="sect" id="back" style="margin-top:18px">
-  <a class="cta" id="pay" href="${esc(cfg.pay || '#')}" ${s.two || s.one ? '' : 'aria-disabled="true"'}>
-    ${s.two ? 'Back ' + esc(s.two.handle) : (s.one ? 'Back ' + esc(s.one.handle) : 'Take #1')}</a>
+  ${(() => {
+    const t = s.two || s.one || null;
+    const href = t ? payTo(t.id) : null;
+    return `<a class="cta" id="pay"${href ? ` href="${esc(href)}"` : ' aria-disabled="true"'}>`
+      + (t ? 'Back ' + esc(t.handle) : 'Nothing listed yet') + '</a>';
+  })()}
   ${amounts(s, b.name)}
 </section>
 
@@ -359,8 +363,27 @@ ${rest.length ? `<section class="sect" id="rest">
     (i ? '<hr class="hr">' : '') + row(r, i + 3)).join('')}</div>
 </section>` : ''}
 
-<section class="sect">
-  <a class="ghost" href="/find/">Add something that is missing</a>
+<section class="sect" id="add">
+  <details class="add">
+    <summary class="ghost">Add something that is missing</summary>
+    <div class="add__body">
+      <p class="lede">Anything can be listed here. Adding it is free; holding a position is not
+        &mdash; a listing appears on the ranking once a payment lands on it, and the first one
+        can be ${esc(money(MIN_CENTS))}.</p>
+      <form id="add-form" novalidate>
+        <label class="field"><span class="field__k">Name</span>
+          <input class="field__i" id="add-name" maxlength="40" required
+                 placeholder="${esc(b.example || 'The name as people write it')}" autocomplete="off"></label>
+        <label class="field"><span class="field__k">Link, if it has one</span>
+          <input class="field__i" id="add-link" maxlength="200" type="url" inputmode="url"
+                 placeholder="https://" autocomplete="off"></label>
+        <button type="submit" class="cta" style="margin-top:14px">Add and back it</button>
+        <div id="add-out"></div>
+      </form>
+      <p class="fine">You will be sent to Stripe to pay. Nothing is listed publicly until a
+        payment lands, and the amount you type there is what it holds.</p>
+    </div>
+  </details>
 </section>
 
 <section class="sect" id="spread">
@@ -382,6 +405,22 @@ ${rest.length ? `<section class="sect" id="rest">
 </section>
 
 ${footer()}`;
+}
+
+/* The Back button as it is written into the page.
+ *
+ * It carries the listing already, because a reader whose JavaScript never
+ * arrives must still be able to pay -- and a payment that reaches Stripe with
+ * no client_reference_id comes back naming no listing, which means money taken
+ * and nothing credited. app.js replaces this href a moment later with the same
+ * listing plus the visit that sent it, which is the half that only matters for
+ * knowing where the traffic came from.
+ */
+function payTo(listingId) {
+  if (!cfg.pay || !listingId) return null;
+  const u = new URL(cfg.pay);
+  u.searchParams.set('client_reference_id', listingId);
+  return u.toString();
 }
 
 /* --------------------------------------------------------------- writing -- */

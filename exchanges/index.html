@@ -46,8 +46,7 @@
 <section class="sect" id="top" style="margin-top:26px"><div class="glass top"><div class="top__one"><div class="rk rk--1 rk--big"><svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true"><path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg></div><div class="row__main"><div class="top__name">Binance</div><div class="top__sub">#1 for 3 days</div></div><div class="top__amt num">$44</div></div><hr class="hr"><div class="top__two"><div class="rk">2</div><div class="row__main"><div class="top__name">Coinbase Exchange</div><div class="top__sub num">$5.01 takes #1</div></div><div class="top__amt num">$39</div></div><div style="padding:0 18px 18px"><div class="gap"><div class="gap__fill" style="width:88.6%"></div></div><div class="gap__label num">Coinbase Exchange is at 88.6% of the leader</div></div></div></section>
 
 <section class="sect" id="back" style="margin-top:18px">
-  <a class="cta" id="pay" href="https://buy.stripe.com/28EdR2eZoaV76yy2C00co0d" >
-    Back Coinbase Exchange</a>
+  <a class="cta" id="pay" href="https://buy.stripe.com/28EdR2eZoaV76yy2C00co0d?client_reference_id=176e3493-d8cc-406e-b85b-e1ace45e6348">Back Coinbase Exchange</a>
   <div class="amounts"><button type="button" class="chip num" data-amount="200">$2</button><button type="button" class="chip num" data-amount="500">$5</button><button type="button" class="chip num chip--on" data-amount="1000">$10</button><button type="button" class="chip num" data-amount="2500">$25</button><button type="button" class="chip chip--any" data-amount="0">Any</button></div><div class="note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div>You type the amount on the payment page. <span class="num">$5.01</span> puts Coinbase Exchange at <span class="num">$44.01</span>, past Binance.</div></div>
 </section>
 
@@ -56,8 +55,27 @@
   <div class="glass" style="overflow:hidden"><div class="row"><div class="rk">3</div><div class="row__main"><div class="row__name">Crypto.com Exchange</div></div><div class="row__amt num">$8</div></div><hr class="hr"><div class="row"><div class="rk">4</div><div class="row__main"><div class="row__name">Bybit</div></div><div class="row__amt num">$5</div></div><hr class="hr"><div class="row"><div class="rk">5</div><div class="row__main"><div class="row__name">Kraken</div></div><div class="row__amt num">$3</div></div><hr class="hr"><div class="row"><div class="rk">6</div><div class="row__main"><div class="row__name">Gate</div></div><div class="row__amt num">$3</div></div><hr class="hr"><div class="row"><div class="rk">7</div><div class="row__main"><div class="row__name">OKX</div></div><div class="row__amt num">$2</div></div><hr class="hr"><div class="row"><div class="rk">8</div><div class="row__main"><div class="row__name">Bitget</div></div><div class="row__amt num">$2</div></div><hr class="hr"><div class="row"><div class="rk">9</div><div class="row__main"><div class="row__name">KuCoin</div></div><div class="row__amt num">$2</div></div><hr class="hr"><div class="row"><div class="rk">10</div><div class="row__main"><div class="row__name">MEXC</div></div><div class="row__amt num">$2</div></div></div>
 </section>
 
-<section class="sect">
-  <a class="ghost" href="/find/">Add something that is missing</a>
+<section class="sect" id="add">
+  <details class="add">
+    <summary class="ghost">Add something that is missing</summary>
+    <div class="add__body">
+      <p class="lede">Anything can be listed here. Adding it is free; holding a position is not
+        &mdash; a listing appears on the ranking once a payment lands on it, and the first one
+        can be $2.</p>
+      <form id="add-form" novalidate>
+        <label class="field"><span class="field__k">Name</span>
+          <input class="field__i" id="add-name" maxlength="40" required
+                 placeholder="The name as people write it" autocomplete="off"></label>
+        <label class="field"><span class="field__k">Link, if it has one</span>
+          <input class="field__i" id="add-link" maxlength="200" type="url" inputmode="url"
+                 placeholder="https://" autocomplete="off"></label>
+        <button type="submit" class="cta" style="margin-top:14px">Add and back it</button>
+        <div id="add-out"></div>
+      </form>
+      <p class="fine">You will be sent to Stripe to pay. Nothing is listed publicly until a
+        payment lands, and the amount you type there is what it holds.</p>
+    </div>
+  </details>
 </section>
 
 <section class="sect" id="spread">

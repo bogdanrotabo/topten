@@ -105,3 +105,20 @@ export function situation(rows) {
     percent: one.total_cents > 0 ? Math.min(100, (two.total_cents / one.total_cents) * 100) : 0,
   };
 }
+
+/**
+ * The key that decides whether two submissions are the same thing.
+ *
+ * `listings` is unique on (platform, url), and on these boards the url is not
+ * a web address -- it is the name, folded. "Bitcoin", "bitcoin" and " BITCOIN "
+ * all key to `crypto:bitcoin`, so the second person to think of it is sent to
+ * pay towards the first one's row instead of splitting the money across two.
+ * Accents fold too, which is why Beyoncé keys to `artists:beyonce`: the row
+ * that has been collecting since August is the one a new payment should join.
+ */
+export function listingKey(platform, handle) {
+  const folded = String(handle || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/\s+/g, ' ').trim();
+  return platform + ':' + folded;
+}

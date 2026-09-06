@@ -298,6 +298,26 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pill:hover { color: var(--text); background: var(--glass-2); }
 .pill--more { color: var(--muted); }
 
+/* ------------------------------------------------------------ the adding -- */
+
+/* A <details> rather than a button that JavaScript has to open, so the form is
+   reachable on a page whose script never arrived -- and reachable by keyboard
+   without anything being wired at all. */
+.add summary { list-style: none; cursor: pointer; }
+.add summary::-webkit-details-marker { display: none; }
+.add[open] summary { border-color: var(--cyan-line); background: var(--cyan-soft); }
+.add__body { margin-top: 14px; }
+
+.field { display: block; margin-top: 14px; }
+.field__k { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 7px; }
+.field__i {
+  width: 100%; height: 50px; padding: 0 16px; border-radius: var(--radius);
+  background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .09);
+  color: var(--text); font-family: inherit; font-size: 16px;
+}
+.field__i::placeholder { color: var(--dim); }
+.field__i:focus { outline: none; border-color: var(--cyan-line); background: var(--cyan-soft); }
+
 /* ---------------------------------------------------------------- search -- */
 
 .search {

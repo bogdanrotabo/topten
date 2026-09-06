@@ -11,7 +11,7 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, MIN_CENTS } from './lib.js';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js';
 import { topTwo, amounts, row, battle, trend, openOne, move } from './render.js';
 
 const CFG = window.TOPTEN_CONFIG || {};
@@ -169,6 +169,8 @@ async function drawBoard(slug) {
   const restEl = $('#rest .glass');
   if (restEl) restEl.innerHTML = rest_.map((r, i) => (i ? '<hr class="hr">' : '') + row(r, i + 3)).join('');
 
+  wireAdd(slug, board.name);
+
   /* Any row can become the one being backed. */
   $$('#rest .row, #top .top__one, #top .top__two').forEach((el, i) => {
     el.style.cursor = 'pointer';
@@ -182,6 +184,79 @@ async function drawBoard(slug) {
     el.addEventListener('click', pick);
     el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
     void i;
+  });
+}
+
+/* ------------------------------------------------------------- the adding -- */
+
+/* The token a listing is edited with, kept in the browser that created the
+   row and nowhere else. Paying towards a listing has never granted the right
+   to edit it -- anybody may pay towards anything, and two dollars must not buy
+   the pen -- so this is only ever written for a row this browser made. */
+function keepToken(id, token) {
+  if (!id || !token) return;
+  try {
+    const all = JSON.parse(localStorage.getItem('topten_tokens') || '{}');
+    all[id] = token;
+    localStorage.setItem('topten_tokens', JSON.stringify(all));
+  } catch (e) { /* a browser that will not store it simply cannot edit later */ }
+}
+
+function wireAdd(slug, boardName) {
+  const form = $('#add-form');
+  if (!form) return;
+  const out = $('#add-out');
+  const say = (html, bad) => {
+    out.innerHTML = `<div class="note${bad ? ' note--bad' : ''}">`
+      + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+      + 'stroke-width="1.9" stroke-linecap="round" aria-hidden="true">'
+      + '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>'
+      + `<div>${html}</div></div>`;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = $('#add-name').value.trim().slice(0, 40);
+    let link = $('#add-link').value.trim();
+    if (!name) { say('It needs a name.', true); return; }
+    if (link && !/^[a-z][a-z0-9+.-]*:/i.test(link)) link = 'https://' + link;
+    if (link && !/^https?:\/\/[a-z0-9][a-z0-9._-]*\.[a-z]{2,}/i.test(link)) {
+      say('That link is not an address a browser can open. Leave it empty if there is not one.', true);
+      return;
+    }
+
+    const btn = $('button[type=submit]', form);
+    btn.setAttribute('aria-disabled', 'true');
+    btn.textContent = 'Adding…';
+    try {
+      const r = await rpc('create_listing', {
+        p_platform: slug,
+        p_url: listingKey(slug, name),
+        p_handle: name,
+        p_tagline: null,
+        p_link: link || null,
+      });
+      if (!r || !r.ok) { say('That could not be added. Try a different name.', true); return; }
+
+      if (r.existing) {
+        say(`<b>${esc(name)}</b> is already on ${esc(boardName)}. Back the listing that is there `
+          + 'rather than starting a second one &mdash; the money would be split between them otherwise.');
+        btn.textContent = 'Add and back it';
+        btn.removeAttribute('aria-disabled');
+        return;
+      }
+
+      keepToken(r.id, r.edit_token);
+      const href = payHref(r.id);
+      if (!href) { say('Added. Payments are not configured, so it cannot be backed yet.', true); return; }
+      say(`<b>${esc(name)}</b> is ready. Sending you to Stripe &mdash; type at least `
+        + `<span class="num">${esc(money(costToOpen()))}</span> and it goes on the ranking.`);
+      setTimeout(() => { location.href = href; }, 900);
+    } catch (err) {
+      say('Something went wrong on our side. Nothing was charged.', true);
+      btn.textContent = 'Add and back it';
+      btn.removeAttribute('aria-disabled');
+    }
   });
 }
 
