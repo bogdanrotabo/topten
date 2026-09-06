@@ -291,6 +291,138 @@ async function drawHome() {
   }
 }
 
+/* ---------------------------------------------------- what the payment did -- */
+
+/* Whichever receipt Stripe hands back. The Payment Link's success URL is not
+   ours to change, so all the shapes it might use are read and the first one
+   that means anything wins. */
+function receipt() {
+  const q = new URLSearchParams(location.search);
+  const sid = (q.get('session_id') || '').trim();
+  const ref = (q.get('client_reference_id') || q.get('ref') || q.get('listing') || '').trim();
+  return {
+    session_id: /^cs_(test|live)_[A-Za-z0-9]{8,120}$/.test(sid) ? sid : null,
+    client_ref: /^[0-9a-fA-F_-]{16,200}$/.test(ref) ? ref : null,
+  };
+}
+
+async function drawResult() {
+  const el = $('#result');
+  if (!el) return;
+  const r = receipt();
+
+  if (!r.session_id && !r.client_ref) {
+    el.className = '';
+    el.innerHTML = '<h1 class="hero__q">NO RECEIPT<br>HERE.</h1>'
+      + '<p class="hero__sub">This address is where Stripe sends you back after a payment. '
+      + 'Nothing came with it.</p>'
+      + '<a class="cta" href="/" style="margin-top:28px">Go to the rankings</a>';
+    return;
+  }
+
+  const reg = await registry();
+  const name = (slug) => (reg.boards.find((b) => b.slug === slug) || {}).name || slug;
+
+  /* Getting back from Stripe before the webhook does is ordinary, not an
+     error. The page waits, and says it is waiting. */
+  const started = Date.now();
+  let out = null;
+  while (Date.now() - started < 45000) {
+    try {
+      out = await rpc('payment_result', { p_session_id: r.session_id, p_client_ref: r.client_ref });
+    } catch (e) { out = null; }
+    if (out && out.outcome !== 'pending') break;
+    await new Promise((go) => setTimeout(go, 1800));
+  }
+
+  el.className = '';
+
+  /* Once there is a definitive answer the receipt leaves the address bar: a
+     link shared from this page must not carry the key to somebody's payment.
+     It stays while the answer is still pending, so a reload can still ask. */
+  if (out && out.outcome !== 'pending') history.replaceState({}, '', location.pathname);
+
+  if (!out || out.outcome === 'pending') {
+    el.innerHTML = '<h1 class="hero__q">STILL<br>SETTLING.</h1>'
+      + '<p class="hero__sub">Your payment has not reached us yet. It usually takes seconds. '
+      + 'Reload in a minute &mdash; nothing is lost, and the ranking will show it when it lands.</p>'
+      + '<a class="ghost" href="/" style="margin-top:24px">Back to the rankings</a>';
+    return;
+  }
+
+  if (out.outcome === 'orphan') {
+    el.innerHTML = '<h1 class="hero__q">PAYMENT<br>RECEIVED.</h1>'
+      + `<p class="hero__sub">We have your <span class="num">${esc(money(out.amount_cents, out.currency))}</span>, `
+      + 'but not which listing it was for &mdash; so it has been written down rather than credited. '
+      + `Write to <a href="mailto:${esc(CFG.CONTACT_EMAIL || '')}">${esc(CFG.CONTACT_EMAIL || 'us')}</a> `
+      + 'and it will be put where you meant it.</p>'
+      + '<a class="ghost" href="/" style="margin-top:24px">Back to the rankings</a>';
+    return;
+  }
+
+  /* The three things a payment can do, each read off the ranking before and
+     after it landed. Nothing here is asserted: a move is only claimed when the
+     two numbers differ. */
+  const board = out.platform;
+  const took = out.is_leader && (out.rank_before === null || out.rank_before > 1);
+  const moved = out.rank_before !== null && out.rank_after < out.rank_before;
+  const first = out.rank_before === null;
+
+  let headline, story;
+  if (took) {
+    headline = `${esc(out.handle).toUpperCase()} IS<br><em>#1</em> IN ${esc(name(board)).toUpperCase()}.`;
+    story = `Your <span class="num">${esc(money(out.amount_cents, out.currency))}</span> put it there. `
+      + 'The ranking changed the moment your payment cleared.';
+  } else if (first) {
+    headline = `${esc(out.handle).toUpperCase()}<br>IS ON THE BOARD.`;
+    story = `Your <span class="num">${esc(money(out.amount_cents, out.currency))}</span> put `
+      + `${esc(out.handle)} at #${out.rank_after} in ${esc(name(board))}.`;
+  } else if (moved) {
+    headline = `${esc(out.handle).toUpperCase()} MOVED<br>TO <em>#${out.rank_after}</em>.`;
+    story = `Your <span class="num">${esc(money(out.amount_cents, out.currency))}</span> took `
+      + `${esc(out.handle)} from #${out.rank_before} to #${out.rank_after} in ${esc(name(board))}.`;
+  } else {
+    headline = `YOU BACKED<br>${esc(out.handle).toUpperCase()}.`;
+    story = `<span class="num">${esc(money(out.amount_cents, out.currency))}</span> added, no move yet `
+      + `&mdash; ${esc(out.handle)} is at <span class="num">${esc(money(out.total_cents))}</span> and still `
+      + `#${out.rank_after}.`;
+  }
+  if (out.needed_cents) {
+    story += ` <span class="num">${esc(money(out.needed_cents))}</span> more takes #1 from `
+      + `${esc(out.leader)}.`;
+  }
+
+  const crown = '<svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true">'
+    + '<path fill="currentColor" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg>';
+  const badge = out.rank_after === 1
+    ? `<div class="rk rk--1 rk--big">${crown}</div>`
+    : `<div class="rk">${out.rank_after}</div>`;
+  const under = (moved || took)
+    ? `<div class="row__sub" style="color:var(--green)">MOVED ${out.rank_before} &rarr; ${out.rank_after}</div>`
+    : `<div class="row__sub">#${out.rank_after} in ${esc(name(board))}</div>`;
+
+  el.innerHTML = [
+    '<div class="eyebrow" style="color:var(--green)">Payment confirmed</div>',
+    `<h1 class="hero__q" style="margin-top:16px">${headline}</h1>`,
+    `<p class="hero__sub">${story}</p>`,
+    '<div style="margin-top:30px"><div class="glass" style="overflow:hidden">',
+      '<div class="row"><div class="row__main"><div class="eyebrow">Now</div></div>',
+      `<div class="row__amt num">${esc(money(out.total_cents, out.currency))}</div></div>`,
+      '<hr class="hr">',
+      '<div class="row" style="padding:18px">',
+        badge,
+        `<div class="row__main"><div class="top__name">${esc(out.handle)}</div>${under}</div>`,
+      '</div>',
+    '</div></div>',
+    '<div style="margin-top:22px">',
+      '<button type="button" class="cta" id="share2">Tell the other side</button>',
+      `<a class="ghost" href="/${esc(board)}/" style="margin-top:10px">Back to ${esc(name(board))}</a>`,
+    '</div>',
+  ].join('');
+
+  wireShare();
+}
+
 /* ------------------------------------------------------------- the share -- */
 
 function wireShare() {
@@ -332,7 +464,8 @@ async function boot() {
 
   const slug = slugFromPath();
   try {
-    if (location.pathname === '/' || location.pathname === '/index.html') await drawHome();
+    if ($('#result')) await drawResult();
+    else if (location.pathname === '/' || location.pathname === '/index.html') await drawHome();
     else if (slug && !['find', 'back', 'thanks', 'claim'].includes(slug)) await drawBoard(slug);
   } catch (e) {
     /* The page already carries a ranking, written in at build time. Leaving it

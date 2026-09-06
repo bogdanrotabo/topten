@@ -201,6 +201,15 @@ function question(q) {
   return esc(q).split('#1').join('<em>#1</em>');
 }
 
+/* Where the site is made. Drawn rather than written as an emoji: a flag
+   character renders as two letters on most of Windows, which is how this
+   line came to say "CH" on a PC the last time it was tried. */
+const SWISS = '<svg class="swiss__flag" viewBox="0 0 32 32" width="14" height="14" aria-hidden="true">'
+  + '<rect width="32" height="32" rx="4" fill="#DA291C"/>'
+  + '<path fill="#fff" d="M13 6h6v7h7v6h-7v7h-6v-7H6v-6h7z"/></svg>';
+
+const swissLine = `<p class="swiss">${SWISS}<span>Swiss made &middot; Available worldwide</span></p>`;
+
 const wordmark = `<a class="wordmark" href="/"><span style="color:var(--gold)">${CROWN}</span>TOPTEN.ONE</a>`;
 
 function masthead({ back = false, share = false } = {}) {
@@ -257,6 +266,7 @@ ${masthead()}
 <section class="hero above">
   <h1 class="hero__q">WHO SHOULD<br>BE <em>#1</em>?</h1>
   <p class="hero__sub">Pick a side. Move the ranking.</p>
+  ${swissLine}
   <a class="cta" href="${leadBoard ? '/' + esc(leadBoard.slug) + '/' : '/find/'}" style="margin-top:28px">Explore now</a>
   <div class="search-wrap">${ICON.search.replace('width="20" height="20"', 'width="17" height="17"')}
     <input class="search" id="q" type="search" placeholder="Find anyone or anything" aria-label="Find anyone or anything" autocomplete="off">

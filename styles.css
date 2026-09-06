@@ -136,6 +136,13 @@ img, svg { max-width: 100%; }
 }
 .page-title em { font-style: normal; color: var(--gold); }
 
+/* Where the site is made. Small, quiet, and under the promise it belongs to. */
+.swiss {
+  display: flex; align-items: center; gap: 9px;
+  margin: 14px 0 0; font-size: 13px; font-weight: 600; color: var(--dim);
+}
+.swiss__flag { flex: 0 0 auto; display: block; border-radius: 4px; }
+
 .eyebrow {
   font-size: 12px; font-weight: 700; letter-spacing: .16em;
   text-transform: uppercase; color: var(--dim);

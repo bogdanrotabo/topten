@@ -198,7 +198,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   // `<listing uuid>` or `<listing uuid>_<visit uuid>`.
-  const listingId = reference.split("_")[0] ?? "";
+  const [listingId = "", visit = ""] = reference.split("_");
   const cents = Math.round(amount);
 
   /** Write the payment down somewhere, when it cannot be credited. */
@@ -248,6 +248,23 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // real, so it goes to unmatched_payments instead of into a log line.
   if (result?.reason === "unknown_listing") {
     return await orphan("unknown_listing");
+  }
+
+  // What the payment came in holding: which listing, and which visit sent it.
+  // Written beside credit_payment rather than inside it, so the money path
+  // stays exactly the audited thing it is and a receipt that fails to record
+  // can never fail a payment. The payer's result page reads this; so does
+  // revenue by campaign.
+  try {
+    const ref = await rpc("record_payment_ref", {
+      p_session_id: sessionId,
+      p_listing_id: listingId,
+      p_visit: visit || null,
+      p_reference: reference || null,
+    });
+    if (!ref.ok) console.error(`record_payment_ref failed (${ref.status}): ${await ref.text()}`);
+  } catch (e) {
+    console.error("record_payment_ref threw", e);
   }
 
   console.log(`${cents} ${currency} -> ${listingId}: ${JSON.stringify(result)}`);
