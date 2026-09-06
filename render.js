@@ -78,25 +78,31 @@ export function topTwo(s, opts = {}) {
 }
 
 /**
- * The amounts, and the sentence under them.
+ * The amounts, and the sentence above them.
  *
- * The chips are suggestions and say so: the Payment Link takes a figure the
- * payer types on Stripe's own page, and Stripe has no way to pre-fill it from
- * a URL. So the page says what to type and what it buys, rather than pretending
- * to set it. The chip matching the winning amount is the one marked.
+ * Every chip is a link to the same payment page the big button leads to. They
+ * used to be buttons that lit up and did nothing else, which is a promise the
+ * page could not keep: a figure you can press has said it will be charged.
+ *
+ * What they cannot do is set the figure. A Stripe Payment Link with a custom
+ * amount takes what the payer types on Stripe's own page and there is no way
+ * to fill it in from a URL, so the sentence saying that comes FIRST -- above
+ * the chips, where it is read before the tap rather than after it.
+ *
+ * @param s     the situation on this ranking
+ * @param href  the payment link carrying the listing, or null when there is
+ *              nothing on the ranking to pay towards yet
  */
-export function amounts(s, boardName) {
+export function amounts(s, boardName, href) {
   const price = s.empty ? MIN_CENTS : (s.two ? s.price : MIN_CENTS);
-  const preset = [200, 500, 1000, 2500];
-  const chips = preset.map((c) =>
-    '<button type="button" class="chip num' + (c === Math.min(...preset.filter((p) => p >= price)) ? ' chip--on' : '')
-    + '" data-amount="' + c + '">' + esc(money(c)) + '</button>').join('')
-    + '<button type="button" class="chip chip--any" data-amount="0">Any</button>';
 
   let says;
   if (s.empty) {
-    says = esc(money(MIN_CENTS)) + ' is the smallest payment the site takes, and on an empty '
-      + 'ranking it is also what takes #1.';
+    /* Nothing is listed, so nothing can be paid towards yet. Saying where the
+       amount gets typed first would be answering a question nobody on this
+       page has reached: the move here is putting a name down. */
+    says = 'Put a name down first &mdash; that part is free. It goes on the ranking as soon as a '
+      + 'payment lands on it, and the first ' + esc(money(MIN_CENTS)) + ' takes #1.';
   } else if (!s.two) {
     says = esc(money(price)) + ' is the smallest payment the site takes. '
       + esc(s.one.handle) + ' holds #1 with ' + esc(money(s.one.total_cents)) + '.';
@@ -107,8 +113,27 @@ export function amounts(s, boardName) {
       + (price === MIN_CENTS ? ' It is also the smallest payment the site takes.' : '');
   }
 
-  return '<div class="amounts">' + chips + '</div>'
-    + '<div class="note">' + INFO + '<div>You type the amount on the payment page. ' + says + '</div></div>';
+  const note = '<div class="note">' + INFO + '<div>'
+    + (s.empty ? '' : 'You type the amount on Stripe\u2019s page &mdash; a payment link cannot '
+                      + 'be filled in for you. ')
+    + says + '</div></div>';
+
+  if (!href) return note;
+
+  /* Four figures at most: the one that actually takes #1 from where the
+     ranking stands, then the round numbers above it. The winning amount is
+     always the first chip and always the marked one -- a row of suggestions
+     that does not contain the answer is decoration, and the old row could
+     mark nothing at all whenever the price ran past $25. */
+  const round = [200, 500, 1000, 2500, 5000, 10000];
+  const list = [...new Set([price, ...round.filter((c) => c > price)])].slice(0, 4);
+
+  const chips = list.map((c, i) =>
+    '<a class="chip num' + (i === 0 ? ' chip--on' : '') + '" href="' + esc(href) + '"'
+    + ' data-amount="' + c + '">' + esc(money(c)) + '</a>').join('')
+    + '<a class="chip chip--any" href="' + esc(href) + '" data-amount="0">Any</a>';
+
+  return note + '<div class="amounts">' + chips + '</div>';
 }
 
 /** A line in the closest-battles list on the front page. */
@@ -150,6 +175,41 @@ export function move(m) {
     + '<div class="move__when num">' + esc(m.when) + '</div>'
     + '<div class="move__what">' + m.html + '</div>'
     + '</div>';
+}
+
+/* ---------------------------------------------------------------- ticker -- */
+
+/** One name on the strip: where it stands, on what, for how much. */
+export function tick(t) {
+  return '<span class="tick">'
+    + '<span class="tick__r' + (t.rank === 1 ? ' tick__r--1' : '') + '">'
+    +   (t.rank === 1 ? CROWN : '#' + t.rank) + '</span>'
+    + '<span class="tick__h">' + esc(t.handle) + '</span>'
+    + '<span class="tick__b">' + esc(t.boardName) + '</span>'
+    + '<span class="tick__a num">' + esc(money(t.cents)) + '</span>'
+    + '</span>';
+}
+
+/**
+ * The strip itself, newest payment first.
+ *
+ * Printed twice, and the track slides exactly half its own width: when the
+ * animation restarts the second copy is standing where the first was, so the
+ * loop has no seam to see.
+ *
+ * The duration is a speed, not a time. It was a flat 45 seconds on the first
+ * TopTen, which meant every listing added made the same 45 seconds cover more
+ * ground and the strip read faster; five names ambled and fifteen went three
+ * times quicker for no reason anybody could see. So: pixels per second, fixed,
+ * worked out from how far the track has to travel. The estimate here is what a
+ * reader sees first and app.js replaces it with the measured width.
+ */
+export function ticker(items) {
+  if (!items || !items.length) return '';
+  const cells = items.map(tick).join('');
+  const seconds = Math.min(600, Math.max(30, Math.round(items.length * 170 / 70)));
+  return '<div class="ticker" id="ticker" aria-hidden="true" style="--tick-dur:' + seconds + 's">'
+    + '<div class="ticker__track">' + cells + cells + '</div></div>';
 }
 
 export { situation };

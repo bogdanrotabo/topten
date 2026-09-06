@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
 import { esc, money, shortDate, situation, costToOpen, MIN_CENTS } from '../lib.js';
-import { topTwo, amounts, row, battle, trend, openOne, move, CROWN } from '../render.js';
+import { topTwo, amounts, row, battle, trend, openOne, move, ticker, CROWN } from '../render.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const R = (p) => join(root, p);
@@ -108,6 +108,25 @@ const recent = [...rows]
         + '<span class="num">' + esc(money(r.total_cents)) + '</span>.',
     };
   });
+
+/* Everybody who has paid, newest payment first, for the strip that runs across
+   the top. The rank each name carries is its rank on its own ranking, worked
+   out before this is sorted, so a name that is #4 on Crypto still says #4
+   wherever it lands on the strip. Only the strip's order changed.
+
+   Capped at forty. The track is printed twice, so forty names is eighty cells
+   of markup in every page on the site; past that the strip is carrying weight
+   nobody reads to the end of. */
+const ticks = rows
+  .filter((r) => r.last_paid_at && bySlug.has(r.platform))
+  .sort((a, b) => new Date(b.last_paid_at) - new Date(a.last_paid_at))
+  .slice(0, 40)
+  .map((r) => ({
+    handle: r.handle,
+    boardName: bySlug.get(r.platform).name,
+    rank: r.rank,
+    cents: r.total_cents,
+  }));
 
 console.log(`  ${rows.length} listings across ${live.length} rankings, `
   + `${openBoards.length} still open, ${battles.length} races with a challenger`);
@@ -262,6 +281,7 @@ function homeBody() {
 
   return `<div class="wash wash--violet"></div><div class="wash wash--magenta"></div>
 ${masthead()}
+${ticker(ticks)}
 
 <section class="hero above">
   ${swissLine}
@@ -285,7 +305,7 @@ ${masthead()}
     <a class="sect__link" href="/find/">See all</a></div>
   ${lead ? `<div style="margin-top:16px">${topTwo(leadBoard.s)}
     <div style="margin-top:14px"><a class="cta" href="/${esc(lead.slug)}/">Back ${esc(lead.two.handle)}</a>
-    ${amounts(leadBoard.s, leadBoard.name)}</div></div>` : ''}
+    ${amounts(leadBoard.s, leadBoard.name, payTo(lead.two.id))}</div></div>` : ''}
   <div style="margin-top:14px">${battles.slice(1, 4).map(battle).join('')}</div>
   <p class="fine">The gap plus one cent, or ${esc(money(MIN_CENTS))} &mdash; whichever is larger. A tie stays below.</p>
 </section>
@@ -335,8 +355,18 @@ ${footer()}`;
 function boardBody(b) {
   const s = b.s;
   const rest = s.list.slice(2);
+
+  /* Who the button pays for, and the link that carries them. On a ranking
+     nobody has paid into there is nobody, and the button used to say so and
+     then do nothing -- a dead end with the only way forward folded shut below
+     a full ranking. So an empty ranking's first action is the one that is
+     actually available: put a name on it. */
+  const target = s.two || s.one || null;
+  const href = target ? payTo(target.id) : null;
+
   return `<div class="wash wash--gold"></div>
 ${masthead({ back: true, share: true })}
+${ticker(ticks)}
 
 <section class="hero above" style="padding-top:40px">
   ${swissLine}
@@ -349,24 +379,15 @@ ${masthead({ back: true, share: true })}
 <section class="sect" id="top" style="margin-top:26px">${topTwo(s)}</section>
 
 <section class="sect" id="back" style="margin-top:18px">
-  ${(() => {
-    const t = s.two || s.one || null;
-    const href = t ? payTo(t.id) : null;
-    return `<a class="cta" id="pay"${href ? ` href="${esc(href)}"` : ' aria-disabled="true"'}>`
-      + (t ? 'Back ' + esc(t.handle) : 'Nothing listed yet') + '</a>';
-  })()}
-  ${amounts(s, b.name)}
+  ${target
+    ? `<a class="cta" id="pay"${href ? ` href="${esc(href)}"` : ' aria-disabled="true"'}>Back ${esc(target.handle)}</a>`
+    : `<a class="cta" id="pay" href="#add-name">Add the first name</a>`}
+  ${amounts(s, b.name, href)}
 </section>
 
-${rest.length ? `<section class="sect" id="rest">
-  <h2 class="eyebrow" style="padding-bottom:14px">Full ranking</h2>
-  <div class="glass" style="overflow:hidden">${rest.map((r, i) =>
-    (i ? '<hr class="hr">' : '') + row(r, i + 3)).join('')}</div>
-</section>` : ''}
-
 <section class="sect" id="add">
-  <details class="add">
-    <summary class="ghost">Add something that is missing</summary>
+  <details class="add"${s.empty ? ' open' : ''}>
+    <summary class="ghost">Add a name to this ranking</summary>
     <div class="add__body">
       <p class="lede">Anything can be listed here. Adding it is free; holding a position is not
         &mdash; a listing appears on the ranking once a payment lands on it, and the first one
@@ -387,12 +408,18 @@ ${rest.length ? `<section class="sect" id="rest">
   </details>
 </section>
 
+${rest.length ? `<section class="sect" id="rest">
+  <h2 class="eyebrow" style="padding-bottom:14px">Full ranking</h2>
+  <div class="glass" style="overflow:hidden">${rest.map((r, i) =>
+    (i ? '<hr class="hr">' : '') + row(r, i + 3)).join('')}</div>
+</section>` : ''}
+
 <section class="sect" id="spread">
   <h2 class="eyebrow">Bring someone in</h2>
   <p class="lede">A ranking only moves when the other side hears about it.</p>
   <div style="display:flex;gap:10px;margin-top:16px">
-    <button type="button" class="ghost" id="copy"><span style="color:var(--cyan)">${ICON.link}</span>Copy link</button>
-    <button type="button" class="ghost" id="share2"><span style="color:var(--cyan)">${ICON.share}</span>Share</button>
+    <button type="button" class="ghost" id="copy"><span style="color:var(--gold)">${ICON.link}</span>Copy link</button>
+    <button type="button" class="ghost" id="share2"><span style="color:var(--gold)">${ICON.share}</span>Share</button>
   </div>
 </section>
 

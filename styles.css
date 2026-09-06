@@ -1,51 +1,44 @@
-/* TopTen.one — the whole look, in one file.
- *
- * Midnight navy, white type, dark glass on hairline borders. The colours are
- * rationed on purpose, because a page about money stops being believable the
- * moment everything on it is shouting:
- *
- *   gold    the crown, the #1 amount, "take #1". Nothing else is gold.
- *   violet  the call to action, and only the call to action.
- *   green   movement that actually happened. Never decoration.
- *   cyan    links and information.
- *
- * One family, Archivo, 400 to 800. Weight and size do the work a second
- * typeface would have done, which is what keeps it clean. Every figure is
- * tabular, so a column of money lines up like a scoreboard.
- *
- * Every text colour here clears 4.5:1 against the surface it sits on, checked
- * rather than eyeballed: #98A2B8 is 7.7:1 on the background, #78849E is 5.3:1,
- * and white on the violet call to action is 5.7:1 at the light end.
- */
-
 :root {
   color-scheme: dark;
 
-  --bg: #070A14;
-  --bg-2: #0A0E1C;
-  --glass: rgba(255, 255, 255, .045);
-  --glass-2: rgba(255, 255, 255, .065);
-  --line: rgba(255, 255, 255, .08);
-  --line-soft: rgba(255, 255, 255, .06);
+  /* King of the Hill's palette, which is gift.ceo's: warm near-black, one gold,
+     and nothing else asking for attention. The blue-navy version was colder and
+     read as an app; this reads as a ledger, which is what the site is.
 
-  --text: #EEF2FA;
-  --muted: #98A2B8;
-  --dim: #78849E;
+     Every text colour below was measured against the surface it sits on rather
+     than eyeballed. --dim is the one that moved: the original #7d7871 is 4.27
+     on the background and 3.88 on a card, so it was lifted to #948e86, which
+     clears 4.5 everywhere the page puts it. */
 
-  --gold: #E9B949;
-  --gold-soft: rgba(233, 185, 73, .10);
-  --gold-line: rgba(233, 185, 73, .35);
+  --bg: #131211;
+  --bg-2: #1b1a18;
+  --glass: rgba(255, 255, 255, .035);
+  --glass-2: rgba(255, 255, 255, .055);
+  --line: #2b2926;
+  --line-soft: #232120;
 
-  --cta-a: #7C3AED;
-  --cta-b: #BE2E8E;
+  --text: #f2f0ec;
+  --muted: #a09b93;
+  --dim: #948e86;
 
-  --green: #34D399;
-  --cyan: #38BDF8;
-  --cyan-soft: rgba(56, 189, 248, .07);
-  --cyan-line: rgba(56, 189, 248, .22);
+  --gold: #d9a63c;
+  --gold-bright: #e8bc5c;
+  --gold-ink: #131211;
+  --gold-soft: rgba(217, 166, 60, .10);
+  --gold-line: rgba(217, 166, 60, .38);
 
-  --radius: 14px;
-  --radius-lg: 18px;
+  /* The call to action is the gold, the way it was. Two accents on a page
+     about one number is one accent too many. */
+  --cta-a: #d9a63c;
+  --cta-b: #d9a63c;
+
+  --green: #6cc296;
+  --cyan: #d9a63c;
+  --cyan-soft: rgba(217, 166, 60, .07);
+  --cyan-line: rgba(217, 166, 60, .24);
+
+  --radius: 10px;
+  --radius-lg: 16px;
   --shell: 430px;
   --pad: 20px;
 }
@@ -70,7 +63,7 @@ body {
 }
 
 a { color: var(--cyan); text-decoration: none; }
-a:hover { color: #7DD3FC; }
+a:hover { color: var(--gold-bright); }
 
 :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
 
@@ -85,15 +78,15 @@ img, svg { max-width: 100%; }
    reason the background does not read as flat black. */
 .wash { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
 .wash--violet { top: -180px; left: -140px; width: 460px; height: 460px;
-  background: radial-gradient(circle, rgba(124, 58, 237, .20), rgba(124, 58, 237, 0) 68%); }
+  background: radial-gradient(circle, rgba(217, 166, 60, .13), rgba(217, 166, 60, 0) 68%); }
 .wash--magenta { top: -60px; right: -160px; width: 380px; height: 380px;
-  background: radial-gradient(circle, rgba(190, 46, 142, .14), rgba(190, 46, 142, 0) 70%); }
+  background: radial-gradient(circle, rgba(217, 166, 60, .07), rgba(217, 166, 60, 0) 70%); }
 .wash--gold { top: -200px; right: -140px; width: 440px; height: 440px;
-  background: radial-gradient(circle, rgba(233, 185, 73, .13), rgba(233, 185, 73, 0) 68%); }
+  background: radial-gradient(circle, rgba(217, 166, 60, .15), rgba(217, 166, 60, 0) 68%); }
 .wash--green { top: -160px; left: -120px; width: 480px; height: 480px;
-  background: radial-gradient(circle, rgba(52, 211, 153, .14), rgba(52, 211, 153, 0) 66%); }
+  background: radial-gradient(circle, rgba(108, 194, 150, .12), rgba(108, 194, 150, 0) 66%); }
 .wash--cyan { top: -170px; left: -140px; width: 440px; height: 440px;
-  background: radial-gradient(circle, rgba(56, 189, 248, .13), rgba(56, 189, 248, 0) 68%); }
+  background: radial-gradient(circle, rgba(217, 166, 60, .11), rgba(217, 166, 60, 0) 68%); }
 
 .above { position: relative; z-index: 1; }
 
@@ -180,12 +173,13 @@ img, svg { max-width: 100%; }
 .cta {
   display: flex; align-items: center; justify-content: center; gap: 10px;
   width: 100%; height: 56px; border: 0; border-radius: var(--radius);
-  color: #fff; font-family: inherit; font-size: 16px; font-weight: 700; letter-spacing: -.005em;
-  background: linear-gradient(96deg, var(--cta-a) 0%, var(--cta-b) 100%);
-  box-shadow: 0 10px 30px -12px rgba(124, 58, 237, .65);
+  font-family: inherit; font-size: 16px; font-weight: 700; letter-spacing: -.005em;
+  background: var(--gold);
+  color: var(--gold-ink);
+  box-shadow: 0 10px 30px -14px rgba(217, 166, 60, .55);
   cursor: pointer;
 }
-.cta:hover { color: #fff; filter: brightness(1.06); }
+.cta:hover { color: var(--gold-ink); filter: brightness(1.06); }
 .cta[aria-disabled="true"] { background: var(--glass-2); box-shadow: none; color: var(--muted); cursor: default; }
 
 .ghost {
@@ -196,19 +190,28 @@ img, svg { max-width: 100%; }
 }
 .ghost:hover { color: var(--text); background: var(--glass-2); }
 
-/* The amounts. Suggestions, not commands: Stripe takes the figure the payer
-   types, so a chip says what to type and the note under it says what it buys. */
+/* The amounts. Every one of them goes to Stripe -- they were switches that
+   only lit up before, which is why they were reported as dead: a figure you
+   can press and that does nothing has promised something. The figure itself is
+   still typed on Stripe's page, because a Payment Link with a custom amount
+   cannot be pre-filled from a URL, so the chip carries the amount in its own
+   label and the line above says where to type it. */
 .amounts { display: flex; gap: 8px; margin-top: 10px; }
 
 .chip {
-  flex: 1 1 0; height: 48px; display: flex; align-items: center; justify-content: center;
-  border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 700;
+  flex: 1 1 0; min-width: 0; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px; border-radius: 12px;
+  font-family: inherit; font-size: 15px; font-weight: 700;
   color: var(--text); background: var(--glass); border: 1px solid var(--line);
+  white-space: nowrap; overflow: hidden;
   cursor: pointer;
 }
-.chip:hover { background: var(--glass-2); }
-.chip--on { border-color: var(--gold-line); background: var(--gold-soft); color: var(--gold); }
-.chip--any { font-size: 14px; font-weight: 600; color: var(--muted); }
+a.chip, a.chip:hover { color: var(--text); }
+.chip:hover { background: var(--glass-2); border-color: var(--gold-line); }
+/* The one that takes #1 from where the ranking stands right now. */
+.chip--on, a.chip--on { border-color: var(--gold-line); background: var(--gold-soft); color: var(--gold); }
+.chip--any, a.chip--any { font-size: 14px; font-weight: 600; color: var(--muted); }
 
 .takes {
   display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -220,12 +223,62 @@ img, svg { max-width: 100%; }
 .note {
   display: flex; align-items: flex-start; gap: 10px;
   margin-top: 12px; padding: 14px 16px; border-radius: var(--radius);
-  background: var(--cyan-soft); border: 1px solid var(--cyan-line);
-  font-size: 13px; line-height: 1.55; color: #C9D2E3;
+  background: var(--glass); border: 1px solid var(--line);
+  font-size: 13px; line-height: 1.55; color: var(--muted);
 }
-.note svg { flex: 0 0 auto; margin-top: 2px; color: var(--cyan); }
+/* The gold is the button and the money. A note outlined in it as well turns
+   the page into three things shouting the same colour, which is how the
+   rationing goes wrong -- so the frame is plain and only the mark is gold. */
+.note svg { flex: 0 0 auto; margin-top: 2px; color: var(--gold); }
 .note--bad { background: rgba(244, 114, 114, .07); border-color: rgba(244, 114, 114, .28); }
 .note--bad svg { color: #F47272; }
+
+/* --------------------------------------------------------------- ticker -- */
+
+/* A ranking with nobody on it is a claim; a name with money beside it is
+   evidence. This runs the evidence across the top of the page, newest payment
+   first, exactly as it did on the first TopTen -- minus the faces, because the
+   site no longer fetches a picture of anybody from anywhere.
+
+   It is aria-hidden and carries no links on purpose. The list is printed
+   twice so the loop has no seam, and a screen reader given the same twenty
+   names twice is being handed noise; the same payments are in Happening now,
+   in words, and every ranking is a page of its own. Motion is not information
+   here -- it is only how the names take turns. */
+.ticker {
+  height: 46px; overflow: hidden; display: flex; align-items: center;
+  margin: 20px calc(var(--pad) * -1) 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--bg-2);
+  position: relative; z-index: 1;
+  /* Names arrive and leave rather than being cut off at the edge. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+/* The duration is set from the track's own width once app.js has measured it,
+   so the strip travels at a fixed speed however many listings are on it -- a
+   flat duration would make every listing added speed the whole thing up. The
+   value here is the build's estimate, which is what a reader sees first. */
+.ticker__track {
+  display: flex; align-items: center; width: max-content;
+  animation: tick var(--tick-dur, 120s) linear infinite;
+}
+/* Half the track, because the track is the list twice over. */
+@keyframes tick { to { transform: translateX(-50%); } }
+.ticker:hover .ticker__track { animation-play-state: paused; }
+
+.tick {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0 15px; font-size: 13px; white-space: nowrap;
+}
+.tick + .tick { border-left: 1px solid var(--line-soft); }
+.tick__r { font-size: 12px; font-weight: 700; color: var(--dim); }
+.tick__r--1 { color: var(--gold); display: inline-flex; align-items: center; }
+.tick__h { font-weight: 600; color: var(--text); }
+.tick__b { font-size: 12px; font-weight: 600; color: var(--dim); }
+.tick__a { font-weight: 700; color: var(--gold); }
 
 /* ------------------------------------------------------------------ rows -- */
 
@@ -242,7 +295,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
   font-size: 14px; font-weight: 700; color: var(--muted);
   background: rgba(255, 255, 255, .05);
 }
-.rk--1 { background: rgba(233, 185, 73, .16); color: var(--gold); }
+.rk--1 { background: rgba(217, 166, 60, .16); color: var(--gold); }
 .rk--big { width: 34px; height: 34px; border-radius: 10px; }
 
 .row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
@@ -255,7 +308,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 /* The two at the top of a ranking, drawn larger than the rest. */
 .top { overflow: hidden; }
 .top__one { display: flex; align-items: center; gap: 14px; padding: 22px 18px 18px;
-  background: linear-gradient(180deg, rgba(233, 185, 73, .10), rgba(233, 185, 73, 0)); }
+  background: linear-gradient(180deg, rgba(217, 166, 60, .10), rgba(217, 166, 60, 0)); }
 .top__name { font-size: 20px; font-weight: 700; letter-spacing: -.01em;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .top__sub { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 3px; }
@@ -272,8 +325,8 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .moves { padding: 20px 18px; }
 .move { display: flex; gap: 13px; align-items: flex-start; }
 .move__when { flex: 0 0 auto; width: 46px; font-size: 12px; font-weight: 600; color: var(--dim); padding-top: 3px; }
-.move__what { flex: 1 1 auto; font-size: 15px; line-height: 1.5; color: #C9D2E3; }
-.move__what b { color: #fff; font-weight: 700; }
+.move__what { flex: 1 1 auto; font-size: 15px; line-height: 1.5; color: var(--muted); }
+.move__what b { color: var(--text); font-weight: 700; }
 .move__up { color: var(--green); font-weight: 700; }
 
 .battle { display: flex; align-items: center; gap: 13px; padding: 15px 0; border-bottom: 1px solid var(--line-soft); }
@@ -313,7 +366,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
    without anything being wired at all. */
 .add summary { list-style: none; cursor: pointer; }
 .add summary::-webkit-details-marker { display: none; }
-.add[open] summary { border-color: var(--cyan-line); background: var(--cyan-soft); }
+.add[open] summary { border-color: var(--line); background: var(--glass-2); }
 .add__body { margin-top: 14px; }
 
 .field { display: block; margin-top: 14px; }
@@ -351,7 +404,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .figure { flex: 1 1 0; }
 .figure--wide { flex: 1.3 1 0; }
 .figure__v { font-size: 26px; font-weight: 800; }
-.figure__v--cyan { color: var(--cyan); }
+.figure__v--cyan { color: var(--gold); }
 .figure__v small { font-size: 17px; }
 .figure__k { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 5px; }
 
