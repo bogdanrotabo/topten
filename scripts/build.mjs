@@ -170,16 +170,20 @@ const V = (() => {
   };
 })();
 
-/* app.js reaches lib.js and render.js by address, so those addresses carry the
-   stamp too. Written back to the file it was read from: this is build output
-   living in a source file, which is worth one line of noise in a diff and is
-   the only place a module's own imports can be versioned without an import
-   map -- and an import map would need an inline script, which is the one
-   thing the policy below does not allow. */
-{
-  const src = bare(readFileSync(R('app.js'), 'utf8'));
-  const out = src.replace(/(from\s+['"]\.\/[\w.-]+\.js)(['"])/g, `$1?v=${V.js}$2`);
-  if (out !== readFileSync(R('app.js'), 'utf8')) writeFileSync(R('app.js'), out);
+/* app.js reaches lib.js and render.js by address, and render.js reaches lib.js
+   the same way, so every one of those addresses carries the stamp. app.js
+   alone was rewritten before, which left render.js importing a bare ./lib.js:
+   the four-hour cache then held that lib.js stale across a deploy that changed
+   it, and a cached render.js asking for the previous lib.js is the exact "new
+   markup, old rules" this stamp exists to stop. Written back to the file each
+   was read from: this is build output living in a source file, worth one line
+   of noise in a diff and the only place a module's own imports can be versioned
+   without an import map -- and an import map would need an inline script, which
+   is the one thing the policy below does not allow. */
+for (const f of ['app.js', 'render.js']) {
+  const original = readFileSync(R(f), 'utf8');
+  const out = bare(original).replace(/(from\s+['"]\.\/[\w.-]+\.js)(['"])/g, `$1?v=${V.js}$2`);
+  if (out !== original) writeFileSync(R(f), out);
 }
 
 /* ------------------------------------------------------------ the shell --- */
