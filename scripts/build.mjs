@@ -512,17 +512,18 @@ ${rest.length ? `<section class="sect" id="rest">
 ${footer()}`;
 }
 
-/* The band at the foot of the front page: the two other sites, side by side
- * and the same size, because neither is the bigger one.
+/* The band at the foot of the front page: the other sites, side by side
+ * and the same size, because none is the bigger one.
  *
- * Both sit on gift.ceo's near-black. rotabo's own ground is lavender and it
- * had it here, which on a page this dark read as a white hole punched beside
- * the other card rather than as rotabo's colour -- two boxes that were not a
- * pair. The ground is shared now and each mark stays its own: gift.ceo's gold
- * on it, rotabo's violet and gold diamonds on it. Neither is redrawn in
- * TopTen's gold, because a mark that has been repainted is not that mark.
+ * All three sit on gift.ceo's near-black. rotabo's own ground is lavender and
+ * it had it here, which on a page this dark read as a white hole punched
+ * beside the other card rather than as rotabo's colour -- boxes that were not
+ * a pair. The ground is shared now and each mark stays its own: gift.ceo's
+ * gold on it, rotabo's violet and gold diamonds on it, selfies.lol's own blue
+ * on it. Neither is redrawn in TopTen's gold, because a mark that has been
+ * repainted is not that mark.
  *
- * There is no "Sponsors" over them. These are the owner's own two sites, and
+ * There is no "Sponsors" over them. These are the owner's own sites, and
  * calling them sponsors would be the band claiming something it does not have.
  * The line underneath says what the place is and that it is open, which is the
  * true version of the same invitation.
@@ -547,8 +548,12 @@ function partners() {
       <span class="pb__w">${DIAMOND}Rotabo</span>
       <span class="pb__t">People need things. People have things.</span>
     </a>
+    <a class="pb__b pb__b--selfies" href="https://selfies.lol" target="_blank" rel="noopener">
+      <span class="pb__w">selfies<b>.lol</b></span>
+      <span class="pb__t">Don't follow people. Follow the world.</span>
+    </a>
   </div>
-  <p class="fine">Two other sites by the same people. This place is held for an organisation
+  <p class="fine">Three other sites by the same people. This place is held for an organisation
     that stands behind the idea &mdash; it costs nothing, and it never will.</p>
 </section>`;
 }

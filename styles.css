@@ -423,13 +423,22 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__b--rotabo, .pb__b--rotabo:hover { color: #f2f0ec; }
 .pb__b--rotabo .pb__t { color: #a09b93; }
 
-/* Side by side is the point, but not at 360px: below that the two wordmarks
-   stop fitting and start breaking mid-word. */
-@media (max-width: 419px) {
+/* selfies.lol's own blue, which is what it wears itself (--action, spec §17
+   on that repo) -- gift's gold and rotabo's violet are already spoken for. */
+.pb__b--selfies { background: #1c1b19; border: 1px solid #2b2926; }
+.pb__b--selfies:hover { border-color: #1a7cf5; }
+.pb__b--selfies, .pb__b--selfies:hover { color: #f2f0ec; }
+.pb__b--selfies b { color: #1a7cf5; }
+.pb__b--selfies .pb__t { color: #a09b93; }
+
+/* Side by side is the point, but three wordmarks need more room than two did:
+   the row now waits for the tablet shell (700px, same breakpoint the rest of
+   the page switches on) instead of giving up at 360px. */
+@media (max-width: 699px) {
   .pb { flex-direction: column; }
   /* Stacked, "equal width" is free and equal height is not. The mark is
-     shorter than the line it sits on now, so the two match on their own --
-     a floor on both keeps them matching if either side ever grows. */
+     shorter than the line it sits on now, so all three match on their own --
+     a floor on each keeps them matching if any one side ever grows. */
   .pb__b { min-height: 92px; }
 }
 
