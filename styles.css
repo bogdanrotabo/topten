@@ -671,25 +671,33 @@ a.sb, a.sb:hover { color: var(--text); }
 
   /* ---- the front page ---- */
 
-  /* The question on the left, a fight you can act on beside it; under each,
-     its own follow-on -- what just happened under the question, what is
-     moving under the fight.
+  /* The front door opens onto the catalogue: the question on the left with
+     the groups under it, and every ranking beside them -- what the site has,
+     all of it, at first paint. What just happened runs full width under
+     that; then the fight you can act on, with the movers, the open thrones
+     and the partner doors stacked beside it, a column that adds up to within
+     a card of the battle column so neither side leaves a hole.
 
-     Two column boxes rather than four sections pinned to two shared rows: a
-     grid row is as tall as the tallest thing in it, and Closest battles is
-     780px where the hero is 480, so sharing row 4 held the left column empty
-     from 654 to 1073 -- 419 measured pixels of nothing -- before Happening
-     now was allowed to begin. In a box of its own each column flows, and the
-     phone never sees the boxes at all. */
+     Column boxes rather than sections pinned to shared rows: a grid row is
+     as tall as the tallest thing in it, which is how an earlier layout held
+     a 419px void open. The 72 pills run the full width rather than standing
+     in a column: in a 442px column they stack to ~1600px against a hero of
+     ~900, and that difference is the same void wearing gold. On a phone the
+     boxes are display:contents and the document order -- title, catalogue,
+     the rest -- simply stands. */
   .shell--home .masthead  { grid-row: 1; }
   .shell--home .tally     { grid-row: 2; }
   .shell--home .ticker    { grid-row: 3; }
-  .shell--home .home-col       { display: block; grid-column: 1 / span 7; grid-row: 4; }
-  .shell--home .home-col--side { grid-column: 8 / -1; }
-  .shell--home #battles   { margin-top: 78px; }
+  .shell--home .home-col          { display: block; grid-column: 1 / span 7; grid-row: 4; }
+  .shell--home .home-col--side    { grid-column: 8 / -1; margin-top: 24px; }
+  .shell--home #every             { grid-row: 5; }
+  .shell--home #happening         { grid-row: 6; }
+  .shell--home .home-col--battles { grid-row: 7; }
+  .shell--home .home-col--after   { grid-column: 8 / -1; grid-row: 7; margin-top: 24px; }
+  /* Group tiles two-up inside a 7/12 column; four-up is for the full width. */
+  .shell--home .home-col .grid2   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .shell--home .search-wrap { max-width: 520px; }
-  .shell--home #open .stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .grid2 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .figures { gap: 24px; }
   .figure__v { font-size: 34px; }

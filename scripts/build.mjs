@@ -371,15 +371,33 @@ ${ticker(ticks)}
   </div>
   <div id="q-out"></div>
 </section>
+</div>
+
+<div class="home-col home-col--side">
+<section class="sect" id="groups">
+  <h2 class="eyebrow">What are you into</h2>
+  <div class="grid2">${groups.map((g) => `<a class="glass tile" href="/find/#${esc(g.id)}">
+    <div class="tile__name">${esc(g.name)}</div>
+    <div class="tile__sub num">${g.listed} &middot; ${esc(money(g.cents))}</div></a>`).join('')}</div>
+</section>
+</div>
+
+<section class="sect" id="every">
+  <div class="sect__head"><h2 class="eyebrow">Every ranking</h2>
+    <span class="sect__note num">${registry.boards.length} of them</span></div>
+  <div class="pills">${boards.map((b) => `<a class="pill" href="/${esc(b.slug)}/">${esc(b.name)}${
+    b.rows.length ? '' : ' <span style="color:var(--gold)">&middot;</span>'}</a>`).join('')}</div>
+  <p class="fine">A gold dot marks a ranking nobody has paid into yet. There ${openBoards.length === 1 ? 'is' : 'are'}
+    ${openBoards.length} of them, and the first ${esc(money(costToOpen()))} takes the top of any one.</p>
+</section>
 
 <section class="sect" id="happening">
   <div class="sect__head"><h2 class="eyebrow">Happening now</h2>
     <span class="sect__note">Most recent payments</span></div>
   <div class="glass moves">${recent.map((m, i) => (i ? '<hr class="hr" style="margin:16px 0">' : '') + move(m)).join('')}</div>
 </section>
-</div>
 
-<div class="home-col home-col--side">
+<div class="home-col home-col--battles">
 <section class="sect" id="battles">
   <div class="sect__head"><h2 class="eyebrow">Closest battles</h2>
     <a class="sect__link" href="/find/">See all</a></div>
@@ -389,13 +407,14 @@ ${ticker(ticks)}
   <div style="margin-top:14px">${battles.slice(1, 4).map(battle).join('')}</div>
   <p class="fine">The gap plus one cent, or ${esc(money(MIN_CENTS))} &mdash; whichever is larger. A tie stays below.</p>
 </section>
+</div>
 
+<div class="home-col home-col--after">
 <section class="sect" id="trending">
   <div class="sect__head"><h2 class="eyebrow">Trending</h2>
     <span class="sect__note">Money moved, 7 days</span></div>
   <div class="stack">${trending.map((t, i) => trend(t, i + 1)).join('')}</div>
 </section>
-</div>
 
 <section class="sect" id="open">
   <div class="sect__head"><h2 class="eyebrow">Open #1</h2>
@@ -406,15 +425,8 @@ ${ticker(ticks)}
   <a class="ghost" href="/find/" style="margin-top:12px">See the other ${openBoards.length - 3}</a>
 </section>
 
-<section class="sect" id="groups">
-  <h2 class="eyebrow">What are you into</h2>
-  <div class="grid2">${groups.map((g) => `<a class="glass tile" href="/find/#${esc(g.id)}">
-    <div class="tile__name">${esc(g.name)}</div>
-    <div class="tile__sub num">${g.listed} &middot; ${esc(money(g.cents))}</div></a>`).join('')}</div>
-  <a class="ghost" href="/find/" style="margin-top:12px">Browse all ${registry.boards.length} rankings</a>
-</section>
-
 ${partners()}
+</div>
 
 <section class="sect" id="spread">
   <h2 class="eyebrow">Bring someone in</h2>
