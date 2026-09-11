@@ -247,7 +247,7 @@ function head({ title, description, path, image }) {
 <link rel="icon" href="/icons/icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#131211">
+<meta name="theme-color" content="#faf9f7">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TopTen.one">
 <meta property="og:title" content="${esc(title)}">
@@ -626,8 +626,8 @@ function manifest() {
     start_url: '/',
     scope: '/',
     display: 'standalone',
-    background_color: '#131211',
-    theme_color: '#131211',
+    background_color: '#faf9f7',
+    theme_color: '#faf9f7',
     orientation: 'portrait-primary',
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },

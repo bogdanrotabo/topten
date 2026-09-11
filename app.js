@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=2955655bef';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=fcf84357b2';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=2955655bef';
+         figures, figureText } from './render.js?v=fcf84357b2';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -220,7 +220,7 @@ function confetti() {
   sky.setAttribute('aria-hidden', 'true');   /* it says nothing; the page says it */
 
   /* The site's own colours, and the ones a prize is allowed to add. */
-  const paint = ['#d9a63c', '#e8bc5c', '#f2f0ec', '#6cc296', '#a239c9', '#c264e0'];
+  const paint = ['#8d6610', '#d9a63c', '#1c1b19', '#2f6f4f', '#a239c9', '#c264e0'];
   for (let i = 0; i < 144; i += 1) {
     const bit = document.createElement('i');
     bit.className = 'bit';
@@ -997,8 +997,8 @@ function flash(text) {
     el.id = 'flash';
     el.setAttribute('role', 'status');
     el.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:20;'
-      + 'padding:12px 18px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);'
-      + 'backdrop-filter:blur(24px);font-size:14px;font-weight:600;max-width:88vw;text-align:center';
+      + 'padding:12px 18px;border-radius:12px;background:#ffffff;border:1px solid #e6e3de;'
+      + 'box-shadow:0 12px 32px rgba(28,27,25,.13);font-size:14px;font-weight:600;max-width:88vw;text-align:center';
     document.body.appendChild(el);
   }
   el.textContent = text;

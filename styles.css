@@ -1,45 +1,55 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* King of the Hill's palette, which is gift.ceo's: warm near-black, one gold,
-     and nothing else asking for attention. The blue-navy version was colder and
-     read as an app; this reads as a ledger, which is what the site is.
+  /* King of the Hill's palette, which is gift.ceo's -- the daylight half of
+     it now. The previous sheet was gift.ceo's dark theme verbatim (#131211,
+     #1b1a18, #f2f0ec, #d9a63c); this is its light theme verbatim: paper, ink,
+     and the same one gold. Still a ledger, in daylight.
 
-     Every text colour below was measured against the surface it sits on rather
-     than eyeballed. --dim is the one that moved: the original #7d7871 is 4.27
-     on the background and 3.88 on a card, so it was lifted to #948e86, which
-     clears 4.5 everywhere the page puts it. */
+     Every text colour below keeps the same discipline: measured against the
+     surface it sits on rather than eyeballed. The gold moves furthest --
+     #d9a63c is 2.2:1 on paper, unreadable, and gift.ceo already walked its
+     daylight gold down to #8d6610 so the gold line on the page (4.9) and the
+     white on the gold button (5.2) both clear 4.5. --dim is gift.ceo's
+     #75726d, 4.6 on this paper. */
 
-  --bg: #131211;
-  --bg-2: #1b1a18;
-  --glass: rgba(255, 255, 255, .035);
-  --glass-2: rgba(255, 255, 255, .055);
-  /* Every frame on the page is gold. It was a grey hairline, which is the
-     safe choice and also the invisible one: on a near-black ground a card
-     with a grey edge has no edge. Two strengths, so the page still has a
-     hierarchy -- the outline of a thing, and the rule inside it. */
-  --line: rgba(217, 166, 60, .30);
-  --line-soft: rgba(217, 166, 60, .15);
+  --bg: #faf9f7;
+  --bg-2: #ffffff;
+  --glass: #ffffff;
+  --glass-2: #f4f2ed;
+  /* On the near-black ground every frame had to be gold, because a grey
+     hairline there has no edge. Paper turns that around: a warm grey hairline
+     is exactly visible, and a gold frame on every card would put the accent
+     everywhere, which is nowhere. Two strengths still, same hierarchy --
+     the outline of a thing, and the rule inside it. */
+  --line: #e6e3de;
+  --line-soft: #f0ede8;
 
-  --text: #f2f0ec;
-  --muted: #a09b93;
-  --dim: #948e86;
+  --text: #1c1b19;
+  --muted: #6b6864;
+  --dim: #75726d;
 
-  --gold: #d9a63c;
-  --gold-bright: #e8bc5c;
-  --gold-ink: #131211;
-  --gold-soft: rgba(217, 166, 60, .10);
-  --gold-line: rgba(217, 166, 60, .62);
+  --gold: #8d6610;
+  /* "Bright" leans the other way in daylight: the hover that lightened the
+     gold on black must deepen it on paper, or a link fades as it is touched. */
+  --gold-bright: #6f4f0c;
+  --gold-ink: #ffffff;
+  --gold-soft: #f5efe1;
+  --gold-line: rgba(141, 102, 16, .55);
 
   /* The call to action is the gold, the way it was. Two accents on a page
      about one number is one accent too many. */
-  --cta-a: #d9a63c;
-  --cta-b: #d9a63c;
+  --cta-a: #8d6610;
+  --cta-b: #8d6610;
 
-  --green: #6cc296;
-  --cyan: #d9a63c;
-  --cyan-soft: rgba(217, 166, 60, .07);
-  --cyan-line: rgba(217, 166, 60, .24);
+  --green: #2f6f4f;
+  --cyan: #8d6610;
+  --cyan-soft: rgba(141, 102, 16, .06);
+  --cyan-line: rgba(141, 102, 16, .35);
+
+  /* gift.ceo's shadow, verbatim. On the near-black a card's depth came from
+     its gold frame; on paper it comes from this. */
+  --shadow: 0 1px 2px rgba(28, 27, 25, .04), 0 8px 24px -16px rgba(28, 27, 25, .18);
 
   --radius: 10px;
   --radius-lg: 16px;
@@ -82,15 +92,15 @@ img, svg { max-width: 100%; }
    reason the background does not read as flat black. */
 .wash { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
 .wash--violet { top: -180px; left: -140px; width: 460px; height: 460px;
-  background: radial-gradient(circle, rgba(217, 166, 60, .13), rgba(217, 166, 60, 0) 68%); }
+  background: radial-gradient(circle, rgba(141, 102, 16, .07), rgba(141, 102, 16, 0) 68%); }
 .wash--magenta { top: -60px; right: -160px; width: 380px; height: 380px;
-  background: radial-gradient(circle, rgba(217, 166, 60, .07), rgba(217, 166, 60, 0) 70%); }
+  background: radial-gradient(circle, rgba(141, 102, 16, .04), rgba(141, 102, 16, 0) 70%); }
 .wash--gold { top: -200px; right: -140px; width: 440px; height: 440px;
-  background: radial-gradient(circle, rgba(217, 166, 60, .15), rgba(217, 166, 60, 0) 68%); }
+  background: radial-gradient(circle, rgba(141, 102, 16, .08), rgba(141, 102, 16, 0) 68%); }
 .wash--green { top: -160px; left: -120px; width: 480px; height: 480px;
-  background: radial-gradient(circle, rgba(108, 194, 150, .12), rgba(108, 194, 150, 0) 66%); }
+  background: radial-gradient(circle, rgba(47, 111, 79, .06), rgba(47, 111, 79, 0) 66%); }
 .wash--cyan { top: -170px; left: -140px; width: 440px; height: 440px;
-  background: radial-gradient(circle, rgba(217, 166, 60, .11), rgba(217, 166, 60, 0) 68%); }
+  background: radial-gradient(circle, rgba(141, 102, 16, .06), rgba(141, 102, 16, 0) 68%); }
 
 .above { position: relative; z-index: 1; }
 
@@ -167,7 +177,7 @@ img, svg { max-width: 100%; }
   background: var(--glass);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(24px);
+  box-shadow: var(--shadow);
 }
 
 .hr { height: 1px; background: var(--line-soft); border: 0; margin: 0; }
@@ -180,7 +190,7 @@ img, svg { max-width: 100%; }
   font-family: inherit; font-size: 16px; font-weight: 700; letter-spacing: -.005em;
   background: var(--gold);
   color: var(--gold-ink);
-  box-shadow: 0 10px 30px -14px rgba(217, 166, 60, .55);
+  box-shadow: 0 1px 2px rgba(28, 27, 25, .06), 0 10px 30px -14px rgba(141, 102, 16, .35);
   cursor: pointer;
 }
 .cta:hover { color: var(--gold-ink); filter: brightness(1.06); }
@@ -234,8 +244,8 @@ a.chip, a.chip:hover { color: var(--text); }
    the page into three things shouting the same colour, which is how the
    rationing goes wrong -- so the frame is plain and only the mark is gold. */
 .note svg { flex: 0 0 auto; margin-top: 2px; color: var(--gold); }
-.note--bad { background: rgba(244, 114, 114, .07); border-color: rgba(244, 114, 114, .28); }
-.note--bad svg { color: #F47272; }
+.note--bad { background: rgba(178, 58, 58, .07); border-color: rgba(178, 58, 58, .30); }
+.note--bad svg { color: #b23a3a; }
 
 /* --------------------------------------------------------------- ticker -- */
 
@@ -300,9 +310,9 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
   flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 700; color: var(--muted);
-  background: rgba(255, 255, 255, .05);
+  background: rgba(28, 27, 25, .05);
 }
-.rk--1 { background: rgba(217, 166, 60, .16); color: var(--gold); }
+.rk--1 { background: rgba(141, 102, 16, .12); color: var(--gold); }
 .rk--big { width: 34px; height: 34px; border-radius: 10px; }
 
 .row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
@@ -315,7 +325,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 /* The two at the top of a ranking, drawn larger than the rest. */
 .top { overflow: hidden; }
 .top__one { display: flex; align-items: center; gap: 14px; padding: 22px 18px 18px;
-  background: linear-gradient(180deg, rgba(217, 166, 60, .10), rgba(217, 166, 60, 0)); }
+  background: linear-gradient(180deg, rgba(141, 102, 16, .06), rgba(141, 102, 16, 0)); }
 .top__name { font-size: 20px; font-weight: 700; letter-spacing: -.01em;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .top__sub { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 3px; }
@@ -325,7 +335,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .top__two .top__amt { font-size: 30px; color: var(--text); }
 
 /* How close the challenger is. Green because the distance is real. */
-.gap { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.gap { height: 4px; border-radius: 2px; background: rgba(28, 27, 25, .08); overflow: hidden; }
 .gap__fill { height: 100%; background: var(--green); border-radius: 2px; }
 .gap__label { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 8px; }
 
@@ -380,7 +390,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .field__k { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 7px; }
 .field__i {
   width: 100%; height: 50px; padding: 0 16px; border-radius: var(--radius);
-  background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .09);
+  background: var(--bg); border: 1px solid var(--line);
   color: var(--text); font-family: inherit; font-size: 16px;
 }
 .field__i::placeholder { color: var(--dim); }
@@ -406,22 +416,22 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__t { font-size: 12px; font-weight: 700; line-height: 1.35; }
 .pb__mark { flex: none; display: block; margin-right: 9px; }
 
-/* gift.ceo's near-black with its gold, which is what it wears itself. */
-.pb__b--gift { background: #1c1b19; border: 1px solid #2b2926; }
-.pb__b--gift:hover { border-color: #d9a63c; }
-.pb__b--gift, .pb__b--gift:hover { color: #f2f0ec; }
-.pb__b--gift b { color: #d9a63c; }
-.pb__b--gift .pb__t { color: #a09b93; }
+/* gift.ceo's paper with its daylight gold, which is what it wears itself. */
+.pb__b--gift { background: #ffffff; border: 1px solid #e6e3de; }
+.pb__b--gift:hover { border-color: #8d6610; }
+.pb__b--gift, .pb__b--gift:hover { color: #1c1b19; }
+.pb__b--gift b { color: #8d6610; }
+.pb__b--gift .pb__t { color: #6b6864; }
 
-/* The same near-black, so the two read as a pair. It was rotabo's lavender,
-   which on a page this dark was not rotabo's ground so much as a white hole
-   beside the other card. The ground is shared; the violet stays rotabo's, in
-   the mark and on the edge it lifts to -- #c264e0 rather than #9b3fc0, which
-   is the value rotabo.app itself uses once its own page goes dark. */
-.pb__b--rotabo { background: #1c1b19; border: 1px solid #2b2926; }
-.pb__b--rotabo:hover { border-color: #c264e0; }
-.pb__b--rotabo, .pb__b--rotabo:hover { color: #f2f0ec; }
-.pb__b--rotabo .pb__t { color: #a09b93; }
+/* The same paper, so the two still read as a pair -- two dark slabs on this
+   ground would be the lavender's old "white hole" problem, mirrored. The
+   violet stays rotabo's, in the mark and on the edge it lifts to -- #9b3fc0
+   now, not #c264e0: the pale value was picked to survive a dark ground, and
+   on paper it thins to 3.4:1 while #9b3fc0 holds 5.4. */
+.pb__b--rotabo { background: #ffffff; border: 1px solid #e6e3de; }
+.pb__b--rotabo:hover { border-color: #9b3fc0; }
+.pb__b--rotabo, .pb__b--rotabo:hover { color: #1c1b19; }
+.pb__b--rotabo .pb__t { color: #6b6864; }
 
 /* Side by side is the point, but not at 360px: below that the two wordmarks
    stop fitting and start breaking mid-word. */
@@ -453,7 +463,7 @@ a.sb, a.sb:hover { color: var(--text); }
 .search {
   display: flex; align-items: center; gap: 11px;
   height: 50px; padding: 0 16px; border-radius: var(--radius);
-  background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .075);
+  background: var(--bg); border: 1px solid var(--line);
   color: var(--dim); font-size: 15px; width: 100%; font-family: inherit;
 }
 .search::placeholder { color: var(--dim); }
@@ -507,12 +517,12 @@ a.sb, a.sb:hover { color: var(--text); }
 }
 .live__dot {
   width: 7px; height: 7px; border-radius: 50%; background: var(--green);
-  box-shadow: 0 0 0 0 rgba(108, 194, 150, .55);
+  box-shadow: 0 0 0 0 rgba(47, 111, 79, .45);
   animation: pulse 2.4s ease-out infinite;
 }
 @keyframes pulse {
-  70%  { box-shadow: 0 0 0 8px rgba(108, 194, 150, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(108, 194, 150, 0); }
+  70%  { box-shadow: 0 0 0 8px rgba(47, 111, 79, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(47, 111, 79, 0); }
 }
 
 /* Who received money last, at the end of the band. Pushed right so it reads as
