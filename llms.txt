@@ -1,0 +1,29 @@
+# TopTen.one
+
+> Public rankings where money, not an algorithm, picks #1
+
+TopTen.one runs 72 public rankings - X accounts, footballers, billionaires,
+crypto coins, cities, actors and more - where positions are decided by one
+thing only: how much money has been paid towards each name. No algorithm, no
+editors, no votes. Every ranking orders its listings by the total amount
+paid, and the page says so out loud.
+
+Anyone can add a name to any ranking for free; a listing appears once a
+payment lands on it. The minimum payment is $2, payments go through Stripe,
+and they are final: they buy a position on a public ranking - not an
+investment, not a vote, not an endorsement. The closest battles - where the
+smallest sum flips a #1 - are shown on the front page, along with what just
+happened and what is trending over seven days.
+
+The site is a fast static page, prerendered from the live rankings and
+rebuilt as the money moves. It is Swiss made and available worldwide.
+
+## Key pages
+- [Home](https://topten.one/): the question, every ranking shelved by category, the closest battles
+- [Find](https://topten.one/find/): search anyone or anything across all 72 rankings
+- [About](https://topten.one/about.html): what the site is and how it works
+- [Terms](https://topten.one/terms.html): terms of service
+- [Privacy](https://topten.one/privacy.html): privacy policy
+
+## Elsewhere
+- [TopTen.one on PeerPush](https://peerpush.com/p/toptenone): product listing with features, pricing and screenshots

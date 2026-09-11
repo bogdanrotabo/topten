@@ -1036,7 +1036,21 @@ writeFileSync(R('sitemap.xml'),
       + (at ? `<lastmod>${at}</lastmod>` : '') + '</url>').join('\n')
   + '\n</urlset>\n');
 
-writeFileSync(R('robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+/* The AI engines, named one by one. The "*" rule already lets everyone in;
+   naming them is what their own docs ask for, and it keeps a future
+   tightening of "*" from silently locking them out. llms.txt is the
+   structured summary they read; it lives in the repo rather than in this
+   build, because its text changes when the product's story changes, not
+   when a ranking moves. */
+const AI_CRAWLERS = [
+  'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-User',
+  'PerplexityBot', 'Google-Extended', 'Applebot-Extended', 'CCBot',
+  'Bingbot', 'Amazonbot', 'meta-externalagent',
+];
+writeFileSync(R('robots.txt'), `User-agent: *\nAllow: /\n\n`
+  + `# llms.txt: ${SITE}/llms.txt\n\n`
+  + AI_CRAWLERS.map((bot) => `User-agent: ${bot}\nAllow: /\n`).join('\n')
+  + `\nSitemap: ${SITE}/sitemap.xml\n`);
 console.log(`  sitemap.xml (${urls.length} addresses), robots.txt`);
 
 console.log('done.');
