@@ -190,6 +190,22 @@ for (const f of ['app.js', 'render.js']) {
 
 const SITE = 'https://topten.one';
 
+/* The link-preview platforms cache a card by its address for days, so a
+   redrawn card at the same address is, to WhatsApp or X, the old card
+   forever. The address therefore carries the picture's own hash, exactly
+   like styles.css and app.js: it moves when and only when the pixels do.
+   A card that does not exist yet is left unstamped rather than crashed on. */
+const ogV = (() => {
+  const seen = new Map();
+  return (p) => {
+    if (!seen.has(p)) {
+      try { seen.set(p, '?v=' + stamp(readFileSync(R(p.slice(1))))); }
+      catch { seen.set(p, ''); }
+    }
+    return seen.get(p);
+  };
+})();
+
 /* The content security policy.
  *
  * There is no inline script on any page any more -- config.js and app.js are
@@ -253,7 +269,7 @@ function head({ title, description, path, image }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${SITE}${path}">
-<meta property="og:image" content="${SITE}${image || '/og-image.png'}">
+<meta property="og:image" content="${SITE}${image || '/og-image.png'}${ogV(image || '/og-image.png')}">
 <!-- The size, said rather than left to be discovered. A crawler that knows the
      dimensions before it has the file can lay the card out on the first pass;
      one that does not sometimes falls back to the small square card, which is
@@ -267,7 +283,7 @@ function head({ title, description, path, image }) {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
-<meta name="twitter:image" content="${SITE}${image || '/og-image.png'}">
+<meta name="twitter:image" content="${SITE}${image || '/og-image.png'}${ogV(image || '/og-image.png')}">
 <meta name="twitter:image:alt" content="${esc(title)}">`;
 }
 
@@ -573,8 +589,12 @@ function partners() {
       <span class="pb__w">${DIAMOND}Rotabo</span>
       <span class="pb__t">People need things. People have things.</span>
     </a>
+    <a class="pb__b pb__b--topten" href="/">
+      <span class="pb__w"><span class="pb__mark" style="color:var(--gold)">${CROWN}</span>topten<b>.one</b></span>
+      <span class="pb__t">Who should be #1?</span>
+    </a>
   </div>
-  <p class="fine">Two other sites by the same people. This place is held for an organisation
+  <p class="fine">Three sites by the same people. This place is held for an organisation
     that stands behind the idea &mdash; it costs nothing, and it never will.</p>
 </section>`;
 }

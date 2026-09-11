@@ -446,6 +446,14 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__b--rotabo, .pb__b--rotabo:hover { color: #1c1b19; }
 .pb__b--rotabo .pb__t { color: #6b6864; }
 
+/* The house itself, third in its own row of doors: same paper, and the
+   crown and the gold are already its. */
+.pb__b--topten { background: #ffffff; border: 1px solid #e6e3de; }
+.pb__b--topten:hover { border-color: #8d6610; }
+.pb__b--topten, .pb__b--topten:hover { color: #1c1b19; }
+.pb__b--topten b { color: var(--gold); }
+.pb__b--topten .pb__t { color: #6b6864; }
+
 /* Side by side is the point, but not at 360px: below that the two wordmarks
    stop fitting and start breaking mid-word. */
 @media (max-width: 419px) {
@@ -702,6 +710,8 @@ a.sb, a.sb:hover { color: var(--text); }
   .shell--home #happening         { grid-row: 6; }
   .shell--home .home-col--battles { grid-row: 7; }
   .shell--home .home-col--after   { grid-column: 8 / -1; grid-row: 7; margin-top: 24px; }
+  /* Three doors across need more than a 442px column gives them. */
+  .shell--home .home-col--after .pb { flex-direction: column; }
   /* Group tiles two-up inside a 7/12 column; four-up is for the full width. */
   .shell--home .home-col .grid2   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
