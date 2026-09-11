@@ -360,6 +360,7 @@ ${masthead()}
 ${tally(numbers)}
 ${ticker(ticks)}
 
+<div class="home-col">
 <section class="hero above">
   ${swissLine}
   <h1 class="hero__q">WHO SHOULD<br>BE <em>#1</em>?</h1>
@@ -376,7 +377,9 @@ ${ticker(ticks)}
     <span class="sect__note">Most recent payments</span></div>
   <div class="glass moves">${recent.map((m, i) => (i ? '<hr class="hr" style="margin:16px 0">' : '') + move(m)).join('')}</div>
 </section>
+</div>
 
+<div class="home-col home-col--side">
 <section class="sect" id="battles">
   <div class="sect__head"><h2 class="eyebrow">Closest battles</h2>
     <a class="sect__link" href="/find/">See all</a></div>
@@ -392,6 +395,7 @@ ${ticker(ticks)}
     <span class="sect__note">Money moved, 7 days</span></div>
   <div class="stack">${trending.map((t, i) => trend(t, i + 1)).join('')}</div>
 </section>
+</div>
 
 <section class="sect" id="open">
   <div class="sect__head"><h2 class="eyebrow">Open #1</h2>

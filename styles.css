@@ -88,6 +88,11 @@ img, svg { max-width: 100%; }
 
 .shell { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 var(--pad) 48px; position: relative; }
 
+/* The front page's two desktop columns. On a phone the boxes do not exist --
+   contents -- and the sections stack in document order, which was already the
+   right order there. The desktop block below gives each box its half. */
+.home-col { display: contents; }
+
 /* The two washes behind the top of every page. Purely atmosphere, and the
    reason the background does not read as flat black. */
 .wash { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
@@ -666,20 +671,22 @@ a.sb, a.sb:hover { color: var(--text); }
 
   /* ---- the front page ---- */
 
-  /* The question on the left, a fight you can act on beside it. Below that,
-     what just happened next to what is moving.
-   *
-     The rows are named rather than left to fall out of document order,
-     because the order on a phone is not this order -- Happening now comes
-     before Closest battles there, and should. Auto-placement would honour the
-     document and leave the whole right of the headline empty. */
+  /* The question on the left, a fight you can act on beside it; under each,
+     its own follow-on -- what just happened under the question, what is
+     moving under the fight.
+
+     Two column boxes rather than four sections pinned to two shared rows: a
+     grid row is as tall as the tallest thing in it, and Closest battles is
+     780px where the hero is 480, so sharing row 4 held the left column empty
+     from 654 to 1073 -- 419 measured pixels of nothing -- before Happening
+     now was allowed to begin. In a box of its own each column flows, and the
+     phone never sees the boxes at all. */
   .shell--home .masthead  { grid-row: 1; }
   .shell--home .tally     { grid-row: 2; }
   .shell--home .ticker    { grid-row: 3; }
-  .shell--home .hero      { grid-column: 1 / span 7; grid-row: 4; }
-  .shell--home #battles   { grid-column: 8 / -1;     grid-row: 4; margin-top: 78px; }
-  .shell--home #happening { grid-column: 1 / span 7; grid-row: 5; }
-  .shell--home #trending  { grid-column: 8 / -1;     grid-row: 5; }
+  .shell--home .home-col       { display: block; grid-column: 1 / span 7; grid-row: 4; }
+  .shell--home .home-col--side { grid-column: 8 / -1; }
+  .shell--home #battles   { margin-top: 78px; }
 
   .shell--home .search-wrap { max-width: 520px; }
   .shell--home #open .stack { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
