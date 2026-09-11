@@ -227,7 +227,9 @@ function csp() {
     "style-src 'self' https://fonts.googleapis.com",
     "style-src-attr 'unsafe-inline'",
     'font-src https://fonts.gstatic.com',
-    "img-src 'self' data:",
+    // PeerPush draws its own badge in the footer: the picture is the site's
+    // live standing there, so it must come from them. One host, img-src only.
+    "img-src 'self' data: https://peerpush.com",
     `connect-src ${connect}`,
     "base-uri 'self'",
     "form-action 'self'",
@@ -341,6 +343,9 @@ function footer() {
        line exists not to say. email_off is the documented way to exempt a
        fragment, and it needs no change to anybody's Cloudflare settings. -->
   <p class="foot__mail">Write to <!--email_off--><a href="mailto:${esc(cfg.mail)}">${esc(cfg.mail)}</a><!--email_on--></p>
+  <a class="peerpush-badge" href="https://peerpush.com/p/toptenone" target="_blank" rel="noopener">
+    <img src="https://peerpush.com/p/toptenone/badge.png" alt="TopTen.one on PeerPush"
+         width="230" height="65" loading="lazy" decoding="async"></a>
   <p class="foot__legal">Payments are final and buy a position on a public ranking. Not an investment,
   not a vote, not an endorsement. Minimum payment ${esc(money(MIN_CENTS))}.</p>
 </footer>`;

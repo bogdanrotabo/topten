@@ -628,6 +628,13 @@ a.sb, a.sb:hover { color: var(--text); }
 .foot__mail { margin: 10px 0 0; font-size: 14px; font-weight: 600; color: var(--muted); }
 .foot__mail a { color: var(--gold); }
 .foot__mail a:hover { color: var(--gold-bright); }
+
+/* PeerPush draws this one -- the site's live standing there -- so the
+   picture is theirs and stays theirs: no copy, no proxy. Sized in the
+   markup (230x65, half the PNG) so the footer does not shift when it
+   arrives, and capped at the shell's width on a narrow phone. */
+.peerpush-badge { display: inline-block; width: 230px; max-width: 100%; margin-top: 18px; }
+.peerpush-badge img { display: block; width: 100%; height: auto; }
 .foot__legal { margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--dim); }
 
 /* ----------------------------------------------------------------- prose -- */
