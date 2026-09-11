@@ -741,8 +741,14 @@ ${masthead({ back: true })}
 
 <section class="sect">
   <h2 class="eyebrow">Every ranking</h2>
-  <div class="pills">${boards.map((b) => `<a class="pill" href="/${esc(b.slug)}/">${esc(b.name)}${
-    b.rows.length ? '' : ' <span style="color:var(--gold)">·</span>'}</a>`).join('')}</div>
+  ${registry.groups.map((g) => {
+    const mine = boards.filter((b) => b.group === g.id);
+    return mine.length ? `<div class="every__group">
+    <h3 class="every__label">${esc(g.name)}</h3>
+    <div class="pills">${mine.map((b) => `<a class="pill" href="/${esc(b.slug)}/">${esc(b.name)}${
+      b.rows.length ? '' : ' <span style="color:var(--gold)">·</span>'}</a>`).join('')}</div>
+  </div>` : '';
+  }).join('')}
   <p class="fine">A gold dot marks a ranking nobody has paid into yet. There ${openBoards.length === 1 ? 'is' : 'are'}
     ${openBoards.length} of them, and the first ${esc(money(costToOpen()))} takes the top of any one.</p>
 </section>
