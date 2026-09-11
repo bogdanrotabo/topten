@@ -144,7 +144,7 @@ img, svg { max-width: 100%; }
 }
 .hero__q em { font-style: normal; color: var(--gold); }
 
-.hero__sub { margin: 16px 0 0; font-size: 17px; font-weight: 500; line-height: 1.4; color: var(--muted); }
+.hero__sub { margin: 16px 0 0; font-size: 18px; font-weight: 400; line-height: 1.4; color: var(--muted); }
 
 .page-title {
   font-size: 36px; font-weight: 800; line-height: 1.04; letter-spacing: -.035em;
@@ -220,7 +220,7 @@ img, svg { max-width: 100%; }
 .chip {
   flex: 1 1 0; min-width: 0; height: 48px;
   display: flex; align-items: center; justify-content: center;
-  padding: 0 6px; border-radius: 12px;
+  padding: 0 6px; border-radius: var(--radius);
   font-family: inherit; font-size: 15px; font-weight: 700;
   color: var(--text); background: var(--glass); border: 1px solid var(--line);
   white-space: nowrap; overflow: hidden;
@@ -234,7 +234,7 @@ a.chip, a.chip:hover { color: var(--text); }
 
 .takes {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  height: 46px; margin-top: 8px; border-radius: 12px;
+  height: 46px; margin-top: 8px; border-radius: var(--radius);
   border: 1px solid var(--gold-line); background: var(--gold-soft);
   font-size: 14px; font-weight: 700; color: var(--gold);
 }
@@ -312,13 +312,13 @@ a.row:hover, a.battle:hover, a.tile:hover, a.result:hover { color: var(--text); 
 a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim); }
 
 .rk {
-  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px;
+  flex: 0 0 auto; width: 30px; height: 30px; border-radius: var(--radius);
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 700; color: var(--muted);
   background: rgba(28, 27, 25, .05);
 }
 .rk--1 { background: rgba(141, 102, 16, .12); color: var(--gold); }
-.rk--big { width: 34px; height: 34px; border-radius: 10px; }
+.rk--big { width: 34px; height: 34px; }
 
 .row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
 .row__main { flex: 1 1 auto; min-width: 0; }
@@ -336,7 +336,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .top__sub { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 3px; }
 .top__amt { font-size: 34px; font-weight: 800; color: var(--gold); }
 .top__two { display: flex; align-items: center; gap: 14px; padding: 18px; }
-.top__two .top__name { font-size: 19px; }
+.top__two .top__name { font-size: 18px; }
 .top__two .top__amt { font-size: 30px; color: var(--text); }
 
 /* How close the challenger is. Green because the distance is real. */
@@ -354,13 +354,13 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .battle { display: flex; align-items: center; gap: 13px; padding: 15px 0; border-bottom: 1px solid var(--line-soft); }
 .battle:last-of-type { border-bottom: 0; }
 .battle__pair { font-size: 15px; font-weight: 700; }
-.battle__pair span { color: var(--dim); font-weight: 500; }
+.battle__pair span { color: var(--dim); font-weight: 400; }
 .battle__where { font-size: 12px; font-weight: 600; color: var(--dim); margin-top: 3px; }
 .battle__price { font-size: 16px; font-weight: 800; color: var(--gold); }
 
 .stack { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
 
-.tile { padding: 18px 16px; color: var(--text); border-radius: 16px; display: block; }
+.tile { padding: 18px 16px; color: var(--text); border-radius: var(--radius-lg); display: block; }
 .tile:hover { color: var(--text); background: var(--glass-2); }
 .tile__name { font-size: 16px; font-weight: 700; }
 .tile__sub { font-size: 13px; font-weight: 600; color: var(--dim); margin-top: 5px; }
@@ -368,7 +368,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 
 .take {
   display: flex; align-items: center; justify-content: center;
-  height: 36px; padding: 0 14px; border-radius: 10px;
+  height: 36px; padding: 0 14px; border-radius: var(--radius);
   border: 1px solid var(--gold-line); background: var(--gold-soft);
   font-size: 13px; font-weight: 700; color: var(--gold);
 }
@@ -411,13 +411,13 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__b {
   flex: 1 1 0; min-width: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
-  padding: 20px 16px; border-radius: 16px; text-align: center;
+  padding: 20px 16px; border-radius: var(--radius-lg); text-align: center;
 }
 /* No gap on the wordmark. A flex gap falls between EVERY item, and "gift" and
    ".ceo" are two of them -- the first version read "gift .ceo". Anything that
    needs space before the word says so itself, below. */
 .pb__w { display: flex; align-items: center; gap: 0;
-  font-size: 21px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+  font-size: 20px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
 .pb__t { font-size: 12px; font-weight: 700; line-height: 1.35; }
 .pb__mark { flex: none; display: block; margin-right: 9px; }
 
@@ -549,7 +549,7 @@ a.sb, a.sb:hover { color: var(--text); }
    enough to look up at, short enough that it is over before it is annoying. */
 .lp--new { animation: lit 2.4s ease-out 1; }
 @keyframes lit {
-  0%   { background: var(--gold); color: var(--gold-ink); border-radius: 8px; }
+  0%   { background: var(--gold); color: var(--gold-ink); border-radius: var(--radius); }
   15%  { background: var(--gold-soft); }
   100% { background: transparent; }
 }
@@ -576,8 +576,8 @@ a.sb, a.sb:hover { color: var(--text); }
   .tally { gap: 9px; padding: 0 13px; }
   .live { font-size: 0; gap: 0; }
   .tally__i { gap: 4px; }
-  .tally__i b { font-size: 13.5px; }
-  .tally__k { font-size: 9.5px; letter-spacing: 0; }
+  .tally__i b { font-size: 13px; }
+  .tally__k { font-size: 10px; letter-spacing: 0; }
 }
 
 /* ------------------------------------------------------------- confetti -- */
@@ -605,7 +605,7 @@ a.sb, a.sb:hover { color: var(--text); }
 /* ---------------------------------------------------------------- footer -- */
 
 .foot { margin: 40px 0 0; position: relative; z-index: 1; }
-.foot__line { font-size: 22px; font-weight: 700; line-height: 1.25; letter-spacing: -.02em; color: var(--muted); }
+.foot__line { font-size: 20px; font-weight: 700; line-height: 1.25; letter-spacing: -.02em; color: var(--muted); }
 .foot__nav { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 12px; font-size: 14px; font-weight: 600; }
 .foot__nav a { padding: 11px 0; }
 .foot__mail { margin: 10px 0 0; font-size: 14px; font-weight: 600; color: var(--muted); }
@@ -630,7 +630,7 @@ a.sb, a.sb:hover { color: var(--text); }
 @media (min-width: 520px) {
   :root { --pad: 28px; --shell: 560px; }
   .hero__q { font-size: 52px; }
-  .page-title { font-size: 42px; }
+  .page-title { font-size: 44px; }
 }
 
 /* A tablet held upright is too narrow for two columns and much too wide for a
@@ -666,7 +666,7 @@ a.sb, a.sb:hover { color: var(--text); }
 
   .hero { padding-top: 64px; }
   .hero__q { font-size: 76px; }
-  .page-title { font-size: 56px; }
+  .page-title { font-size: 60px; }
   .hero__sub { font-size: 20px; }
 
   /* ---- the front page ---- */
