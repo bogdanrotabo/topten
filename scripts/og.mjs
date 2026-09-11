@@ -80,6 +80,14 @@ body {
   background: radial-gradient(circle, rgba(141,102,16,.08), rgba(141,102,16,0) 68%); }
 .rule { position: absolute; left: 0; right: 0; top: 0; height: 5px; background: #8d6610; }
 .top { display: flex; align-items: center; gap: 13px; position: relative; }
+.mid { position: relative; }
+/* The badge the site's own hero wears, at card scale: the Swiss line was a
+   21px whisper in the footer, and the owner wants it seen. */
+.badge { display: inline-flex; align-items: center; gap: 13px;
+  border: 1px solid #e6e3de; background: #ffffff; border-radius: 999px;
+  padding: 13px 26px; margin-bottom: 34px;
+  font-size: 25px; font-weight: 600; color: #6b6864; }
+.badge svg { width: 27px; height: 27px; display: block; }
 .mark { font-size: 27px; font-weight: 800; letter-spacing: .02em; }
 .eyebrow { margin-left: auto; font-size: 17px; font-weight: 800; letter-spacing: .18em;
   text-transform: uppercase; color: #75726d; }
@@ -87,16 +95,15 @@ body {
   font-weight: 800; line-height: 1.02; letter-spacing: -.03em; }
 .q em { font-style: normal; color: #8d6610; }
 .foot { display: flex; align-items: center; gap: 11px; position: relative;
-  font-size: 21px; font-weight: 600; color: #6b6864; }
+  font-size: 22px; font-weight: 600; color: #6b6864; }
 .foot b { color: #1c1b19; font-weight: 700; }
-.dot { color: #75726d; }
 </style>
 <div class="rule"></div><div class="wash"></div>
 <div class="top">${CROWN}<span class="mark">TOPTEN.ONE</span>${
   eyebrow ? `<span class="eyebrow">${esc(eyebrow)}</span>` : ''}</div>
-<div class="q">${one(question)}</div>
-<div class="foot">${SWISS}<span><b>${esc(sub)}</b></span>
-  <span class="dot">&middot;</span><span>Swiss made</span></div>`;
+<div class="mid"><div class="badge">${SWISS}<span>Swiss made &middot; Available worldwide</span></div>
+<div class="q">${one(question)}</div></div>
+<div class="foot"><span><b>${esc(sub)}</b></span></div>`;
 }
 
 const jobs = [
