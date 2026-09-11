@@ -446,13 +446,14 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__b--rotabo, .pb__b--rotabo:hover { color: #1c1b19; }
 .pb__b--rotabo .pb__t { color: #6b6864; }
 
-/* The house itself, third in its own row of doors: same paper, and the
-   crown and the gold are already its. */
-.pb__b--topten { background: #ffffff; border: 1px solid #e6e3de; }
-.pb__b--topten:hover { border-color: #8d6610; }
-.pb__b--topten, .pb__b--topten:hover { color: #1c1b19; }
-.pb__b--topten b { color: var(--gold); }
-.pb__b--topten .pb__t { color: #6b6864; }
+/* The third sibling. selfies.lol's energy is its rose, and the rose it
+   wears on its own dark ground (#F472B6) is 2.5:1 on paper -- so the door
+   says it in #DB2777, the same rose walked down until it reads (4.6). */
+.pb__b--selfies { background: #ffffff; border: 1px solid #e6e3de; }
+.pb__b--selfies:hover { border-color: #DB2777; }
+.pb__b--selfies, .pb__b--selfies:hover { color: #1c1b19; }
+.pb__b--selfies b { color: #DB2777; }
+.pb__b--selfies .pb__t { color: #6b6864; }
 
 /* Side by side is the point, but not at 360px: below that the two wordmarks
    stop fitting and start breaking mid-word. */

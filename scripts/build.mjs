@@ -589,9 +589,9 @@ function partners() {
       <span class="pb__w">${DIAMOND}Rotabo</span>
       <span class="pb__t">People need things. People have things.</span>
     </a>
-    <a class="pb__b pb__b--topten" href="/">
-      <span class="pb__w"><span class="pb__mark" style="color:var(--gold)">${CROWN}</span>topten<b>.one</b></span>
-      <span class="pb__t">Who should be #1?</span>
+    <a class="pb__b pb__b--selfies" href="https://selfies.lol" target="_blank" rel="noopener">
+      <span class="pb__w">selfies<b>.lol</b></span>
+      <span class="pb__t">Don't follow people. Follow the world.</span>
     </a>
   </div>
   <p class="fine">Three sites by the same people. This place is held for an organisation
