@@ -374,6 +374,14 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 }
 
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+/* The catalogue, shelved: 72 doors in one run are a wall, eight labelled
+   shelves are a shop. The label is one step under the section's eyebrow --
+   it sorts, it does not announce. */
+.every__group { margin-top: 18px; }
+.every__label { margin: 0; font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.every__group .pills { margin-top: 10px; }
 .pill {
   padding: 12px 15px; border-radius: 999px; font-size: 14px; font-weight: 600;
   color: var(--text); background: var(--glass); border: 1px solid var(--line);
