@@ -21,7 +21,7 @@
  * Needs Playwright and a Chromium, which CI does not have, so this is run by
  * hand and its output is committed. It changes only when a question changes.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 /* Playwright is CommonJS and is not a dependency of this repository -- it is
@@ -50,7 +50,7 @@ const esc = (s) => String(s == null ? '' : s)
 
 /* The crown from render.js, drawn at the size a card wants it. */
 const CROWN = '<svg width="34" height="26" viewBox="0 0 38 28" aria-hidden="true">'
-  + '<path fill="#d9a63c" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg>';
+  + '<path fill="#8d6610" d="M2 8l7 6 10-12 10 12 7-6-4 18H6z"/></svg>';
 
 const SWISS = '<svg viewBox="0 0 32 32" width="17" height="17">'
   + '<rect width="32" height="32" rx="4" fill="#DA291C"/>'
@@ -66,9 +66,9 @@ function card({ eyebrow, question, sub }) {
 * { box-sizing: border-box; margin: 0; }
 html, body { width: 1200px; height: 630px; }
 body {
-  background: #131211;
+  background: #faf9f7;
   font-family: Archivo, sans-serif;
-  color: #f2f0ec;
+  color: #1c1b19;
   padding: 62px 72px;
   display: flex; flex-direction: column; justify-content: space-between;
   position: relative; overflow: hidden;
@@ -77,19 +77,19 @@ body {
    like the same place. */
 .wash { position: absolute; border-radius: 50%; pointer-events: none;
   top: -240px; right: -180px; width: 620px; height: 620px;
-  background: radial-gradient(circle, rgba(217,166,60,.15), rgba(217,166,60,0) 68%); }
-.rule { position: absolute; left: 0; right: 0; top: 0; height: 5px; background: #d9a63c; }
+  background: radial-gradient(circle, rgba(141,102,16,.08), rgba(141,102,16,0) 68%); }
+.rule { position: absolute; left: 0; right: 0; top: 0; height: 5px; background: #8d6610; }
 .top { display: flex; align-items: center; gap: 13px; position: relative; }
 .mark { font-size: 27px; font-weight: 800; letter-spacing: .02em; }
 .eyebrow { margin-left: auto; font-size: 17px; font-weight: 800; letter-spacing: .18em;
-  text-transform: uppercase; color: #948e86; }
+  text-transform: uppercase; color: #75726d; }
 .q { position: relative; font-size: ${question.length > 46 ? 74 : question.length > 30 ? 88 : 104}px;
   font-weight: 800; line-height: 1.02; letter-spacing: -.03em; }
-.q em { font-style: normal; color: #d9a63c; }
+.q em { font-style: normal; color: #8d6610; }
 .foot { display: flex; align-items: center; gap: 11px; position: relative;
-  font-size: 21px; font-weight: 600; color: #a09b93; }
-.foot b { color: #f2f0ec; font-weight: 700; }
-.dot { color: #948e86; }
+  font-size: 21px; font-weight: 600; color: #6b6864; }
+.foot b { color: #1c1b19; font-weight: 700; }
+.dot { color: #75726d; }
 </style>
 <div class="rule"></div><div class="wash"></div>
 <div class="top">${CROWN}<span class="mark">TOPTEN.ONE</span>${
@@ -110,7 +110,15 @@ const jobs = [
   })),
 ];
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+/* The Chromium is whatever this machine has, like the Playwright above it:
+   the container's baked path first, then the Chrome Windows keeps, then
+   whatever Playwright itself would pick. */
+const executablePath = [
+  '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+].find((p) => existsSync(p));
+const browser = await chromium.launch({ executablePath });
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 
 let n = 0;
