@@ -17,13 +17,16 @@
   --bg-2: #ffffff;
   --glass: #ffffff;
   --glass-2: #f4f2ed;
-  /* On the near-black ground every frame had to be gold, because a grey
-     hairline there has no edge. Paper turns that around: a warm grey hairline
-     is exactly visible, and a gold frame on every card would put the accent
-     everywhere, which is nowhere. Two strengths still, same hierarchy --
-     the outline of a thing, and the rule inside it. */
-  --line: #e6e3de;
-  --line-soft: #f0ede8;
+  /* Every frame on the page is gold, the way it was on the near-black.
+     Paper was given warm grey hairlines instead, on the theory that grey is
+     visible on white -- and it is, at 1.28:1 against a card, which is
+     "visible" the way a watermark is visible. Measured, not eyeballed: the
+     frame is gold at .75, which is 3.20 against a card and 3.09 against the
+     page, clearing the 3:1 a boundary needs; the rule inside a card is the
+     same gold at .45, about 1.9, a step quieter on purpose. Two strengths,
+     same hierarchy as ever -- the outline of a thing, and the rule in it. */
+  --line: rgba(141, 102, 16, .75);
+  --line-soft: rgba(141, 102, 16, .45);
 
   --text: #1c1b19;
   --muted: #6b6864;
@@ -35,7 +38,11 @@
   --gold-bright: #6f4f0c;
   --gold-ink: #ffffff;
   --gold-soft: #f5efe1;
-  --gold-line: rgba(141, 102, 16, .55);
+  /* The emphatic edge: a pressed chip, a hovered card. It was .55 -- 2.24 --
+     which now sits *under* the resting frame, so the thing you touched would
+     have drawn itself fainter than the things you did not. .90 is 4.28, and
+     the order of the two is right again. */
+  --gold-line: rgba(141, 102, 16, .90);
 
   /* The call to action is the gold, the way it was. Two accents on a page
      about one number is one accent too many. */
@@ -45,7 +52,10 @@
   --green: #2f6f4f;
   --cyan: #8d6610;
   --cyan-soft: rgba(141, 102, 16, .06);
-  --cyan-line: rgba(141, 102, 16, .35);
+  /* The edge of a field you are typing in. A focus indicator that nobody
+     can find is the one border on the page that has to clear 3:1: .35 was
+     1.6, this is 4.28. */
+  --cyan-line: rgba(141, 102, 16, .90);
 
   /* gift.ceo's shadow, verbatim. On the near-black a card's depth came from
      its gold frame; on paper it comes from this. */
@@ -429,8 +439,12 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__t { font-size: 12px; font-weight: 700; line-height: 1.35; }
 .pb__mark { flex: none; display: block; margin-right: 9px; }
 
-/* gift.ceo's paper with its daylight gold, which is what it wears itself. */
-.pb__b--gift { background: #ffffff; border: 1px solid #e6e3de; }
+/* gift.ceo's paper with its daylight gold, which is what it wears itself.
+   The frame is this page's, though -- all three doors stood in the one grey
+   hairline left on the site once the frames went gold, which read as three
+   cards that had failed to load rather than three that belonged to somebody
+   else. The ground and the mark are still theirs; only the edge is ours. */
+.pb__b--gift { background: #ffffff; border: 1px solid var(--line); }
 .pb__b--gift:hover { border-color: #8d6610; }
 .pb__b--gift, .pb__b--gift:hover { color: #1c1b19; }
 .pb__b--gift b { color: #8d6610; }
@@ -441,7 +455,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
    violet stays rotabo's, in the mark and on the edge it lifts to -- #9b3fc0
    now, not #c264e0: the pale value was picked to survive a dark ground, and
    on paper it thins to 3.4:1 while #9b3fc0 holds 5.4. */
-.pb__b--rotabo { background: #ffffff; border: 1px solid #e6e3de; }
+.pb__b--rotabo { background: #ffffff; border: 1px solid var(--line); }
 .pb__b--rotabo:hover { border-color: #9b3fc0; }
 .pb__b--rotabo, .pb__b--rotabo:hover { color: #1c1b19; }
 .pb__b--rotabo .pb__t { color: #6b6864; }
@@ -449,7 +463,7 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 /* The third sibling. selfies.lol's energy is its rose, and the rose it
    wears on its own dark ground (#F472B6) is 2.5:1 on paper -- so the door
    says it in #DB2777, the same rose walked down until it reads (4.6). */
-.pb__b--selfies { background: #ffffff; border: 1px solid #e6e3de; }
+.pb__b--selfies { background: #ffffff; border: 1px solid var(--line); }
 .pb__b--selfies:hover { border-color: #DB2777; }
 .pb__b--selfies, .pb__b--selfies:hover { color: #1c1b19; }
 .pb__b--selfies b { color: #DB2777; }
