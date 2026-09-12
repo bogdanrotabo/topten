@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=fcf84357b2';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=c67deae675';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=fcf84357b2';
+         figures, figureText } from './render.js?v=c67deae675';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);
@@ -61,7 +61,7 @@ function sessionId() {
 /* The address as it arrived, minus anything that is a credential rather than a
    campaign. utm_* and the ad-click markers are the point of keeping the query
    string at all; a token in it is not analytics, it is a key. */
-const SECRET_PARAM = /^(token|edit|edit_token|session_id|claim_ref|ref)$/i;
+const SECRET_PARAM = /^(token|edit|edit_token|session_id|claim_ref|ref|listing)$/i;
 function safePath() {
   const u = new URL(location.href);
   const keep = new URLSearchParams();
@@ -747,17 +747,26 @@ async function drawHome() {
 /* Whichever receipt Stripe hands back. The Payment Link's success URL is not
    ours to change, so all the shapes it might use are read and the first one
    that means anything wins. */
+const REF_SHAPE = /^[0-9a-fA-F_-]{16,200}$/;
+
 function receipt() {
   const q = new URLSearchParams(location.search);
   const sid = (q.get('session_id') || '').trim();
   /* The address first, since a session id from Stripe is better evidence than
-     anything this browser wrote down; what it remembered is the fallback for
-     the case that actually happens, which is an address with nothing in it. */
-  const ref = (q.get('client_reference_id') || q.get('ref') || q.get('listing') || '').trim()
-    || (rememberedRef() || '');
+     anything this browser wrote down; what it remembered is the fallback.
+     Each candidate is TESTED, not merely taken: the chain used to stop at the
+     first non-empty one, so the unsubstituted `{CHECKOUT_SESSION_CLIENT_
+     REFERENCE_ID}` Stripe was returning -- a truthy string, and junk -- won
+     the `||` and the remembered ref was never consulted. Every payment from
+     3 September on landed here with the ref sitting in localStorage and this
+     page saying NOTHING TO SHOW HERE. A parameter that cannot be used is now
+     passed over rather than ending the search. */
+  const ref = [q.get('client_reference_id'), q.get('ref'), q.get('listing')]
+    .map((v) => (v || '').trim())
+    .find((v) => REF_SHAPE.test(v)) || rememberedRef() || '';
   return {
     session_id: /^cs_(test|live)_[A-Za-z0-9]{8,120}$/.test(sid) ? sid : null,
-    client_ref: /^[0-9a-fA-F_-]{16,200}$/.test(ref) ? ref : null,
+    client_ref: REF_SHAPE.test(ref) ? ref : null,
   };
 }
 

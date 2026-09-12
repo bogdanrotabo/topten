@@ -10,7 +10,7 @@
  * through esc() on its way in. The rule is escape first, wrap second.
  */
 
-import { esc, money, since, situation, MIN_CENTS } from './lib.js?v=fcf84357b2';
+import { esc, money, since, situation, MIN_CENTS } from './lib.js?v=c67deae675';
 
 export const CROWN =
   '<svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true">'
