@@ -463,11 +463,11 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 /* The third sibling. selfies.lol's energy is its rose, and the rose it
    wears on its own dark ground (#F472B6) is 2.5:1 on paper -- so the door
    says it in #DB2777, the same rose walked down until it reads (4.6). */
-.pb__b--selfies { background: #ffffff; border: 1px solid var(--line); }
-.pb__b--selfies:hover { border-color: #DB2777; }
-.pb__b--selfies, .pb__b--selfies:hover { color: #1c1b19; }
-.pb__b--selfies b { color: #DB2777; }
-.pb__b--selfies .pb__t { color: #6b6864; }
+.pb__b--selfies { background: #f6ecf9; border: 1px solid #e2c3ee; }
+.pb__b--selfies:hover { border-color: #9b3fc0; }
+.pb__b--selfies, .pb__b--selfies:hover { color: #7c2d9c; }
+.pb__b--selfies b { color: #9b3fc0; }
+.pb__b--selfies .pb__t { color: #7c2d9c; }
 
 /* Side by side is the point, but not at 360px: below that the two wordmarks
    stop fitting and start breaking mid-word. */

@@ -189,6 +189,14 @@ for (const f of ['app.js', 'render.js']) {
 /* ------------------------------------------------------------ the shell --- */
 
 const SITE = 'https://topten.one';
+const BRAND_SCHEMA = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${SITE}/#website`, name: 'TopTen.one', url: `${SITE}/` },
+    { '@type': 'Organization', '@id': `${SITE}/#brand`, name: 'TopTen.one', url: `${SITE}/`, logo: `${SITE}/icons/icon-512.png` },
+  ],
+});
+const BRAND_HASH = `'sha256-${createHash('sha256').update(BRAND_SCHEMA).digest('base64')}'`;
 
 /* The link-preview platforms cache a card by its address for days, so a
    redrawn card at the same address is, to WhatsApp or X, the old card
@@ -208,9 +216,9 @@ const ogV = (() => {
 
 /* The content security policy.
  *
- * There is no inline script on any page any more -- config.js and app.js are
- * both files -- so script-src is a flat 'self' with no hash to keep in step
- * with an edit, which is what used to break. Inline STYLE attributes are how
+ * Executable scripts are external. Static brand JSON-LD has one exact hash
+ * computed from its content; no general inline-script allowance is added.
+ * Inline STYLE attributes are how
  * the markup is written, so style-src-attr has to allow them; that is a much
  * smaller door than an inline script, and the one that matters is shut.
  *
@@ -220,7 +228,8 @@ const ogV = (() => {
 function csp() {
   const connect = ["'self'", cfg.url].concat(
     cfg.ga ? ['https://*.google-analytics.com', 'https://*.analytics.google.com'] : []).join(' ');
-  const script = ["'self'"].concat(cfg.ga ? ['https://www.googletagmanager.com'] : []).join(' ');
+  // Exact hash for the static identity data; no general inline-script allowance.
+  const script = ["'self'", BRAND_HASH].concat(cfg.ga ? ['https://www.googletagmanager.com'] : []).join(' ');
   return [
     "default-src 'self'",
     `script-src ${script}`,
@@ -286,7 +295,8 @@ function head({ title, description, path, image }) {
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${SITE}${image || '/og-image.png'}${ogV(image || '/og-image.png')}">
-<meta name="twitter:image:alt" content="${esc(title)}">`;
+<meta name="twitter:image:alt" content="${esc(title)}">
+${path === '/' ? `<script type="application/ld+json">${BRAND_SCHEMA}</script>` : ''}`;
 }
 
 const ICON = {
@@ -587,7 +597,7 @@ function partners() {
   <h2 class="eyebrow">Elsewhere</h2>
   <div class="pb">
     <a class="pb__b pb__b--gift" href="https://gift.ceo" target="_blank" rel="noopener">
-      <span class="pb__w">gift<b>.ceo</b></span>
+      <span class="pb__w"><img class="pb__mark" src="/icons/gift-mark.svg" width="32" height="32" alt="">gift<b>.ceo</b></span>
       <span class="pb__t">Only CEOs give here.</span>
     </a>
     <a class="pb__b pb__b--rotabo" href="https://rotabo.app" target="_blank" rel="noopener">
@@ -595,8 +605,8 @@ function partners() {
       <span class="pb__t">People need things. People have things.</span>
     </a>
     <a class="pb__b pb__b--selfies" href="https://selfies.lol" target="_blank" rel="noopener">
-      <span class="pb__w">selfies<b>.lol</b></span>
-      <span class="pb__t">Don't follow people. Follow the world.</span>
+      <span class="pb__w"><img class="pb__mark" src="/icons/selfies-mark.png" width="36" height="36" alt="">selfies<b>.lol</b></span>
+      <span class="pb__t">Make your campus impossible to ignore.</span>
     </a>
   </div>
   <p class="fine">Three sites by the same people. This place is held for an organisation
