@@ -496,11 +496,13 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
   .pb__b { min-height: 92px; }
 }
 
-/* Four doors now. A grid rather than the flex row: four across where there is
-   room, two by two on a phone, one column where even that breaks a wordmark.
-   Set after the rules above so it is the one that holds. */
-.pb { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 640px) { .pb { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Four doors now, two by two. Not four across: on a desktop this band sits in
+   a side column some 440px wide, so a viewport breakpoint lies about the room
+   there is -- four columns left each door 101px and pushed the wordmarks out
+   of their cards (measured on the live page). Two columns hold everywhere;
+   one where even that breaks a wordmark. Set after the rules above so it is
+   the one that holds. */
+.pb { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 419px) { .pb { grid-template-columns: 1fr; } }
 
 /* -------------------------------------------------------------- sharing -- */
