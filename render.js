@@ -10,7 +10,7 @@
  * through esc() on its way in. The rule is escape first, wrap second.
  */
 
-import { esc, money, since, situation, MIN_CENTS } from './lib.js?v=c67deae675';
+import { esc, money, since, situation, MIN_CENTS } from './lib.js?v=a4608a5d99';
 
 export const CROWN =
   '<svg width="18" height="14" viewBox="0 0 38 28" aria-hidden="true">'
@@ -256,10 +256,21 @@ export function tick(t) {
  * worked out from how far the track has to travel. The estimate here is what a
  * reader sees first and app.js replaces it with the measured width.
  */
+/* AutoSport Event (Sibiu), the strip's sponsor on the owner's instruction. It
+ * leads each pass under a plain "Sponsor" label with its own logo, so nobody
+ * takes an advertiser for a ranking. The strip is aria-hidden and printed
+ * twice, so the link stays out of the tab order -- the door under "Elsewhere"
+ * is the one a keyboard and a screen reader reach. */
+const SPONSOR_TICK = '<a class="tick tick--sponsor" href="https://autosportevent.com"'
+  + ' target="_blank" rel="noopener" tabindex="-1"><span class="tick__spw">'
+  + '<span class="tick__sp">Sponsor</span>'
+  + '<img class="tick__logo" src="/icons/autosportevent-logo.png" width="27" height="18" alt="">'
+  + '<span class="tick__h">AutoSport Event</span></span></a>';
+
 export function ticker(items) {
   if (!items || !items.length) return '';
-  const cells = items.map(tick).join('');
-  const seconds = Math.min(600, Math.max(30, Math.round(items.length * 170 / 70)));
+  const cells = SPONSOR_TICK + items.map(tick).join('');
+  const seconds = Math.min(600, Math.max(30, Math.round((items.length + 1) * 170 / 70)));
   return '<div class="ticker" id="ticker" aria-hidden="true" style="--tick-dur:' + seconds + 's">'
     + '<div class="ticker__track">' + cells + cells + '</div></div>';
 }

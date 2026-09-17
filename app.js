@@ -11,9 +11,9 @@
  * about what it draws; it cannot be wrong about anybody's money.
  */
 
-import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=c67deae675';
+import { esc, money, situation, costToOpen, listingKey, MIN_CENTS } from './lib.js?v=a4608a5d99';
 import { topTwo, amounts, row, battle, trend, openOne, move, ticker,
-         figures, figureText } from './render.js?v=c67deae675';
+         figures, figureText } from './render.js?v=a4608a5d99';
 
 const CFG = window.TOPTEN_CONFIG || {};
 const $ = (s, el) => (el || document).querySelector(s);

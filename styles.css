@@ -312,6 +312,14 @@ a.chip, a.chip:hover { color: var(--text); }
 .tick__b { font-size: 12px; font-weight: 600; color: var(--dim); }
 .tick__a { font-weight: 700; color: var(--gold); }
 
+/* The sponsor that leads the strip: a label, its own logo, its name. One inner
+   row so the spacing is its own whatever .tick does with its children. */
+.tick--sponsor { text-decoration: none; }
+.tick--sponsor:hover .tick__h { text-decoration: underline; }
+.tick__spw { display: inline-flex; align-items: center; gap: 8px; }
+.tick__sp { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.tick__logo { display: block; height: 18px; width: auto; }
+
 /* ------------------------------------------------------------------ rows -- */
 
 /* A whole row can be a link. When it is, the words inside keep the colours
@@ -469,6 +477,15 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
 .pb__b--selfies b { color: #9b3fc0; }
 .pb__b--selfies .pb__t { color: #7c2d9c; }
 
+/* AutoSport Event, a sponsor beside the three siblings. The same paper; its
+   own logo carries the wordmark, so this door sets no type of its own, and
+   the edge lifts to its red. */
+.pb__b--autosport { background: #ffffff; border: 1px solid var(--line); }
+.pb__b--autosport:hover { border-color: #c8102e; }
+.pb__b--autosport, .pb__b--autosport:hover { color: #1c1b19; }
+.pb__b--autosport .pb__t { color: #6b6864; }
+.pb__logo { display: block; height: 40px; width: auto; max-width: 100%; object-fit: contain; }
+
 /* Side by side is the point, but not at 360px: below that the two wordmarks
    stop fitting and start breaking mid-word. */
 @media (max-width: 419px) {
@@ -478,6 +495,13 @@ a.row .row__sub, a.battle .battle__where, a.result .row__sub { color: var(--dim)
      a floor on both keeps them matching if either side ever grows. */
   .pb__b { min-height: 92px; }
 }
+
+/* Four doors now. A grid rather than the flex row: four across where there is
+   room, two by two on a phone, one column where even that breaks a wordmark.
+   Set after the rules above so it is the one that holds. */
+.pb { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 640px) { .pb { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 419px) { .pb { grid-template-columns: 1fr; } }
 
 /* -------------------------------------------------------------- sharing -- */
 

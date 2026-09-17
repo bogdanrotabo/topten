@@ -608,8 +608,14 @@ function partners() {
       <span class="pb__w"><img class="pb__mark" src="/icons/selfies-mark.png" width="36" height="36" alt="">selfies<b>.lol</b></span>
       <span class="pb__t">Make your campus impossible to ignore.</span>
     </a>
+    <!-- AutoSport Event (Sibiu), a sponsor on the owner's instruction. Its own
+         logo, served from this site: the CSP allows images from 'self' only. -->
+    <a class="pb__b pb__b--autosport" href="https://autosportevent.com" target="_blank" rel="noopener">
+      <span class="pb__w"><img class="pb__logo" src="/icons/autosportevent-logo.png" width="60" height="40" alt="AutoSport Event"></span>
+      <span class="pb__t">Motorsport events · Sibiu</span>
+    </a>
   </div>
-  <p class="fine">Three sites by the same people. This place is held for an organisation
+  <p class="fine">Three sites by the same people, and AutoSport Event, a sponsor. This place is held for an organisation
     that stands behind the idea &mdash; it costs nothing, and it never will.</p>
 </section>`;
 }
