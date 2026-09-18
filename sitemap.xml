@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://topten.one/</loc><lastmod>2026-09-12</lastmod></url>
-  <url><loc>https://topten.one/find/</loc><lastmod>2026-09-12</lastmod></url>
+  <url><loc>https://topten.one/</loc><lastmod>2026-09-18</lastmod></url>
+  <url><loc>https://topten.one/find/</loc><lastmod>2026-09-18</lastmod></url>
   <url><loc>https://topten.one/about.html</loc></url>
   <url><loc>https://topten.one/terms.html</loc></url>
   <url><loc>https://topten.one/privacy.html</loc></url>
@@ -20,7 +20,7 @@
   <url><loc>https://topten.one/threads/</loc></url>
   <url><loc>https://topten.one/telegram/</loc><lastmod>2026-08-25</lastmod></url>
   <url><loc>https://topten.one/snapchat/</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://topten.one/podcasts/</loc></url>
+  <url><loc>https://topten.one/podcasts/</loc><lastmod>2026-09-18</lastmod></url>
   <url><loc>https://topten.one/us-politicians/</loc><lastmod>2026-09-03</lastmod></url>
   <url><loc>https://topten.one/us-parties/</loc><lastmod>2026-09-03</lastmod></url>
   <url><loc>https://topten.one/eu-politicians/</loc></url>
@@ -63,10 +63,10 @@
   <url><loc>https://topten.one/south-korea-billionaires/</loc></url>
   <url><loc>https://topten.one/spain-billionaires/</loc></url>
   <url><loc>https://topten.one/mexico-billionaires/</loc></url>
-  <url><loc>https://topten.one/artists/</loc><lastmod>2026-09-03</lastmod></url>
+  <url><loc>https://topten.one/artists/</loc><lastmod>2026-09-18</lastmod></url>
   <url><loc>https://topten.one/actors/</loc></url>
   <url><loc>https://topten.one/movies/</loc><lastmod>2026-09-03</lastmod></url>
-  <url><loc>https://topten.one/games/</loc></url>
+  <url><loc>https://topten.one/games/</loc><lastmod>2026-09-18</lastmod></url>
   <url><loc>https://topten.one/playstation/</loc></url>
   <url><loc>https://topten.one/xbox/</loc></url>
   <url><loc>https://topten.one/nintendo/</loc></url>
@@ -75,6 +75,6 @@
   <url><loc>https://topten.one/boats/</loc></url>
   <url><loc>https://topten.one/cities/</loc></url>
   <url><loc>https://topten.one/restaurants/</loc></url>
-  <url><loc>https://topten.one/startups/</loc></url>
+  <url><loc>https://topten.one/startups/</loc><lastmod>2026-09-18</lastmod></url>
   <url><loc>https://topten.one/pets/</loc></url>
 </urlset>
